@@ -1,0 +1,28 @@
+<div class="modal" style="width: 850px;">
+    <div class="fuctionContent" style="align-items: center;">
+        <h2 class="Stitle">{{elements.name}}</h2>
+        <h3 style="color: #aaa;">{{elements.property}}</h3>
+    </div>
+
+    <div>
+        <table>
+            <thead class="headerTable">
+                <tr class="headerRow" style="background-color: #95ade93f;">
+                    <th class="headerCell">Elementos</th>
+                </tr>
+            </thead>
+            <tbody *ngIf="elements.elementList.length > 0; else noElements">
+                <tr class="dataRow" *ngFor="let element of elements.elementList">
+                    <td class="dataIndiCell">{{element.nombre}}</td>
+                </tr>
+            </tbody>
+            <ng-template #noElements>
+                <tbody>
+                    <tr class="dataRow">
+                        <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                    </tr>
+                </tbody>
+            </ng-template>
+        </table>
+    </div>
+</div>

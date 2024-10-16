@@ -1,0 +1,38 @@
+<div class="title">
+    <h1>Mantenimiento</h1>
+</div>
+
+
+<div class="mantenimientoContainer">
+
+    <div class="mantenimientoOptions">
+
+        <!-- <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['periodos'] } }]" routerLinkActive="active">
+            <mat-icon>settings</mat-icon>Periodos
+        </a> -->
+
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['competencias'] } }]" routerLinkActive="active">
+            <mat-icon>settings</mat-icon>Competencias
+        </a>
+
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['grados']}}]"
+            routerLinkActive="active">
+            <mat-icon>settings</mat-icon>Grados
+        </a>
+
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['asignacion-competencias']}}]"
+            routerLinkActive="active">
+            <mat-icon>settings</mat-icon>Asignación de Competencias
+        </a>
+
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['colaboradores'] } }]" routerLinkActive="active">
+            <mat-icon>settings</mat-icon>Colaboradores
+        </a>
+
+    </div>
+
+    <div class="mantenimientoForms">
+        <router-outlet name="mantenimiento"></router-outlet>
+    </div>
+
+</div>

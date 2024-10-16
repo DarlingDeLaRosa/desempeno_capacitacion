@@ -1,0 +1,88 @@
+<mat-sidenav-container>
+
+    <mat-sidenav mode="side" [(opened)]="sidenavOpened">
+        <div class="logosideMenuContainer">
+            <img [routerLink]="['formulacion']" class="logoPlanner" src="DyCVBO.png" alt="Planificación Institucional">
+        </div>
+
+        <div class="sideMenuOptionsContainer"> <!---*ngIf="userLogged.rol.modulos"-->
+
+            <a class="item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
+                <mat-icon>description</mat-icon>Evaluación de competencias
+            </a>
+
+        </div>
+
+        <div class="ConfigsideMenuContainer">
+            <div class="item-menu" [routerLink]="['/layout/mantenimiento']" routerLinkActive="activeOut">
+                <mat-icon>settings</mat-icon>Mantenimiento
+            </div>
+        </div>
+
+        <div class="ConfigsideMenuContainer">
+            <div class="item-menu" [routerLink]="['formulacion']" routerLinkActive="activeOut">
+                <mat-icon>logout</mat-icon>Cerrar Sesión
+            </div>
+        </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div class="componentsContent">
+            <mat-toolbar class="navbar">
+
+                <div class="btnMenuContainer"> <!--*ngIf="userSystemService.getUnitOrg.nombre"-->
+                    <button class="btnMenu" (click)="sidenavOpened = !sidenavOpened">
+                        <mat-icon>menu</mat-icon>
+                    </button>&nbsp;
+                    <h2 class="departamento">Nombre Recinto</h2>
+
+                    <!-- *ngIf="unidadOrgData.subUnidad.length > 1"-->
+                    <!-- <button class="dropdown-toggle" (click)="toggleDropdown($event)"> 
+                <mat-icon>expand_more</mat-icon>
+              </button>
+             -->
+                    <!-- <div class="dropdown-menu" [class.show]="dropdownOpen">
+                <ng-container *ngFor="let unit of unidadOrgData.subUnidad">
+                  <button class="dropdown-item" (click)="changeUnitOrg({id: unit.id, nombre: unit.nombre})">
+                    {{unit.nombre}}
+                  </button>
+                </ng-container>
+              </div> -->
+                </div>
+
+                <div class="logout"> <!--*ngIf="userSystemService.getUnitOrg.nombre"-->
+                    <span class="userName">
+                        <h3 class="nombre">Darling Nomar De la Rosa</h3>
+                        <h3 class="cargo">Administrador de BD</h3>
+                    </span>
+                    <button class="closeAccount" [matMenuTriggerFor]="menu">
+                        <mat-icon>person</mat-icon>
+                    </button>
+                    <mat-menu class="menuPanel" #menu="matMenu">
+                        <!-- <div mat-menu-item class="profile">
+                    <mat-icon>person</mat-icon>
+                    <span>asd</span>
+                    <br>
+                    <span class="email">das</span>
+                  </div> -->
+
+                        <!--(click)="changePassword()"-->
+                        <!-- <button mat-menu-item >
+                  <mat-icon>lock</mat-icon>
+                  <span>Cambiar contraseña</span>
+                </button> -->
+
+                        <!--(click)="logOut()"-->
+                        <!-- <button mat-menu-item> 
+                            <mat-icon>exit_to_app</mat-icon>
+                            <span>Cerrar sesion</span>
+                        </button> -->
+                    </mat-menu>
+                </div>
+            </mat-toolbar>
+            <div class="routerOuletContainer">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

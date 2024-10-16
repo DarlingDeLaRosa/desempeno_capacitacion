@@ -1,0 +1,41 @@
+<div class="authContent">
+
+    <div class="cardsComponent">
+
+        <div class="logoContainer">
+            <img style="width: 100%; height: 100%;" src="DyCVBO.png" alt="Desempeño y capacitación">
+        </div>
+
+        <mat-card class="logInCard">
+            <mat-card-title class="titleLogIn">Inicio de Sesión</mat-card-title>
+
+            <mat-card-content>
+                <form><!--[formGroup]="formUserLogIn" (ngSubmit)="logIn()"-->
+
+                    <mat-form-field appearance="fill" class="inputLogIn">
+                        <mat-label>Usuario (correo)</mat-label>
+                        <input matInput required formControlName="username">
+                        <mat-icon class="iconLogo" matSuffix>alternate_email</mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="fill" class="inputLogIn">
+                        <mat-label>Contraseña:</mat-label>
+                        <input [type]="seePass" matInput required formControlName="password">
+                        <mat-icon (click)="togglePasswordVisibility()" class="iconLogo" matSuffix>visibility</mat-icon>
+                    </mat-form-field>
+
+                    <mat-card-actions>
+                        <button mat-raised-button class="logIn" type="submit">Iniciar Sesión</button>
+                    </mat-card-actions>
+
+                </form>
+            </mat-card-content>
+
+        </mat-card>
+    </div>
+
+    <footer class="footer">
+        <h3>Administrado por: Departamento De Desempeño y Capacitación</h3>
+        <h3>ISFODOSU</h3>
+    </footer>
+</div>

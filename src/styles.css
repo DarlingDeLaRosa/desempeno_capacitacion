@@ -1,1 +1,209 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
+
+
+/*/////////////////////////////
+        General Styles
+/////////////////////////////*/
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    margin: 0;
+}
+
+/*/////////////////////////////
+        Titles Styles
+/////////////////////////////*/
+
+.title {
+    height: 4.5vh;
+    display: flex;
+    font-size: 12px;
+    padding: 0 15px;
+    margin-bottom: 10px;
+    align-items: center;
+    background-color: #eee;
+    border-left: #004b8d 4px solid;
+    /* border-radius: 0 22.5px 22.5px 0 ; */
+}
+
+.Stitle {
+    color: #004b8d;
+}
+
+
+/*/////////////////////////////
+        Button Styles
+/////////////////////////////*/
+
+.saveButton,
+.cleanButton,
+.btnCerrar {
+    color: #004b8d;
+    border: #004b8d solid 1px;
+    background-color: white;
+    border-radius: 5px;
+    height: 35px;
+    padding: 0 20px;
+    cursor: pointer;
+    -webkit-text-stroke: 0.5px #004b8d;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.cleanButton, .btnCerrar {
+    color: red;
+    border: red solid 1px;
+    -webkit-text-stroke: 0.5px red;
+}
+
+.backButton, .backIcon{
+    color: #565656 !important;
+}
+
+/*/////////////////////////////
+        Tables Styles
+/////////////////////////////*/
+
+.table-container {
+    width: 100%;
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+}
+
+.headerTable {
+    background-color: #f0f0f0;
+    text-align: left;
+}
+
+.headerRow {
+    background-color: #e9ecef;
+}
+
+.headerCell,
+.headerCellArrows {
+    padding: 12px 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #333;
+}
+
+.headerCellArrows {
+    padding-left: 0;
+    padding-right: 5px
+}
+
+.dataCell,
+.dataIndiCell {
+    background-color: #f9f9f9;
+}
+
+.footerCell {
+    font-weight: 500;
+    padding-left: 15px;
+}
+
+.dataIndiCell {
+    padding: 12px 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    color: #555;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.dataRow:nth-child(even) .dataIndiCell {
+    background-color: #f4f4f4; 
+}
+
+.paginatorRow {
+    height: 4vh;
+}
+
+.footerRow {
+    border-top: 2px solid #004b8d2a;
+    border-bottom: 2px solid #004b8d2a;
+}
+
+.loader {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ddd;
+    border-top: 3px solid #004b8d;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/**/
+
+
+/*/////////////////////////////
+        Icons Styles
+/////////////////////////////*/
+
+.editIcon, .removeIcon, .listIcon {
+    color: #4CAF50; 
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.editIcon:hover {
+    color: #388E3C; 
+}
+
+.removeIcon{
+    color: #F44336;
+}
+
+.removeIcon:hover {
+    color: #D32F2F; 
+}
+
+.listIcon{
+    color: #004b8d;
+}
+
+.listIcon:hover {
+    color: #002c52; 
+}
+
+/*/////////////////////////////
+        Components Styles
+/////////////////////////////*/
+
+.modal{
+    padding: 20px;
+}
+
+/*/////////////////////////////
+        Others Styles
+/////////////////////////////*/
+
+.fuctionContent{
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    padding: 10px 0 20px 0;
+}

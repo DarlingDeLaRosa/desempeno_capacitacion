@@ -1,0 +1,48 @@
+.mantenimientoContainer{
+    display: grid;
+    padding: 0 5px;
+    grid-template-columns: 20% 79%;
+    grid-column-gap: 1%;
+    box-sizing: border-box;
+}
+
+.mantenimientoContainer{
+    margin-top: 25px;
+}
+
+.mantenimientoOptions{
+    box-sizing: border-box;
+    min-height: 72vh;
+    padding: 1vh 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.item-menu {
+    width: 100%;
+    height: 47px;
+    display: grid;
+    grid-template-columns: 40px auto;
+    align-items: center;
+    text-decoration: none;
+    margin-bottom: 7px;
+    border-radius: 5px;
+    padding: 0 10px;
+    color: #00396b;
+    font-size: 17px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+}
+
+.mantenimientoForms{
+    box-sizing: border-box;
+    min-height: 74vh;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+}
+
+.active {
+    background-color: #eee;
+}

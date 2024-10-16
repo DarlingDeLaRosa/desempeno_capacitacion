@@ -1,0 +1,58 @@
+
+<div class="fuctionContent">
+    <div class="title">
+        <h1>Evaluación De Competencias</h1>
+    </div>
+
+    <mat-form-field appearance="fill" >
+        <mat-label>Buscar colaborador</mat-label>
+        <input matInput  > <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+</div>
+
+<h3>División De Desarrollo e Implementación de Sistemas</h3>
+<div class="table-container">
+    <table>
+        <thead class="headerTable">
+            <tr class="headerRow">
+                <th class="headerCell">Competencia</th>
+                <th class="headerCell">Descripción</th>
+                <th class="headerCell" style="width: 5%;"></th>
+                <th class="headerCell" style="width: 5%; padding-right: 15px;">
+                    <div class="loader"></div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">Item 1</td>
+                <td class="dataIndiCell">001</td>
+                <td class="dataIndiCell"><mat-icon [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']" routerLinkActive="active" class="editIcon">edit</mat-icon></td>
+                <td class="dataIndiCell"><mat-icon (click)="openModalviewEvaluation()" class="removeIcon">delete</mat-icon></td>
+            </tr>
+            <tr class="dataRow">
+                <td class="dataIndiCell">Item 2</td>
+                <td class="dataIndiCell">002</td>
+                <td class="dataIndiCell"><mat-icon class="editIcon">edit</mat-icon></td>
+                <td class="dataIndiCell"><mat-icon class="removeIcon">delete</mat-icon></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr class="paginatorRow">
+                <td class="dataIndiCell"></td>
+                <td class="dataIndiCell"></td>
+                <td class="dataIndiCell">
+                    <!-- Placeholder para paginación -->
+                </td>
+                <td class="dataIndiCell">
+                    <span style="display: flex; align-items: center;">
+                        <mat-icon class="">navigate_before</mat-icon>
+                        <h5 style="margin: 0;"></h5>
+                        <mat-icon class="">navigate_next</mat-icon>
+                    </span>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

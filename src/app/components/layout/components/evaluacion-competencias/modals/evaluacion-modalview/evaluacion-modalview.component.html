@@ -1,0 +1,50 @@
+<div class="modal">
+    <div class="fuctionContent">
+        <h2>Evaluación De Competencias</h2><br>
+
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle value="1">Primera competencia</mat-button-toggle>
+            <mat-button-toggle value="0">Segunda Competencia</mat-button-toggle>
+        </mat-button-toggle-group>
+    </div>
+
+    <h3>Competencia</h3>
+
+    <div class="competencia">
+        <p>Capacidad para comunicarse de manera verbal y escrita con los grupos de interés internos y externos siguiendo
+            los lineamientos
+            definidos. Capacidad para escuchar con atención y entender los requerimientos de los clientes-ciudadanos
+            para ofrecerle servicios. Habilidad para intercambiar informaciones pertinentes de manera verbal y escrita
+            con los interesados.</p>
+    </div>
+
+    <h3>Comportamientos y calificaciones</h3>
+
+    <div class="comportamientoCalificacion" *ngFor="let comportamiento of [4, 5, 3, 4, 5]">
+        <div class="comportamiento">
+            <p>Utiliza los canales de comunicación existentes para
+                obtener la información que necesita y mantener la
+                interacción con los demás.</p>
+        </div>
+
+        <div class="iconContainer">
+            <mat-icon>arrow_forward</mat-icon>
+        </div>
+
+        <div class="calificacionContainer">
+            <h2>{{comportamiento}} / 5</h2>
+        </div>
+    </div>
+    <div class="comportamientoCalificacion">
+        <h3 style="padding-top: 22px; color: #004b8d;">Total</h3>
+        <span></span>
+        <div class="calificacionContainer">
+            <h2 style="border-top: 2px solid #555; padding: 8px 13px;">50</h2>
+        </div>
+    </div>
+
+    <div style="display: flex ; justify-content: end;">
+        <button class="btnCerrar">Cerrar</button>
+    </div>
+
+</div>
