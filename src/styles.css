@@ -56,6 +56,17 @@ h6 {
     -webkit-text-stroke: 0.5px #004b8d;
     font-family: 'Montserrat', sans-serif;
 }
+.btnNavegar {
+    color: #4CAF50;
+    border: #4CAF50 solid 1px;
+    background-color: white;
+    border-radius: 5px;
+    height: 35px;
+    padding: 0 20px;
+    cursor: pointer;
+    -webkit-text-stroke: 0.5px #4CAF50;
+    font-family: 'Montserrat', sans-serif;
+}
 
 .cleanButton, .btnCerrar {
     color: red;
@@ -130,7 +141,7 @@ table {
 
 
 .dataRow:nth-child(even) .dataIndiCell {
-    background-color: #f4f4f4; 
+    background-color: #f4f4f4;
 }
 
 .paginatorRow {
@@ -164,13 +175,13 @@ table {
 /////////////////////////////*/
 
 .editIcon, .removeIcon, .listIcon {
-    color: #4CAF50; 
+    color: #4CAF50;
     cursor: pointer;
     transition: color 0.3s ease;
 }
 
 .editIcon:hover {
-    color: #388E3C; 
+    color: #388E3C;
 }
 
 .removeIcon{
@@ -178,7 +189,7 @@ table {
 }
 
 .removeIcon:hover {
-    color: #D32F2F; 
+    color: #D32F2F;
 }
 
 .listIcon{
@@ -186,7 +197,7 @@ table {
 }
 
 .listIcon:hover {
-    color: #002c52; 
+    color: #002c52;
 }
 
 /*/////////////////////////////
@@ -207,3 +218,10 @@ table {
     /* align-items: center; */
     padding: 10px 0 20px 0;
 }
+.filters{
+    display: flex;
+    justify-content: end;
+    margin-top: -15px !important;
+    /* align-items: center; */
+}
+

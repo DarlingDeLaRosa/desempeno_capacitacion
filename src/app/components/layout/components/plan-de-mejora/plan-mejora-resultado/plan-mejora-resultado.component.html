@@ -1,0 +1,67 @@
+
+<div class="fuctionContent">
+  <div class="title">
+      <h1>Resultado Plan de Mejora</h1>
+    </div>
+    <div>
+      <button class="backButton" mat-stroked-button
+      [routerLink]="['../']"><mat-icon class="backIcon">arrow_back
+      </mat-icon>Listado plan de mejora</button>
+
+    </div>
+  </div>
+  <div class="filters">
+
+    <mat-form-field appearance="fill">
+      <mat-label>Filtrar</mat-label>
+      <input matInput  > <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+<div class="table-container">
+  <table>
+      <thead class="headerTable">
+          <tr class="headerRow">
+              <th class="headerCell">Curso</th>
+              <th class="headerCell">Descripción</th>
+              <th class="headerCell">Cantidad de Solicitantes</th>
+              <th class="headerCell" style="width: 5%; padding-right: 15px;">
+                  <!-- <div class="loader"></div> -->
+              </th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr class="dataRow">
+              <td class="dataIndiCell">Item 1</td>
+              <td class="dataIndiCell">Item 1</td>
+              <td class="dataIndiCell">002</td>
+              <td class="dataIndiCell"><mat-icon  class="listIcon">groups</mat-icon></td>
+          </tr>
+          <tr class="dataRow">
+              <td class="dataIndiCell">Item 2</td>
+              <td class="dataIndiCell">Item 2</td>
+              <td class="dataIndiCell">Item 2</td>
+              <td class="dataIndiCell"><mat-icon  class="listIcon">groups</mat-icon></td>
+          </tr>
+      </tbody>
+      <tfoot>
+          <tr class="paginatorRow">
+              <td class="dataIndiCell"></td>
+              <td class="dataIndiCell"></td>
+              <td class="dataIndiCell">
+                  <!-- Placeholder para paginación -->
+              </td>
+              <td class="dataIndiCell">
+                  <span style="display: flex; align-items: center;">
+                      <mat-icon class="">navigate_before</mat-icon>
+                      <h5 style="margin: 0;"></h5>
+                      <mat-icon class="">navigate_next</mat-icon>
+                  </span>
+              </td>
+          </tr>
+      </tfoot>
+  </table>
+</div>
+
+

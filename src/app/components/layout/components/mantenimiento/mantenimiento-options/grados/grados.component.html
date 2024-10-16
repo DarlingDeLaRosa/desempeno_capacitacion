@@ -1,6 +1,6 @@
 <h2 class="Stitle">Grados</h2>
 <div>
-    <form style=" margin: 15px 0 35px 0" [formGroup]="gradesForm" >  <!-- (ngSubmit)="saveChanges()"-->
+    <form style=" margin: 15px 0 35px 0" [formGroup]="gradesForm" (ngSubmit)="saveChanges()">
 
         <mat-form-field appearance="fill" style="width: 69%;">
             <mat-label>Competencias</mat-label>
@@ -18,7 +18,7 @@
 
         <mat-form-field appearance="fill" style="width: 30%;">
             <mat-label>Grados</mat-label>
-            <mat-select formControlName="nombre" disableRipple>
+            <mat-select formControlName="idTipoGrado" disableRipple>
                 <ng-container>
                     <mat-option [value]="typeGrade.idTipoGrado" *ngFor="let typeGrade of gradesTypes">
                         {{typeGrade.nombre}}
@@ -33,7 +33,7 @@
         <h3 class="Stitle">Comportamientos</h3>
         <br>
         <div formArrayName="comportamientos" >
-            <div *ngFor="let behavior of comportamientos.controls; let i = index" [formGroupName]="i" >
+            <div *ngFor="let behavior of behaviors.controls; let i = index" [formGroupName]="i" >
                 <mat-form-field appearance="fill" style="width: 100%;">
                     <mat-label>Comportamiento {{i + 1}}</mat-label>
                     <input matInput formControlName="nombre">
@@ -42,7 +42,7 @@
         </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button class="cleanButton">Limpiar edición</button> <!--(click)="estructuraProgramaticaForm.reset()" -->
+        <button type="button" class="cleanButton" (click)="gradesForm.reset()" *ngIf="gradesForm.value.idGrado">Limpiar edición</button>
 
     </form>
 
@@ -53,7 +53,7 @@
             <thead class="headerTable">
                 <tr class="headerRow">
                     <th class="headerCell">Competencia</th>
-                    <th class="headerCell">Descripción</th>
+                    <th class="headerCell">Grado</th>
                     <th class="headerCell" style="width: 10%;">Comportamientos</th>
                     <th class="headerCell" style="width: 5%;"></th>
                     <th class="headerCell" style="width: 5%; padding-right: 15px;">
@@ -61,21 +61,22 @@
                     </th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="grades.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let grade of grades">
                     <td class="dataIndiCell">{{grade.competenciaObj.nombre}}</td>
-                    <td class="dataIndiCell">{{grade.nombre}}</td>
-                    <td class="dataIndiCell"  style="text-align: center;" ><mat-icon class="listIcon" (click)="openPropertyModal(grade.comportamientosObj, 'Grados', grade.nombre)" >list</mat-icon></td>
+                    <td class="dataIndiCell">{{grade.tipoGradoObj.nombre}}</td>
+                    <td class="dataIndiCell"  style="text-align: center;" ><mat-icon class="listIcon" (click)="openPropertyModal(grade.comportamientosObj, 'Comportamientos', grade.tipoGradoObj.nombre)" >list</mat-icon></td>
                     <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(grade)" class="editIcon">edit</mat-icon></td>
                     <td class="dataIndiCell"><mat-icon (click)="deleteGrade(grade.idGrado)" class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
-            <!-- <tfoot>
+            <tfoot>
                 <tr class="paginatorRow">
                     <td class="dataIndiCell"></td>
                     <td class="dataIndiCell"></td>
+                    <td class="dataIndiCell"></td>
                     <td class="dataIndiCell">
-                        Placeholder para paginación
+                        items
                     </td>
                     <td class="dataIndiCell">
                         <span style="display: flex; align-items: center;">
@@ -85,11 +86,15 @@
                         </span>
                     </td>
                 </tr>
-            </tfoot> -->
+            </tfoot>
         </table>
     </div>
 
-    <!-- <div class="noData" *ngIf="estructurasProgramaticas && estructurasProgramaticas.length == 0">
-        <img class="imgNoData" src="../../../../../assets/NO_DATA_ILUSTRACION.png" alt="No hay Datos.">
-      </div> -->
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+            </tr>
+        </tbody>
+    </ng-template>
 </div>

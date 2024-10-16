@@ -1,52 +1,81 @@
-<h2 class="Stitle">Competencias</h2>
+<h2 class="Stitle">Asignación de competencias</h2>
 <div>
-    <form style=" margin: 15px 0 35px 0"> <!--[formGroup]="estructuraProgramaticaForm" (ngSubmit)="saveChanges()"-->
+    <form style=" margin: 15px 0 35px 0" [formGroup]="asignationCompetencyForm" (ngSubmit)="saveChanges()"> <!---->
 
-        <mat-form-field appearance="fill" style="width: 100%;">
-            <mat-label>Nombre</mat-label>
-            <input matInput formControlName="nombre">
+        <mat-form-field appearance="fill" style="width: 33%;">
+            <mat-label>Grupo Ocupacional</mat-label>
+            <mat-select formControlName="idGrupo" disableRipple>
+                <ng-container > <!--*ngIf="competencies && competencies.length; else noCompetency"-->
+                    <mat-option > <!--[value]="competency.idCompetencia" *ngFor="let competency of competencies"-->
+                        <!-- {{competency.nombre}} -->
+                    </mat-option>
+                </ng-container>
+                <ng-template #noCompetency>
+                    <mat-option>No hay campos disponibles</mat-option>
+                </ng-template>
+            </mat-select>
+        </mat-form-field>&nbsp;
+
+        <mat-form-field appearance="fill" style="width: 33%;">
+            <mat-label>Competencias</mat-label>
+            <mat-select formControlName="idCompetencia" disableRipple>
+                <ng-container *ngIf="competencies && competencies.length; else noCompetency">
+                    <mat-option [value]="competency.idCompetencia" *ngFor="let competency of competencies"> <!---->
+                        {{competency.nombre}}
+                    </mat-option>
+                </ng-container>
+                <ng-template #noCompetency>
+                    <mat-option>No hay campos disponibles</mat-option>
+                </ng-template>
+            </mat-select>
+        </mat-form-field>&nbsp;
+
+        <mat-form-field appearance="fill" style="width: 32.5%;">
+            <mat-label>Grado</mat-label>
+            <mat-select formControlName="idGrado" disableRipple>
+                <ng-container *ngIf="competencies && competencies.length; else noCompetency">
+                    <mat-option [value]="competency.idCompetencia" *ngFor="let competency of competencies"> <!---->
+                        {{competency.nombre}}
+                    </mat-option>
+                </ng-container>
+                <ng-template #noCompetency>
+                    <mat-option>No hay campos disponibles</mat-option>
+                </ng-template>
+            </mat-select>
         </mat-form-field><br>
-
-        <mat-form-field appearance="fill" style="width: 100%;">
-            <mat-label>Descripción</mat-label>
-            <textarea matInput formControlName="descripcion"></textarea>
-        </mat-form-field>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
         <button class="cleanButton">Limpiar edición</button> <!--(click)="estructuraProgramaticaForm.reset()" -->
 
     </form>
 
-    <h3 class="Stitle">Listado de Competencias</h3>
+    <h3 class="Stitle">Listado de Asignaciones de competencias</h3>
 
     <div class="table-container">
         <table>
             <thead class="headerTable">
                 <tr class="headerRow">
+                    <th class="headerCell">Grupo ocupacional</th>
                     <th class="headerCell">Competencia</th>
-                    <th class="headerCell">Descripción</th>
+                    <th class="headerCell">Grado</th>
                     <th class="headerCell" style="width: 5%;"></th>
                     <th class="headerCell" style="width: 5%; padding-right: 15px;">
                         <div class="loader"></div>
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="dataRow">
+            <tbody *ngIf="asignationCompetencies.length > 0; else noElements">
+                <tr class="dataRow" *ngFor="let asignationCompetency of asignationCompetencies">
                     <td class="dataIndiCell">Item 1</td>
                     <td class="dataIndiCell">001</td>
-                    <td class="dataIndiCell"><mat-icon class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon class="removeIcon">delete</mat-icon></td>
-                </tr>
-                <tr class="dataRow">
-                    <td class="dataIndiCell">Item 2</td>
-                    <td class="dataIndiCell">002</td>
+                    <td class="dataIndiCell">001</td>
                     <td class="dataIndiCell"><mat-icon class="editIcon">edit</mat-icon></td>
                     <td class="dataIndiCell"><mat-icon class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr class="paginatorRow">
+                    <td class="dataIndiCell"></td>
                     <td class="dataIndiCell"></td>
                     <td class="dataIndiCell"></td>
                     <td class="dataIndiCell">
@@ -63,8 +92,11 @@
             </tfoot>
         </table>
     </div>
-
-    <!-- <div class="noData" *ngIf="estructurasProgramaticas && estructurasProgramaticas.length == 0">
-        <img class="imgNoData" src="../../../../../assets/NO_DATA_ILUSTRACION.png" alt="No hay Datos.">
-      </div> -->
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+            </tr>
+        </tbody>
+    </ng-template>
 </div>

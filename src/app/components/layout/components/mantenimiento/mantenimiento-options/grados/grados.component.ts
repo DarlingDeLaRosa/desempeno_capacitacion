@@ -36,32 +36,26 @@ export class GradosComponent implements OnInit {
     this.gradesForm = fb.group({
       idGrado: 0,
       idCompetencia: new FormControl('', Validators.required),
-      nombre: new FormControl('', Validators.required),
-      descripcion: new FormControl('', Validators.required),
+      nombre: new FormControl(''),
+      descripcion: new FormControl(''),
+      idTipoGrado: new FormControl('', Validators.required),
       comportamientos: this.fb.array([])
-    })
-
-    this.behaviorsForm = fb.group({
-      nombre: new FormControl('', Validators.required),
-      probatorio: new FormControl(false),
-      calificacion: new FormControl(0),
     })
   }
 
   grades!: GradesGetI[]
   gradesForm: FormGroup
-  behaviorsForm: FormGroup
   competencies!: CompetencyI[]
   gradesTypes!: GradesTypeGetI[]
 
   ngOnInit(): void {
     this.getGrades()
     this.getTypeGrades()
-    this.getCompetencies()   
+    this.getCompetencies()
     this.initializeBehaviors()
   }
 
-  get comportamientos() {
+  get behaviors() {
     return this.gradesForm.get('comportamientos') as FormArray;
   }
 
@@ -73,7 +67,7 @@ export class GradosComponent implements OnInit {
       })
   }
 
-  // Metodo para obtener todos los grados 
+  // Metodo para obtener todos los tipos de grados 
   getTypeGrades() {
     this.typeGradeService.getTypesGrades()
       .subscribe((res: any) => {
@@ -82,9 +76,15 @@ export class GradosComponent implements OnInit {
   }
 
   // Metodo para inicializar los cinco comportamientos de cada grado 
-  initializeBehaviors(){
+  initializeBehaviors() {
     for (let i = 0; i < 5; i++) {
-      this.comportamientos.push(this.behaviorsForm)
+      this.behaviors.push(
+        this.fb.group({
+          nombre: new FormControl('', Validators.required),
+          probatorio: new FormControl(false),
+          calificacion: new FormControl(0),
+        })
+      )
     }
   }
 
@@ -101,24 +101,26 @@ export class GradosComponent implements OnInit {
       })
   }
 
-  // Metodo para crear las competencias
+  // Metodo para crear los grados
   postGrade() {
     this.gradeService.postGrade(this.gradesForm.value)
-      .subscribe((res: any) => { 
-        this.appHelpers.handleResponse(res, () => this.getCompetencies(), this.gradesForm) })
+      .subscribe((res: any) => {
+        this.appHelpers.handleResponse(res, () => this.getGrades(), this.gradesForm)
+      })
   }
 
-  // Metodo para editar las competencias
+  // Metodo para editar los grados
   putGrade() {
     this.gradeService.putGrade(this.gradesForm.value)
-      .subscribe((res: any) => { 
-        this.appHelpers.handleResponse(res, () => this.getCompetencies(), this.gradesForm) })
+      .subscribe((res: any) => {
+        this.appHelpers.handleResponse(res, () => this.getGrades(), this.gradesForm)
+      })
   }
 
-  // Metodo para eliminar las competencias y confirmación de la misma
+  // Metodo para eliminar los grados y comportamientos
   async deleteGrade(id: number) {
     let removeDecision: boolean = await this.snackBar.snackbarConfirmationDelete()
-    
+
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
       this.gradeService.deleteGrade(id)
@@ -127,12 +129,22 @@ export class GradosComponent implements OnInit {
   }
 
   // Metodo asignar valores y habilitar la edición de un registro
-  setValueToEdit(grade: any) {
-    this.gradesForm.reset(grade)
+  setValueToEdit(grade: GradesGetI) {
+
+    this.gradesForm.patchValue({
+      idGrado: grade.idGrado,
+      idCompetencia: grade.idCompetencia,
+      idTipoGrado: grade.tipoGradoObj.idTipoGrado,
+      comportamientos: grade.comportamientosObj.map((behavior, index) => {
+
+        let behaviorsGroup = this.behaviors.at(index)
+        behaviorsGroup.reset(behavior)
+      })
+    })
   }
 
-  // Metodo para manejar las funciones de editar y crear con el mismo onSubmit del formulario
+  // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
-    this.appHelpers.saveChanges(() => this.postGrade(), () => this.putGrade(), this.gradesForm.value.idGrado ,this.gradesForm)
+    this.appHelpers.saveChanges(() => this.postGrade(), () => this.putGrade(), this.gradesForm.value.idGrado, this.gradesForm)
   }
 }

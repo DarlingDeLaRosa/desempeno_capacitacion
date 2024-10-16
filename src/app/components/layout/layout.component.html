@@ -7,6 +7,9 @@
 
         <div class="sideMenuOptionsContainer"> <!---*ngIf="userLogged.rol.modulos"-->
 
+            <a class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
+                <mat-icon>star</mat-icon>Plan de mejora
+            </a>
             <a class="item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
                 <mat-icon>description</mat-icon>Evaluación de competencias
             </a>
@@ -37,7 +40,7 @@
                     <h2 class="departamento">Nombre Recinto</h2>
 
                     <!-- *ngIf="unidadOrgData.subUnidad.length > 1"-->
-                    <!-- <button class="dropdown-toggle" (click)="toggleDropdown($event)"> 
+                    <!-- <button class="dropdown-toggle" (click)="toggleDropdown($event)">
                 <mat-icon>expand_more</mat-icon>
               </button>
              -->
@@ -73,7 +76,7 @@
                 </button> -->
 
                         <!--(click)="logOut()"-->
-                        <!-- <button mat-menu-item> 
+                        <!-- <button mat-menu-item>
                             <mat-icon>exit_to_app</mat-icon>
                             <span>Cerrar sesion</span>
                         </button> -->

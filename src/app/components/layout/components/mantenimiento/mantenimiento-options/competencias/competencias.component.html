@@ -12,8 +12,9 @@
             <textarea matInput formControlName="descripcion"></textarea>
         </mat-form-field>
 
-        <button type="submit" class="saveButton" >Guardar cambios</button> &nbsp;
-        <button type="button" class="cleanButton" (click)="competencyEvaluationForm.reset()" *ngIf="competencyEvaluationForm.value.idCompetencia">Limpiar edición</button>
+        <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+        <button type="button" class="cleanButton" (click)="competencyEvaluationForm.reset()"
+            *ngIf="competencyEvaluationForm.value.idCompetencia">Limpiar edición</button>
     </form>
 
     <h3 class="Stitle">Listado de Competencias</h3>
@@ -30,33 +31,38 @@
                     </th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody *ngIf="competencies.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let competency of competencies">
                     <td class="dataIndiCell">{{competency.nombre}}</td>
                     <td class="dataIndiCell">{{competency.descripcion}}</td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(competency)" class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon (click)="deleteCompetency(competency.idCompetencia)" class="removeIcon">delete</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(competency)"
+                            class="editIcon">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteCompetency(competency.idCompetencia)"
+                            class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
-            <!-- <tfoot>
+            <tfoot>
                 <tr class="paginatorRow">
                     <td class="dataIndiCell"></td>
                     <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell">
-                    </td>
+                    <td class="dataIndiCell"></td>
                     <td class="dataIndiCell">
                         <span style="display: flex; align-items: center;">
-                            <mat-icon class="" >navigate_before</mat-icon>
+                            <mat-icon class="">navigate_before</mat-icon>
                             <h5 style="margin: 0;"></h5>
-                            <mat-icon class="" >navigate_next</mat-icon>
+                            <mat-icon class="">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
-            </tfoot> -->
+            </tfoot>
         </table>
     </div>
 
-    <!-- <div class="noData" *ngIf="estructurasProgramaticas && estructurasProgramaticas.length == 0">
-        <img class="imgNoData" src="../../../../../assets/NO_DATA_ILUSTRACION.png" alt="No hay Datos.">
-    </div> -->
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+            </tr>
+        </tbody>
+    </ng-template>
 </div>
