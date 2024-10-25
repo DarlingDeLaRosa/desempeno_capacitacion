@@ -28,6 +28,10 @@ export class CompetencyServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Competencia`, this.header));
     }
 
+    public getCompetencyById(competencyId: number) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Competencia/${competencyId}`, this.header));
+    }
+
     public postCompetency(competency: CompetencyI) {
         return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Competencia`, competency, this.header))
     }

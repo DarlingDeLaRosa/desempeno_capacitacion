@@ -17,6 +17,8 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatTableModule } from '@angular/material/table';
 
 export const MaterialComponents: any = [
   MatIconModule,
@@ -33,10 +35,12 @@ export const MaterialComponents: any = [
   MatToolbarModule,
   MatSidenavModule,
   MatCheckboxModule,
+  MatSnackBarModule,
   MatFormFieldModule,
   MatNativeDateModule,
   MatDatepickerModule,
   MatSlideToggleModule,
+  MatAutocompleteModule,
   MatButtonToggleModule,
-  MatSnackBarModule,
+  MatTableModule,
 ]

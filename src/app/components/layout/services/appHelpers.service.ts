@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { SnackBars } from './snackBars.service';
 import { FormGroup } from '@angular/forms';
+import { LoaderService } from '../../../helpers/service/loader.service';
 
 @Injectable({ providedIn: "root" })
 
@@ -9,16 +10,18 @@ export class HerlperService {
 
     constructor(
         public snackBar: SnackBars,
+        private loaderService: LoaderService
     ) { }
 
     // Maneja todas las peticiones validando si existe un error o devolviendo el resultado de la petición.
     handleRequest<T>(request: () => Observable<T>): Observable<T> {
         return request().pipe(
+          finalize(() => this.loaderService.hide()),
             catchError((error) => {
                 this.snackBar.snackbarLouder(false);
                 setTimeout(() => {
-                    error.error.detail ? this.snackBar.snackbarError(error.error.detail)
-                        : this.snackBar.snackbarServerError();
+                  error.error.detail ? this.snackBar.snackbarError(error.error.detail)
+                  : this.snackBar.snackbarServerError();
                 }, 500);
                 return throwError(error)
             }),

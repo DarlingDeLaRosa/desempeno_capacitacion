@@ -1,0 +1,190 @@
+<h2 class="Stitle">Cursos</h2>
+<div>
+    <form style=" margin: 15px 0 35px 0" [formGroup]="coursesForm" (ngSubmit)="saveChanges()">
+
+        <div class="matRadioChoice">
+            <h4>¿Quien manejara el curso?</h4>
+            <mat-radio-group formControlName="interno">
+                <mat-radio-button [value]="true" color="primary">ISFODOSU</mat-radio-button>
+                <!--matTooltip="." [disabled]="disableItbis"-->
+                <mat-radio-button [value]="false" color="primary">Institución exterior</mat-radio-button>
+                <!--matTooltip="." [disabled]="disableItbis"-->
+            </mat-radio-group>
+        </div>
+
+        <div style="display: flex;  gap: 5px;">
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Razon social</mat-label>
+                <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="suplidor"
+                    (input)="getSuppliersByRs()">
+
+                <mat-autocomplete #auto='matAutocomplete' (optionSelected)="setValueRs($event.option.value)"
+                    [displayWith]="displayRsName ">
+                    <ng-container *ngIf="suppliersRs && suppliersRs.length > 0; else noRs">
+                        <mat-option *ngFor="let supplierRs of suppliersRs" [value]="supplierRs">
+                            {{supplierRs.razonSocial}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noRs>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>RNC</mat-label>
+                <input matInput formControlName="rnc" (blur)="getSuppliersByRnc()" (keyup.enter)="getSuppliersByRnc()">
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" style="flex: 1" *ngIf="!coursesForm.value.interno">
+                <mat-label>Link</mat-label>
+                <input matInput formControlName="link">
+            </mat-form-field>
+            
+            <mat-form-field appearance="fill" *ngIf="coursesForm.value.interno">
+                <mat-label>Cupos Disponibles</mat-label>
+                <input matInput type="number" formControlName="cuposDisponibles">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Rango Inscripción</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Fecha Inicial" formControlName="fechaInicioInscripcion">
+                    <input matEndDate placeholder="Fecha Final" formControlName="fechaFinInscripcion">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Rango Curso</mat-label>
+                <mat-date-range-input [rangePicker]="picker2">
+                    <input matStartDate placeholder="Fecha Inicial" formControlName="fechaInicio">
+                    <input matEndDate placeholder="Fecha Final" formControlName="fechaFin">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker2></mat-date-range-picker>
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex;">
+            <mat-form-field appearance="fill" style="flex: 1;" *ngIf="coursesForm.value.interno">
+                <mat-label>Descripción</mat-label>
+                <textarea matInput formControlName="descripcion"></textarea>
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" [style]=" coursesForm.value.interno ? 'flex: 1': 'width: 300px' ">
+                <mat-label>Modalidad</mat-label>
+                <mat-select formControlName="idModalidad" disableRipple>
+                    <ng-container *ngIf="modalities && modalities.length; else noModality">
+                        <mat-option [value]="modality.idModalidad" *ngFor="let modality of modalities">
+                            {{modality.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noModality>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="width: 25%;" *ngIf="coursesForm.value.interno">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="idEstado" disableRipple>
+                    <ng-container *ngIf="states && states.length; else noState">
+                        <mat-option [value]="state.idEstado" *ngFor="let state of states">
+                            {{state.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noState>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="width: 25%;" *ngIf="coursesForm.value.interno">
+                <mat-label>Costo Total</mat-label>
+                <input matInput type="number" formControlName="costoTotal">
+            </mat-form-field>
+        </div>
+
+        <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+        <button type="button" class="cleanButton" (click)="coursesForm.reset()" *ngIf="coursesForm.value.idCurso">Limpiar edición</button>
+
+    </form>
+
+    <h3 class="Stitle">Listado de Asignaciones de competencias</h3>
+
+    <div class="table-container">
+        <table>
+            <thead class="headerTable">
+                <tr class="headerRow">
+                    <th class="headerCell">Nombre</th>
+                    <th class="headerCell">Suplidor</th>
+                    <th class="headerCell">Modalidad</th>
+                    <!-- <th class="headerCell">Fecha Inscripción</th> -->
+                    <th class="headerCell">Fecha Curso</th>
+                    <th class="headerCell">Cupos</th>
+                    <th class="headerCell">Costo</th>
+                    <th class="headerCell" style="width: 5%;"></th>
+                    <th class="headerCell" style="width: 5%; padding-right: 15px;">
+                        <div class="loader" *ngIf="!courses"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngIf="courses && courses.length > 0; else noElements">
+                <tr class="dataRow" *ngFor="let course of courses">
+                    <td class="dataIndiCell">{{course.nombre}}</td>
+                    <td class="dataIndiCell">{{course.suplidor}}</td>
+                    <td class="dataIndiCell">{{course.modalidadObj.nombre}}</td>
+                    <!-- <td class="dataIndiCell">{{course.fechaInicioInscripcion | date: 'dd/MM/yyyy'}} - {{course.fechaFinInscripcion | date: 'dd/MM/yyyy'}}</td> -->
+                    <td class="dataIndiCell">{{course.fechaInicio | date: 'dd/MM/yyyy'}} - {{course.fechaFin | date:
+                        'dd/MM/yyyy'}}</td>
+                    <td class="dataIndiCell">{{course.cuposDisponibles}}</td>
+                    <td class="dataIndiCell">{{course.costoTotal | currency: 'DOP ': 'symbol': '1.2-2'}}</td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(course)" class="editIcon">edit</mat-icon>
+                    </td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteCourse(course.idCurso)"
+                            class="removeIcon">delete</mat-icon></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="paginatorRow">
+                    <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container> 
+                    <td class="dataIndiCell">Items:</td>
+                    <td class="dataIndiCell">
+                        <span style="display: flex; align-items: center;">
+                            <mat-icon class="">navigate_before</mat-icon>
+                            <h5 style="margin: 0;"></h5>
+                            <mat-icon class="">navigate_next</mat-icon>
+                        </span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6, 7]">
+                    <td class="dataIndiCell"></td>
+                </ng-container> 
+            </tr>
+        </tbody>
+    </ng-template>
+</div>

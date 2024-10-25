@@ -1,12 +1,12 @@
 
 <div class="fuctionContent">
   <div class="title">
-      <h1>Resultado Plan de Mejora</h1>
+      <h1>Listado de Cursos</h1>
     </div>
     <div>
       <button class="backButton" mat-stroked-button
       [routerLink]="['../']"><mat-icon class="backIcon">arrow_back
-      </mat-icon>Listado plan de mejora</button>
+      </mat-icon>Publicaciones de Cursos</button>
 
     </div>
   </div>
@@ -24,29 +24,35 @@
       <thead class="headerTable">
           <tr class="headerRow">
               <th class="headerCell">Curso</th>
+              <th class="headerCell">Fecha Inicio</th>
+              <th class="headerCell">Fecha Fin</th>
               <th class="headerCell">Descripción</th>
-              <th class="headerCell">Cantidad de Solicitantes</th>
+              <th class="headerCell">Inicio Inscrip</th>
+              <th class="headerCell">Fin Inscrip</th>
+              <th class="headerCell">Solicitantes</th>
               <th class="headerCell" style="width: 5%; padding-right: 15px;">
                   <!-- <div class="loader"></div> -->
               </th>
           </tr>
       </thead>
       <tbody>
-          <tr class="dataRow">
-              <td class="dataIndiCell">Item 1</td>
-              <td class="dataIndiCell">Item 1</td>
-              <td class="dataIndiCell">002</td>
-              <td class="dataIndiCell"><mat-icon  class="listIcon">groups</mat-icon></td>
-          </tr>
-          <tr class="dataRow">
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell"><mat-icon  class="listIcon">groups</mat-icon></td>
+          <tr class="dataRow" *ngFor="let item of cursoList">
+              <td class="dataIndiCell">{{item.nombre}}</td>
+              <td class="dataIndiCell">{{item.fechaInicio |date}}</td>
+              <td class="dataIndiCell">{{item.fechaFin | date}}</td>
+              <td class="dataIndiCell">{{item.descripcion}}</td>
+              <td class="dataIndiCell">{{item.fechaInicioInscripcion |date}}</td>
+              <td class="dataIndiCell">{{item.fechaFinInscripcion |date}}</td>
+              <td class="dataIndiCell">{{item.inscripcionesObj.length}}</td>
+              <td class="dataIndiCell"><mat-icon  class="listIcon" (click)="openModal(item)">groups</mat-icon></td>
           </tr>
       </tbody>
       <tfoot>
           <tr class="paginatorRow">
+              <td class="dataIndiCell"></td>
+              <td class="dataIndiCell"></td>
+              <td class="dataIndiCell"></td>
+              <td class="dataIndiCell"></td>
               <td class="dataIndiCell"></td>
               <td class="dataIndiCell"></td>
               <td class="dataIndiCell">
@@ -63,5 +69,6 @@
       </tfoot>
   </table>
 </div>
+
 
 

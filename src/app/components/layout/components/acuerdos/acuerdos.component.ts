@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { MaterialComponents } from '../../../../helpers/material.components';
+import { ClassImports } from '../../../../helpers/class.components';
 
 @Component({
   selector: 'app-acuerdos',
   standalone: true,
-  imports: [],
+  imports: [MaterialComponents,ClassImports],
   templateUrl: './acuerdos.component.html',
-  styleUrl: './acuerdos.component.css'
 })
 export class AcuerdosComponent {
 

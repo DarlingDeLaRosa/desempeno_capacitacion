@@ -56,11 +56,11 @@ export class SnackBars {
         })
     }
 
-    snackbarError(errorMessage: string) {
+    snackbarError(errorMessage: string, time: number = 2500) {
         this.snackBarRef = this.snackBar.openFromComponent(SnackbarError, {
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            duration: 2500,
+            duration: time,
             data: errorMessage
         })
     }

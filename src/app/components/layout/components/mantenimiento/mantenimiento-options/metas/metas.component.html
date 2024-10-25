@@ -1,0 +1,94 @@
+<h2 class="Stitle">Metas</h2>
+<div>
+    <form style=" margin: 15px 0 35px 0" [formGroup]="goalsForm" (ngSubmit)="saveChanges()">
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" style="flex: 2;">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Medio de Verificación</mat-label>
+                <mat-select formControlName="idMedio" disableRipple>
+                    <ng-container *ngIf="verificationMethods && verificationMethods.length; else noVM">
+                        <mat-option [value]="verificationMethod.idMedio"
+                            *ngFor="let verificationMethod of verificationMethods">
+                            {{verificationMethod.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noVM>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex;">
+            <mat-form-field appearance="fill" style="width: 25%;">
+                <mat-label>Valor</mat-label>
+                <input matInput type="number" formControlName="valor">
+            </mat-form-field>
+        </div>
+
+        <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+        <button type="button" class="cleanButton" (click)="goalsForm.reset()" *ngIf="goalsForm.value.idMeta">Limpiar edición</button>
+    </form>
+
+    <h3 class="Stitle">Listado Metas</h3>
+
+    <div class="table-container">
+        <table>
+            <thead class="headerTable">
+                <tr class="headerRow">
+                    <th class="headerCell">Nombre</th>
+                    <th class="headerCell">Medio de verificación</th>
+                    <th class="headerCell">Valor</th>
+                    <th class="headerCell" style="width: 5%;"></th>
+                    <th class="headerCell" style="width: 5%; padding-right: 15px;">
+                        <div class="loader" *ngIf="!goals"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngIf="goals && goals.length > 0; else noElements">
+                <tr class="dataRow" *ngFor="let goal of goals">
+                    <td class="dataIndiCell">{{goal.nombre}}</td>
+                    <td class="dataIndiCell">{{goal.medioVerificacionObj.nombre}}</td>
+                    <td class="dataIndiCell">{{goal.valor}} Puntos</td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(goal)" class="editIcon">edit</mat-icon>
+                    </td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteGoal(goal.idMeta)"
+                            class="removeIcon">delete</mat-icon></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="paginatorRow">
+                    <ng-container *ngFor="let td of [1, 2, 3]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container>
+                    <td class="dataIndiCell">
+                        <!-- Placeholder para paginación -->
+                    </td>
+                    <td class="dataIndiCell">
+                        <span style="display: flex; align-items: center;">
+                            <mat-icon class="">navigate_before</mat-icon>
+                            <h5 style="margin: 0;"></h5>
+                            <mat-icon class="">navigate_next</mat-icon>
+                        </span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3, 4]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
+
+            </tr>
+        </tbody>
+    </ng-template>
+</div>

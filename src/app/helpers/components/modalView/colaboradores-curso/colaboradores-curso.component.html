@@ -1,0 +1,39 @@
+<div class="container">
+  <h2>{{data.curso.nombre}}</h2>
+  <p style="margin-top: 10px; margin-bottom: 10px;">Colaboradores inscritos</p>
+
+  <div class="colaboradores-list">
+
+    <div *ngFor="let colaborador of data.curso.inscripcionesObj" class="colaborador">
+      <div class="colaborador-info">
+        <span class="colaborador-nombre">{{ colaborador.idColaborador }}</span>
+        <span class="colaborador-cargo">{{ colaborador.idColaborador }}</span>
+        <span class="colaborador-genero">{{ colaborador.idColaborador }}</span>
+        <span class="colaborador-nivel">{{ colaborador.idColaborador }}</span>
+      </div>
+      <div class="colaborador-actions">
+        <button mat-icon-button>
+          <mat-icon>restore</mat-icon>
+        </button>
+        <button mat-icon-button >
+          <mat-icon >delete</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="data.curso.inscripcionesObj.length === 0" class="empty-list">
+      <img src="nodata.jpg"  alt="No courses available">
+      <!-- <p>No hay cursos disponibles en este momento.</p> -->
+    </div>
+
+  </div>
+
+
+  <div class="modal-actions">
+    <button mat-button (click)="closeModal()" class="cancel-button">Cancelar</button>
+    <ng-container *ngIf="data.curso.inscripcionesObj.length !== 0">
+      <button mat-raised-button color="primary">Subscribir</button>
+    </ng-container>
+  </div>
+
+</div>

@@ -1,0 +1,113 @@
+.colaborador {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #004b84; /* Color azul oscuro */
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+
+.colaborador-info {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: 10px; /* Espacio entre las columnas */
+}
+
+.colaborador-info span {
+  overflow: hidden; /* Oculta el desbordamiento */
+  white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+  text-overflow: ellipsis; /* Añade "..." si el texto es muy largo */
+}
+
+/* Ajusta el tamaño específico de cada campo */
+.colaborador-nombre {
+  flex-basis: 20%; /* Ocupa el 20% del ancho total */
+  flex-grow: 1; /* Puede crecer si hay espacio disponible */
+}
+
+.colaborador-cargo {
+  flex-basis: 40%; /* Ocupa el 40% del ancho total */
+  flex-grow: 2; /* Ocupa más espacio proporcionalmente */
+}
+
+.colaborador-genero {
+  flex-basis: 10%; /* Ocupa el 10% del ancho total */
+}
+
+.colaborador-nivel {
+  flex-basis: 10%; /* Ocupa el 10% del ancho total */
+}
+
+.colaborador-actions {
+  display: flex;
+  gap: 10px;
+}
+
+
+button.cancel-button {
+  color: red;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+.container{
+margin: 15px 15px 15px 15px;
+}
+.modal-footer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: flex-end;  /* Alinea los botones a la derecha */
+  gap: 10px;
+  flex-shrink: 0;  /* Evita que el footer se encoja */
+}
+
+
+
+
+
+.colaboradores-list {
+  flex-grow: 1;
+  height:  450px;
+  overflow-y: auto; /* Permite que solo la lista de colaboradores haga scroll */
+  max-height: 450px; /* Ajusta el alto máximo de la lista */
+  padding-right: 10px; /* Añade un poco de espacio a la derecha para el scroll */
+}
+
+::ng-deep .colaboradores-list::-webkit-scrollbar {
+  width: 14px;
+}
+
+::ng-deep .colaboradores-list::-webkit-scrollbar-track {
+  background: #edf2fa;
+}
+
+::ng-deep .colaboradores-list::-webkit-scrollbar-thumb {
+  background-color: #004b8d;
+  border-radius: 5px;
+  border-left: 8px solid #edf2fa;
+}
+
+::ng-deep .colaboradores-list::-webkit-scrollbar-thumb:hover {
+  background-color: #003366;
+}
+.empty-list {
+  text-align: center;
+}
+
+.empty-list img {
+  max-width: 440px;
+}
+
+.empty-list p {
+  font-size: 1.2rem;
+  color: #555;
+}

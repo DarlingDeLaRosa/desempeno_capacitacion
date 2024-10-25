@@ -11,9 +11,20 @@ import { ColaboradoresComponent } from './components/layout/components/mantenimi
 import { EvaluacionPersonaComponent } from './components/layout/components/evaluacion-competencias/competencias-pages/evaluacion-persona/evaluacion-persona.component';
 import { CompetenciasOuletComponent } from './components/layout/components/evaluacion-competencias/competencias-oultet.component';
 import { PlanMejoraOuletComponent } from './components/layout/components/plan-de-mejora/plandemejora-oulet.component';
-import { PlanMejoraListComponent } from './components/layout/components/plan-de-mejora/plan-mejora-list/plan-mejora-list.component';
-import { PlanMejoraResultadoComponent } from './components/layout/components/plan-de-mejora/plan-mejora-resultado/plan-mejora-resultado.component';
-import { PlanMejoraFormularioComponent } from './components/layout/components/plan-de-mejora/plan-mejora-formulario/plan-mejora-formulario.component';
+import { PlanMejoraListComponent } from './components/layout/components/plan-de-mejora/pages/plan-mejora-list/plan-mejora-list.component';
+import { PlanMejoraResultadoComponent } from './components/layout/components/plan-de-mejora/pages/plan-mejora-resultado/plan-mejora-resultado.component';
+import { PlanMejoraFormularioComponent } from './components/layout/components/plan-de-mejora/pages/plan-mejora-formulario/plan-mejora-formulario.component';
+import { CursosComponent } from './components/layout/components/cursos/cursos-oulet.component';
+import { CursosMantenimientoComponent } from './components/layout/components/mantenimiento/mantenimiento-options/cursos/cursos.component';
+import { CursosListadoComponent } from './components/layout/components/cursos/pages/cursos-listado/cursos-listado.component';
+import CursosTableroComponent from './components/layout/components/cursos/pages/cursos-tablero/cursos-tablero.component';
+import { CursosMiembrosComponent } from './components/layout/components/cursos/pages/cursos-miembros/cursos-miembros.component';
+import { AcuerdosComponent } from './components/layout/components/acuerdos/acuerdos.component';
+import { AcuerdoDesempenioComponent } from './components/layout/components/acuerdos/acuerdo-desempenio/acuerdo-desempenio.component';
+import { MiscursosComponent } from './components/layout/components/cursos/modals/miscursos/miscursos.component';
+import { MiAcuerdoComponent } from './components/layout/components/acuerdos/mi-acuerdo/mi-acuerdo.component';
+import { MetasComponent } from './components/layout/components/mantenimiento/mantenimiento-options/metas/metas.component';
+import { AsignacionMetasComponent } from './components/layout/components/mantenimiento/mantenimiento-options/asignacion-metas/asignacion-metas.component';
 
 export const routes: Routes = [
     {
@@ -24,21 +35,44 @@ export const routes: Routes = [
         path: 'layout',
         component: LayoutComponent,
         children:[
-            {
-                path: 'evaluacion-competencias',
-                component: CompetenciasOuletComponent,
-                children: [
-                    {
-                        path: '',
-                        component: EvalucionCompetenciasComponent
-                    },
-                    {
-                        path: 'evaluacion-competencia-persona',
-                        component: EvaluacionPersonaComponent
-                    },
-                ]
-            },
-            {
+          {
+            path: 'acuerdos',
+            component: AcuerdosComponent,
+            children: [
+              {
+                path: '',
+                component: AcuerdoDesempenioComponent,
+                outlet: 'acuerdos'
+              },
+              {
+                path: 'miacuerdo',
+                component: MiAcuerdoComponent,
+                outlet: 'acuerdos'
+              },
+            ]
+          },
+          {
+            path: 'cursos',
+            component: CursosComponent,
+            children: [
+              {
+                path: '',
+                component: CursosTableroComponent,
+                outlet: 'cursos'
+              },
+              {
+                path: 'listado',
+                component: CursosListadoComponent,
+                outlet: 'cursos'
+              },
+              {
+                path: 'miembros',
+                component: CursosMiembrosComponent,
+                outlet: 'cursos'
+              },
+            ]
+          },
+          {
 
                 path: 'plan-de-mejora',
                 component: PlanMejoraOuletComponent,
@@ -61,12 +95,31 @@ export const routes: Routes = [
                 ]
             },
             {
+              path: 'evaluacion-competencias',
+              component: CompetenciasOuletComponent,
+              children: [
+                  {
+                      path: '',
+                      component: EvalucionCompetenciasComponent
+                  },
+                  {
+                      path: 'evaluacion-competencia-persona',
+                      component: EvaluacionPersonaComponent
+                  },
+              ]
+          },
+            {
                 path: 'mantenimiento',
                 component: MantenimientoComponent,
                 children:[
                     {
                         path:'periodos',
                         component: PeriodosComponent,
+                        outlet: 'mantenimiento'
+                    },
+                    {
+                        path:'cursos',
+                        component: CursosMantenimientoComponent,
                         outlet: 'mantenimiento'
                     },
                     {
@@ -87,6 +140,16 @@ export const routes: Routes = [
                     {
                         path:'colaboradores',
                         component: ColaboradoresComponent,
+                        outlet: 'mantenimiento'
+                    },
+                    {
+                        path:'metas',
+                        component: MetasComponent,
+                        outlet: 'mantenimiento'
+                    },
+                    {
+                        path:'asignacion-metas',
+                        component: AsignacionMetasComponent,
                         outlet: 'mantenimiento'
                     }
                 ]

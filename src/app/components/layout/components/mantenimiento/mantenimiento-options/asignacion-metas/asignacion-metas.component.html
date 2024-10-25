@@ -1,0 +1,97 @@
+<h2 class="Stitle">Asignación de competencias</h2>
+<div>
+    <form style=" margin: 15px 0 35px 0" [formGroup]="asignationGoalForm" (ngSubmit)="saveChanges()">
+        
+        <div style="display: flex; gap:5px">
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Grupo Ocupacional</mat-label>
+                <mat-select formControlName="idGrupo" disableRipple>
+                    <ng-container *ngIf="ocupationalGroup && ocupationalGroup.length; else noOcupationalGroup">
+                        <mat-option [value]="ocupational.idGrupo" *ngFor="let ocupational of ocupationalGroup">
+                            {{ocupational.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noOcupationalGroup>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 2">
+                <mat-label>Metas</mat-label>
+                <mat-select formControlName="idMeta" disableRipple>
+                    <ng-container *ngIf="goals && goals.length; else noGoal">
+                        <mat-option [value]="goal.idMeta" *ngFor="let goal of goals">
+                            {{goal.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noGoal>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+
+        <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+        <button type="button" class="cleanButton" (click)="asignationGoalForm.reset()"
+            *ngIf="asignationGoalForm.value.idAsignacion">Limpiar edición</button>
+
+    </form>
+
+    <h3 class="Stitle">Listado de Asignaciones de competencias</h3>
+
+    <div class="table-container">
+        <table>
+            <thead class="headerTable">
+                <tr class="headerRow">
+                    <th class="headerCell">Grupo ocupacional</th>
+                    <th class="headerCell">Competencia</th>
+                    <th class="headerCell" style="width: 5%;"></th>
+                    <th class="headerCell" style="width: 5%; padding-right: 15px;">
+                        <div class="loader" *ngIf="!asignationGoals"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngIf="asignationGoals && asignationGoals.length > 0; else noElements">
+                <tr class="dataRow" *ngFor="let asignationGoal of asignationGoals">
+                    <td class="dataIndiCell"> Grupo {{asignationGoal.grupoOcupacionalObj.nombre}}</td>
+                    <td class="dataIndiCell">{{asignationGoal.metaObj.nombre}}</td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(asignationGoal)"
+                            class="editIcon">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon
+                            (click)="deleteAsignationGoal(asignationGoal.idAsignacion)"
+                            class="removeIcon">delete</mat-icon></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="paginatorRow">
+                    <ng-container *ngFor="let td of [1, 2]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container>
+                    <td class="dataIndiCell">
+                        <!-- Placeholder para paginación -->
+                    </td>
+                    <td class="dataIndiCell">
+                        <span style="display: flex; align-items: center;">
+                            <mat-icon class="">navigate_before</mat-icon>
+                            <h5 style="margin: 0;"></h5>
+                            <mat-icon class="">navigate_next</mat-icon>
+                        </span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3 ]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
+
+            </tr>
+        </tbody>
+    </ng-template>
+</div>

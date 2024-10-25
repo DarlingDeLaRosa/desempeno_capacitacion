@@ -1,51 +1,54 @@
 <h2 class="Stitle">Asignación de competencias</h2>
 <div>
-    <form style=" margin: 15px 0 35px 0" [formGroup]="asignationCompetencyForm" (ngSubmit)="saveChanges()"> <!---->
+    <form style=" margin: 15px 0 35px 0" [formGroup]="asignationCompetencyForm" (ngSubmit)="saveChanges()">
+        <div style="display: flex;">
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Grupo Ocupacional</mat-label>
+                <mat-select formControlName="idGrupo" disableRipple>
+                    <ng-container *ngIf="ocupationalGroup && ocupationalGroup.length; else noOcupationalGroup">
+                        <mat-option [value]="ocupational.idGrupo" *ngFor="let ocupational of ocupationalGroup">
+                            {{ocupational.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noOcupationalGroup>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>&nbsp;
 
-        <mat-form-field appearance="fill" style="width: 33%;">
-            <mat-label>Grupo Ocupacional</mat-label>
-            <mat-select formControlName="idGrupo" disableRipple>
-                <ng-container > <!--*ngIf="competencies && competencies.length; else noCompetency"-->
-                    <mat-option > <!--[value]="competency.idCompetencia" *ngFor="let competency of competencies"-->
-                        <!-- {{competency.nombre}} -->
-                    </mat-option>
-                </ng-container>
-                <ng-template #noCompetency>
-                    <mat-option>No hay campos disponibles</mat-option>
-                </ng-template>
-            </mat-select>
-        </mat-form-field>&nbsp;
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Competencias</mat-label>
+                <mat-select formControlName="idCompetencia" disableRipple
+                    (selectionChange)="getCompetencyById($event.value)">
+                    <ng-container *ngIf="competencies && competencies.length; else noCompetency">
+                        <mat-option [value]="competency.idCompetencia" *ngFor="let competency of competencies">
+                            {{competency.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noCompetency>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>&nbsp;
 
-        <mat-form-field appearance="fill" style="width: 33%;">
-            <mat-label>Competencias</mat-label>
-            <mat-select formControlName="idCompetencia" disableRipple>
-                <ng-container *ngIf="competencies && competencies.length; else noCompetency">
-                    <mat-option [value]="competency.idCompetencia" *ngFor="let competency of competencies"> <!---->
-                        {{competency.nombre}}
-                    </mat-option>
-                </ng-container>
-                <ng-template #noCompetency>
-                    <mat-option>No hay campos disponibles</mat-option>
-                </ng-template>
-            </mat-select>
-        </mat-form-field>&nbsp;
-
-        <mat-form-field appearance="fill" style="width: 32.5%;">
-            <mat-label>Grado</mat-label>
-            <mat-select formControlName="idGrado" disableRipple>
-                <ng-container *ngIf="competencies && competencies.length; else noCompetency">
-                    <mat-option [value]="competency.idCompetencia" *ngFor="let competency of competencies"> <!---->
-                        {{competency.nombre}}
-                    </mat-option>
-                </ng-container>
-                <ng-template #noCompetency>
-                    <mat-option>No hay campos disponibles</mat-option>
-                </ng-template>
-            </mat-select>
-        </mat-form-field><br>
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Grado</mat-label>
+                <mat-select formControlName="idGrado" disableRipple>
+                    <ng-container *ngIf="gradesTypes && gradesTypes.length; else noGrades">
+                        <mat-option [value]="grade.idGrado" *ngFor="let grade of gradesTypes">
+                            {{grade.tipoGradoObj.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noGrades>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field><br>
+        </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button class="cleanButton">Limpiar edición</button> <!--(click)="estructuraProgramaticaForm.reset()" -->
+        <button type="button" class="cleanButton" (click)="asignationCompetencyForm.reset()"
+            *ngIf="asignationCompetencyForm.value.idAsignacion">Limpiar edición</button>
 
     </form>
 
@@ -60,24 +63,27 @@
                     <th class="headerCell">Grado</th>
                     <th class="headerCell" style="width: 5%;"></th>
                     <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                        <div class="loader"></div>
+                        <div class="loader" *ngIf="!asignationCompetencies"></div>
                     </th>
                 </tr>
             </thead>
-            <tbody *ngIf="asignationCompetencies.length > 0; else noElements">
+            <tbody *ngIf="asignationCompetencies && asignationCompetencies.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let asignationCompetency of asignationCompetencies">
-                    <td class="dataIndiCell">Item 1</td>
-                    <td class="dataIndiCell">001</td>
-                    <td class="dataIndiCell">001</td>
-                    <td class="dataIndiCell"><mat-icon class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon class="removeIcon">delete</mat-icon></td>
+                    <td class="dataIndiCell"> Grupo {{asignationCompetency.grupoOcupacionlObj.nombre}}</td>
+                    <td class="dataIndiCell">{{asignationCompetency.competenciaObj.nombre}}</td>
+                    <td class="dataIndiCell">{{asignationCompetency.gradoObj.tipoGradoObj.nombre}}</td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(asignationCompetency)"
+                            class="editIcon">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon
+                            (click)="deleteAsignationCompetency(asignationCompetency.idAsignacion)"
+                            class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr class="paginatorRow">
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell"></td>
+                    <ng-container *ngFor="let td of [1, 2, 3]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container>
                     <td class="dataIndiCell">
                         <!-- Placeholder para paginación -->
                     </td>
@@ -96,6 +102,10 @@
         <tbody>
             <tr class="dataRow">
                 <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2,3, 4]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
+
             </tr>
         </tbody>
     </ng-template>

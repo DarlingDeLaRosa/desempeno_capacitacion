@@ -1,0 +1,133 @@
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 16px;
+}
+
+.card {
+  height: 150px; /* Altura fija para los cards */
+  border-radius: 20px;
+  background: #fff;
+  position: relative;
+  padding: 1.8rem;
+  border: 2px solid #49aa42;
+  transition: 0.5s ease-out;
+  overflow: visible;
+  cursor: pointer;
+}
+
+.small-size {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Smaller grid layout */
+  gap: 10px;
+  display: flex;
+}
+
+.small-size .card {
+
+  height: 150px; /* Adjust the height for 4 or fewer cards */
+  width: 300px; /* Adjust the height for 4 or fewer cards */
+}
+
+
+ .label{
+  margin: -18px 0px 0px 75px;
+ }
+
+ .cupo {
+  margin-right: 50px;
+  margin-top: 10px;
+  color: black;
+  font-size: 50px;
+}
+ .cupo2 {
+  margin-right: 50px;
+  margin-top: 10px;
+  color: rgb(40, 40, 40);
+  font-size: 40px;
+}
+
+ .card-details {
+  color: rgb(0, 0, 0);
+  height: 100%;
+  padding-left: 20px;
+  gap: .5em;
+  display: grid;
+  place-content: start;
+ }
+ .card-details:hover {
+  color: #fff;
+ }
+ .card-button:hover{
+  cursor:pointer
+ }
+
+ .card-button {
+  transform: translate(-50%, 125%);
+  width: 60%;
+  border-radius: 1rem;
+  border: none;
+  background-color: #ec801e;
+  color: #fff;
+  font-size: 1rem;
+  padding: .5rem 1rem;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  opacity: 0;
+  transition: 0.3s ease-out;
+ }
+
+ .text-body {
+  color: rgb(134, 134, 134);
+ }
+
+
+ .text-title {
+  font-size: 1.5em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+
+ .card:hover{
+  border-color: #49aa42;
+  background-color: #004b8d;
+  color : #fff;
+  box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+ }
+
+ .card:hover .card-details{
+  color : #fff;
+ }
+
+ .card:hover .cupo{
+  color : #fff;
+ }
+ .card:hover .cupo2{
+  color : #fff;
+ }
+
+ .card:hover .card-button {
+  transform: translate(-50%, 50%);
+  opacity: 1;
+ }
+
+ .empty-list {
+  text-align: center;
+}
+
+.empty-list img {
+  max-width: 550px;
+}
+
+.empty-list p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+
+
+

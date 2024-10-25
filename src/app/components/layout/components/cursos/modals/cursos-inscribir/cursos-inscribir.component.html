@@ -1,0 +1,40 @@
+<div class="container">
+  <h1 style="margin-bottom: 20px;">{{data.course.nombre}}</h1>
+  <div class="container2">
+    <div class="description">
+      <p>
+       {{data.course.descripcion}}
+      </p>
+    </div>
+    <div class="date">
+      <p>Fecha Inicio: {{data.course.fechaInicio |date}}</p>
+    </div>
+  </div>
+  <form [formGroup]="inscripcionForm">
+  <h2 style="margin-bottom: 20px; margin-top: 10px;">Expectativas del Curso</h2>
+  <div style="display: flex;">
+    <mat-form-field style="flex: 1;">
+      <mat-label>¿Cuál es tu principal objetivo al tomar este curso?</mat-label>
+      <textarea matInput formControlName="objetivoPrincipal"></textarea>
+    </mat-form-field>&nbsp;
+
+    <mat-form-field style="flex: 1;">
+      <mat-label>¿Qué esperas lograr al finalizar el curso?</mat-label>
+      <textarea matInput  formControlName="resultadoEsperado"></textarea>
+    </mat-form-field>
+  </div>
+  <div style="display: flex;">
+    <mat-form-field style="flex: 1;">
+      <mat-label>¿Tienes alguna experiencia previa relacionada al tema del curso?</mat-label>
+      <textarea matInput  formControlName="experienciaPrevia"></textarea>
+    </mat-form-field>&nbsp;
+  </div>
+</form>
+
+
+  <div class="modal-actions">
+    <button mat-button (click)="cerrar()" class="cancel-button">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="save()">Inscribir</button>
+  </div>
+</div>
+

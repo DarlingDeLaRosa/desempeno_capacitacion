@@ -31,7 +31,7 @@
                     </th>
                 </tr>
             </thead>
-            <tbody *ngIf="competencies.length > 0; else noElements">
+            <tbody *ngIf="competencies && competencies.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let competency of competencies">
                     <td class="dataIndiCell">{{competency.nombre}}</td>
                     <td class="dataIndiCell">{{competency.descripcion}}</td>
@@ -43,9 +43,12 @@
             </tbody>
             <tfoot>
                 <tr class="paginatorRow">
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell"></td>
+                    <ng-container *ngFor="let td of [1, 2]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container>
+                    <td class="dataIndiCell">
+                        <!-- Placeholder para paginación -->
+                    </td>
                     <td class="dataIndiCell">
                         <span style="display: flex; align-items: center;">
                             <mat-icon class="">navigate_before</mat-icon>
@@ -62,6 +65,9 @@
         <tbody>
             <tr class="dataRow">
                 <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
             </tr>
         </tbody>
     </ng-template>

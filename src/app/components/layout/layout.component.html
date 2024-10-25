@@ -7,6 +7,12 @@
 
         <div class="sideMenuOptionsContainer"> <!---*ngIf="userLogged.rol.modulos"-->
 
+            <a class="item-menu" [routerLink]="['/layout/acuerdos']" routerLinkActive="active">
+                <mat-icon>handshake</mat-icon>Acuerdos
+            </a>
+            <a class="item-menu" [routerLink]="['/layout/cursos']" routerLinkActive="active">
+                <mat-icon>collections_bookmark</mat-icon>Cursos
+            </a>
             <a class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
                 <mat-icon>star</mat-icon>Plan de mejora
             </a>
@@ -37,7 +43,7 @@
                     <button class="btnMenu" (click)="sidenavOpened = !sidenavOpened">
                         <mat-icon>menu</mat-icon>
                     </button>&nbsp;
-                    <h2 class="departamento">Nombre Recinto</h2>
+                    <h2 class="departamento">{{usuario.RecintoSigla}}</h2>
 
                     <!-- *ngIf="unidadOrgData.subUnidad.length > 1"-->
                     <!-- <button class="dropdown-toggle" (click)="toggleDropdown($event)">
@@ -55,8 +61,8 @@
 
                 <div class="logout"> <!--*ngIf="userSystemService.getUnitOrg.nombre"-->
                     <span class="userName">
-                        <h3 class="nombre">Darling Nomar De la Rosa</h3>
-                        <h3 class="cargo">Administrador de BD</h3>
+                        <h3 class="nombre">{{usuario.Firstname}} {{usuario.Lastname}}</h3>
+                        <h3 class="cargo">{{usuario.Position}}</h3>
                     </span>
                     <button class="closeAccount" [matMenuTriggerFor]="menu">
                         <mat-icon>person</mat-icon>

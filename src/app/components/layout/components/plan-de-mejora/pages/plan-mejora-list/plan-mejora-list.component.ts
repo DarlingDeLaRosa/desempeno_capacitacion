@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { MaterialComponents } from '../../../../../helpers/material.components';
-import { ClassImports } from '../../../../../helpers/class.components';
+import { MaterialComponents } from '../../../../../../helpers/material.components';
+import { ClassImports } from '../../../../../../helpers/class.components';
+
 
 @Component({
   selector: 'app-plan-mejora-list',

@@ -130,7 +130,6 @@ export class GradosComponent implements OnInit {
 
   // Metodo asignar valores y habilitar la edición de un registro
   setValueToEdit(grade: GradesGetI) {
-
     this.gradesForm.patchValue({
       idGrado: grade.idGrado,
       idCompetencia: grade.idCompetencia,

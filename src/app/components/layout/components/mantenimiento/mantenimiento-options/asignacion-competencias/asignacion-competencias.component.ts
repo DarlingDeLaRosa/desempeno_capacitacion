@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { MaterialComponents } from '../../../../../../helpers/material.components';
-import { ClassImports } from '../../../../../../helpers/class.components';
-import { CompetencyServices } from '../competencias/services/competencias.service';
-import { TypesGradesServices } from '../grados/services/tiposGrados.service';
-import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
 import { SnackBars } from '../../../../services/snackBars.service';
+import { GradesGetI } from '../grados/interfaces/grados.interfaces';
 import { HerlperService } from '../../../../services/appHelpers.service';
+import { ClassImports } from '../../../../../../helpers/class.components';
 import { CompetencyI } from '../competencias/interfaces/competencias.interfaces';
-import { GradesTypeGetI } from '../grados/interfaces/tiposGrados.interface';
-import { AsignationCompetencyI } from './interfaces/asignacion-competencias.interface';
+import { FormBuilder, FormControl, Validators, FormGroup } from '@angular/forms';
+import { CompetencyServices } from '../competencias/services/competencias.service';
+import { MaterialComponents } from '../../../../../../helpers/material.components';
+import { IntranetServices } from '../../../../../../helpers/intranet/intranet.service';
+import { OcupationalGroupI } from '../../../../../../helpers/intranet/intranet.interface';
+import { AsignationGetCompetencyI } from './interfaces/asignacion-competencias.interface';
 import { AsignationCompetenciesServices } from './services/asignacion-competencias.service';
 
 @Component({
   selector: 'app-asignacion-competencias',
   standalone: true,
   imports: [MaterialComponents, ClassImports],
-  providers: [CompetencyServices, TypesGradesServices, AsignationCompetenciesServices],
+  providers: [CompetencyServices, AsignationCompetenciesServices, IntranetServices],
   templateUrl: './asignacion-competencias.component.html',
   styleUrl: './asignacion-competencias.component.css'
 })
@@ -26,7 +27,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
     public fb: FormBuilder,
     public snackBar: SnackBars,
     private appHelpers: HerlperService,
-    private typeGradeService: TypesGradesServices,
+    private intranetService: IntranetServices,
     private competencyService: CompetencyServices,
     private asignationCompetenciesService: AsignationCompetenciesServices,
   ) {
@@ -34,19 +35,29 @@ export class AsignacionCompetenciasComponent implements OnInit {
     this.asignationCompetencyForm = fb.group({
       idAsignacion: 0,
       idGrupo: new FormControl('', Validators.required),
-      idCompetencia: new FormControl('', Validators.required),
       idGrado: new FormControl('', Validators.required),
+      idCompetencia: new FormControl('', Validators.required),
     })
   }
 
-  asignationCompetencies!: AsignationCompetencyI[]
-  asignationCompetencyForm: FormGroup
   competencies!: CompetencyI[]
-  gradesTypes!: GradesTypeGetI[]
+  gradesTypes!: GradesGetI[]
+  asignationCompetencyForm: FormGroup
+  ocupationalGroup!: OcupationalGroupI[]
+  asignationCompetencies!: AsignationGetCompetencyI[]
 
   ngOnInit(): void {
     this.getCompetencies()
+    this.getOcupationalGroup()
     this.getAsignationCompetencies()
+  }
+
+  // Metodo para obtener todos los grupos ocupacionales
+  getOcupationalGroup() {
+    this.intranetService.getOcupationalGroup()
+      .subscribe((res: any) => {
+        this.ocupationalGroup = res.data;
+      })
   }
 
   // Metodo para obtener todas las competencias
@@ -57,11 +68,11 @@ export class AsignacionCompetenciasComponent implements OnInit {
       })
   }
 
-  // Metodo para obtener todos los tipos de grados 
-  getTypeGrades() {
-    this.typeGradeService.getTypesGrades()
+  // Metodo para obtener todas las competencias
+  getCompetencyById(idCompetency: number) {
+    this.competencyService.getCompetencyById(idCompetency)
       .subscribe((res: any) => {
-        this.gradesTypes = res.data;
+        this.gradesTypes = res.data.gradosObj;
       })
   }
 
@@ -102,7 +113,8 @@ export class AsignacionCompetenciasComponent implements OnInit {
   }
 
   // Metodo asignar valores y habilitar la edición de un registro
-  setValueToEdit(asignationCompetency: any) {
+  async setValueToEdit(asignationCompetency: AsignationGetCompetencyI) {
+    await this.getCompetencyById(asignationCompetency.idCompetencia)
     this.asignationCompetencyForm.reset(asignationCompetency)
   }
 

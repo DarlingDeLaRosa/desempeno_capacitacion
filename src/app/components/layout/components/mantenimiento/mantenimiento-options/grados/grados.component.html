@@ -1,39 +1,40 @@
 <h2 class="Stitle">Grados</h2>
 <div>
     <form style=" margin: 15px 0 35px 0" [formGroup]="gradesForm" (ngSubmit)="saveChanges()">
+        <div style="display: flex;">
+            <mat-form-field appearance="fill" style="flex: 2;">
+                <mat-label>Competencias</mat-label>
+                <mat-select formControlName="idCompetencia" disableRipple>
+                    <ng-container *ngIf="competencies && competencies.length; else noCompetency">
+                        <mat-option [value]="competency.idCompetencia" *ngFor="let competency of competencies"> <!---->
+                            {{competency.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noCompetency>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>&nbsp;
 
-        <mat-form-field appearance="fill" style="width: 69%;">
-            <mat-label>Competencias</mat-label>
-            <mat-select formControlName="idCompetencia" disableRipple>
-                <ng-container *ngIf="competencies && competencies.length; else noCompetency">
-                    <mat-option [value]="competency.idCompetencia" *ngFor="let competency of competencies"> <!---->
-                        {{competency.nombre}}
-                    </mat-option>
-                </ng-container>
-                <ng-template #noCompetency>
-                    <mat-option>No hay campos disponibles</mat-option>
-                </ng-template>
-            </mat-select>
-        </mat-form-field>&nbsp;
-
-        <mat-form-field appearance="fill" style="width: 30%;">
-            <mat-label>Grados</mat-label>
-            <mat-select formControlName="idTipoGrado" disableRipple>
-                <ng-container>
-                    <mat-option [value]="typeGrade.idTipoGrado" *ngFor="let typeGrade of gradesTypes">
-                        {{typeGrade.nombre}}
-                    </mat-option>
-                </ng-container>
-                <ng-template #noUnidadPadre>
-                    <mat-option>No hay campos disponibles</mat-option>
-                </ng-template>
-            </mat-select>
-        </mat-form-field><br>
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Grados</mat-label>
+                <mat-select formControlName="idTipoGrado" disableRipple>
+                    <ng-container>
+                        <mat-option [value]="typeGrade.idTipoGrado" *ngFor="let typeGrade of gradesTypes">
+                            {{typeGrade.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noUnidadPadre>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field><br>
+        </div>
 
         <h3 class="Stitle">Comportamientos</h3>
         <br>
-        <div formArrayName="comportamientos" >
-            <div *ngFor="let behavior of behaviors.controls; let i = index" [formGroupName]="i" >
+        <div formArrayName="comportamientos">
+            <div *ngFor="let behavior of behaviors.controls; let i = index" [formGroupName]="i">
                 <mat-form-field appearance="fill" style="width: 100%;">
                     <mat-label>Comportamiento {{i + 1}}</mat-label>
                     <input matInput formControlName="nombre">
@@ -42,7 +43,8 @@
         </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button type="button" class="cleanButton" (click)="gradesForm.reset()" *ngIf="gradesForm.value.idGrado">Limpiar edición</button>
+        <button type="button" class="cleanButton" (click)="gradesForm.reset()" *ngIf="gradesForm.value.idGrado">Limpiar
+            edición</button>
 
     </form>
 
@@ -61,20 +63,24 @@
                     </th>
                 </tr>
             </thead>
-            <tbody *ngIf="grades.length > 0; else noElements">
+            <tbody *ngIf="grades && grades.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let grade of grades">
                     <td class="dataIndiCell">{{grade.competenciaObj.nombre}}</td>
                     <td class="dataIndiCell">{{grade.tipoGradoObj.nombre}}</td>
-                    <td class="dataIndiCell"  style="text-align: center;" ><mat-icon class="listIcon" (click)="openPropertyModal(grade.comportamientosObj, 'Comportamientos', grade.tipoGradoObj.nombre)" >list</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(grade)" class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon (click)="deleteGrade(grade.idGrado)" class="removeIcon">delete</mat-icon></td>
+                    <td class="dataIndiCell" style="text-align: center;"><mat-icon class="listIcon"
+                            (click)="openPropertyModal(grade.comportamientosObj, 'Comportamientos', grade.tipoGradoObj.nombre)">list</mat-icon>
+                    </td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(grade)" class="editIcon">edit</mat-icon>
+                    </td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteGrade(grade.idGrado)"
+                            class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr class="paginatorRow">
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell"></td>
+                    <ng-container *ngFor="let td of [1, 2, 3]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container>
                     <td class="dataIndiCell">
                         items
                     </td>
@@ -94,6 +100,9 @@
         <tbody>
             <tr class="dataRow">
                 <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3, 4]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
             </tr>
         </tbody>
     </ng-template>

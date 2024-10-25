@@ -1,0 +1,47 @@
+<div class="fuctionContent">
+  <div class="title">
+    <h1>Publicaciones de Cursos</h1>
+  </div>
+  <div>
+    <button type="submit" class="btnNavegar"
+    [routerLink]="[{ outlets: { 'cursos': ['listado']}}]"
+    >Listado de cursos</button> &nbsp;
+
+    <button type="submit" class="btnNavegar"
+    (click)="openModal()"
+    >Mis cursos</button> &nbsp;
+
+    <button type="submit" class="btnNavegar"
+    [routerLink]="[{ outlets: { 'cursos': ['miembros']}}]"
+    >Supervisados</button> &nbsp;
+  </div>
+</div>
+<app-loader *ngIf="isLoading"></app-loader>
+
+<div class="cards-container"  [ngClass]="{'small-size': cursoTableroList.length < 4}">
+  <div class="card"
+   *ngFor="let course of cursoTableroList" (click)="openModalCursosIncribir(course)">
+      <div class="card-details">
+        <p class="text-title">{{ course.nombre }}</p>
+        <p class="date-range">{{ course.fechaInicioInscripcion | date:'dd/MM/yyyy'}} -
+           {{ course.fechaFinInscripcion | date:'dd/MM/yyyy'}} </p>
+           <ng-container *ngIf="course.interno">
+             <div class="cupo">{{ course.inscripcionesObj.length }}/{{ course.cuposDisponibles }}</div>
+             <span class="label">Participantes</span>
+           </ng-container>
+           <ng-container *ngIf="!course.interno">
+             <div class="cupo2">Externo</div>
+           </ng-container>
+
+      </div>
+      <button class="card-button">Inscribir</button>
+  </div>
+</div>
+<div *ngIf="cursoTableroList.length === 0 && !isLoading" class="empty-list">
+  <img src="nodata.jpg"  alt="No courses available">
+  <!-- <p>No hay cursos disponibles en este momento.</p> -->
+</div>
+
+
+
+

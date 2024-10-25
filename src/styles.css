@@ -31,7 +31,7 @@ h6 {
     align-items: center;
     background-color: #eee;
     border-left: #004b8d 4px solid;
-    /* border-radius: 0 22.5px 22.5px 0 ; */
+    border-radius: 0 18.5px 18.5px 0 ;
 }
 
 .Stitle {
@@ -218,6 +218,7 @@ table {
     /* align-items: center; */
     padding: 10px 0 20px 0;
 }
+
 .filters{
     display: flex;
     justify-content: end;
@@ -225,3 +226,30 @@ table {
     /* align-items: center; */
 }
 
+.matRadioChoice {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 240px auto;
+    width: 800px;
+}
+
+.matRadioChoice h4 {
+    margin: 0;
+}
+
+.empty-list {
+  text-align: center;
+}
+
+.empty-list img {
+  max-width: 550px;
+}
+
+.empty-list p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.no-record {
+  text-align: center;
+}

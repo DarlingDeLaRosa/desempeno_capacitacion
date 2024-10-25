@@ -3,12 +3,12 @@ import { MaterialComponents } from '../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../helpers/class.components';
 
 @Component({
-  selector: 'app-plan-mejora-resultado',
+  selector: 'app-acuerdo-desempenio',
   standalone: true,
   imports: [MaterialComponents,ClassImports],
-  templateUrl: './plan-mejora-resultado.component.html',
-  styleUrl: './plan-mejora-resultado.component.css'
+  templateUrl: './acuerdo-desempenio.component.html',
+  styleUrl: './acuerdo-desempenio.component.css'
 })
-export class PlanMejoraResultadoComponent {
+export class AcuerdoDesempenioComponent {
 
 }
