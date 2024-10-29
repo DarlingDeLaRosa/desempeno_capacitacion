@@ -227,10 +227,11 @@ table {
 }
 
 .matRadioChoice {
-    display: grid;
+    display: flex;
     align-items: center;
-    grid-template-columns: 240px auto;
-    width: 800px;
+    margin-bottom: 10px;
+    /* grid-template-columns: 240px auto; */
+    /* width: 800px; */
 }
 
 .matRadioChoice h4 {
@@ -252,4 +253,5 @@ table {
 
 .no-record {
   text-align: center;
+  height: 30px;
 }

@@ -13,7 +13,7 @@ import { loggedUserI } from '../../helpers/intranet/intranet.interface';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent implements OnInit{
-usuario!: loggedUserI
+  usuario!: loggedUserI
 
   constructor(
     private systemInformationService: systemInformationService

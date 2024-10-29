@@ -26,7 +26,31 @@ export class IntranetServices {
     }
 
     public getOcupationalGroup() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/get_grupo_ocupaciona`, this.header));
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/get_grupo_ocupacional`, this.header));
+    }
+
+    public getPositions() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallcargos`, this.header));
+    }
+
+    public getLocations() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallrecintos`, this.header));
+    }
+
+    public getDivisions() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldivisiones`, this.header));
+    }
+
+    public getDepartments() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldepartamento`, this.header));
+    }
+
+    public getDirections() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldireccion`, this.header));
+    }
+
+    public getViceRectorates() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallvicerectorias`, this.header));
     }
 
     // Peticion al API de SIGEBI, obtener catalogo de RNC de todo proveedor en RD
@@ -36,6 +60,6 @@ export class IntranetServices {
     }
 
     public findProveedorByRS(rs: string) {
-        return this.appHelpers.handleRequest(()=> this.http.get(`${this.sigebiURL}/Proveedor/consultaproveedorbynombre/${rs}`, this.header))
+        return this.appHelpers.handleRequest(()=> this.http.get(`${this.sigebiURL}/Proveedor/consultaproveedorbynombre_pagination/${rs}/1/25`, this.header))
     }
 }

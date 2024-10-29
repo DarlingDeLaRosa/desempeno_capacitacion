@@ -18,6 +18,7 @@
 </div>
 <app-loader *ngIf="isLoading"></app-loader>
 
+<ng-container *ngIf="!isLoading">
 <div class="cards-container"  [ngClass]="{'small-size': cursoTableroList.length < 4}">
   <div class="card"
    *ngFor="let course of cursoTableroList" (click)="openModalCursosIncribir(course)">
@@ -37,6 +38,7 @@
       <button class="card-button">Inscribir</button>
   </div>
 </div>
+</ng-container>
 <div *ngIf="cursoTableroList.length === 0 && !isLoading" class="empty-list">
   <img src="nodata.jpg"  alt="No courses available">
   <!-- <p>No hay cursos disponibles en este momento.</p> -->

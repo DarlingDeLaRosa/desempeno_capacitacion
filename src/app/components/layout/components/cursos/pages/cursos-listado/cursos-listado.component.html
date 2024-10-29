@@ -44,10 +44,16 @@
               <td class="dataIndiCell">{{item.fechaInicioInscripcion |date}}</td>
               <td class="dataIndiCell">{{item.fechaFinInscripcion |date}}</td>
               <td class="dataIndiCell">{{item.inscripcionesObj.length}}</td>
-              <td class="dataIndiCell"><mat-icon  class="listIcon" (click)="openModal(item)">groups</mat-icon></td>
+
+              <td  class="dataIndiCell"><mat-icon  class="listIcon" (click)="openModal(item)">groups</mat-icon></td>
+          </tr>
+          <tr *ngIf="cursoList.length === 0">
+            <td colspan="12">
+              <h5 class="no-record">No hay datos Registrados</h5>
+            </td>
           </tr>
       </tbody>
-      <tfoot>
+      <tfoot *ngIf="cursoList.length !== 0">
           <tr class="paginatorRow">
               <td class="dataIndiCell"></td>
               <td class="dataIndiCell"></td>
@@ -66,6 +72,7 @@
                   </span>
               </td>
           </tr>
+
       </tfoot>
   </table>
 </div>

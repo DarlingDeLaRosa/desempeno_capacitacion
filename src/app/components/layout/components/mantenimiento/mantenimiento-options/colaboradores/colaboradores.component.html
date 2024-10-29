@@ -1,57 +1,229 @@
-<h2 class="Stitle">Competencias</h2>
+<h2 class="Stitle">Colaboradores</h2>
 <div>
-    <form style=" margin: 15px 0 35px 0"> <!--[formGroup]="estructuraProgramaticaForm" (ngSubmit)="saveChanges()"-->
+    <form style=" margin: 15px 0 35px 0" [formGroup]="collaboratorForm"> <!--(ngSubmit)="saveChanges()"-->
 
-        <mat-form-field appearance="fill" style="width: 100%;">
-            <mat-label>Nombre</mat-label>
-            <input matInput formControlName="nombre">
-        </mat-form-field><br>
+        <div style="display: flex; gap: 5px;">
 
-        <mat-form-field appearance="fill" style="width: 100%;">
-            <mat-label>Descripción</mat-label>
-            <textarea matInput formControlName="descripcion"></textarea>
-        </mat-form-field>
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre">
+            </mat-form-field><br>
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Apellidos</mat-label>
+                <input matInput formControlName="apellidos">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Usuario</mat-label>
+                <input matInput formControlName="usuario">
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Cargo</mat-label>
+                <mat-select formControlName="idCargo" disableRipple>
+                    <ng-container *ngIf="positions && positions.length; else noPosition">
+                        <mat-option [value]="position.idCargo" *ngFor="let position of positions">
+                            {{position.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noPosition>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Grupo Ocupacional</mat-label>
+                <mat-select formControlName="idGrupo" disableRipple>
+                    <ng-container *ngIf="ocupationalGroups && ocupationalGroups.length; else noOG">
+                        <mat-option [value]="ocupationalGroup.idGrupo"
+                            *ngFor="let ocupationalGroup of ocupationalGroups">
+                            {{ocupationalGroup.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noOG>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Recinto</mat-label>
+                <mat-select formControlName="idRecinto" disableRipple>
+                    <ng-container *ngIf="locations && locations.length; else noLocation">
+                        <mat-option [value]="location.idRecinto" *ngFor="let location of locations">
+                            {{location.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noLocation>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" style="flex: 1" *ngIf="vic">
+                <mat-label>Vicerrectoria</mat-label>
+                <mat-select formControlName="idViceRectoria" disableRipple (selectionChange)="hidingUnitOrg()">
+                    <ng-container *ngIf="viceRectorates && viceRectorates.length; else noviceRectorate">
+                        <mat-option [value]="null">NO APLICA</mat-option>
+                        <mat-option [value]="viceRectorate.idViceRectoria" *ngFor="let viceRectorate of viceRectorates">
+                            {{viceRectorate.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noviceRectorate>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1" *ngIf="dir">
+                <mat-label>Dirección</mat-label>
+                <mat-select formControlName="idDireccion" disableRipple (selectionChange)="hidingUnitOrg()">
+                    <ng-container *ngIf="directions && directions.length; else noDirection">
+                        <mat-option [value]="null">NO APLICA</mat-option>
+                        <mat-option [value]="direction.idDireccion" *ngFor="let direction of directions">
+                            {{direction.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noDirection>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1" *ngIf="dep">
+                <mat-label>Departamento</mat-label>
+                <mat-select formControlName="idDepartamento" disableRipple (selectionChange)="hidingUnitOrg()">
+                    <mat-option [value]="null">NO APLICA</mat-option>
+                    <ng-container *ngIf="departments && departments.length; else noDepartment">
+                        <mat-option [value]="department.idDepartamento" *ngFor="let department of departments">
+                            {{department.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noDepartment>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <div style="flex: 1" *ngIf="vic == false || dir == false || dep == false"></div>
+            <div style="flex: 1" *ngIf="vic == false || dir == false || dep == false"></div>
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" style="flex: 1" *ngIf="div">
+                <mat-label>División</mat-label>
+                <mat-select formControlName="idDivision" disableRipple (selectionChange)="hidingUnitOrg()">
+                    <ng-container *ngIf="divisions && divisions.length; else noDivision">
+                        <mat-option [value]="null">NO APLICA</mat-option>
+                        <mat-option [value]="division.id" *ngFor="let division of divisions">
+                            {{division.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noDivision>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <div style="flex: 1"></div>
+            <div style="flex: 1"></div>
+
+        </div>
+
+        <div class="matRadioChoice">
+            <h4 style="margin-right: 20px;">¿El empleado desempeña un un cargo o grupo ocupacional al establecido ?</h4>
+            <mat-radio-group>
+                <mat-radio-button [value]="false" [checked]="true" (click)="onSelectionChange(false)"
+                    color="primary">No</mat-radio-button>
+                <mat-radio-button [value]="true" (click)="onSelectionChange(true)" color="primary">Si</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div style="display: flex; gap: 5px;" *ngIf="diferentPosition">
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Cargo desempeñado</mat-label>
+                <mat-select formControlName="idCargoDesempenia" disableRipple>
+                    <ng-container *ngIf="positions && positions.length; else noDPosition">
+                        <mat-option [value]="position.idCargo" *ngFor="let position of positions">
+                            {{position.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noDPosition>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Grupo ocupacional desempeñado</mat-label>
+                <mat-select formControlName="idGrupoDesempenia" disableRipple>
+                    <ng-container *ngIf="ocupationalGroups && ocupationalGroups.length; else noGoal">
+                        <mat-option [value]="ocupationalGroup.idGrupo"
+                            *ngFor="let ocupationalGroup of ocupationalGroups">
+                            {{ocupationalGroup.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noGoal>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <div style="flex: 1"></div>
+
+        </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button class="cleanButton">Limpiar edición</button> <!--(click)="estructuraProgramaticaForm.reset()" -->
+        <button type="button" class="cleanButton" *ngIf="collaboratorForm.value.idPersona"
+        (click)="collaboratorForm.reset()">Limpiar edición</button> 
 
     </form>
 
-    <h3 class="Stitle">Listado de Competencias</h3>
+    <h3 class="Stitle">Listado de Colaboradores</h3>
 
     <div class="table-container">
         <table>
             <thead class="headerTable">
                 <tr class="headerRow">
-                    <th class="headerCell">Competencia</th>
-                    <th class="headerCell">Descripción</th>
+                    <th class="headerCell">Colaborador</th>
+                    <th class="headerCell">Recinto</th>
+                    <th class="headerCell">Cargo</th>
+                    <th class="headerCell">Estado</th>
+                    <th class="headerCell">G.Ocupacional</th>
                     <th class="headerCell" style="width: 5%;"></th>
                     <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                        <div class="loader"></div>
+                        <div *ngIf="!collaborators" class="loader"></div>
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="dataRow">
-                    <td class="dataIndiCell">Item 1</td>
-                    <td class="dataIndiCell">001</td>
-                    <td class="dataIndiCell"><mat-icon class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon class="removeIcon">delete</mat-icon></td>
-                </tr>
-                <tr class="dataRow">
-                    <td class="dataIndiCell">Item 2</td>
-                    <td class="dataIndiCell">002</td>
-                    <td class="dataIndiCell"><mat-icon class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon class="removeIcon">delete</mat-icon></td>
+            <tbody *ngIf="collaborators && collaborators.length > 0; else noElements">
+                <tr class="dataRow" *ngFor="let collaborator of collaborators">
+                    <td class="dataIndiCell">{{collaborator.nombre}} {{collaborator.apellidos}}</td>
+                    <td class="dataIndiCell">{{collaborator.recinto.nombre}} ({{collaborator.recinto.siglas}})</td>
+                    <td class="dataIndiCell">{{collaborator.cargo.nombre}}</td>
+                    <td class="dataIndiCell">{{collaborator.estadoObj?.nombre ?? 'No asignado'}}</td>
+                    <td class="dataIndiCell">{{collaborator.grupoObj?.nombre ?? 'No asignado'}}</td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(collaborator)" class="editIcon">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteCollaborator(collaborator.idPersona)" class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr class="paginatorRow">
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell">
-                        <!-- Placeholder para paginación -->
-                    </td>
+                    <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container>
+                    <td class="dataIndiCell"><!-- items --></td>
                     <td class="dataIndiCell">
                         <span style="display: flex; align-items: center;">
                             <mat-icon class="">navigate_before</mat-icon>
@@ -63,8 +235,15 @@
             </tfoot>
         </table>
     </div>
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
 
-    <!-- <div class="noData" *ngIf="estructurasProgramaticas && estructurasProgramaticas.length == 0">
-        <img class="imgNoData" src="../../../../../assets/NO_DATA_ILUSTRACION.png" alt="No hay Datos.">
-      </div> -->
+            </tr>
+        </tbody>
+    </ng-template>
 </div>

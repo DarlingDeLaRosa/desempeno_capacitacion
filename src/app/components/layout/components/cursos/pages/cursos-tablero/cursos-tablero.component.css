@@ -32,6 +32,9 @@
 
  .label{
   margin: -18px 0px 0px 75px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0;
  }
 
  .cupo {
@@ -39,12 +42,18 @@
   margin-top: 10px;
   color: black;
   font-size: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0;
 }
  .cupo2 {
   margin-right: 50px;
   margin-top: 10px;
   color: rgb(40, 40, 40);
   font-size: 40px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0;
 }
 
  .card-details {
@@ -59,10 +68,17 @@
   color: #fff;
  }
  .card-button:hover{
-  cursor:pointer
+  cursor:pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0;
+
  }
 
  .card-button {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0;
   transform: translate(-50%, 125%);
   width: 60%;
   border-radius: 1rem;
@@ -80,6 +96,9 @@
 
  .text-body {
   color: rgb(134, 134, 134);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0;
  }
 
 
@@ -89,10 +108,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0;
 }
 
 
  .card:hover{
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  margin: 0;
   border-color: #49aa42;
   background-color: #004b8d;
   color : #fff;

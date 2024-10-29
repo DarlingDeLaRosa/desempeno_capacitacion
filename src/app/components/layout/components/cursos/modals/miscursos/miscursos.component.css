@@ -10,7 +10,7 @@ button.cancel-button {
 
 .table-container {
   flex-grow: 1;
-  height:  240px;
+  /* height:  240px; */
   overflow-y: auto; /* Permite que solo la lista de colaboradores haga scroll */
   max-height:  240px; /* Ajusta el alto máximo de la lista */
 }

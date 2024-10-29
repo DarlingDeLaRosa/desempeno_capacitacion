@@ -57,7 +57,7 @@ export default class CursosTableroComponent implements  OnInit{
     });
 
     dialogRef.afterClosed().subscribe(result => {
-
+      this.getCursosTablero();
     });
   }
   openModalCursosIncribir(course:CourseGetI): void {

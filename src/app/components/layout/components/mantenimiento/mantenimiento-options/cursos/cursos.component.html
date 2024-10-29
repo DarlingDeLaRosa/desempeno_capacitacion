@@ -3,7 +3,7 @@
     <form style=" margin: 15px 0 35px 0" [formGroup]="coursesForm" (ngSubmit)="saveChanges()">
 
         <div class="matRadioChoice">
-            <h4>¿Quien manejara el curso?</h4>
+            <h4 style="margin-right: 20px;">¿Quien manejara el curso?</h4>
             <mat-radio-group formControlName="interno">
                 <mat-radio-button [value]="true" color="primary">ISFODOSU</mat-radio-button>
                 <!--matTooltip="." [disabled]="disableItbis"-->

@@ -44,6 +44,7 @@ export class AsignacionMetasComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOcupationalGroup()
+    this.getAsignationGoals()
     this.getGoals()
   }
 

@@ -57,7 +57,7 @@ export class CursosListadoComponent implements OnInit{
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      // console.log('El modal fue cerrado');
+      this.getCursos();
     });
   }
 }

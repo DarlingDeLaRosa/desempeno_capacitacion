@@ -10,7 +10,6 @@
                 <th class="headerCell">Curso</th>
                 <th class="headerCell">Fecha Inicio</th>
                 <th class="headerCell">Fecha Fin</th>
-                <th class="headerCell">Descripción</th>
                 <th class="headerCell" style="width: 5%; padding-right: 15px;">
                    Acción
                 </th>
@@ -22,7 +21,6 @@
                 <td class="dataIndiCell">{{item.nombre}}</td>
                 <td class="dataIndiCell">{{item.fechaInicio | date}}</td>
                 <td class="dataIndiCell">{{item.fechaFin | date}}</td>
-                <td class="dataIndiCell">{{item.descripcion}}</td>
                 <td class="dataIndiCell"><mat-icon  class="removeIcon"
                   (click)="deleteInscripcion(item.inscripcionesObj[0].idInscripcion)">logout</mat-icon></td>
             </tr>
@@ -35,7 +33,6 @@
         </tbody>
         <tfoot *ngIf="cursosPendiente.length !== 0">
             <tr class="paginatorRow">
-                <td class="dataIndiCell"></td>
                 <td class="dataIndiCell"></td>
                 <td class="dataIndiCell"></td>
                 <td class="dataIndiCell">
@@ -63,9 +60,7 @@
                 <th class="headerCell">Curso</th>
                 <th class="headerCell">Fecha Inicio</th>
                 <th class="headerCell">Fecha Fin</th>
-                <th class="headerCell">Descripción</th>
                 <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                  Acción
                 </th>
             </tr>
         </thead>
@@ -74,8 +69,8 @@
                 <td class="dataIndiCell">{{item.nombre}}</td>
                 <td class="dataIndiCell">{{item.fechaInicio | date}}</td>
                 <td class="dataIndiCell">{{item.fechaFin | date}}</td>
-                <td class="dataIndiCell">{{item.descripcion}}</td>
-                <td class="dataIndiCell"><mat-icon  class="listIcon">groups</mat-icon></td>
+                <td class="dataIndiCell">
+                 </td>
             </tr>
             <tr *ngIf="cursosCompletado.length === 0">
               <td colspan="12">
@@ -85,7 +80,6 @@
         </tbody>
         <tfoot *ngIf="cursosCompletado.length !== 0">
             <tr class="paginatorRow">
-                <td class="dataIndiCell"></td>
                 <td class="dataIndiCell"></td>
                 <td class="dataIndiCell"></td>
                 <td class="dataIndiCell">

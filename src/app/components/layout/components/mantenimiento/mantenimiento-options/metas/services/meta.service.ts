@@ -44,6 +44,6 @@ export class GoalsServices {
     //Medios de verificación para las metas
 
     public getVerificationMethod() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Meta/get_medio_verificacion`, this.header));
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Meta/getall_medio_verificacion`, this.header));
     }
 }

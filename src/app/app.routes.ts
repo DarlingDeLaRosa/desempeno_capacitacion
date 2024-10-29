@@ -25,6 +25,8 @@ import { MiscursosComponent } from './components/layout/components/cursos/modals
 import { MiAcuerdoComponent } from './components/layout/components/acuerdos/mi-acuerdo/mi-acuerdo.component';
 import { MetasComponent } from './components/layout/components/mantenimiento/mantenimiento-options/metas/metas.component';
 import { AsignacionMetasComponent } from './components/layout/components/mantenimiento/mantenimiento-options/asignacion-metas/asignacion-metas.component';
+import { AsignacionAcuerdoComponent } from './components/layout/components/mantenimiento/mantenimiento-options/asignacion-acuerdo/asignacion-acuerdo.component';
+import { ProtocolosComponent } from './components/layout/components/mantenimiento/mantenimiento-options/protocolos/protocolos.component';
 
 export const routes: Routes = [
     {
@@ -150,6 +152,16 @@ export const routes: Routes = [
                     {
                         path:'asignacion-metas',
                         component: AsignacionMetasComponent,
+                        outlet: 'mantenimiento'
+                    },
+                    {
+                        path:'asignacion-acuerdos',
+                        component: AsignacionAcuerdoComponent,
+                        outlet: 'mantenimiento'
+                    },
+                    {
+                        path:'protocolos',
+                        component: ProtocolosComponent,
                         outlet: 'mantenimiento'
                     }
                 ]

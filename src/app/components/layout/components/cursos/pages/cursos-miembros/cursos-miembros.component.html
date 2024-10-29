@@ -11,7 +11,11 @@
       </mat-icon>Publicaciones de Cursos</button>
     </div>
 </div>
-<h2 style="margin: 10px;" >Joel</h2>
+
+<ng-container *ngFor="let hijo of hijosList">
+
+
+  <h2 style="margin: 10px;" >{{hijo.nombre}} {{hijo.apellidos}}</h2>
 
   <div class="table-container">
     <table>
@@ -20,149 +24,34 @@
                 <th class="headerCell">Curso</th>
                 <th class="headerCell">Fecha Inicio</th>
                 <th class="headerCell">Fecha Fin</th>
-                <th class="headerCell">Descripción</th>
+                <th class="headerCell">Final Inscripcion</th>
                 <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                   Salir
+
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="dataRow" >
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asdasdas</td>
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asasdasd</td>
-                <td class="dataIndiCell"><mat-icon  class="removeIcon">logout</mat-icon></td>
+            <tr class="dataRow" *ngFor="let curso of hijo.cursosPendientes">
+                <td class="dataIndiCell">{{curso.nombre || null}}</td>
+                <td class="dataIndiCell">{{curso.fechaInicio | date}}</td>
+                <td class="dataIndiCell">{{curso.fechaFin| date}}</td>
+                <td class="dataIndiCell">{{curso.fechaFinInscripcion|date}}</td>
+                <td class="dataIndiCell">
+                  <mat-icon  class="removeIcon"
+                  (click)="deleteInscripcion(curso.inscripcionesObj[0].idInscripcion)">logout</mat-icon></td>
             </tr>
-            <tr class="dataRow" >
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asdasdas</td>
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asasdasd</td>
-                <td class="dataIndiCell"><mat-icon  class="removeIcon">logout</mat-icon></td>
+                  <tr *ngIf="hijo.cursosPendientes.length === 0">
+              <td colspan="12">
+                <h5 class="no-record">No hay datos Registrados</h5>
+              </td>
             </tr>
         </tbody>
-        <tfoot>
-            <tr class="paginatorRow">
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell">
-                    <!-- Placeholder para paginación -->
-                </td>
-                <td class="dataIndiCell">
-                    <span style="display: flex; align-items: center;">
-                        <mat-icon class="">navigate_before</mat-icon>
-                        <h5 style="margin: 0;"></h5>
-                        <mat-icon class="">navigate_next</mat-icon>
-                    </span>
-                </td>
-            </tr>
-        </tfoot>
     </table>
   </div>
 
+</ng-container>
 
-<h2>Darling</h2>
 
-
-  <div class="table-container">
-    <table>
-        <thead class="headerTable">
-            <tr class="headerRow">
-                <th class="headerCell">Curso</th>
-                <th class="headerCell">Fecha Inicio</th>
-                <th class="headerCell">Fecha Fin</th>
-                <th class="headerCell">Descripción</th>
-                <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                    <!-- <div class="loader"></div> -->
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="dataRow" >
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asdasdas</td>
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asasdasd</td>
-                <td class="dataIndiCell"><mat-icon  class="removeIcon">logout</mat-icon></td>
-            </tr>
-            <tr class="dataRow" >
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asdasdas</td>
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asasdasd</td>
-                <td class="dataIndiCell"><mat-icon  class="removeIcon">logout</mat-icon></td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr class="paginatorRow">
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell">
-                    <!-- Placeholder para paginación -->
-                </td>
-                <td class="dataIndiCell">
-                    <span style="display: flex; align-items: center;">
-                        <mat-icon class="">navigate_before</mat-icon>
-                        <h5 style="margin: 0;"></h5>
-                        <mat-icon class="">navigate_next</mat-icon>
-                    </span>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-  </div>
-  <h2>Jonas</h2>
-  <div class="table-container">
-    <table>
-        <thead class="headerTable">
-            <tr class="headerRow">
-                <th class="headerCell">Curso</th>
-                <th class="headerCell">Fecha Inicio</th>
-                <th class="headerCell">Fecha Fin</th>
-                <th class="headerCell">Descripción</th>
-                <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                    <!-- <div class="loader"></div> -->
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="dataRow" >
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asdasdas</td>
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asasdasd</td>
-                <td class="dataIndiCell"><mat-icon  class="removeIcon">logout</mat-icon></td>
-            </tr>
-            <tr class="dataRow" >
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asdasdas</td>
-                <td class="dataIndiCell">asdasdasd</td>
-                <td class="dataIndiCell">asasdasd</td>
-                <td class="dataIndiCell"><mat-icon  class="removeIcon">logout</mat-icon></td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr class="paginatorRow">
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell">
-                    <!-- Placeholder para paginación -->
-                </td>
-                <td class="dataIndiCell">
-                    <span style="display: flex; align-items: center;">
-                        <mat-icon class="">navigate_before</mat-icon>
-                        <h5 style="margin: 0;"></h5>
-                        <mat-icon class="">navigate_next</mat-icon>
-                    </span>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
-  </div>
 
 
 

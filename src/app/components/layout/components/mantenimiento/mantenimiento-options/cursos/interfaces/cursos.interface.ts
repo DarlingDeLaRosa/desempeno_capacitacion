@@ -1,3 +1,5 @@
+import { CollaboratorsGetI } from "../../colaboradores/interfaces/colaboradores.interface"
+
 export interface CourseI {
     idCurso: number,
     nombre: string,
@@ -46,7 +48,8 @@ export interface InscriptionI {
     objetivoPrincipal: string,
     resultadoEsperado: string,
     experienciaPrevia: string,
-    estadoObj: StateI
+    estadoObj: StateI,
+    colaboradorObj: CollaboratorsGetI;
 }
 
 export interface StateI {

@@ -69,8 +69,14 @@ export class CoursesServices {
       return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Curso/get_inscripcion_byidcolaborador/${this.usuario.idPersona}`, this.header));
     }
 
+    public getHijosColaborador() {
+      return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Curso/get_supervisor/${this.usuario.idPersona}`, this.header));
+    }
+
     public deleteInscripcion(id: number) {
       return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/Curso/delete_inscripcion/${id}`, this.header))
     }
+
+
 
 }

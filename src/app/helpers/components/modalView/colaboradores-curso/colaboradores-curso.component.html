@@ -4,20 +4,22 @@
 
   <div class="colaboradores-list">
 
-    <div *ngFor="let colaborador of data.curso.inscripcionesObj" class="colaborador">
+    <div *ngFor="let colaborador of data.curso.inscripcionesObj;  let i = index" class="colaborador">
       <div class="colaborador-info">
-        <span class="colaborador-nombre">{{ colaborador.idColaborador }}</span>
-        <span class="colaborador-cargo">{{ colaborador.idColaborador }}</span>
-        <span class="colaborador-genero">{{ colaborador.idColaborador }}</span>
-        <span class="colaborador-nivel">{{ colaborador.idColaborador }}</span>
+        <span class="colaborador-nombre">{{ colaborador.colaboradorObj.nombre }} {{ colaborador.colaboradorObj.apellidos }}</span>
+        <span class="colaborador-cargo">{{ colaborador.colaboradorObj.cargo.nombre }} </span>
+        <span class="colaborador-genero">{{ colaborador.colaboradorObj.recinto.nombre }}</span>
+        <!-- <span class="colaborador-nivel">{{ colaborador.idColaborador }}</span> -->
       </div>
       <div class="colaborador-actions">
-        <button mat-icon-button>
+        <!-- <button mat-icon-button>
           <mat-icon>restore</mat-icon>
-        </button>
-        <button mat-icon-button >
-          <mat-icon >delete</mat-icon>
-        </button>
+        </button> -->
+        <ng-container *ngIf="data.curso.idEstado == 2">
+          <button mat-icon-button (click)="deleteInscripcion(colaborador.idInscripcion, i)">
+            <mat-icon >delete</mat-icon>
+          </button>
+        </ng-container>
       </div>
     </div>
 
