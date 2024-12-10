@@ -1,8 +1,10 @@
 export interface GoalI {
-    idMeta: number,
-    idMedio: number,
-    nombre: string,
+    idMeta: number
+    idMedio: number
+    metaPoa: number
+    nombre: string
     valor: number
+    isTranversal: boolean
 }
 
 export interface GoalGetI {
@@ -11,6 +13,8 @@ export interface GoalGetI {
     medioVerificacionObj: VerificationMethodI
     nombre: string,
     valor: number
+    metaPoa: string | null
+    isTranversal: boolean
 }
 
 export interface VerificationMethodI {

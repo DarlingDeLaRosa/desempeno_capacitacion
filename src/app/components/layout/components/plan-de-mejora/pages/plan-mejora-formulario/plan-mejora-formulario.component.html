@@ -3,14 +3,26 @@
     <h1>Formulario de Mejora</h1>
   </div>
   <div>
-    <button class="backButton" mat-stroked-button [routerLink]="['../']"><mat-icon class="backIcon">arrow_back
+    <button class="backButton" mat-stroked-button
+
+    [routerLink]="['/layout/plan-de-mejora']"><mat-icon class="backIcon">arrow_back
       </mat-icon>Listado plan de mejora</button>
   </div>
 </div>
 
 
+<!-- <ng-container *ngIf="isLoading">
+  <div class="container-loaderMother" style="margin-top: 100px;">
+    <div class="loaderMother"></div>
+    <div class="loading-text">Cargando...</div>
+  </div>
+</ng-container> -->
+
+
 <h3 style="margin-bottom: 30px;">Nombre del colaborador</h3>
-<div style="margin-left: 25px;">
+
+<!--
+<div>
   <div class="row">
     <div class="input-container">
       <mat-form-field class="fixed-input">
@@ -23,8 +35,8 @@
     <div class="tags-container">
       <div class="tags">
         <span matChip class="tag" *ngFor="let item of puntosFuertes; let i = index">
-          {{ item }}
-          <mat-icon (click)="removeItem('puntosFuertes', i)">close</mat-icon>
+          {{ item.nombre }}
+          <mat-icon class="btnEliminar" (click)="removeItem('puntosFuertes', i)">close</mat-icon>
         </span>
       </div>
     </div>
@@ -32,7 +44,7 @@
   </div>
   <div class="row">
     <div class="input-container">
-      <mat-form-field class="example-full-width">
+      <mat-form-field class="fixed-input">
         <mat-label>Area de mejora</mat-label>
         <input matInput placeholder="Agregar area de mejora" [(ngModel)]="nuevaAreaMejora"
           (keydown.enter)="addItem('areasMejora')">
@@ -42,119 +54,156 @@
 
     <div class="tags-container">
       <div class="tags">
-        <span matChip class="tag green" *ngFor="let item of areasMejora;  let i = index">{{ item }}
-          <mat-icon (click)="removeItem('areasMejora', i)">close</mat-icon>
+        <span matChip class="tag green" *ngFor="let item of areasMejora;  let i = index">{{ item.nombre}}
+          <mat-icon class="btnEliminar" (click)="removeItem('areasMejora', i)">close</mat-icon>
         </span>
       </div>
     </div>
   </div>
+</div> -->
+
+<div class="cartas">
+  <div class="input-container">
+    <mat-form-field class="fixed-input">
+      <mat-label>Agregar area de mejora</mat-label>
+      <input matInput placeholder="Agregar area de mejora" [(ngModel)]="nuevaAreaMejora"
+      (keydown.enter)="addItem('areasMejora')">
+    </mat-form-field>
+  </div>
+  <div class="input-container">
+    <mat-form-field class="fixed-input">
+      <mat-label>Agregar puntos fuertes</mat-label>
+      <input matInput placeholder="Agregar Punto Fuerte" (keydown.enter)="addItem('puntosFuertes')"
+        [(ngModel)]="nuevoPuntoFuerte">
+    </mat-form-field>
+  </div>
 </div>
 
-<h3 style="margin-bottom: 30px;">Recomendaciones de formación</h3>
-<div style="margin-left: 25px;">
-  <div style="display: flex;">
-    <mat-form-field style="flex: 1;">
-      <mat-label>Categoría</mat-label>
-      <input matInput placeholder="Agregar Punto Fuerte">
-    </mat-form-field> &nbsp;
-
-    <mat-form-field style="flex: 1;">
-      <mat-label>¿Que?</mat-label>
-      <input matInput placeholder="Agregar Punto Fuerte">
-    </mat-form-field> &nbsp;
-
-    <mat-form-field style="flex: 1;">
-      <mat-label>¿Como?</mat-label>
-      <input matInput placeholder="Agregar Punto Fuerte">
-    </mat-form-field>
-  </div>
-  <div class="row">
-    <mat-form-field style="width:30%;">
-      <mat-label>¿Para que?</mat-label>
-      <input matInput placeholder="Agregar area de mejora">
-    </mat-form-field>
-    <mat-form-field style="width:30%;">
-      <mat-label>¿Caundo?</mat-label>
-      <input matInput placeholder="Agregar area de mejora">
-    </mat-form-field>
-
-    <div class="btnAbajo">
-      <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-      <!-- <button type="button" class="cleanButton">Limpiar edición</button> -->
+<div class="cartas">
+  <div class="carta">
+    <span class="titulocarta">Puntos Fuertes</span>
+    <div class="cardEtiqueta">
+      <ul class="etiqueta">
+        <li class="tag__name" *ngFor="let item of areasMejora">
+          {{item.nombre}}</li>
+      </ul>
     </div>
-
   </div>
+
+  <div class="carta">
+    <span class="titulocarta">Areas de Mejora</span>
+    <div class="cardEtiqueta">
+      <ul class="etiqueta">
+       <li class="tag__name1" *ngFor="let item of puntosFuertes">
+          {{item.nombre}}</li>
+       </ul>
+    </div>
+  </div>
+</div>
+
+<h3 style="margin-top: 30px; margin-bottom: 30px;">Recomendaciones de formación</h3>
+<div>
+  <form [formGroup]="recommenForm">
+    <div style="display: flex; gap: 5px">
+      <mat-form-field style="flex: 1;">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="idCategoriaRecomendacion">
+          <mat-option *ngFor="let item of categoriesRecommenList" [value]="item.id">
+            {{item.nombre}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field style="flex: 1;">
+        <mat-label>¿Que?</mat-label>
+        <input matInput formControlName="que">
+      </mat-form-field>
+
+      <mat-form-field style="flex: 1;">
+        <mat-label>¿Como?</mat-label>
+        <input matInput formControlName="como">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field style="width:30%;">
+        <mat-label>¿Para que?</mat-label>
+        <input matInput formControlName="porque">
+      </mat-form-field>
+
+      <mat-form-field style="width:30%;">
+        <mat-label>¿Cuando?</mat-label>
+        <mat-select formControlName="comienzoId">
+          <mat-option *ngFor="let item of trimestresList" [value]="item.id">
+            {{item.nombre}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <div class="btnAbajo">
+        <button type="submit" class="saveButton" (click)="add()">
+          Agregar</button> &nbsp;
+        <!-- <button type="button" class="cleanButton">Limpiar edición</button> -->
+      </div>
+
+    </div>
+  </form>
 </div>
 <div class="table-container">
   <table>
-      <thead class="headerTable">
-          <tr class="headerRow">
-              <th class="headerCell">Categoría</th>
-              <th class="headerCell">Que</th>
-              <th class="headerCell">Como</th>
-              <th class="headerCell">Para que</th>
-              <th class="headerCell">Cuando</th>
-              <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                  <!-- <div class="loader"></div> -->
-              </th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr class="dataRow">
-              <td class="dataIndiCell">Item 1</td>
-              <td class="dataIndiCell">Item 1</td>
-              <td class="dataIndiCell">002</td>
-              <td class="dataIndiCell">002</td>
-              <td class="dataIndiCell">002</td>
-              <td class="dataIndiCell"><mat-icon  class="listIcon">edit</mat-icon></td>
-          </tr>
-          <tr class="dataRow">
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell"><mat-icon  class="listIcon">edit</mat-icon></td>
-          </tr>
-      </tbody>
-      <tfoot>
-          <tr class="paginatorRow">
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell">
-                  <!-- Placeholder para paginación -->
-              </td>
-              <td class="dataIndiCell">
-                  <span style="display: flex; align-items: center;">
-                      <mat-icon class="">navigate_before</mat-icon>
-                      <h5 style="margin: 0;"></h5>
-                      <mat-icon class="">navigate_next</mat-icon>
-                  </span>
-              </td>
-          </tr>
-      </tfoot>
+    <thead class="headerTable">
+      <tr class="headerRow">
+        <th class="headerCell">Categoría</th>
+        <th class="headerCell">Que</th>
+        <th class="headerCell">Como</th>
+        <th class="headerCell">Para que</th>
+        <th class="headerCell">Cuando</th>
+        <th class="headerCell" style="width: 5%; padding-right: 15px;">
+        <th class="headerCell" style="width: 5%; padding-right: 15px;">
+          <!-- <div class="loader"></div> -->
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="dataRow" *ngFor="let item of recommendDetails; let i = index">
+        <td class="dataIndiCell">{{item.nombreCategoria}}</td>
+        <td class="dataIndiCell">{{item.que}}</td>
+        <td class="dataIndiCell">{{item.como}}</td>
+        <td class="dataIndiCell">{{item.porque}}</td>
+        <td class="dataIndiCell">{{item.nombreTrimestre}}</td>
+        <td class="dataIndiCell"><mat-icon class="editIcon" (click)="cargarDetalleEnFormularioIndex(i, item.id)">edit</mat-icon></td>
+        <td class="dataIndiCell"><mat-icon class="removeIcon" (click)="deletedetalle(i)">delete</mat-icon></td>
+      </tr>
+    </tbody>
+    <tr *ngIf="recommendDetails.length == 0">
+      <td colspan="12" style="padding-top: 10px;">
+        <h5 class="no-record">No hay datos Registrados</h5>
+      </td>
+    </tr>
+
   </table>
 </div>
-<div style="display: flex;">
-  <mat-form-field style="flex: 1;">
-    <mat-label>Aspectos que han insidido en el desempeño</mat-label>
-    <textarea matInput></textarea>
-  </mat-form-field>&nbsp;
+<form [formGroup]="planMejoraForm">
+  <div style="display: flex;">
+    <mat-form-field style="flex: 1;">
+      <mat-label>Aspectos que han insidido en el desempeño</mat-label>
+      <textarea matInput formControlName="aspectos"></textarea>
+    </mat-form-field>&nbsp;
 
-  <mat-form-field style="flex: 1;">
-    <mat-label>Acciones dirigidas a incrementar motivación</mat-label>
-    <textarea matInput></textarea>
-  </mat-form-field>
-</div>
-<div style="display: flex;">
-  <mat-form-field style="flex: 1;">
-    <mat-label>Comentario</mat-label>
-    <textarea matInput></textarea>
-  </mat-form-field>&nbsp;
-</div>
+    <mat-form-field style="flex: 1;">
+      <mat-label>Acciones dirigidas a incrementar motivación</mat-label>
+      <textarea matInput formControlName="acciones"></textarea>
+    </mat-form-field>
+  </div>
+  <div style="display: flex;">
+    <mat-form-field style="flex: 1;">
+      <mat-label>Comentario</mat-label>
+      <textarea matInput formControlName="comentarios"></textarea>
+    </mat-form-field>&nbsp;
+  </div>
+</form>
 
+<div class="saveButtons">
+    <button type="submit" class="saveButton" (click)="save()">Guardar Cambios</button> &nbsp;
+</div>
 
 
 

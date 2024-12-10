@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { MatSnackBarRef } from '@angular/material/snack-bar';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 import { ClassImports } from '../../class.components';
 import { MaterialComponents } from '../../material.components';
 
 @Component({
-    selector: 'selector',
+    selector: 'snackbarConfirmDelete',
     standalone: true,
     imports: [MaterialComponents, ClassImports],
     templateUrl: 'snackbarConfirmDelete.component.html'
@@ -12,6 +12,7 @@ import { MaterialComponents } from '../../material.components';
 export class SnackBarConfirmation {
 
     constructor(
+        @Inject(MAT_SNACK_BAR_DATA) public data: any,
         private snackBarRef: MatSnackBarRef<SnackBarConfirmation>
     ) { }
 

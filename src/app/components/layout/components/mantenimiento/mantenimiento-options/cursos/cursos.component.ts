@@ -8,13 +8,13 @@ import { ClassImports } from '../../../../../../helpers/class.components';
 import { CourseGetI, ModalityI, StateI } from './interfaces/cursos.interface';
 import { SuppliersI } from '../../../../../../helpers/intranet/intranet.interface';
 import { IntranetServices } from '../../../../../../helpers/intranet/intranet.service';
-import { debounceTime } from 'rxjs';
+import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
+import { systemInformationService } from '../../../../services/systemInformationService.service';
 
 @Component({
   selector: 'app-cursos',
   standalone: true,
   imports: [MaterialComponents, ClassImports],
-  providers: [CoursesServices, IntranetServices],
   templateUrl: './cursos.component.html',
   styleUrl: './cursos.component.css'
 })
@@ -26,6 +26,7 @@ export class CursosMantenimientoComponent implements OnInit {
     private appHelpers: HerlperService,
     private coursesService: CoursesServices,
     private intranetService: IntranetServices,
+    private systemInformation: systemInformationService,
   ) {
 
     this.coursesForm = fb.group({
@@ -45,13 +46,16 @@ export class CursosMantenimientoComponent implements OnInit {
       costoTotal: new FormControl(0),
       idEstado: new FormControl(null),
       link: new FormControl(''),
+      periodoId: new FormControl(''),
     })
   }
 
-  coursesForm: FormGroup
+  page: number = 1
   states!: StateI[]
+  coursesForm: FormGroup
   courses!: CourseGetI[]
   modalities!: ModalityI[]
+  pagination!: PaginationI
   suppliersRs!: SuppliersI[]
   suppliersRnc!: SuppliersI[]
 
@@ -59,16 +63,10 @@ export class CursosMantenimientoComponent implements OnInit {
     this.getState()
     this.getCourses()
     this.getModality()
-
-    this.coursesForm.get('suplidor')?.valueChanges
-      .pipe(
-        debounceTime(300)
-      )
-      .subscribe(() => {
-        this.getSuppliersByRs();
-      });
+    this.getSuppliersByRs()
   }
 
+  //Metodo para mostrar el nombre en el input
   displayRsName(rs: SuppliersI): string {
     return rs ? rs.razonSocial : '';
   }
@@ -87,33 +85,28 @@ export class CursosMantenimientoComponent implements OnInit {
         }
       })
   }
-
+  
   // Metodo para obtener todos los proveedores por nombre
-  getSuppliersByRs() {
+  getSuppliersByRsFilter() {
     const suplidorValue = this.coursesForm.value.suplidor;
-
     if (suplidorValue && suplidorValue.length >= 3) {
-      this.intranetService.findProveedorByRS(suplidorValue)
-        .subscribe((res: any) => {
-          this.suppliersRs = res.data;
-        });
+      this.getSuppliersByRs(suplidorValue)
     } else {
       this.suppliersRs = [];
     }
   }
 
+  // Metodo para obtener todos los proveedores 
+  getSuppliersByRs( rs: any = '') {
+    this.intranetService.findProveedorByRS(rs)
+    .subscribe((res: any) => {
+      this.suppliersRs = res.data;
+    });
+  }
+  
   // Metodo para completar el campo de RNC en el formulario
   setValueRs(suplier: SuppliersI) {
     this.coursesForm.patchValue({ rnc: suplier.rnc })
-  }
-
-  // Metodo para obtener todas los cursos
-  getCourses() {
-    this.coursesService.getCourses()
-      .subscribe((res: any) => {
-        this.courses = res.data;
-        console.log(this.courses);
-      })
   }
 
   // Metodo para obtener todas las modalidades de cursos
@@ -129,6 +122,18 @@ export class CursosMantenimientoComponent implements OnInit {
     this.coursesService.getStates()
       .subscribe((res: any) => {
         this.states = res.data;
+      })
+  }
+
+  // Metodo para obtener todas los cursos
+  getCourses() {
+    this.coursesService.getCourses(this.page, 10)
+      .subscribe((res: any) => {
+        console.log(res);
+        
+        this.courses = res.data;
+        const { currentPage, totalItem, totalPage } = res
+        this.pagination = { currentPage, totalItem, totalPage }
       })
   }
 
@@ -148,9 +153,9 @@ export class CursosMantenimientoComponent implements OnInit {
       })
   }
 
-  // Metodo para eliminar un curso 
+  // Metodo para eliminar un curso
   async deleteCourse(id: number) {
-    let removeDecision: boolean = await this.snackBar.snackbarConfirmationDelete()
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
 
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
@@ -171,12 +176,29 @@ export class CursosMantenimientoComponent implements OnInit {
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
+    this.coursesForm.value.periodoId = this.systemInformation.activePeriod().idPeriodo
     this.coursesForm.value.suplidor = this.coursesForm.value.suplidor.razonSocial
-    if (this.coursesForm.value.suplidor == undefined){
+    if (this.coursesForm.value.suplidor == undefined) {
       this.snackBar.snackbarError('La razón social es incorrecta, asegurese de seleccionar una de la barra de opciones.', 5000)
     }
     else {
       this.appHelpers.saveChanges(() => this.postCourse(), () => this.putCourse(), this.coursesForm.value.idCurso, this.coursesForm)
+    }
+  }
+
+  //Metodo para llamar a la siguiente pagina
+  nextPage() {
+    if (this.page < this.pagination.totalPage) {
+      this.page += 1
+      this.getCourses()
+    }
+  }
+
+  //Metodo para llamar a la pagina anterior
+  previousPage() {
+    if (this.page > 1) {
+      this.page -= 1
+        ; this.getCourses()
     }
   }
 }

@@ -29,8 +29,17 @@ export class CoursesServices {
     }
 
 
-    public getCourses() {
-        return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Curso`, this.header));
+    public getCourses(page: number = 1, itemPerPage: number = 1000) {
+        return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Curso?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
+    }
+    
+    public getCoursesFilter(valor:string,page:number) {
+
+        const url = `${this.baseURL}/Curso/filter${valor ? `?filtro=${valor}&` :
+         '?'}numeroPagina=${page}&tamanoPagina=10`;
+        console.log(url);
+
+        return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(url, this.header));
     }
 
     public getCoursesDashboard() {

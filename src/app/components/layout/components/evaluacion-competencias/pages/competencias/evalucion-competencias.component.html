@@ -1,0 +1,81 @@
+<div class="fuctionContent">
+    <div class="title">
+        <h1>Evaluación De Competencias</h1>
+    </div>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Buscar colaborador</mat-label>
+        <input matInput> <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+</div>
+
+<h3>{{userLogged.Unidad}}</h3>
+
+<div class="table-container">
+    <table>
+        <thead class="headerTable">
+            <tr class="headerRow">
+                <th class="headerCell">Nombre</th>
+                <th class="headerCell">Unidad organizativa</th>
+                <th class="headerCell">Cargo</th>
+                <th class="headerCell">Grupo ocupacional</th>
+                <th class="headerCell" style="width: 5%;"></th>
+                <th class="headerCell" style="width: 7%; padding-right: 15px;">
+                    <div class="loader" *ngIf="!supervisorWithSubordinates"></div>
+                </th>
+            </tr>
+        </thead>
+        <tbody *ngIf="supervisorWithSubordinates && supervisorWithSubordinates.length > 0 || evaluationsCompetencies && evaluationsCompetencies.length > 0; else noElements">
+            <tr class="dataRow" *ngFor="let subordinate of supervisorWithSubordinates">
+                <td class="dataIndiCell">{{subordinate.nombre}} {{subordinate.apellidos}}</td>
+                <td class="dataIndiCell">{{appHelper.getUnitOrg(subordinate.division, subordinate.departamento, subordinate.direccion, subordinate.viceRectoria)?.nombre }}</td>
+                <td class="dataIndiCell">{{subordinate.cargo.nombre}}</td>
+                <td class="dataIndiCell">{{subordinate.grupoObj.nombre}}</td>
+                <td class="dataIndiCell"></td>
+                <td class="dataIndiCell"><mat-icon 
+                    [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']" 
+                    [queryParams]="{ colaboradorId: subordinate.idPersona }"
+                    class="editIcon">add</mat-icon></td>
+                </tr>
+            <tr class="dataRow" *ngFor="let subordinateEvaluation of evaluationsCompetencies">
+                <td class="dataIndiCell">{{subordinateEvaluation.colaborador.nombre}} {{subordinateEvaluation.colaborador.apellidos}}</td>
+                <td class="dataIndiCell">{{appHelper.getUnitOrg(subordinateEvaluation.colaborador.division, subordinateEvaluation.colaborador.departamento, subordinateEvaluation.colaborador.direccion, subordinateEvaluation.colaborador.viceRectoria)?.nombre }}</td>
+                <td class="dataIndiCell">{{subordinateEvaluation.colaborador.cargo.nombre}}</td>
+                <td class="dataIndiCell">{{subordinateEvaluation.colaborador.grupoObj.nombre}}</td>
+                <td class="dataIndiCell"><mat-icon (click)="openModalviewEvaluation(subordinateEvaluation.colaborador, subordinateEvaluation.evaluacionCompetencia)" class="listIcon">description</mat-icon></td>
+                <td class="dataIndiCell"><mat-icon 
+                    [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']"
+                    [queryParams]="{ colaboradorId: subordinateEvaluation.colaborador.idPersona }"
+                    class="editIcon" >edit</mat-icon></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr class="paginatorRow">
+                <ng-container *ngFor="let td of [1, 2, 3, 4]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
+                <td class="dataIndiCell">
+                    <!-- Placeholder para paginación -->
+                </td>
+                <td class="dataIndiCell">
+                    <span style="display: flex; align-items: center;">
+                        <mat-icon class="">navigate_before</mat-icon>
+                        <h5 style="margin: 0;"></h5>
+                        <mat-icon class="">navigate_next</mat-icon>
+                    </span>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
+            </tr>
+        </tbody>
+    </ng-template>
+</div>

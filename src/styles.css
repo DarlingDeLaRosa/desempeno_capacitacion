@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-
+*{
+  font-family: 'Montserrat', sans-serif;
+}
 
 /*/////////////////////////////
         General Styles
@@ -67,6 +69,15 @@ h6 {
     -webkit-text-stroke: 0.5px #4CAF50;
     font-family: 'Montserrat', sans-serif;
 }
+.btnInfo {
+  color: #004b8d;
+  border: #004b8d solid 1px;
+  background-color: white;
+  border-radius: 5px;
+  height: 35px;
+  cursor: pointer;
+  -webkit-text-stroke: 0.5px #004b8d;
+}
 
 .cleanButton, .btnCerrar {
     color: red;
@@ -122,7 +133,8 @@ table {
 }
 
 .dataCell,
-.dataIndiCell {
+.dataIndiCell,
+.paginationCell {
     background-color: #f9f9f9;
 }
 
@@ -131,7 +143,14 @@ table {
     padding-left: 15px;
 }
 
-.dataIndiCell {
+.dataIndiCell{
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dataIndiCell, .paginationCell {
     padding: 12px 16px;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
@@ -139,6 +158,10 @@ table {
     border-bottom: 1px solid #ddd;
 }
 
+.paginationCell{
+    padding: 8px 0;
+
+}
 
 .dataRow:nth-child(even) .dataIndiCell {
     background-color: #f4f4f4;
@@ -160,6 +183,29 @@ table {
     border-top: 3px solid #004b8d;
     border-radius: 50%;
     animation: spin 1s linear infinite;
+}
+
+.loaderMother {
+    display: flex;
+    justify-items: center;
+    width: 70px;
+    height: 70px;
+    border: 5px solid #ddd;
+    border-top: 5px solid #004b8d;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  font-size: 17px;
+  color: #121212;
+  display: flex;
+  justify-items: center;
+}
+.container-loaderMother{
+  display: grid;
+  justify-content: center;
+  justify-items: center;
 }
 
 @keyframes spin {
@@ -198,6 +244,15 @@ table {
 
 .listIcon:hover {
     color: #002c52;
+}
+
+.rowIcon{
+    cursor: pointer;
+    color: #888;
+}
+
+.rowIcon:hover{
+    color: black;
 }
 
 /*/////////////////////////////

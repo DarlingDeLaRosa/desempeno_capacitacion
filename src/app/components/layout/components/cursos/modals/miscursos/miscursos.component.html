@@ -11,7 +11,7 @@
                 <th class="headerCell">Fecha Inicio</th>
                 <th class="headerCell">Fecha Fin</th>
                 <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                   Acción
+                  <div *ngIf="isloading ===  true" class="loader" ></div>
                 </th>
             </tr>
         </thead>
@@ -24,19 +24,18 @@
                 <td class="dataIndiCell"><mat-icon  class="removeIcon"
                   (click)="deleteInscripcion(item.inscripcionesObj[0].idInscripcion)">logout</mat-icon></td>
             </tr>
-            <tr *ngIf="cursosPendiente.length === 0">
+            <tr *ngIf="cursosPendiente.length === 0 && isloading == false">
               <td colspan="12">
                 <h5 class="no-record">No hay datos Registrados</h5>
               </td>
             </tr>
 
         </tbody>
-        <tfoot *ngIf="cursosPendiente.length !== 0">
+        <!-- <tfoot *ngIf="cursosPendiente.length !== 0">
             <tr class="paginatorRow">
                 <td class="dataIndiCell"></td>
                 <td class="dataIndiCell"></td>
                 <td class="dataIndiCell">
-                    <!-- Placeholder para paginación -->
                 </td>
                 <td class="dataIndiCell">
                     <span style="display: flex; align-items: center;">
@@ -46,7 +45,7 @@
                     </span>
                 </td>
             </tr>
-        </tfoot>
+        </tfoot> -->
     </table>
   </div>
 
@@ -78,12 +77,11 @@
               </td>
             </tr>
         </tbody>
-        <tfoot *ngIf="cursosCompletado.length !== 0">
+        <!-- <tfoot *ngIf="cursosCompletado.length !== 0">
             <tr class="paginatorRow">
                 <td class="dataIndiCell"></td>
                 <td class="dataIndiCell"></td>
                 <td class="dataIndiCell">
-                    <!-- Placeholder para paginación -->
                 </td>
                 <td class="dataIndiCell">
                     <span style="display: flex; align-items: center;">
@@ -93,7 +91,7 @@
                     </span>
                 </td>
             </tr>
-        </tfoot>
+        </tfoot> -->
     </table>
   </div>
 

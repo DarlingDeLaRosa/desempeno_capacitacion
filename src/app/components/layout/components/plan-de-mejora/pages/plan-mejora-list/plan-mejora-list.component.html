@@ -37,24 +37,15 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="dataRow">
-        <td class="dataIndiCell">Item 1</td>
-        <td class="dataIndiCell">Item 1</td>
-        <td class="dataIndiCell">Item 1</td>
-        <td class="dataIndiCell">001</td>
-        <td class="dataIndiCell"><mat-icon class="listIcon">description</mat-icon></td>
+      <tr class="dataRow" *ngFor="let persona of agreementList">
+        <td class="dataIndiCell">{{persona.colaboradorObj.nombre}} {{persona.colaboradorObj.apellidos}}</td>
+        <td class="dataIndiCell">{{persona.colaboradorObj.departamento.nombre}}</td>
+        <td class="dataIndiCell">{{persona.colaboradorObj.cargo.nombre}}</td>
+        <td class="dataIndiCell">{{persona.colaboradorObj.grupoObj.nombre}}</td>
+        <td class="dataIndiCell"><mat-icon class="listIcon" (click)="openModalVerPlanMejora(persona.colaboradorObj.idPersona, persona.colaboradorObj.nombre,persona.colaboradorObj.apellidos)">description</mat-icon></td>
         <td class="dataIndiCell"><mat-icon class="editIcon"
-            [routerLink]="[{ outlets: { 'plan-de-mejora': ['formulario']}}]" routerLinkActive="active">edit</mat-icon>
-        </td>
-      </tr>
-      <tr class="dataRow">
-        <td class="dataIndiCell">Item 2</td>
-        <td class="dataIndiCell">Item 2</td>
-        <td class="dataIndiCell">Item 2</td>
-        <td class="dataIndiCell">002</td>
-        <td class="dataIndiCell"><mat-icon class="listIcon">description</mat-icon></td>
-        <td class="dataIndiCell"><mat-icon class="editIcon"
-            [routerLink]="[{ outlets: { 'plan-de-mejora': ['formulario']}}]" routerLinkActive="active">edit</mat-icon>
+            [routerLink]="[{ outlets: { 'plan-de-mejora': ['formulario',persona.colaboradorObj.idPersona]}}]" routerLinkActive="active"
+            >edit</mat-icon>
         </td>
       </tr>
     </tbody>

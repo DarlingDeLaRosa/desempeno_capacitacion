@@ -16,27 +16,26 @@ export interface CollaboratorsI {
     idGrupoDesempenia: number
 }
 
+export interface PersonI {
+    rol: RolI
+    usuario: string
+    idPersona: number
+    idSistema: number
+    idUsuario: number
+    persona: CollaboratorsGetI
+}
+
 export interface CollaboratorsGetI {
     idPersona: number,
     nombre: string,
     apellidos: string,
     usuario: string,
-    idCargo: number,
-    idDepartamento: number,
-    idDireccion: number,
-    idViceRectoria: number,
-    idDivision: number,
-    idRecinto: number,
-    fechaCreacion: Date,
-    fechaActualizacion: Date,
     estado: boolean,
     cedula: string,
-    idGrupo: number,
     fechaIngreso: Date,
     sexo: string,
     edad: number,
     supervisor: boolean,
-    idEstado: number,
     idCargoDesempenia: number,
     cargoDesempeniaObj: PositionI
     idGrupoDesempenia: number,
@@ -49,12 +48,28 @@ export interface CollaboratorsGetI {
     direccion: DirectionI
     hijos: any
     cursosPendientes: CourseGetI[];
-    viceRectoria: viceRectorate,
+    viceRectoria: ViceRectorate,
     recinto: LocationI
+    carreraAdministrativa: boolean
+    supervisorObj: SupervisorI
 }
 
 export interface PositionI {
     idCargo: number,
+    nombre: string
+}
+
+
+export interface SupervisorI {
+    nombre: string,
+    apellidos: string,
+    cargoObj: PositionI
+}
+
+export interface RolI {
+    idRol: number
+    idSistema: number
+    modulos: any
     nombre: string
 }
 
@@ -89,10 +104,23 @@ export interface DirectionI {
     departamentos: DepartmentI
 }
 
-export interface viceRectorate {
+export interface ViceRectorate {
     idViceRectoria: number,
     nombre: string,
     direcciones: DirectionI
 }
 
-
+export interface PersonSystemI {
+    apellidos: string
+    departamento: DepartmentI
+    direccion: DirectionI
+    division: DivisionI
+    fechaUltimaSesion: string
+    idPersona: number
+    idUsuario: number
+    nombre: string
+    rol: RolI
+    unidad: string 
+    username: string
+    viceRectoria: ViceRectorate
+}

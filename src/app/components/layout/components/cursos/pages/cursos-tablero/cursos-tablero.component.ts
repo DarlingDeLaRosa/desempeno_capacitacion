@@ -10,6 +10,8 @@ import { CourseGetI, CourseI } from '../../../mantenimiento/mantenimiento-option
 import { LoaderComponent } from '../../../../../../helpers/components/loader/loader.component';
 import { LoaderService } from '../../../../../../helpers/service/loader.service';
 import { finalize } from 'rxjs';
+import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
+import { systemInformationService } from '../../../../services/systemInformationService.service';
 
 
 
@@ -17,7 +19,6 @@ import { finalize } from 'rxjs';
   selector: 'app-cursos-tablero',
   standalone: true,
   imports: [MaterialComponents, ClassImports, LoaderComponent],
-  providers: [CoursesServices, LoaderService],
   templateUrl: './cursos-tablero.component.html',
   styleUrl: './cursos-tablero.component.css'
 })
@@ -25,14 +26,17 @@ export default class CursosTableroComponent implements  OnInit{
 
   cursoTableroList: Array<CourseGetI> = [];
   isLoading = false;
+  usuarioActual!: loggedUserI
 
   constructor(
     private dialog: MatDialog,
     private courseService:CoursesServices,
-    private loaderService: LoaderService
-    ){}
+    private loaderService: LoaderService,
+    private InformationService: systemInformationService,
+    ){
+      this.usuarioActual = InformationService.localUser;
+    }
   ngOnInit(): void {
-    // this.courseService.getUsuarioLocal(); //esto se exploto cuando envie la funcion para el systemInformation
     this.getCursosTablero();
     this.loaderService.loading$.subscribe((loading) => {
       this.isLoading = loading;
@@ -42,7 +46,8 @@ export default class CursosTableroComponent implements  OnInit{
   getCursosTablero() {
     this.loaderService.show();
     this.courseService.getCoursesDashboard()
-      .pipe(finalize(() => this.loaderService.hide())) // Se asegura de ocultar el loader al finalizar
+      .pipe(
+        finalize(() => this.loaderService.hide()))
       .subscribe({ next: (resp) => {
           this.cursoTableroList = resp.data;
           console.log(this.cursoTableroList);
@@ -52,7 +57,7 @@ export default class CursosTableroComponent implements  OnInit{
   openModal(): void {
     const dialogRef = this.dialog.open(MiscursosComponent, {
       width: '900px',
-      height: '800px',
+      height: '700px',
 
     });
 

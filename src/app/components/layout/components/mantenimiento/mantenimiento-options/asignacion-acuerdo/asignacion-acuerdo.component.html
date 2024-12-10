@@ -1,1 +1,145 @@
-<p>asignacion-acuerdo works!</p>
+<h2 class="Stitle">Asignación de acuerdos</h2>
+<div>
+    <form style=" margin: 15px 0 35px 0" [formGroup]="asignationAgreementForm" (ngSubmit)="saveChanges()">
+
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Cedula / Pasaporte</mat-label>
+                <input matInput formControlName="cedula" maxlength="11" (keydown.enter)="getAsignationAgreementsByDNI($event)">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre" readonly>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Apellidos</mat-label>
+                <input matInput formControlName="apellidos" readonly>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Usuario</mat-label>
+                <input matInput formControlName="usuario" readonly>
+            </mat-form-field>
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" style="flex: 2;">
+                <mat-label>Unidad Org</mat-label>
+                <input matInput formControlName="idUnitOrg" readonly> 
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Cargo</mat-label>
+                <input matInput formControlName="idCargo" readonly>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Recinto</mat-label>
+                <input matInput formControlName="idRecinto" readonly>
+            </mat-form-field>
+
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+ 
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Tipo de Acuerdo</mat-label>
+                <mat-select formControlName="idTipoAcuerdo" disableRipple>
+                    <ng-container *ngIf="typeAgreements && typeAgreements.length; else noLocation">
+                        <mat-option [value]="typeAgreement.idTipoAcuerdo" *ngFor="let typeAgreement of typeAgreements">
+                            {{typeAgreement.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noLocation>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Periodo a evaluar</mat-label>
+                <mat-select formControlName="acuerdosDuracionId" disableRipple>
+                    <mat-option [value]="1">3 meses</mat-option>
+                    <mat-option [value]="2">6 meses</mat-option>
+                    <mat-option [value]="3">12 meses</mat-option>
+
+                    <ng-template #noRol>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <div style="flex: 1"></div>
+        </div>
+
+        <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+        <button type="button" class="cleanButton" *ngIf="asignationAgreementForm.value.idAsignacion"
+            (click)="asignationAgreementForm.reset()">Limpiar edición</button>
+
+    </form>
+
+    <h3 class="Stitle">Listado de asignaciones de acuerdos</h3>
+
+    <div class="table-container">
+        <table>
+            <thead class="headerTable">
+                <tr class="headerRow">
+                    <th class="headerCell">Colaborador</th>
+                    <th class="headerCell">DNI</th>
+                    <th class="headerCell">Cargo</th>
+                    <th class="headerCell">Tipo de acuerdo</th>
+                    <th class="headerCell">Unidad Org.</th>
+                    <!-- <th class="headerCell">Recinto</th> -->
+                    <th class="headerCell" style="width: 7%"></th>
+                    <th class="headerCell" style="width: 7%">
+                        <div *ngIf="!asignationsAgreement" class="loader"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody *ngIf="asignationsAgreement && asignationsAgreement.length > 0; else noElements">
+                <tr class="dataRow" *ngFor="let asignationAgreement of asignationsAgreement">
+                    <td class="dataIndiCell">{{asignationAgreement.colaborador.nombre}}
+                        {{asignationAgreement.colaborador.apellidos}}</td>
+                    <td class="dataIndiCell">{{asignationAgreement.colaborador.cedula || 'No Asignado'}}</td>
+                    <td class="dataIndiCell">{{asignationAgreement.colaborador.cargo.nombre}}</td>
+                    <td class="dataIndiCell">{{asignationAgreement.tipoAcuerdoObj.nombre}}</td>
+                    <td class="dataIndiCell">{{appHelpers.getUnitOrg(asignationAgreement.colaborador.division,
+                        asignationAgreement.colaborador.departamento, asignationAgreement.colaborador.direccion,
+                        asignationAgreement.colaborador.viceRectoria)?.nombre}}</td>
+                    <!-- <td class="dataIndiCell">{{asignationAgreement.colaborador.recinto.nombre}}</td> -->
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(asignationAgreement)" class="editIcon">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteAsignationAgreement(asignationAgreement.idAsignacion)" class="removeIcon">delete</mat-icon></td>
+                </tr>
+            </tbody>
+            <tfoot *ngIf="pagination && pagination.totalPage">
+                <tr class="paginatorRow">
+                    <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container>
+                    <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+                    <td class="paginationCell">
+                        <span style="display: flex; align-items: center;">
+                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                            <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+                        </span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
+            </tr>
+        </tbody>
+    </ng-template>
+</div>

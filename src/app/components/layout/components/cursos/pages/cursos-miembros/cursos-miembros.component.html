@@ -26,7 +26,6 @@
                 <th class="headerCell">Fecha Fin</th>
                 <th class="headerCell">Final Inscripcion</th>
                 <th class="headerCell" style="width: 5%; padding-right: 15px;">
-
                 </th>
             </tr>
         </thead>
@@ -40,7 +39,7 @@
                   <mat-icon  class="removeIcon"
                   (click)="deleteInscripcion(curso.inscripcionesObj[0].idInscripcion)">logout</mat-icon></td>
             </tr>
-                  <tr *ngIf="hijo.cursosPendientes.length === 0">
+              <tr *ngIf="hijo.cursosPendientes.length === 0">
               <td colspan="12">
                 <h5 class="no-record">No hay datos Registrados</h5>
               </td>

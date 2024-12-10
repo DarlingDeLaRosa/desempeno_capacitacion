@@ -22,17 +22,20 @@
 
         </div>
 
-        <div class="ConfigsideMenuContainer">
-            <div class="item-menu" [routerLink]="['/layout/mantenimiento']" routerLinkActive="activeOut">
-                <mat-icon>settings</mat-icon>Mantenimiento
+        <div >
+            <div class="ConfigsideMenuContainer">
+                <div class="item-menu" [routerLink]="['/layout/mantenimiento']" routerLinkActive="activeOut">
+                    <mat-icon>settings</mat-icon>Mantenimiento
+                </div>
+            </div>
+    
+            <div class="ConfigsideMenuContainer">
+                <div class="item-menu" [routerLink]="['formulacion']" routerLinkActive="activeOut">
+                    <mat-icon>logout</mat-icon>Cerrar Sesión
+                </div>
             </div>
         </div>
 
-        <div class="ConfigsideMenuContainer">
-            <div class="item-menu" [routerLink]="['formulacion']" routerLinkActive="activeOut">
-                <mat-icon>logout</mat-icon>Cerrar Sesión
-            </div>
-        </div>
     </mat-sidenav>
 
     <mat-sidenav-content>
@@ -64,7 +67,7 @@
                         <h3 class="nombre">{{usuario.Firstname}} {{usuario.Lastname}}</h3>
                         <h3 class="cargo">{{usuario.Position}}</h3>
                     </span>
-                    <button class="closeAccount" [matMenuTriggerFor]="menu">
+                    <button class="closeAccount" ><!--[matMenuTriggerFor]="menu"-->
                         <mat-icon>person</mat-icon>
                     </button>
                     <mat-menu class="menuPanel" #menu="matMenu">

@@ -7,7 +7,6 @@ import { ClassImports } from '../../class.components';
   selector: 'app-loader',
   standalone: true,
   imports: [MaterialComponents,ClassImports],
-  providers:[LoaderService],
   templateUrl: './loader.component.html',
   styleUrl: './loader.component.css'
 })

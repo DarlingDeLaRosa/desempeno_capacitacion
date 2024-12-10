@@ -7,18 +7,18 @@ export interface GradesI {
     nombre: string,
     descripcion: string
     idTipoGrado: number
-    comportamientos: comportamientos[]
+    comportamientos: behaviorsI[]
 }
 
-export interface comportamientos {
+export interface behaviorsI {
+    idComportamiento: number
     nombre: string,
     probatorio: boolean,
-    calificacion: number
 }
 
 export interface GradesGetI {
     competenciaObj: CompetencyI
-    comportamientosObj: comportamientos[]
+    comportamientosObj: behaviorsI[]
     descripcion: string
     idCompetencia: number
     idGrado: number

@@ -1,0 +1,147 @@
+.documento {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  background-color: #ffffff;
+  color: rgb(59 59 59);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.documento-info {
+  display: flex;
+  flex: 1;
+  justify-content: start;
+  gap: 10px;
+  /* Espacio entre las columnas */
+}
+
+.documento-info span {
+  overflow: hidden;
+  /* Oculta el desbordamiento */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Ajusta el tamaño específico de cada campo */
+.documento-nombre {
+  flex-basis: 50%;
+  /* Ocupa el 20% del ancho total */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.documento-fecha {
+  flex-basis: 40%;
+  /* Ocupa el 40% del ancho total */
+}
+
+button.cancel-button {
+  color: red;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.container {
+  padding: 15px 20px;
+}
+
+.modal-footer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: flex-end;
+  /* Alinea los botones a la derecha */
+  gap: 10px;
+  flex-shrink: 0;
+  /* Evita que el footer se encoja */
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+}
+
+.documento-list {
+  flex-grow: 1;
+  height: 330px;
+  overflow-y: auto;
+  /* Permite que solo la lista de colaboradores haga scroll */
+  max-height: 330px;
+  /* Ajusta el alto máximo de la lista */
+}
+
+::ng-deep .documento-list::-webkit-scrollbar {
+  width: 14px;
+}
+
+::ng-deep .documento-list::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+::ng-deep .documento-list::-webkit-scrollbar-thumb {
+  background-color: #004b8d;
+  border-radius: 5px;
+  border-left: 8px solid #ffffff;
+}
+
+::ng-deep .documento-list::-webkit-scrollbar-thumb:hover {
+  background-color: #003366;
+}
+
+.empty-list {
+  text-align: center;
+}
+
+.empty-list img {
+  max-width: 320px;
+}
+
+.empty-list p {
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.file-upload-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid #888;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.6);
+  transition: border-color 0.3s;
+  background-color: #f5f5f5;
+}
+
+.file-upload-container:hover {
+  border-color: rgba(0, 0, 0, 0.87);
+  background-color: #ECECEC;
+}
+
+.file-upload-label {
+  display: grid;
+  place-items: center;
+  margin-right: 10px;
+}
+
+.file-upload-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+}

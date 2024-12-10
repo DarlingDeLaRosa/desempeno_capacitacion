@@ -1,0 +1,90 @@
+
+<!-- <div class="empty-list" *ngIf="!agreement">
+  <img src="nodata.jpg" alt="No courses available">
+</div> -->
+
+<div class="fuctionContent">
+  <div class="title">
+    <h1>Evaluación de Acuerdo</h1>
+  </div>
+  <div>
+     <div>
+      <button class="backButton" mat-stroked-button
+      [routerLink]="['/layout/acuerdos']"><mat-icon class="backIcon">arrow_back
+      </mat-icon>Acuerdos de Desempeño</button>
+    </div>
+  </div>
+</div>
+<h2 style="margin-bottom: 15px;">Colaborador</h2>
+
+<div class="staticInfoContainer" *ngIf="agreement">
+  <span>
+      <h3>Nombre Servidor Evaluado</h3>
+      <h4>{{agreement.colaboradorObj.nombre}} {{agreement.colaboradorObj.apellidos}}</h4>
+      <!-- <h5>{{person.cargo.nombre}}</h5> -->
+  </span>
+  <span>
+      <h3>Nombre del Cargo</h3>
+      <h4>{{agreement.colaboradorObj.cargo.nombre}}</h4>
+      <!-- <h5>{{person.supervisorObj.cargoObj.nombre}}</h5> -->
+  </span>
+  <span>
+      <h3>Periodo a Evaluar</h3>
+      <h4>{{agreement.periodo.nombre}}</h4>
+      <!-- <h4>{{systemInformationSevice.getMonths(period.fechaInicio.getMonth())}} - {{systemInformationSevice.getMonths(period.fechaFin.getMonth())}} {{period.fechaFin.getFullYear()}}</h4> -->
+  </span>
+  <span>
+      <h3>Grupo Ocupacional</h3>
+      <h4>{{agreement.colaboradorObj.grupoObj.nombre}}</h4>
+  </span>
+</div>
+
+<h2 style="margin: 15px 0px 15px 0px;">Lista de Metas</h2>
+
+<div class="table-container">
+  <table>
+    <thead class="headerTable">
+      <tr class="headerRow">
+        <th class="headerCell">Metas</th>
+        <th class="headerCell">Medio de verificación</th>
+        <th class="headerCell">valor</th>
+        <th class="headerCell">Calificación</th>
+        <th class="headerCell"></th>
+
+          <div *ngIf="isLoading ===  true" class="loader" ></div>
+        <!-- </th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="dataRow"  *ngFor="let goal of goalDetails; let i = index">
+        <td class="dataIndiCell">{{goal.nombre}}</td>
+        <td class="dataIndiCell">{{goal.nombreMedio}}</td>
+        <td class="dataIndiCell">{{goal.valor}}</td>
+        <td class="dataIndiCell">{{goal.calificacion}}</td>
+        <td class="dataIndiCell">
+          <mat-icon class="editIcon" (click)="openModalCalificacion(goal)">task</mat-icon>
+        </td>
+
+      </tr>
+      <tr *ngIf="goalDetails.length === 0">
+        <td colspan="12">
+          <h5 class="no-record">No hay datos Registrados</h5>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr class="paginatorRow"  *ngIf="goalDetails.length !== 0">
+        <td class="dataIndiCell">Total:</td>
+        <td class="dataIndiCell"></td>
+        <td class="dataIndiCell" ><strong>{{totalValor}}</strong></td>
+        <td class="dataIndiCell" ><strong>{{totalCalificacion}}</strong></td>
+
+        <td class="dataIndiCell">
+          <span style="display: flex; align-items: center;">
+
+          </span>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

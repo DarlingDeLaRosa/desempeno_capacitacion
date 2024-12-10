@@ -1,0 +1,114 @@
+.container-verAcuerdo {
+  margin: 20px;
+  border: 1px solid black;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 85% 15%;
+  border-bottom: 1px solid black;
+  padding: 5px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.title2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.subtitle2 {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.group-info {
+  display: grid;
+  place-items: center;
+  margin-right: 15px;
+}
+
+.group-title {
+  font-weight: 600;
+  margin: 0;
+}
+
+.info-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid black;
+}
+
+.info-row > :nth-child(1){
+  border-right: 1px solid black;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.table-container {
+  margin-top: 1rem;
+}
+
+.table-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+.evaluation-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.evaluation-table th,
+.evaluation-table td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.evaluation-table th {
+  background-color: #f3f4f6;
+}
+
+.col-no {
+  width: 80px;
+}
+
+.col-goals {
+  width: 400px;
+}
+
+.total-row {
+  background-color: #f3f4f6;
+}
+
+.total-row td {
+  font-weight: bold;
+}
+
+.evaluation-table[_ngcontent-ng-c720453465] td[_ngcontent-ng-c720453465] {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem;
+  text-align: left;
+  background-color: white !important;
+}
+
+p{
+  font-size: 16px;
+}

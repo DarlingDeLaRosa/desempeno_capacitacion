@@ -1,70 +1,59 @@
-/* From Uiverse.io by pravusagar */
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* justify-items: center; */
-  margin: auto;
-  margin-top: 200px;
-  padding: 0.6em;
-  width: 130px;
-  border-radius: 10px;
-  background: linear-gradient(
-    90deg,
-    #3498db,
-    #2ecc71,
-    #e74c3c,
-    #f39c12,
-    #3498db
-  );
-  background-size: 900% 900%;
-  animation: changeGradient 10s ease infinite; /* 10s duration, ease timing function, infinite loop */
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-}
-
-@keyframes changeGradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-.loader-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  background-color: #ffffff87;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.loader {
-  border: 8px solid #ffffff;
-  border-top: 8px solid #0000005f;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
+.line, .line2, .line3 {
+  height: 35px;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #ccc 25%, #e0e0e0 50%, #ccc 75%);
+  background-size: 200% 100%;
+  animation: gradientLoading 1.5s infinite ease-in-out;
 }
 
 .loading-text {
-  font-size: 20px;
-  color: #121212;
+  font-size: 20px;  /* Ajusta el tamaño de la fuente según sea necesario */
+  /* height: 35px;   */
+  width: 100%;
+  color: transparent; /* Hace que el texto sea transparente */
+  background: linear-gradient(90deg, #aaa 25%, #e0e0e0 50%, #aaa 75%);
+  background-size: 200% 100%;
+  animation: gradientLoading 1.5s infinite linear;
+  -webkit-background-clip: text; /* Para navegadores WebKit */
+  background-clip: text; /* Aplica el clip de fondo al texto */
 }
 
-@keyframes spin {
+.line2{
+  height: 25px;
+  width: 50%;
+}
+
+.line3{
+  height: 17px;
+  width: 90%;
+}
+
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 16px;
+}
+
+.card {
+  height: 150px;
+  border-radius: 20px;
+  background: #fff;
+  position: relative;
+  padding: 1.8rem;
+  border: 2px solid #ddd;
+  transition: 0.5s ease-out;
+  overflow: visible;
+  cursor: pointer;
+}
+
+@keyframes gradientLoading {
   0% {
-    transform: rotate(0deg);
+    background-position: -100%;
   }
   100% {
-    transform: rotate(360deg);
+    background-position: 100%;
   }
 }

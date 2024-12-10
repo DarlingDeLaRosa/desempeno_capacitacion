@@ -1,0 +1,113 @@
+<div class="container-plan-mejora">
+
+  <h3 style="margin-bottom: 30px;">{{data.nombreCompleto}}</h3>
+
+  <ng-container *ngIf="isLoading">
+    <div class="container-loaderMother" style="margin-top: 100px;">
+      <div class="loaderMother"></div>
+      <div class="loading-text">Cargando...</div>
+    </div>
+  </ng-container>
+
+
+
+
+  <div class="empty-list" *ngIf="planMejoraObtenido == null && !isLoading">
+    <img src="nodata.jpg" alt="Plan mejora not available">
+  </div>
+  <ng-container *ngIf="planMejoraObtenido != null">
+    <div class="cartas">
+      <div class="carta">
+        <span class="titulocarta">Puntos Fuertes</span>
+        <div class="cardEtiqueta">
+          <ul class="etiqueta">
+            <li class="tag__name" *ngFor="let item of areasMejora">
+              {{item.nombre}}</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="carta">
+        <span class="titulocarta">Areas de Mejora</span>
+        <div class="cardEtiqueta">
+          <ul class="etiqueta">
+           <li class="tag__name1" *ngFor="let item of puntosFuertes">
+              {{item.nombre}}</li>
+           </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div>
+      <div class="row">
+        <div class="tags-container">
+          <div class="tags">
+            <span matChip class="tag" *ngFor="let item of puntosFuertes; let i = index">
+              {{ item.nombre }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="tags-container">
+          <div class="tags">
+            <span matChip class="tag green" *ngFor="let item of areasMejora;  let i = index">{{ item.nombre}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <h3 style="margin-top: 20px;">Recomendaciones de formación</h3>
+
+    <div class="table-container">
+      <table>
+        <thead class="headerTable">
+          <tr class="headerRow">
+            <th class="headerCell">Categoría</th>
+            <th class="headerCell">Que</th>
+            <th class="headerCell">Como</th>
+            <th class="headerCell">Para que</th>
+            <th class="headerCell">Cuando</th>
+            <!-- <div class="loader"></div> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="dataRow" *ngFor="let item of recommendDetails; let i = index">
+            <td class="dataIndiCell">{{item.nombreCategoria}}</td>
+            <td class="dataIndiCell">{{item.que}}</td>
+            <td class="dataIndiCell">{{item.como}}</td>
+            <td class="dataIndiCell">{{item.porque}}</td>
+            <td class="dataIndiCell">{{item.nombreTrimestre}}</td>
+          </tr>
+        </tbody>
+        <tr *ngIf="recommendDetails.length == 0">
+          <td colspan="12" style="padding-top: 10px;">
+            <h5 class="no-record">No hay datos Registrados</h5>
+          </td>
+        </tr>
+
+      </table>
+    </div>
+    <form [formGroup]="planMejoraForm">
+      <div style="display: flex;">
+        <mat-form-field style="flex: 1;">
+          <mat-label>Aspectos que han insidido en el desempeño</mat-label>
+          <textarea matInput formControlName="aspectos" readonly></textarea>
+        </mat-form-field>&nbsp;
+
+        <mat-form-field style="flex: 1;">
+          <mat-label>Acciones dirigidas a incrementar motivación</mat-label>
+          <textarea matInput formControlName="acciones" readonly></textarea>
+        </mat-form-field>
+      </div>
+      <div style="display: flex;">
+        <mat-form-field style="flex: 1;">
+          <mat-label>Comentario</mat-label>
+          <textarea matInput formControlName="comentarios" readonly></textarea>
+        </mat-form-field>&nbsp;
+      </div>
+    </form>
+  </ng-container>
+</div>

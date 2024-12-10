@@ -3,17 +3,22 @@
     <h1>Publicaciones de Cursos</h1>
   </div>
   <div>
-    <button type="submit" class="btnNavegar"
-    [routerLink]="[{ outlets: { 'cursos': ['listado']}}]"
-    >Listado de cursos</button> &nbsp;
+    <ng-container *ngIf="usuarioActual.IdDepartamento === '7'">
+      <button type="submit" class="btnNavegar"
+      [routerLink]="[{ outlets: { 'cursos': ['listado']}}]"
+      >Listado de cursos</button> &nbsp;
+    </ng-container>
 
     <button type="submit" class="btnNavegar"
     (click)="openModal()"
     >Mis cursos</button> &nbsp;
 
+   <ng-container *ngIf="usuarioActual.Supervisor == 'True'">
     <button type="submit" class="btnNavegar"
     [routerLink]="[{ outlets: { 'cursos': ['miembros']}}]"
     >Supervisados</button> &nbsp;
+   </ng-container>
+
   </div>
 </div>
 <app-loader *ngIf="isLoading"></app-loader>
@@ -43,7 +48,3 @@
   <img src="nodata.jpg"  alt="No courses available">
   <!-- <p>No hay cursos disponibles en este momento.</p> -->
 </div>
-
-
-
-

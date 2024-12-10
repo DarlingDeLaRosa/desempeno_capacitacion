@@ -10,6 +10,7 @@ export class CollaboratorServices {
 
     private token: string;
     private baseURL: string;
+    private systemId: number;
     private headers: HttpHeaders;
     private header: { headers: HttpHeaders };
 
@@ -19,25 +20,34 @@ export class CollaboratorServices {
         private systemInformation: systemInformationService,
     ) {
         this.token = this.systemInformation.getToken;
+        this.systemId = this.systemInformation.getSistema;
         this.baseURL = this.systemInformation.getIntranetURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
         this.header = { headers: this.headers };
     }
 
-    public getCollaborators() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona?numeroPagina=1&tamanoPagina=10`, this.header));
+    public getCollaborators(page: number = 1, itemPerPage: number = 1000) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/User/getusuariossistema/${this.systemId}?currentPage=${page}&totalItem=${itemPerPage}`, this.header));
     }
     
     public postCollaborator( collaborator : CollaboratorsI) {
-        return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Persona`, collaborator, this.header))
+        return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/User`, collaborator, this.header))
     }
 
     public putCollaborator( collaborator : CollaboratorsI) {
-        return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Persona`, collaborator , this.header))
+        return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/User`, collaborator , this.header))
     }
 
     public deleteCollaborator(id: number) {
-        return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/Persona/${id}`, this.header))
+        return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/User/${id}`, this.header))
     }
 
-}
+    public getCollaboratorByDNI(identification: string) { //page: number = 1, itemPerPage: number = 1000
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/User/getusuario_by_cedula/${this.systemId}/${identification}`, this.header));
+    }
+    
+    // Get de personas 
+    public getPersonByID(id: number) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, this.header));
+    }
+}   

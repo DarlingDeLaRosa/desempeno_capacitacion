@@ -18,8 +18,10 @@ export interface loggedUserI{
   Lastname: string;
   Position: string;
   RecintoSigla: string;
+  IdDepartamento:string;
   Unidad: string;
   Username: string;
+  Supervisor:string;
   aud: string;
   exp: number;
   idSistema: string;
@@ -27,4 +29,9 @@ export interface loggedUserI{
   jti: string;
   role: string;
   sub: string;
+}
+
+export interface GeneralI{
+  id:number,
+  nombre:string
 }

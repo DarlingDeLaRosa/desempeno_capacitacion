@@ -13,7 +13,6 @@ import { HerlperService } from '../../../../services/appHelpers.service';
   selector: 'app-miscursos',
   standalone: true,
   imports: [MaterialComponents,ClassImports],
-  providers: [CoursesServices, IntranetServices],
   templateUrl: './miscursos.component.html',
   styleUrl: './miscursos.component.css'
 })
@@ -22,6 +21,7 @@ export class MiscursosComponent implements OnInit{
   cursosList: Array<CourseGetI> = [];
   cursosCompletado: Array<CourseGetI> = [];      // Lista de cursos con estado 1
   cursosPendiente: Array<CourseGetI> = [];
+  isloading:boolean = true;
 
   constructor(
     private coursesService: CoursesServices,
@@ -40,6 +40,7 @@ ngOnInit(): void {
 }
 
 getIncripcionesColaborador(){
+  this.isloading = true
   this.coursesService.getInscripcionesColaborador()
   .subscribe((res: any) => {
     this.cursosList = res.data;
@@ -47,11 +48,12 @@ getIncripcionesColaborador(){
     this.cursosCompletado = this.cursosList.filter(curso => curso.idEstado === 1);
     this.cursosPendiente = this.cursosList.filter(curso => curso.idEstado === 2);
     console.log(this.cursosPendiente);
+    this.isloading = false
   })
 }
 
 async deleteInscripcion(id: number) {
-  let removeDecision: boolean = await this.snackBar.snackbarConfirmationDelete()
+  let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
   if (removeDecision) {
     this.snackBar.snackbarLouder(true)
     this.coursesService.deleteInscripcion(id)

@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="encabezado">
+    <h2>{{data.Nombre}}</h2>
+    <button mat-icon-button (click)="cerrar()" style="margin-top: -10px;">
+      <mat-icon style="color: red;">close</mat-icon>
+    </button>
+  </div>
+  <p style="margin: 20px 0 10px 0;">Lista de documentos</p>
+
+  <ng-container *ngIf="!documentosList">
+    <div class="container-loaderMother" style="margin-top: 100px;">
+      <div class="loaderMother"></div>
+      <div class="loading-text">Cargando...</div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="documentosList">
+    <div class="documento-list">
+      <div *ngFor="let documento of documentosList" class="documento">
+        <div class="documento-info">
+          <span class="documento-nombre">{{documento.nombre}}</span>
+          <span class="documento-cargo">{{documento.fecha | date}}</span>
+        </div>
+        <div class="documento-actions">
+          <button mat-icon-button (click)="openDocumentInNewTab(documento.enlace)">
+            <mat-icon class="listIcon">visibility</mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="deleteDocument(documento.idDocumento)">
+            <mat-icon style="color: red;">delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="empty-list" *ngIf="documentosList.length == 0">
+        <img src="nodata.jpg" alt="No courses available">
+      </div>
+
+    </div>
+
+    <div style="display: flex; gap: 5px">
+      <div class="file-upload-container" (click)="fileInput.click()">
+        <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
+        <span class="file-upload-name">
+          {{ selectedFileName || 'Seleccione un archivo *' }}
+        </span>
+        <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
+      </div>
+      <div>
+        <mat-icon style="margin-top: 13px;" class="editIcon" (click)="enviarDatos()">send</mat-icon>
+      </div>
+    </div>
+
+  </ng-container>
+</div>

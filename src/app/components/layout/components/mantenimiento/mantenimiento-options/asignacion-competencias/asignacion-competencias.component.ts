@@ -11,12 +11,12 @@ import { IntranetServices } from '../../../../../../helpers/intranet/intranet.se
 import { OcupationalGroupI } from '../../../../../../helpers/intranet/intranet.interface';
 import { AsignationGetCompetencyI } from './interfaces/asignacion-competencias.interface';
 import { AsignationCompetenciesServices } from './services/asignacion-competencias.service';
+import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 
 @Component({
   selector: 'app-asignacion-competencias',
   standalone: true,
   imports: [MaterialComponents, ClassImports],
-  providers: [CompetencyServices, AsignationCompetenciesServices, IntranetServices],
   templateUrl: './asignacion-competencias.component.html',
   styleUrl: './asignacion-competencias.component.css'
 })
@@ -31,7 +31,6 @@ export class AsignacionCompetenciasComponent implements OnInit {
     private competencyService: CompetencyServices,
     private asignationCompetenciesService: AsignationCompetenciesServices,
   ) {
-
     this.asignationCompetencyForm = fb.group({
       idAsignacion: 0,
       idGrupo: new FormControl('', Validators.required),
@@ -39,9 +38,11 @@ export class AsignacionCompetenciasComponent implements OnInit {
       idCompetencia: new FormControl('', Validators.required),
     })
   }
-
-  competencies!: CompetencyI[]
+  
+  page: number = 1
+  pagination!: PaginationI
   gradesTypes!: GradesGetI[]
+  competencies!: CompetencyI[]
   asignationCompetencyForm: FormGroup
   ocupationalGroup!: OcupationalGroupI[]
   asignationCompetencies!: AsignationGetCompetencyI[]
@@ -72,16 +73,20 @@ export class AsignacionCompetenciasComponent implements OnInit {
   getCompetencyById(idCompetency: number) {
     this.competencyService.getCompetencyById(idCompetency)
       .subscribe((res: any) => {
+        console.log(res);
+        
         this.gradesTypes = res.data.gradosObj;
       })
   }
 
   // Metodo para obtener todas las asignaciones de competencias 
   getAsignationCompetencies() {
-    this.asignationCompetenciesService.getAsignationCompetencies()
+    this.asignationCompetenciesService.getAsignationCompetencies(this.page, 10)
       .subscribe((res: any) => {
         this.asignationCompetencies = res.data;
         console.log(this.asignationCompetencies);
+        const {currentPage ,totalItem, totalPage} = res
+        this.pagination = {currentPage ,totalItem, totalPage}
       })
   }
 
@@ -103,7 +108,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
 
   // Metodo para eliminar las asignaciones de competencias 
   async deleteAsignationCompetency(id: number) {
-    let removeDecision: boolean = await this.snackBar.snackbarConfirmationDelete()
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
 
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
@@ -121,5 +126,21 @@ export class AsignacionCompetenciasComponent implements OnInit {
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
     this.appHelpers.saveChanges(() => this.postAsignationCompetency(), () => this.putAsignationCompetency(), this.asignationCompetencyForm.value.idAsignacion, this.asignationCompetencyForm)
+  }
+
+   //Metodo para llamar a la siguiente pagina
+   nextPage() {
+    if (this.page < this.pagination.totalPage) {
+      this.page += 1
+      this.getAsignationCompetencies()
+    }
+  }
+  
+  //Metodo para llamar a la pagina anterior
+  previousPage() {
+    if (this.page > 1) {
+      this.page -= 1
+      ;this.getAsignationCompetencies()
+    }
   }
 }

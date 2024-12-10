@@ -1,0 +1,75 @@
+<div class="container">
+  <h1 style="margin-bottom: 20px;">{{curso.nombre}}</h1>
+  <div class="container2">
+    <div class="description">
+      <p>
+        {{curso.descripcion}}
+      </p>
+    </div>
+    <div class="date">
+      <p>Fecha Inicio: {{curso.fechaInicio |date}}</p>
+    </div>
+  </div>
+
+
+  <h2 style="margin-bottom: 20px; margin-top: 10px;">Expectativas del Curso</h2>
+  <form [formGroup]="findForm">
+    <div style="display: flex;">
+    <mat-form-field appearance="fill" style="flex: 1">
+      <mat-label>Colaborador</mat-label>
+      <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="findCollaborator"
+        (input)="getCollaboratorByLetras()">
+      <mat-autocomplete #auto='matAutocomplete' (optionSelected)="onCollaboratorSelected($event.option.value)"
+        [displayWith]="displayCollaboratorUser">
+        <ng-container *ngIf="filteredCollaborator && filteredCollaborator.length > 0; else noRs">
+          <mat-option *ngFor="let collaborator of filteredCollaborator" [value]="collaborator">
+            {{collaborator.usuario}}
+          </mat-option>
+        </ng-container>
+        <ng-template #noRs>
+          <mat-option>No hay registros disponibles</mat-option>
+        </ng-template>
+      </mat-autocomplete>
+
+
+      <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+    </mat-form-field>&nbsp;
+
+    <mat-form-field style="flex: 1;">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="cargo" readonly="true">
+    </mat-form-field>&nbsp;
+
+    <mat-form-field style="flex: 1;">
+      <mat-label>Departamento</mat-label>
+      <input matInput formControlName="departamento"  readonly="true">
+    </mat-form-field>&nbsp;
+  </div>
+  </form>
+
+  <form [formGroup]="inscripcionForm">
+    <div style="display: flex;">
+      <mat-form-field style="flex: 1;">
+        <mat-label>¿Cuál es tu principal objetivo al tomar este curso?</mat-label>
+        <textarea matInput formControlName="objetivoPrincipal"></textarea>
+      </mat-form-field>&nbsp;
+
+      <mat-form-field style="flex: 1;">
+        <mat-label>¿Qué esperas lograr al finalizar el curso?</mat-label>
+        <textarea matInput formControlName="resultadoEsperado"></textarea>
+      </mat-form-field>
+    </div>
+    <div style="display: flex;">
+      <mat-form-field style="flex: 1;">
+        <mat-label>¿Tienes alguna experiencia previa relacionada al tema del curso?</mat-label>
+        <textarea matInput formControlName="experienciaPrevia"></textarea>
+      </mat-form-field>&nbsp;
+    </div>
+  </form>
+
+
+  <div class="modal-actions">
+    <button mat-button (click)="cerrar()" class="cancel-button">Cancelar</button>
+    <button mat-raised-button color="primary" (click)="save()">Inscribir</button>
+  </div>
+</div>

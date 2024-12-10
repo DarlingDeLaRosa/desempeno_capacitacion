@@ -1,7 +1,12 @@
-<div  class="container">
-  <div class="loader-container">
-    <div class="loader"></div>
-    <div class="loading-text">Cargando...</div>
+<div class="cards-container" *ngFor="let course of [0, 1, 2, ]">
+  <div class="card" *ngFor="let course of [0, 1, 2, 3,]">
+    <div class="card-details">
+      <div class="line" style="display: flex; align-items: center; padding-left: 10px;">
+        <h3 class="loading-text">Cargando...</h3>
+      </div><br>
+      <div class="line2"></div><br>
+      <div class="line3"></div><br>
+      <div class="line3"></div><br>
+    </div>
   </div>
 </div>
-

@@ -15,7 +15,6 @@ import { CourseGetI } from '../../../mantenimiento/mantenimiento-options/cursos/
   selector: 'app-cursos-inscribir',
   standalone: true,
   imports: [MaterialComponents, ClassImports],
-  providers: [CoursesServices, systemInformationService],
   templateUrl: './cursos-inscribir.component.html',
   styleUrl: './cursos-inscribir.component.css'
 })
@@ -34,32 +33,32 @@ export class CursosInscribirComponent implements OnInit {
     private snackbar: SnackBars,
     private InformationService: systemInformationService,
 
-
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.curso = data.course;
     this.usuarioActual = InformationService.localUser;
-    console.log(data);
     this.inscripcionForm = fb.group({
       objetivoPrincipal: new FormControl('', Validators.required),
       resultadoEsperado: new FormControl('', Validators.required),
       experienciaPrevia: new FormControl('', Validators.required),
-      idColaborador: this.usuarioActual.idPersona,
+      idColaborador: Number(this.usuarioActual.idPersona),
       idCurso: this.curso.idCurso
     })
   }
   ngOnInit(): void {
-    console.log(this.data);
+
   }
 
+//metodo para hacer una inscripcion
   postInscripcion() {
+    console.log(this.inscripcionForm.value);
     this.cursoService.postIncripcion(this.inscripcionForm.value)
       .subscribe((res: any) => {
         console.log(res);
         this.appHelpers.handleResponse(res, () => this.cerrar(), this.inscripcionForm)
       })
   }
-
+  //metodo para cerrar el modal
   cerrar(): void {
     this.dialogRef.close();
   }

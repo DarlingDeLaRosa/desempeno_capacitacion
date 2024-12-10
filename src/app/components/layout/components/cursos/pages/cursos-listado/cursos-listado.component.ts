@@ -4,51 +4,47 @@ import { ClassImports } from '../../../../../../helpers/class.components';
 import { MatDialog } from '@angular/material/dialog';
 import { ColaboradoresCursoComponent } from '../../../../../../helpers/components/modalView/colaboradores-curso/colaboradores-curso.component';
 import { CoursesServices } from '../../../mantenimiento/mantenimiento-options/cursos/services/cursos.service';
-import { ResponseI } from '../../../../../interfaces/generalInteerfaces';
+import { PaginationI, ResponseI } from '../../../../../interfaces/generalInteerfaces';
 import { CourseGetI, CourseI } from '../../../mantenimiento/mantenimiento-options/cursos/interfaces/cursos.interface';
+import { InscribirListaComponent } from '../../modals/inscribir-lista/inscribir-lista.component';
 
 @Component({
   selector: 'app-cursos-listado',
   standalone: true,
   imports: [MaterialComponents,ClassImports],
-  providers: [CoursesServices],
   templateUrl: './cursos-listado.component.html',
   styleUrl: './cursos-listado.component.css'
 })
 export class CursosListadoComponent implements OnInit{
-  cursoList: Array<CourseGetI> = [];
-
-  colaboradores = [
-    // { nombre: 'Darling De La Rosa Vanderhorst', cargo: 'Administrador de Base de Datos', genero: 'M', nivel: 'IV' },
-    // { nombre: 'Roberto Mayi', cargo: 'Encargado de División de Desarrollo', genero: 'M', nivel: 'V' },
-    // { nombre: 'Juan Perez', cargo: 'Administrador de Base de Datos', genero: 'M', nivel: 'IV' },
-    // { nombre: 'Juana Peralta', cargo: 'Auxiliar de Contable', genero: 'F', nivel: 'III' },
-    // { nombre: 'Jonas Diaz', cargo: 'Programador', genero: 'M', nivel: 'IV' },
-    // { nombre: 'Yomaira Sarante', cargo: 'Secretaria', genero: 'F', nivel: 'II' },
-    // { nombre: 'Darling De La Rosa Vanderhorst', cargo: 'Administrador de Base de Datos', genero: 'M', nivel: 'IV' },
-    // { nombre: 'Roberto Mayi', cargo: 'Encargado de División de Desarrollo', genero: 'M', nivel: 'V' },
-    // { nombre: 'Juan Perez', cargo: 'Administrador de Base de Datos', genero: 'M', nivel: 'IV' },
-    // { nombre: 'Juana Peralta', cargo: 'Auxiliar de Contable', genero: 'F', nivel: 'III' },
-    // { nombre: 'Jonas Diaz', cargo: 'Programador', genero: 'M', nivel: 'IV' },
-    // { nombre: 'Yomaira Sarante', cargo: 'Secretaria', genero: 'F', nivel: 'II' }
-  ];
-
+  cursoListfilter: Array<CourseGetI> = [];
+  inputValue: string = '';
+  page: number = 1
+  pagination!: PaginationI
+  isloading:boolean = true
   constructor(
     public dialog: MatDialog,
     public cursosService:CoursesServices
     ) {}
 
   ngOnInit(): void {
-   this.getCursos();
+   this.getCursosfilter('');
   }
-
-  getCursos(){
-    this.cursosService.getCourses().subscribe((resp:ResponseI)=>{
-      this.cursoList = resp.data;
-      console.log(this.cursoList);
+//Metodo para optener la lista de cursos
+  getCursosfilter(valor:string){
+    this.isloading = true;
+    this.cursosService.getCoursesFilter(valor,this.page).subscribe((resp:ResponseI)=>{
+      this.cursoListfilter = resp.data;
+      const {currentPage ,totalItem, totalPage} = resp
+      this.pagination = {currentPage ,totalItem, totalPage}
+      this.isloading = false;
     })
   }
+//llama el metodo de buscar curso y se dispara cuando el input cambia
+  searchCourse(){
+    this.getCursosfilter(this.inputValue)
+  }
 
+//Metodo que Abre el modal de los colaboradores que tiene un curso
   openModal(curso: CourseGetI): void {
     const dialogRef = this.dialog.open(ColaboradoresCursoComponent, {
       width: '900px',
@@ -56,8 +52,41 @@ export class CursosListadoComponent implements OnInit{
       data: { curso }
     });
 
+//metodo que se ejecuta cuando el modal cierra
     dialogRef.afterClosed().subscribe(result => {
-      this.getCursos();
+      this.inputValue = ''
+      this.getCursosfilter('');
     });
+  }
+//Metodo que Abre el modal de inscribir curso
+  openModalIncribirLista(curso: CourseGetI): void {
+    if (!curso.interno) {
+      window.open(curso.link, '_blank');
+    }else{
+      const dialogRef = this.dialog.open(InscribirListaComponent, {
+        width: '900px',
+        data: { curso }
+      });
+//Metodo que se ejecuta cuando el modal cierre
+      dialogRef.afterClosed().subscribe(result => {
+        this.inputValue = ''
+        this.getCursosfilter('');
+      });
+    }
+  }
+
+  nextPage() {
+    if (this.page < this.pagination.totalPage) {
+      this.page += 1
+      this.getCursosfilter(this.inputValue)
+    }
+  }
+
+  //Metodo para llamar a la pagina anterior
+  previousPage() {
+    if (this.page > 1) {
+      this.page -= 1
+      ;this.getCursosfilter(this.inputValue)
+    }
   }
 }

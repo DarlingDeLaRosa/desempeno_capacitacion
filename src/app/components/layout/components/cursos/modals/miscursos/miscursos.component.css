@@ -11,24 +11,24 @@ button.cancel-button {
 .table-container {
   flex-grow: 1;
   /* height:  240px; */
-  overflow-y: auto; /* Permite que solo la lista de colaboradores haga scroll */
-  max-height:  240px; /* Ajusta el alto máximo de la lista */
+  overflow-y: auto;
+  max-height:  240px;
 }
 
-::ng-deep .colaboradores-list::-webkit-scrollbar {
+::ng-deep .table-container::-webkit-scrollbar {
   width: 14px;
 }
 
-::ng-deep .colaboradores-list::-webkit-scrollbar-track {
+::ng-deep .table-container::-webkit-scrollbar-track {
   background: #edf2fa;
 }
 
-::ng-deep .colaboradores-list::-webkit-scrollbar-thumb {
+::ng-deep .table-container::-webkit-scrollbar-thumb {
   background-color: #004b8d;
   border-radius: 5px;
   border-left: 8px solid #edf2fa;
 }
 
-::ng-deep .colaboradores-list::-webkit-scrollbar-thumb:hover {
+::ng-deep .table-container::-webkit-scrollbar-thumb:hover {
   background-color: #003366;
 }

@@ -24,8 +24,8 @@ export class GoalsServices {
         this.header = { headers: this.headers };
     }
 
-    public getGoals() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Meta`, this.header));
+    public getGoals(page: number = 1, itemPerPage: number = 1000, transversal: boolean = false) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Meta?isTransversal=${transversal}&numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
     }
 
     public postGoal(goal: GoalI) {
@@ -39,7 +39,6 @@ export class GoalsServices {
     public deleteGoal(id: number) {
         return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/Meta/${id}`, this.header))
     }
-
 
     //Medios de verificación para las metas
 

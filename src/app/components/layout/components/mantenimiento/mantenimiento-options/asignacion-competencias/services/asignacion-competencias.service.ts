@@ -24,8 +24,12 @@ export class AsignationCompetenciesServices {
         this.header = { headers: this.headers };
     }
 
-    public getAsignationCompetencies() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionCompetencia`, this.header));
+    public getAsignationCompetencies(page: number = 1, itemPerPage: number = 1000) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionCompetencia?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
+    }
+
+    public getAsignationCompetencyByIdOcuGroup(ocupationalGroupId: number) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionCompetencia/por-grupo-ocupacional/${ocupationalGroupId}`, this.header));
     }
 
     public postAsignationCompetency( AsignationCompetency : AsignationCompetencyI) {

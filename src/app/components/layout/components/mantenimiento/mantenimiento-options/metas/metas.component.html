@@ -1,6 +1,7 @@
 <h2 class="Stitle">Metas</h2>
 <div>
     <form style=" margin: 15px 0 35px 0" [formGroup]="goalsForm" (ngSubmit)="saveChanges()">
+
         <div style="display: flex; gap: 5px;">
 
             <mat-form-field appearance="fill" style="flex: 2;">
@@ -24,15 +25,37 @@
             </mat-form-field>
         </div>
 
-        <div style="display: flex;">
-            <mat-form-field appearance="fill" style="width: 25%;">
+        <div style="display: flex; gap: 5px;">
+
+            <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Valor</mat-label>
                 <input matInput type="number" formControlName="valor">
+            </mat-form-field>
+
+            
+            <mat-form-field appearance="fill" style="flex: 2">
+                <mat-label>Meta del plan operativo anual</mat-label>
+                <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="metaPoa"
+                    (input)="getGoalPOA()">
+
+                <mat-autocomplete #auto='matAutocomplete'>
+                    <ng-container *ngIf="goalsPoa && goalsPoa.length > 0; else noGoalPoa">
+                        <mat-option *ngFor="let goalPoa of goalsPoa" [value]="goalPoa.nombre">
+                            {{goalPoa.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noGoalPoa>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
             </mat-form-field>
         </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button type="button" class="cleanButton" (click)="goalsForm.reset()" *ngIf="goalsForm.value.idMeta">Limpiar edición</button>
+        <button type="button" class="cleanButton" (click)="goalsForm.reset()" *ngIf="goalsForm.value.idMeta">Limpiar
+            edición</button>
     </form>
 
     <h3 class="Stitle">Listado Metas</h3>
@@ -44,8 +67,9 @@
                     <th class="headerCell">Nombre</th>
                     <th class="headerCell">Medio de verificación</th>
                     <th class="headerCell">Valor</th>
+                    <th class="headerCell">Meta POA</th>
                     <th class="headerCell" style="width: 5%;"></th>
-                    <th class="headerCell" style="width: 5%; padding-right: 15px;">
+                    <th class="headerCell" style="width: 7%; padding-right: 15px;">
                         <div class="loader" *ngIf="!goals"></div>
                     </th>
                 </tr>
@@ -55,25 +79,22 @@
                     <td class="dataIndiCell">{{goal.nombre}}</td>
                     <td class="dataIndiCell">{{goal.medioVerificacionObj.nombre}}</td>
                     <td class="dataIndiCell">{{goal.valor}} Puntos</td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(goal)" class="editIcon">edit</mat-icon>
-                    </td>
-                    <td class="dataIndiCell"><mat-icon (click)="deleteGoal(goal.idMeta)"
-                            class="removeIcon">delete</mat-icon></td>
+                    <td class="dataIndiCell">{{goal.metaPoa ? goal.metaPoa : 'No Asignado'}}</td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(goal)" class="editIcon">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteGoal(goal.idMeta)" class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr class="paginatorRow">
-                    <ng-container *ngFor="let td of [1, 2, 3]">
+            <tfoot *ngIf="pagination && pagination.totalPage">
+                <tr class="paginatorRow" >
+                    <ng-container *ngFor="let td of [1, 2, 3, 4]">
                         <td class="dataIndiCell"></td>
                     </ng-container>
-                    <td class="dataIndiCell">
-                        <!-- Placeholder para paginación -->
-                    </td>
-                    <td class="dataIndiCell">
+                    <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+                    <td class="paginationCell">
                         <span style="display: flex; align-items: center;">
-                            <mat-icon class="">navigate_before</mat-icon>
-                            <h5 style="margin: 0;"></h5>
-                            <mat-icon class="">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                            <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
@@ -84,10 +105,9 @@
         <tbody>
             <tr class="dataRow">
                 <td class="dataIndiCell">No hay elementos que mostrar.</td>
-                <ng-container *ngFor="let td of [1, 2, 3, 4]">
+                <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
                     <td class="dataIndiCell"></td>
                 </ng-container>
-
             </tr>
         </tbody>
     </ng-template>

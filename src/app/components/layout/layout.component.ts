@@ -8,11 +8,11 @@ import { loggedUserI } from '../../helpers/intranet/intranet.interface';
   selector: 'app-layout',
   standalone: true,
   imports: [MaterialComponents, ClassImports],
-  providers:[systemInformationService],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent implements OnInit{
+
   usuario!: loggedUserI
 
   constructor(
@@ -22,12 +22,12 @@ export class LayoutComponent implements OnInit{
   ngOnInit(): void {
     this.usuario = this.systemInformationService.localUser;
   }
+
   sidenavOpened: boolean = false;
   dropdownOpen: boolean = false;
-
+  
   toggleDropdown(event: Event) {
     event.stopPropagation();
     this.dropdownOpen = !this.dropdownOpen;
   }
-
 }

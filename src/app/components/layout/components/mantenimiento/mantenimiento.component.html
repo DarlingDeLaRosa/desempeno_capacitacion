@@ -1,55 +1,65 @@
-<div class="title">
-    <h1>Mantenimiento</h1>
-</div>
+
+
+
+<div style="display: flex; justify-content: space-between;">
+    <div class="title">
+        <h1>Mantenimiento</h1>
+    </div>
+    <span></span>
+  </div>
 
 
 <div class="mantenimientoContainer">
 
     <div class="mantenimientoOptions">
 
-        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['competencias'] } }]" routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Competencias
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['competencias'] } }]"
+            routerLinkActive="active">
+            <mat-icon>star</mat-icon>Competencias
         </a>
 
-        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['grados']}}]"
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['grados']}}]" routerLinkActive="active">
+            <mat-icon>subtitles</mat-icon>Grados
+        </a>
+        
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['asignacion-competencias']}}]"
             routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Grados
+            <mat-icon>add</mat-icon>Asignación de Competencias
         </a>
 
-        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['protocolos']}}]"
-            routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Protocolos
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['protocolos']}}]" routerLinkActive="active">
+            <mat-icon>gavel</mat-icon>Protocolos
         </a>
 
         <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['cursos'] } }]" routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Cursos
+            <mat-icon>school</mat-icon>Cursos
         </a>
 
         <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['periodos'] } }]" routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Periodos
+            <mat-icon>calendar_month</mat-icon>Gestión de periodo 
         </a>
 
-        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['asignacion-competencias']}}]"
-            routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Asignación de Competencias
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['periodos-procesos'] } }]" routerLinkActive="active">
+            <mat-icon>autorenew</mat-icon>Gestión de procesos
         </a>
-        
-        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['metas']}}]"
-            routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Metas
+
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['metas']}}]" routerLinkActive="active">
+            <mat-icon>merge_type</mat-icon>Metas transversales
         </a>
-        
+
         <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['asignacion-metas']}}]"
             routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Asignación de Metas
+            <mat-icon>add_task</mat-icon>Asignación de Metas
         </a>
 
-        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['colaboradores'] } }]" routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Colaboradores
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['colaboradores'] } }]"
+            routerLinkActive="active">
+            <mat-icon>group</mat-icon>Colaboradores
         </a>
 
-        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['asignacion-acuerdos'] } }]" routerLinkActive="active">
-            <mat-icon>settings</mat-icon>Asignación de Acuerdos
+        <a class="item-menu" [routerLink]="[{ outlets: { mantenimiento: ['asignacion-acuerdos'] } }]"
+            routerLinkActive="active">
+            <mat-icon>note_add</mat-icon>Asignación de Acuerdos
         </a>
 
     </div>

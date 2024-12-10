@@ -1,70 +1,82 @@
 <h2 class="Stitle">Periodos</h2>
 <div>
-    <form style=" margin: 15px 0 35px 0"> <!--[formGroup]="estructuraProgramaticaForm" (ngSubmit)="saveChanges()"-->
+    <form style=" margin: 15px 0 35px 0" [formGroup]="periodsForm" (ngSubmit)="saveChanges()">
 
-        <mat-form-field appearance="fill" style="width: 69%;">
-            <mat-label>Periodo</mat-label>
-            <input matInput formControlName="nombre">
-        </mat-form-field>&nbsp;
+        <div style="display: flex;">
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Nombre</mat-label>
+                <input matInput formControlName="nombre">
+            </mat-form-field>&nbsp;
 
-        <mat-form-field appearance="fill" style="width: 30%;">
-            <mat-label>Codigo</mat-label>
-            <input matInput formControlName="codigo">
-        </mat-form-field>
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Rango de Fecha</mat-label>
+                <mat-date-range-input [rangePicker]="picker2">
+                    <input matStartDate placeholder="Fecha Inicial" formControlName="fechaInicio">
+                    <input matEndDate placeholder="Fecha Final" formControlName="fechaFin">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker2></mat-date-range-picker>
+            </mat-form-field>
+        </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button class="cleanButton">Limpiar edición</button> <!--(click)="estructuraProgramaticaForm.reset()" -->
+        <button type="button" class="cleanButton" (click)="periodsForm.reset()" *ngIf="periodsForm.value.idPeriodo">Limpiar
+            edición</button>
 
     </form>
 
-    <h3 class="Stitle">Listado de Estructura Programatica</h3>
-    
+    <h3 class="Stitle">Listado de periodos</h3>
+
     <div class="table-container">
         <table>
             <thead class="headerTable">
                 <tr class="headerRow">
-                    <th class="headerCell">Estructura programatica</th>
-                    <th class="headerCell" style="width: 20%;">Codigo</th>
+                    <th class="headerCell">Periodo</th>
+                    <th class="headerCell">Rango de Fecha</th>
+                    <th class="headerCell">Activar periodo</th>
                     <th class="headerCell" style="width: 5%;"></th>
-                    <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                        <div class="loader"></div>
+                    <th class="headerCell" style="width: 7%; padding-right: 15px;">
+                        <div class="loader" *ngIf="!periods"></div>
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="dataRow">
-                    <td class="dataIndiCell">Item 1</td>
-                    <td class="dataIndiCell">001</td>
-                    <td class="dataIndiCell"><mat-icon class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon class="removeIcon">delete</mat-icon></td>
-                </tr>
-                <tr class="dataRow">
-                    <td class="dataIndiCell">Item 2</td>
-                    <td class="dataIndiCell">002</td>
-                    <td class="dataIndiCell"><mat-icon class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon class="removeIcon">delete</mat-icon></td>
+            <tbody *ngIf="periods && periods.length > 0; else noElements">
+                <tr class="dataRow" *ngFor="let period of periods">
+                    <td class="dataIndiCell">{{period.nombre}}</td>
+                    <td class="dataIndiCell">{{period.fechaInicio | date: 'dd/MM/yyyy'}} - {{period.fechaFin | date: 'dd/MM/yyyy'}}</td>
+                    <td class="dataIndiCell">
+                        <mat-slide-toggle color="#004b8d" [(ngModel)]="period.estado"
+                            (change)="activatePeriod(period.idPeriodo)"></mat-slide-toggle>
+                    </td>
+                    <td class="dataIndiCell"><mat-icon class="editIcon" (click)="setValueToEdit(period)">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon class="removeIcon" (click)="deletePeriod(period.idPeriodo)">delete</mat-icon></td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr class="paginatorRow">
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell"></td>
-                    <td class="dataIndiCell">
-                        <!-- Placeholder para paginación -->
-                    </td>
-                    <td class="dataIndiCell">
+            <tfoot *ngIf="pagination && pagination.totalPage">
+                <tr class="paginatorRow" >
+                    <ng-container *ngFor="let td of [1, 2, 3]">
+                        <td class="dataIndiCell"></td>
+                    </ng-container>
+                    <td class="paginationCell"><span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+                    <td class="paginationCell">
                         <span style="display: flex; align-items: center;">
-                            <mat-icon class="">navigate_before</mat-icon>
-                            <h5 style="margin: 0;"></h5>
-                            <mat-icon class="">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                            <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
             </tfoot>
         </table>
     </div>
-
-    <!-- <div class="noData" *ngIf="estructurasProgramaticas && estructurasProgramaticas.length == 0">
-        <img class="imgNoData" src="../../../../../assets/NO_DATA_ILUSTRACION.png" alt="No hay Datos.">
-      </div> -->
+    <ng-template #noElements>
+        <tbody>
+            <tr class="dataRow">
+                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <ng-container *ngFor="let td of [1, 2, 3, 4]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
+            </tr>
+        </tbody>
+    </ng-template>
 </div>

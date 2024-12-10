@@ -11,13 +11,13 @@ import { SnackBars } from '../../../../services/snackBars.service';
   selector: 'app-cursos-miembros',
   standalone: true,
   imports: [MaterialComponents,ClassImports],
-  providers:[CoursesServices],
   templateUrl: './cursos-miembros.component.html',
   styleUrl: './cursos-miembros.component.css'
 })
 export class CursosMiembrosComponent implements OnInit{
 
   hijosList!: any[] ;
+  isLoading:boolean = true;
 
   constructor
   (
@@ -31,14 +31,15 @@ export class CursosMiembrosComponent implements OnInit{
   }
 
   getHijosColaborador(){
+    this.isLoading = true;
     this.cursosService.getHijosColaborador().subscribe((resp:any)=>{
       this.hijosList = resp.data.hijos;
-      console.log(this.hijosList);
+      this.isLoading = false;
     })
   }
 
 async deleteInscripcion(id: number) {
-  let removeDecision: boolean = await this.snackBar.snackbarConfirmationDelete()
+  let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
   if (removeDecision) {
     this.snackBar.snackbarLouder(true)
     this.cursosService.deleteInscripcion(id)

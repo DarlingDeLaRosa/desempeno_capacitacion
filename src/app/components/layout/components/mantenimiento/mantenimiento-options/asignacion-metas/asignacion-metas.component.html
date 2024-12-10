@@ -1,4 +1,4 @@
-<h2 class="Stitle">Asignación de competencias</h2>
+<h2 class="Stitle">Asignación de metas</h2>
 <div>
     <form style=" margin: 15px 0 35px 0" [formGroup]="asignationGoalForm" (ngSubmit)="saveChanges()">
         
@@ -21,7 +21,7 @@
                 <mat-label>Metas</mat-label>
                 <mat-select formControlName="idMeta" disableRipple>
                     <ng-container *ngIf="goals && goals.length; else noGoal">
-                        <mat-option [value]="goal.idMeta" *ngFor="let goal of goals">
+                        <mat-option (click)="validateMetaPOA(goal)" [value]="goal.idMeta" *ngFor="let goal of goals">
                             {{goal.nombre}}
                         </mat-option>
                     </ng-container>
@@ -39,7 +39,7 @@
 
     </form>
 
-    <h3 class="Stitle">Listado de Asignaciones de competencias</h3>
+    <h3 class="Stitle">Listado de Asignaciones de metas</h3>
 
     <div class="table-container">
         <table>
@@ -48,7 +48,7 @@
                     <th class="headerCell">Grupo ocupacional</th>
                     <th class="headerCell">Competencia</th>
                     <th class="headerCell" style="width: 5%;"></th>
-                    <th class="headerCell" style="width: 5%; padding-right: 15px;">
+                    <th class="headerCell" style="width: 7%; padding-right: 15px;">
                         <div class="loader" *ngIf="!asignationGoals"></div>
                     </th>
                 </tr>
@@ -64,19 +64,17 @@
                             class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr class="paginatorRow">
+            <tfoot *ngIf="pagination && pagination.totalPage">
+                <tr class="paginatorRow" >
                     <ng-container *ngFor="let td of [1, 2]">
                         <td class="dataIndiCell"></td>
                     </ng-container>
-                    <td class="dataIndiCell">
-                        <!-- Placeholder para paginación -->
-                    </td>
-                    <td class="dataIndiCell">
+                    <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+                    <td class="paginationCell">
                         <span style="display: flex; align-items: center;">
-                            <mat-icon class="">navigate_before</mat-icon>
-                            <h5 style="margin: 0;"></h5>
-                            <mat-icon class="">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                            <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>

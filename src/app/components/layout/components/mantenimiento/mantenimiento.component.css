@@ -3,11 +3,8 @@
     padding: 0 5px;
     grid-template-columns: 20% 79%;
     grid-column-gap: 1%;
+    margin-top: 15px;
     box-sizing: border-box;
-}
-
-.mantenimientoContainer{
-    margin-top: 25px;
 }
 
 .mantenimientoOptions{

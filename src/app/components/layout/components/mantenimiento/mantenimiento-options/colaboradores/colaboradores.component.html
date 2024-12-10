@@ -1,13 +1,18 @@
 <h2 class="Stitle">Colaboradores</h2>
 <div>
-    <form style=" margin: 15px 0 35px 0" [formGroup]="collaboratorForm"> <!--(ngSubmit)="saveChanges()"-->
+    <form style=" margin: 15px 0 35px 0" [formGroup]="collaboratorForm" (ngSubmit)="saveChanges()"> <!---->
 
         <div style="display: flex; gap: 5px;">
 
             <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Cedula / Pasaporte</mat-label>
+                <input matInput formControlName="cedula" maxlength="11" (input)="getPersonaByDNI()">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1;">
                 <mat-label>Nombre</mat-label>
                 <input matInput formControlName="nombre">
-            </mat-form-field><br>
+            </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1;">
                 <mat-label>Apellidos</mat-label>
@@ -22,7 +27,12 @@
 
         <div style="display: flex; gap: 5px;">
 
-            <mat-form-field appearance="fill" style="flex: 1">
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Edad</mat-label>
+                <input type="number" matInput formControlName="edad">
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1.5">
                 <mat-label>Cargo</mat-label>
                 <mat-select formControlName="idCargo" disableRipple>
                     <ng-container *ngIf="positions && positions.length; else noPosition">
@@ -34,6 +44,13 @@
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>
                 </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Fecha de ingreso</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="fechaIngreso">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1">
@@ -51,6 +68,10 @@
                 </mat-select>
             </mat-form-field>
 
+        </div>
+
+        <div style="display: flex; gap: 5px;">
+            
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Recinto</mat-label>
                 <mat-select formControlName="idRecinto" disableRipple>
@@ -65,6 +86,39 @@
                 </mat-select>
             </mat-form-field>
 
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Rol de usuario</mat-label>
+                <mat-select formControlName="idRol" disableRipple>
+                    <ng-container *ngIf="roles && roles.length; else noRol">
+                        <mat-option [value]="rol.idRol" *ngFor="let rol of roles">
+                            {{rol.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noRol>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <div style="flex: 1"></div>
+
+        </div>
+
+
+        <div class="matRadioChoice">
+            <h4 style="margin-right: 20px;">¿Cual es el sexo de la persona?</h4>
+            <mat-radio-group formControlName="sexo">
+                <mat-radio-button value="M" color="primary">Masculino</mat-radio-button>
+                <mat-radio-button value="F" color="primary">Femenino</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div class="matRadioChoice">
+            <h4 style="margin-right: 20px;">¿El colaborador ocupará una posición de supervisión?</h4>
+            <mat-radio-group formControlName="supervisor">
+                <mat-radio-button [value]="true" color="primary">Si</mat-radio-button>
+                <mat-radio-button [value]="false" color="primary">No</mat-radio-button>
+            </mat-radio-group>
         </div>
 
         <div style="display: flex; gap: 5px;">
@@ -141,15 +195,35 @@
         </div>
 
         <div class="matRadioChoice">
-            <h4 style="margin-right: 20px;">¿El empleado desempeña un un cargo o grupo ocupacional al establecido ?</h4>
-            <mat-radio-group>
-                <mat-radio-button [value]="false" [checked]="true" (click)="onSelectionChange(false)"
+            <h4 style="margin-right: 20px;">¿El empleado es de carrera administrativa?</h4>
+            <mat-radio-group formControlName="carreraAdministrativa">
+                <mat-radio-button [value]="false" [checked]="true" (click)="onCareerSelectionChange(false)"
                     color="primary">No</mat-radio-button>
-                <mat-radio-button [value]="true" (click)="onSelectionChange(true)" color="primary">Si</mat-radio-button>
+                <mat-radio-button [value]="true" (click)="onCareerSelectionChange(true)"
+                    color="primary">Si</mat-radio-button>
             </mat-radio-group>
         </div>
 
-        <div style="display: flex; gap: 5px;" *ngIf="diferentPosition">
+        <div style="display: flex; gap: 5px;" *ngIf="adminCareer">
+
+            <mat-form-field appearance="fill" style="flex: 1;">
+                <mat-label>Número de resolución</mat-label>
+                <input matInput formControlName="noResolucion">
+            </mat-form-field>
+
+            <div style="flex: 1"></div>
+            <div style="flex: 1"></div>
+        </div>
+
+        <div class="matRadioChoice">
+            <h4 style="margin-right: 20px;">¿El empleado desempeña un cargo o grupo ocupacional diferente al establecido?</h4>
+            <mat-radio-group formControlName="diferentPosition">
+                <mat-radio-button [value]="false" [checked]="true" color="primary" (click)="onPositionSelectionChange(false)">No</mat-radio-button>
+                <mat-radio-button [value]="true" color="primary" (click)="onPositionSelectionChange(true)">Si</mat-radio-button>
+            </mat-radio-group>
+        </div>
+
+        <div style="display: flex; gap: 5px;" *ngIf="collaboratorForm.value.diferentPosition">
 
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Cargo desempeñado</mat-label>
@@ -181,12 +255,11 @@
             </mat-form-field>
 
             <div style="flex: 1"></div>
-
         </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button type="button" class="cleanButton" *ngIf="collaboratorForm.value.idPersona"
-        (click)="collaboratorForm.reset()">Limpiar edición</button> 
+        <button type="button" class="cleanButton" *ngIf="collaboratorForm.value.idUsuario"
+            (click)="clearForm()" >Limpiar edición</button>
 
     </form>
 
@@ -202,33 +275,33 @@
                     <th class="headerCell">Estado</th>
                     <th class="headerCell">G.Ocupacional</th>
                     <th class="headerCell" style="width: 5%;"></th>
-                    <th class="headerCell" style="width: 5%; padding-right: 15px;">
+                    <th class="headerCell" style="width: 7%; padding-right: 15px;">
                         <div *ngIf="!collaborators" class="loader"></div>
                     </th>
                 </tr>
             </thead>
             <tbody *ngIf="collaborators && collaborators.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let collaborator of collaborators">
-                    <td class="dataIndiCell">{{collaborator.nombre}} {{collaborator.apellidos}}</td>
-                    <td class="dataIndiCell">{{collaborator.recinto.nombre}} ({{collaborator.recinto.siglas}})</td>
-                    <td class="dataIndiCell">{{collaborator.cargo.nombre}}</td>
-                    <td class="dataIndiCell">{{collaborator.estadoObj?.nombre ?? 'No asignado'}}</td>
-                    <td class="dataIndiCell">{{collaborator.grupoObj?.nombre ?? 'No asignado'}}</td>
+                    <td class="dataIndiCell">{{collaborator.persona.nombre}} {{collaborator.persona.apellidos}}</td>
+                    <td class="dataIndiCell">{{collaborator.persona.recinto.nombre}} ({{collaborator.persona.recinto.siglas}})</td>
+                    <td class="dataIndiCell">{{collaborator.persona.cargo.nombre}}</td>
+                    <td class="dataIndiCell">{{collaborator.persona.estadoObj.nombre}}</td>
+                    <td class="dataIndiCell">{{collaborator.persona.grupoObj.nombre}}</td>
                     <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(collaborator)" class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon (click)="deleteCollaborator(collaborator.idPersona)" class="removeIcon">delete</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteCollaborator(collaborator.idUsuario, collaborator.idPersona)" class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
-            <tfoot>
-                <tr class="paginatorRow">
+            <tfoot *ngIf="pagination && pagination.totalPage">
+                <tr class="paginatorRow" >
                     <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
                         <td class="dataIndiCell"></td>
                     </ng-container>
-                    <td class="dataIndiCell"><!-- items --></td>
-                    <td class="dataIndiCell">
+                    <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+                    <td class="paginationCell">
                         <span style="display: flex; align-items: center;">
-                            <mat-icon class="">navigate_before</mat-icon>
-                            <h5 style="margin: 0;"></h5>
-                            <mat-icon class="">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                            <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
@@ -242,7 +315,6 @@
                 <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
                     <td class="dataIndiCell"></td>
                 </ng-container>
-
             </tr>
         </tbody>
     </ng-template>

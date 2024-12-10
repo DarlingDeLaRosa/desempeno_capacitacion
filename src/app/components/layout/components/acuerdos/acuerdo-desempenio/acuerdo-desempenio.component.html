@@ -1,3 +1,4 @@
+
 <div class="fuctionContent">
   <div class="title">
     <h1>Acuerdo de Desempeño</h1>
@@ -41,55 +42,32 @@
         <th class="headerCell" style="width: 2%;">
         <th class="headerCell" style="width: 2%;">
         <th class="headerCell" style="width: 2%;">
-          <!-- <div class="loader"></div> -->
+          <div *ngIf="isLoading ===  true" class="loader" ></div>
         </th>
       </tr>
     </thead>
     <tbody>
-      <tr class="dataRow">
-        <td class="dataIndiCell">Item 1</td>
-        <td class="dataIndiCell">Item 1</td>
-        <td class="dataIndiCell">Item 1</td>
-        <td class="dataIndiCell">001</td>
-        <td class="dataIndiCell"><mat-icon class="listIcon">upload_file</mat-icon></td>
-        <td class="dataIndiCell"><mat-icon class="listIcon">done_outline</mat-icon></td>
-        <td class="dataIndiCell"><mat-icon class="listIcon">description</mat-icon></td>
-        <td class="dataIndiCell"><mat-icon class="editIcon"
-            [routerLink]="[{ outlets: { 'plan-de-mejora': ['formulario']}}]" routerLinkActive="active">edit</mat-icon>
-        </td>
-      </tr>
-      <tr class="dataRow">
-        <td class="dataIndiCell">Item 2</td>
-        <td class="dataIndiCell">Item 2</td>
-        <td class="dataIndiCell">Item 2</td>
-        <td class="dataIndiCell">002</td>
-        <td class="dataIndiCell"><mat-icon class="listIcon">upload_file</mat-icon></td>
-        <td class="dataIndiCell"><mat-icon class="listIcon">done_outline</mat-icon></td>
-        <td class="dataIndiCell"><mat-icon class="listIcon">description</mat-icon></td>
-        <td class="dataIndiCell"><mat-icon class="editIcon"
-            [routerLink]="[{ outlets: { 'plan-de-mejora': ['formulario']}}]" routerLinkActive="active">edit</mat-icon>
+      <tr class="dataRow" *ngFor="let acuerdo of agreement">
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre}} {{acuerdo.colaboradorObj.apellidos}}</td>
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.departamento.nombre}}</td>
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
+        <td class="dataIndiCell">
+
+          <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
+          (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)">upload_file</mat-icon></td>
+        <td class="dataIndiCell">
+          <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
+          [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active">done_outline</mat-icon></td>
+        <td class="dataIndiCell">
+          <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
+          (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)">description</mat-icon></td>
+        <td class="dataIndiCell">
+          <mat-icon class="editIcon" *ngIf="acuerdo.idAcuerdo"
+            [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active">edit</mat-icon>
         </td>
       </tr>
     </tbody>
-    <tfoot>
-      <tr class="paginatorRow">
-        <td class="dataIndiCell"></td>
-        <td class="dataIndiCell"></td>
-        <td class="dataIndiCell"></td>
-        <td class="dataIndiCell"></td>
-        <td class="dataIndiCell"></td>
-        <td class="dataIndiCell"></td>
-        <td class="dataIndiCell">
-          <!-- Placeholder para paginación -->
-        </td>
-        <td class="dataIndiCell">
-          <span style="display: flex; align-items: center;">
-            <mat-icon class="">navigate_before</mat-icon>
-            <h5 style="margin: 0;"></h5>
-            <mat-icon class="">navigate_next</mat-icon>
-          </span>
-        </td>
-      </tr>
-    </tfoot>
   </table>
 </div>
+

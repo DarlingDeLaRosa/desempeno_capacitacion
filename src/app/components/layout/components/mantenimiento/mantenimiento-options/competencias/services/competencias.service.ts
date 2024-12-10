@@ -24,8 +24,8 @@ export class CompetencyServices {
         this.header = { headers: this.headers };
     }
 
-    public getCompetency() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Competencia`, this.header));
+    public getCompetency(page: number = 1, itemPerPage: number = 1000) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Competencia?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
     }
 
     public getCompetencyById(competencyId: number) {

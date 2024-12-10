@@ -12,12 +12,12 @@ import { ListPropertyViewComponent } from '../../../../../../helpers/components/
 import { ClassImports } from '../../../../../../helpers/class.components';
 import { GradesTypeGetI } from './interfaces/tiposGrados.interface';
 import { TypesGradesServices } from './services/tiposGrados.service';
+import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 
 @Component({
   selector: 'app-grados',
   standalone: true,
   imports: [MaterialComponents, ClassImports],
-  providers: [CompetencyServices, GradesServices, TypesGradesServices],
   templateUrl: './grados.component.html',
   styleUrl: './grados.component.css'
 })
@@ -32,7 +32,6 @@ export class GradosComponent implements OnInit {
     private typeGradeService: TypesGradesServices,
     private competencyService: CompetencyServices,
   ) {
-
     this.gradesForm = fb.group({
       idGrado: 0,
       idCompetencia: new FormControl('', Validators.required),
@@ -42,9 +41,11 @@ export class GradosComponent implements OnInit {
       comportamientos: this.fb.array([])
     })
   }
-
+  
+  page: number = 1
   grades!: GradesGetI[]
   gradesForm: FormGroup
+  pagination!: PaginationI
   competencies!: CompetencyI[]
   gradesTypes!: GradesTypeGetI[]
 
@@ -55,9 +56,7 @@ export class GradosComponent implements OnInit {
     this.initializeBehaviors()
   }
 
-  get behaviors() {
-    return this.gradesForm.get('comportamientos') as FormArray;
-  }
+  get behaviors() { return this.gradesForm.get('comportamientos') as FormArray; }
 
   // Metodo para obtener todas las competencias
   getCompetencies() {
@@ -81,8 +80,8 @@ export class GradosComponent implements OnInit {
       this.behaviors.push(
         this.fb.group({
           nombre: new FormControl('', Validators.required),
-          probatorio: new FormControl(false),
           calificacion: new FormControl(0),
+          probatorio: false,
         })
       )
     }
@@ -94,10 +93,13 @@ export class GradosComponent implements OnInit {
 
   // Metodo para obtener todos los grados 
   getGrades() {
-    this.gradeService.getGrades()
+    this.gradeService.getGrades(this.page, 10)
       .subscribe((res: any) => {
+        console.log(res);
+        
         this.grades = res.data;
-        console.log(this.grades);
+        const {currentPage ,totalItem, totalPage} = res
+        this.pagination = {currentPage ,totalItem, totalPage}
       })
   }
 
@@ -119,7 +121,7 @@ export class GradosComponent implements OnInit {
 
   // Metodo para eliminar los grados y comportamientos
   async deleteGrade(id: number) {
-    let removeDecision: boolean = await this.snackBar.snackbarConfirmationDelete()
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
 
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
@@ -132,7 +134,7 @@ export class GradosComponent implements OnInit {
   setValueToEdit(grade: GradesGetI) {
     this.gradesForm.patchValue({
       idGrado: grade.idGrado,
-      idCompetencia: grade.idCompetencia,
+      idCompetencia: grade.competenciaObj.idCompetencia,
       idTipoGrado: grade.tipoGradoObj.idTipoGrado,
       comportamientos: grade.comportamientosObj.map((behavior, index) => {
 
@@ -145,5 +147,22 @@ export class GradosComponent implements OnInit {
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
     this.appHelpers.saveChanges(() => this.postGrade(), () => this.putGrade(), this.gradesForm.value.idGrado, this.gradesForm)
+    console.log(this.gradesForm.value);
+  }
+
+  //Metodo para llamar a la siguiente pagina
+  nextPage() {
+    if (this.page < this.pagination.totalPage) {
+      this.page += 1
+      this.getGrades()
+    }
+  }
+
+  //Metodo para llamar a la pagina anterior
+  previousPage() {
+    if (this.page > 1) {
+      this.page -= 1
+      ;this.getGrades()
+    }
   }
 }

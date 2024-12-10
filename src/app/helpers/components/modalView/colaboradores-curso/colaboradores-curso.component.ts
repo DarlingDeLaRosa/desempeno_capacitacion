@@ -11,7 +11,6 @@ import { SnackBars } from '../../../../components/layout/services/snackBars.serv
   selector: 'app-colaboradores-curso',
   standalone: true,
   imports: [MaterialComponents,ClassImports],
-  providers:[CoursesServices],
   templateUrl: './colaboradores-curso.component.html',
   styleUrls: ['./colaboradores-curso.component.css']  // Aquí está corregido
 })
@@ -38,7 +37,7 @@ export class ColaboradoresCursoComponent {
   }
 
   async deleteInscripcion(id: number, index:number) {
-    let removeDecision: boolean = await this.snackBar.snackbarConfirmationDelete()
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
       this.courseService.deleteInscripcion(id)

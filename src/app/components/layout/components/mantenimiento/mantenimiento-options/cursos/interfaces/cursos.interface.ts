@@ -17,6 +17,7 @@ export interface CourseI {
     costoTotal: number,
     link: string,
     idEstado: number
+    periodoId: number
 }
 
 export interface CourseGetI {

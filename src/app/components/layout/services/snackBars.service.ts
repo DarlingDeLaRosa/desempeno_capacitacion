@@ -5,6 +5,8 @@ import { SnackBarSuccess } from '../../../helpers/components/snackBarSuccess/sna
 import { SnackbarServerError } from '../../../helpers/components/snackBarServerError/snackbarServerError.component';
 import { SnackbarError } from '../../../helpers/components/snackBarError/snackbarError.component';
 import { SnackBarConfirmation } from '../../../helpers/components/snackBarConfirmDelete/snackbarConfirmDelete.component';
+import { SnackbarWarning } from '../../../helpers/components/snackBarWarning/snackbarWarning.component';
+import { SnackBarStaySuccess } from '../../../helpers/components/snackbarStaySuccess/snackbarStaySuccess.component';
 
 @Injectable({
     providedIn: 'root'
@@ -48,6 +50,15 @@ export class SnackBars {
         })
     }
 
+    snackbarStaySuccess( titleMessage: string, successMessage: string) {
+        this.snackBarRef = this.snackBar.openFromComponent(SnackBarStaySuccess, {
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            data: {successMessage, titleMessage}
+        })
+        this.removeOverlay()
+    }
+
     snackbarServerError() {
         this.snackBarRef = this.snackBar.openFromComponent(SnackbarServerError, {
             horizontalPosition: 'center',
@@ -65,13 +76,26 @@ export class SnackBars {
         })
     }
 
-    snackbarConfirmationDelete(): Promise<boolean> {
+    snackbarWarning(warningMessage: string, time: number = 2500) {
+        this.snackBarRef = this.snackBar.openFromComponent(SnackbarWarning, {
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+            duration: time,
+            data: warningMessage
+        })
+    }
+
+    snackbarConfirmation(
+        confirmationTitle: string = '¿Estas seguro de eliminar el registro?',
+        confirmationSubTitle: string = 'Esta acción no se puede deshacer.'
+        ): Promise<boolean> {
         this.createOverlay();
 
         return new Promise((resolve) => {
             const snackBarRefConfirm = this.snackBar.openFromComponent(SnackBarConfirmation, {
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
+                data: {confirmationTitle, confirmationSubTitle}
             })
 
             snackBarRefConfirm.afterDismissed().subscribe(info => {

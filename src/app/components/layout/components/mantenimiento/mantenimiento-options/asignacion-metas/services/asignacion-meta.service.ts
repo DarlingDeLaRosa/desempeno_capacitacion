@@ -24,8 +24,8 @@ export class AsignationGoalsServices {
         this.header = { headers: this.headers };
     }
 
-    public getAsignationGoals() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionMeta`, this.header));
+    public getAsignationGoals(page: number = 1, itemPerPage: number = 1000) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionMeta?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
     }
 
     public postAsignationGoal(AsignationGoal: AsignationGoalI) {

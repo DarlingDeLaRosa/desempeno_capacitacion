@@ -12,9 +12,9 @@
   </div>
   <div class="filters">
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill" style="width: 350px;">
       <mat-label>Filtrar</mat-label>
-      <input matInput  > <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
+      <input matInput [(ngModel)]="inputValue" (input)="searchCourse()"> <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
   </div>
@@ -26,52 +26,61 @@
               <th class="headerCell">Curso</th>
               <th class="headerCell">Fecha Inicio</th>
               <th class="headerCell">Fecha Fin</th>
-              <th class="headerCell">Descripción</th>
               <th class="headerCell">Inicio Inscrip</th>
               <th class="headerCell">Fin Inscrip</th>
               <th class="headerCell">Solicitantes</th>
+              <th class="headerCell">Estado</th>
+              <th class="headerCell" style="width: 5%; padding-right: 15px;">   </th>
               <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                  <!-- <div class="loader"></div> -->
+                <div *ngIf="isloading ===  true" class="loader" ></div>
               </th>
           </tr>
       </thead>
       <tbody>
-          <tr class="dataRow" *ngFor="let item of cursoList">
+          <tr class="dataRow" *ngFor="let item of cursoListfilter">
               <td class="dataIndiCell">{{item.nombre}}</td>
               <td class="dataIndiCell">{{item.fechaInicio |date}}</td>
               <td class="dataIndiCell">{{item.fechaFin | date}}</td>
-              <td class="dataIndiCell">{{item.descripcion}}</td>
               <td class="dataIndiCell">{{item.fechaInicioInscripcion |date}}</td>
               <td class="dataIndiCell">{{item.fechaFinInscripcion |date}}</td>
-              <td class="dataIndiCell">{{item.inscripcionesObj.length}}</td>
-
-              <td  class="dataIndiCell"><mat-icon  class="listIcon" (click)="openModal(item)">groups</mat-icon></td>
+              <td class="dataIndiCell">{{item.inscripcionesObj.length}} / {{item.cuposDisponibles}}</td>
+              <td class="dataIndiCell">{{item.estadoCursoObj?.nombre|| null}}</td>
+              <td  class="dataIndiCell">
+                  <ng-container *ngIf="(item.idEstado == 2) && (item.inscripcionesObj.length != item.cuposDisponibles)">
+                  <mat-icon  class="editIcon" (click)=" openModalIncribirLista(item)">edit_note</mat-icon>
+                </ng-container>
+                </td>
+                <td  class="dataIndiCell">
+                  <ng-container *ngIf="item.interno">
+                    <mat-icon  class="listIcon" (click)="openModal(item)">groups</mat-icon>
+                  </ng-container>
+                </td>
           </tr>
-          <tr *ngIf="cursoList.length === 0">
+          <tr *ngIf="cursoListfilter.length === 0 && isloading == false">
             <td colspan="12">
               <h5 class="no-record">No hay datos Registrados</h5>
             </td>
           </tr>
       </tbody>
-      <tfoot *ngIf="cursoList.length !== 0">
-          <tr class="paginatorRow">
+      <tfoot *ngIf="cursoListfilter.length !== 0">
+        <tr class="paginatorRow" >
+          <td class="dataIndiCell"></td>
+          <td class="dataIndiCell"></td>
+          <td class="dataIndiCell"></td>
+          <td class="dataIndiCell"></td>
+          <td class="dataIndiCell"></td>
+          <ng-container *ngFor="let td of [1, 2]">
               <td class="dataIndiCell"></td>
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell"></td>
-              <td class="dataIndiCell">
-                  <!-- Placeholder para paginación -->
-              </td>
-              <td class="dataIndiCell">
-                  <span style="display: flex; align-items: center;">
-                      <mat-icon class="">navigate_before</mat-icon>
-                      <h5 style="margin: 0;"></h5>
-                      <mat-icon class="">navigate_next</mat-icon>
-                  </span>
-              </td>
-          </tr>
+          </ng-container>
+          <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span> </td>
+          <td class="paginationCell" style="width: 10%;">
+              <span style="display: flex; align-items: center;">
+                  <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                  <h5 style="margin: 0;"> {{page}} / {{pagination.totalPage}}</h5>
+                  <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+              </span>
+          </td>
+      </tr>
 
       </tfoot>
   </table>
