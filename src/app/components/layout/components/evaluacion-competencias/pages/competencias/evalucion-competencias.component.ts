@@ -7,7 +7,7 @@ import { EvaluationCompetencyServices } from '../../services/evaluacion-competen
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { EvaluacionModalviewComponent } from '../../modals/evaluacion-modalview/evaluacion-modalview.component';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
-import { EvaluationBehaviorsI, EvaluationCompetencyGetI, EvaluationCompetencyI, gradeCompetencyI } from '../../interface/evaluacion-competencias.interface';
+import { EvaluationBehaviorsI, EvaluationCompetencyGetI } from '../../interface/evaluacion-competencias.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
 
 @Component({
@@ -43,10 +43,10 @@ export class EvalucionCompetenciasComponent implements OnInit {
 
   getSupervisorWithSubordinates() {
     this.evaluationCompetencyService.getEvaluationCompetencies().subscribe((res: any) => {
-      console.log(res);
-      
       this.supervisorWithSubordinates = res.data.colaboradores;
       this.evaluationsCompetencies = res.data.evaluacionesCompetencias;
+      console.log(this.evaluationsCompetencies);
+      
     })
   }
 }

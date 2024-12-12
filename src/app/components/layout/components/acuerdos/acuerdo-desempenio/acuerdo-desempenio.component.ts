@@ -10,6 +10,7 @@ import { agreementService } from '../services/acuerdo.service';
 import { loggedUserI } from '../../../../../helpers/intranet/intranet.interface';
 import { AcuerdoI } from '../interfaces/acuerdo.interface';
 import { RolI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
+import { rolInitialState } from '../../../services/initialStates';
 
 @Component({
   selector: 'app-acuerdo-desempenio',
@@ -27,6 +28,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
   usuario!: loggedUserI
   agreement: Array<AcuerdoI> = []
   rol!: RolI;
+  searchTerm: string = '';
 
   constructor(
     private dialog: MatDialog,
@@ -39,18 +41,34 @@ export class AcuerdoDesempenioComponent implements OnInit {
   ngOnInit(): void {
     this.usuario = this.systemInformation.localUser;
     this.rol = this.systemInformation.activeRol();
+    console.log(this.rol);
+
     this.getAcuerdoByRol();
   }
 
   //Metodo para traer la lista de los hijos de los supervisores
   getAcuerdoByRol() {
     this.isLoading = true;
-    this.agreementService.getAgreementByRol(this.usuario.idPersona).subscribe((resp: any) => {
+    this.agreementService.getAgreementByRol(this.usuario.idPersona, '').subscribe((resp: any) => {
       this.agreement = resp.data;
       console.log(this.agreement);
       this.isLoading = false;
     })
   }
+
+  Buscar(){
+    if (this.searchTerm.length > 2) {
+      this.agreementService.getAgreementByRol(this.usuario.idPersona, this.searchTerm).subscribe((resp: any) => {
+        this.agreement = resp.data;
+        console.log(this.agreement);
+      });
+    } else{
+      if (this.searchTerm.length < 1) {
+        this.getAcuerdoByRol();
+      }
+    }
+  }
+
 
   //Metodo para abrir el modal de la lista de documento
   openModalListadoDocumentos(idCollaborator: number, nombre: string, apellido: string): void {

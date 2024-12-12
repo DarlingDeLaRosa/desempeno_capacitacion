@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../../helpers/class.components';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EvaluationCompetencyServices } from '../../services/evaluacion-competencia.service';
 import { CollaboratorServices } from '../../../mantenimiento/mantenimiento-options/colaboradores/services/colaboradores.service';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
@@ -11,7 +11,7 @@ import { AsignationGetCompetencyI } from '../../../mantenimiento/mantenimiento-o
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { behaviorsI } from '../../../mantenimiento/mantenimiento-options/grados/interfaces/grados.interfaces';
 import { HerlperService } from '../../../../services/appHelpers.service';
-import { EvaluationCompetencyGetI, EvaluationCompetencyI } from '../../interface/evaluacion-competencias.interface';
+import { EvaluationBehaviorsI, EvaluationCompetencyByIdI, EvaluationCompetencyGetI, EvaluationCompetencyI, getEvaluationCompetencyByIdI } from '../../interface/evaluacion-competencias.interface';
 
 @Component({
   selector: 'app-evaluacion-persona',
@@ -23,6 +23,7 @@ import { EvaluationCompetencyGetI, EvaluationCompetencyI } from '../../interface
 export class EvaluacionPersonaComponent implements OnInit {
 
   constructor(
+    private router: Router,
     public fb: FormBuilder,
     private route: ActivatedRoute,
     private appHelpers: HerlperService,
@@ -34,6 +35,7 @@ export class EvaluacionPersonaComponent implements OnInit {
     this.evaluationCompetencyForm = this.fb.group({
       id: new FormControl(0),
       evaluacionCompetenciasDetalles: this.fb.array([]),
+      gradoId: new FormControl(0, Validators.required),
       periodoId: new FormControl(0, Validators.required),
       idColaborador: new FormControl(0, Validators.required),
     })
@@ -52,28 +54,23 @@ export class EvaluacionPersonaComponent implements OnInit {
   }
 
   findCollaboratorEvaluation() {
-    this.evaluationCompetencyService.getEvaluationCompetencies(this.collaboratorId).subscribe((res: any) => {
-      this.getCollaborator()
-    })
-  }
-
-  getCollaborator() {
-    this.collaboratorService.getPersonByID(this.collaboratorId).subscribe((res: any) => {
-      this.person = res.data
-      this.getAsignationCompetencyByIdOcuGroup()
+    this.evaluationCompetencyService.getEvaluationCompetenciesByIdPerson(this.collaboratorId).subscribe((res: any) => {
+      this.person = res.data.colaborador
+      if (res.data.evaluacionCompetencia.length == 0) {
+        this.getAsignationCompetencyByIdOcuGroup()
+      } else {
+        this.setDataEditEvaluationCompetency(res.data)
+      }
     })
   }
 
   getAsignationCompetencyByIdOcuGroup() {
     this.asignationCompetencySevice.getAsignationCompetencyByIdOcuGroup(this.person.grupoObj.idGrupo).subscribe((res: any) => {
-      console.log(res);
-      
-      res.data.map((asignationCompetency: AsignationGetCompetencyI) => {
 
+      res.data.map((asignationCompetency: AsignationGetCompetencyI) => {
         const behaviorGroup = this.fb.array(
           asignationCompetency.gradoObj.comportamientosObj.map((behavior: behaviorsI) => {
             return this.fb.group({
-              // id: 0,
               nombre: behavior.nombre,
               comportamientoId: behavior.idComportamiento,
               calificacionComportamientoId: ['', Validators.required],
@@ -89,32 +86,68 @@ export class EvaluacionPersonaComponent implements OnInit {
         });
 
         (this.evaluationCompetencyForm.get('evaluacionCompetenciasDetalles') as FormArray).push(competency)
+        console.log(this.evaluationCompetencyForm.value);
       })
     });
   }
 
-  postEvaluationPerson(evaluation: EvaluationCompetencyI) {
-    this.evaluationCompetencyService.postEvaluationCompetency(evaluation)
+  postEvaluationPerson() {
+    this.evaluationCompetencyService.postEvaluationCompetency(this.evaluationCompetencyForm.value)
       .subscribe((res: any) => {
-        this.appHelpers.handleResponse(res, () => ()=>{}, this.evaluationCompetencyForm)
+        this.appHelpers.handleResponse(res, () => { }, this.evaluationCompetencyForm)
+        this.router.navigate(['../']); //pendiente de prueba
       })
   }
 
   putEvaluationPerson() {
+    this.evaluationCompetencyService.putEvaluationCompetency(this.evaluationCompetencyForm.value)
+      .subscribe((res: any) => {
+        this.appHelpers.handleResponse(res, () => { }, this.evaluationCompetencyForm)
+        this.router.navigate(['../']); //pendiente de prueba
+      })
+  }
+
+  setDataEditEvaluationCompetency(evaluations: getEvaluationCompetencyByIdI) {
+    console.log(evaluations);
+
+    evaluations.evaluacionCompetencia.map((asignationCompetency: EvaluationCompetencyByIdI) => {
+      const behaviorGroup = this.fb.array(
+        asignationCompetency.evaluacionCompetenciasDetalles.map((behavior: EvaluationBehaviorsI) => {
+          return this.fb.group({
+            id: behavior.id,
+            nombre: behavior.comportamiento.nombre,
+            comportamientoId: behavior.comportamiento.idComportamiento,
+            calificacionComportamientoId: [behavior.calificacionComportamiento.id, Validators.required],
+          })
+        })
+      )
+
+      const competency = this.fb.group({
+        id: asignationCompetency.id,
+        idGrado: asignationCompetency.grado.id,
+        competenciaNombre: asignationCompetency.grado.competencia.nombre,
+        competenciaDescripcion: asignationCompetency.grado.competencia.descripcion,
+        comportamientos: behaviorGroup
+      });
+
+      (this.evaluationCompetencyForm.get('evaluacionCompetenciasDetalles') as FormArray).push(competency)
+      console.log(this.evaluationCompetencyForm.value);
+    })
   }
 
   saveChanges() {
     let groupOfCompetency = this.evaluationCompetencyForm.value.evaluacionCompetenciasDetalles
     groupOfCompetency.map((evaluationCompetency: any) => {
-      let evaluationCompetencyGroup: EvaluationCompetencyI = {
-        id: 0,
+
+      this.evaluationCompetencyForm.patchValue({
+        id: evaluationCompetency.id,
+        gradoId: evaluationCompetency.idGrado,
         idColaborador: this.person.idPersona,
         periodoId: this.systemInformationSevice.activePeriod().idPeriodo,
         evaluacionCompetenciasDetalles: evaluationCompetency.comportamientos
-      }
+      }) 
 
-      this.appHelpers.saveChanges(() => this.postEvaluationPerson(evaluationCompetencyGroup), () => this.putEvaluationPerson(), this.evaluationCompetencyForm.value.id, this.evaluationCompetencyForm)
+      this.appHelpers.saveChanges(() => this.postEvaluationPerson(), () => this.putEvaluationPerson(), this.evaluationCompetencyForm.value.id, this.evaluationCompetencyForm)
     })
-    // this.evaluationCompetencyForm.get('evaluacionCompetenciasDetalles')?.reset()
   }
 }

@@ -36,7 +36,7 @@ export class PlanMejoraFormularioComponent implements OnInit {
   idColaborador: number | null = null
   idPlanMejora: number | null = null
   planMejoraObtenido!: PlanMejoraI;
-  isLoading: boolean = true;
+  statusCode: number = 0;
 
 
   constructor(
@@ -107,6 +107,7 @@ export class PlanMejoraFormularioComponent implements OnInit {
       this.planMejoraObtenido = resp.data;
       console.log(this.planMejoraObtenido);
 
+      this.statusCode == resp.statusCode
       if (resp.statusCode == 200) {
         this.planMejoraObtenido.recomendacionesFormativas.map((recomendacion) => {
           this.recommendDetails.push({
@@ -139,7 +140,6 @@ export class PlanMejoraFormularioComponent implements OnInit {
         this.planMejoraForm.get('aspectos')?.setValue(this.planMejoraObtenido.aspectoDesempeno);
       }
     })
-
   }
 
   //metodo para obtener las categorias-recomendaciones

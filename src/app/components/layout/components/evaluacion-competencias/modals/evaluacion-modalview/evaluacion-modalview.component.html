@@ -2,22 +2,22 @@
     <div class="fuctionContent">
         <h2>Evaluación De Competencias</h2><br>
 
-        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-            <mat-button-toggle (click)="changeCompetency(0)">Primera competencia</mat-button-toggle>
-            <mat-button-toggle (click)="changeCompetency(1)">Segunda Competencia</mat-button-toggle>
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [(ngModel)]="competency">
+            <mat-button-toggle [value]="0">Primera competencia</mat-button-toggle>
+            <mat-button-toggle [value]="1">Segunda Competencia</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
 
-    <h3>Competencia</h3>
+    <h3>Competencia : {{evaluationData.evaluacionCompetenciasDetalles[competency].grado.competencia.nombre}}</h3>
 
-    <div class="competencia" *ngIf="evaluationData.evaluacionCompetencia">
-        <p>{{evaluationData.evaluacionCompetencia[competency]}}</p><!--competencia.descripcion-->
+    <div class="competencia" >
+        <p>{{evaluationData.evaluacionCompetenciasDetalles[competency].grado.competencia.descripcion}}</p><!--competencia.descripcion-->
     </div>
 
     <br>
 
     <h3>Comportamientos y calificaciones</h3>
-    <!-- <div class="comportamientoCalificacion" *ngFor="let evaluation of this.evaluationData.evaluacionCompetenciasDetalles">
+    <div class="comportamientoCalificacion" *ngFor="let evaluation of this.evaluationData.evaluacionCompetenciasDetalles[competency].evaluacionCompetenciasDetalles">
         <div class="comportamiento">
             <p>{{evaluation.comportamiento.nombre}}</p>
         </div>
@@ -29,7 +29,7 @@
         <div class="calificacionContainer">
             <h3>{{evaluation.calificacionComportamiento.nombre}}</h3>
         </div>
-    </div> -->
+    </div>
     
     <!-- <div class="comportamientoCalificacion">
         <h3 style="padding-top: 22px; color: #004b8d;">Total</h3>

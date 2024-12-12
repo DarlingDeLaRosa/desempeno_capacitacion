@@ -10,22 +10,9 @@
   </div>
 </div>
 <div class="filters">
-  <mat-form-field>
-    <mat-label>Localidad</mat-label>
-    <mat-select>
-      <mat-option>Tegcnologia</mat-option>
-    </mat-select>
-  </mat-form-field> &nbsp;
-  <mat-form-field>
-    <mat-label>Unidad organizativa</mat-label>
-    <mat-select>
-      <mat-option>Tegcnologia</mat-option>
-    </mat-select>
-  </mat-form-field> &nbsp;
-
-  <mat-form-field appearance="fill">
-    <mat-label>Filtrar</mat-label>
-    <input matInput> <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
+  <mat-form-field appearance="fill" style="width: 300px;">
+    <mat-label>Buscar</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="Buscar()"> <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 </div>

@@ -1,9 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../../helpers/class.components';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
-import { gradeCompetencyI, EvaluationBehaviorsI } from '../../interface/evaluacion-competencias.interface';
+import { EvaluationCompetencyByIdI } from '../../interface/evaluacion-competencias.interface';
 
 @Component({
   selector: 'app-evaluacion-modalview',
@@ -12,21 +12,17 @@ import { gradeCompetencyI, EvaluationBehaviorsI } from '../../interface/evaluaci
   templateUrl: './evaluacion-modalview.component.html',
   styleUrl: './evaluacion-modalview.component.css'
 })
-export class EvaluacionModalviewComponent implements OnInit{
+export class EvaluacionModalviewComponent {
 
   constructor(
     private dialogRef: MatDialogRef<EvaluacionModalviewComponent>,
-    @Inject(MAT_DIALOG_DATA) public evaluationData: { colaborador: CollaboratorsGetI, evaluacionCompetencia: EvaluationBehaviorsI[]}
+    @Inject(MAT_DIALOG_DATA) public evaluationData: { colaborador: CollaboratorsGetI, evaluacionCompetenciasDetalles: EvaluationCompetencyByIdI[]}
   ) { }
 
   competency: number = 0
 
-  ngOnInit(): void {
-    console.log(this.evaluationData);
-  }
-
-  changeCompetency(competency: number){
-    this.competency = competency
+  changeCompetency(competency: number): void {
+    this.competency = competency;
   }
 
   closeModal(){

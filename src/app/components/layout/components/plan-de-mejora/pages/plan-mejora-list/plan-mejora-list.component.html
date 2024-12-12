@@ -8,16 +8,9 @@
   </div>
 </div>
 <div class="filters">
-  <mat-form-field>
-    <mat-label>Unidad organizativa</mat-label>
-    <mat-select>
-      <mat-option>Tegcnologia</mat-option>
-    </mat-select>
-  </mat-form-field> &nbsp;
-
-  <mat-form-field appearance="fill">
-    <mat-label>Colaborador</mat-label>
-    <input matInput> <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
+  <mat-form-field appearance="fill" style="width: 300px;">
+    <mat-label>Buscar</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="Buscar()"> <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 </div>
@@ -32,7 +25,7 @@
         <th class="headerCell">Grupo ocupacional</th>
         <th class="headerCell" style="width: 5%;"></th>
         <th class="headerCell" style="width: 5%; padding-right: 15px;">
-          <!-- <div class="loader"></div> -->
+          <div class="loader" *ngIf="!agreementList"></div>
         </th>
       </tr>
     </thead>

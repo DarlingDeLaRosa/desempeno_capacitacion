@@ -35,8 +35,8 @@ export class agreementService {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/get_by_idcolaborador/${idCollaborator}/${idGroup}`, this.header));
   }
 
-  public getAgreementByRol(idCollaborator: number) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador/${idCollaborator}`, this.header));
+  public getAgreementByRol(idCollaborator: number, term:string) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador/${idCollaborator}?term=${term}`, this.header));
   }
 
   public getAgreementByIdCollaborator(idCollaborator: number) {

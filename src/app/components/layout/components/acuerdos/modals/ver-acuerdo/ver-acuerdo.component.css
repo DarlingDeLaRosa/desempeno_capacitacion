@@ -7,13 +7,16 @@
   display: grid;
   grid-template-columns: 85% 15%;
   border-bottom: 1px solid black;
-  padding: 5px;
+}
+
+.header > :nth-child(1){
+  border-right: 1px solid black;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  padding: 2px;
 }
 
 .logo {
@@ -66,47 +69,46 @@
 .table-title {
   text-align: center;
   font-weight: bold;
-  font-size: 1.125rem;
-  margin-bottom: 1rem;
+  font-size: 17px;
+  padding: 5px;
 }
 
 .evaluation-table {
   width: 100%;
+  text-align: left;
+  border-top: 1px solid black;
   border-collapse: collapse;
+  border-radius: 0;
+  background-color: white;
+
 }
 
-.evaluation-table th,
+.evaluation-table th, 
 .evaluation-table td {
-  border: 1px solid #e5e7eb;
-  padding: 0.5rem;
-  text-align: left;
+  border: 1px solid black; /* Define bordes para cada celda */
+  padding: 8px; /* Agrega espacio dentro de las celdas */
+}
+/* Elimina el borde izquierdo del primer <tr> */
+.evaluation-table tr td:first-child {
+  border-left: none;
 }
 
-.evaluation-table th {
-  background-color: #f3f4f6;
+/* Elimina el borde derecho del último <tr> que contiene <th> */
+.evaluation-table tr td:last-child {
+  border-right: none;
 }
 
-.col-no {
-  width: 80px;
+.evaluation-table thead th:first-child {
+  border-left: none;
 }
 
-.col-goals {
-  width: 400px;
+/* Elimina el borde derecho del último <tr> que contiene <th> */
+.evaluation-table thead th:last-child {
+  border-right: none;
 }
 
-.total-row {
-  background-color: #f3f4f6;
-}
-
-.total-row td {
-  font-weight: bold;
-}
-
-.evaluation-table[_ngcontent-ng-c720453465] td[_ngcontent-ng-c720453465] {
-  border: 1px solid #e5e7eb;
-  padding: 0.5rem;
-  text-align: left;
-  background-color: white !important;
+.evaluation-table tr:last-child td {
+  border-bottom: none;
 }
 
 p{

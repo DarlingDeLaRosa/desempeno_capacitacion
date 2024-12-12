@@ -1,7 +1,8 @@
 import { PeriodI } from '../../mantenimiento/mantenimiento-options/periodos/interfaces/periodo.interface';
-import { behaviorsI } from '../../mantenimiento/mantenimiento-options/grados/interfaces/grados.interfaces';
+import { GradesGetI, behaviorsI } from '../../mantenimiento/mantenimiento-options/grados/interfaces/grados.interfaces';
 import { CollaboratorsGetI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 import { CompetencyI } from '../../mantenimiento/mantenimiento-options/competencias/interfaces/competencias.interfaces';
+import { GradesTypeGetI } from '../../mantenimiento/mantenimiento-options/grados/interfaces/tiposGrados.interface';
 
 export interface EvaluationCompetencyGetI {
     colaborador: CollaboratorsGetI
@@ -15,6 +16,7 @@ export interface EvaluationCompetencyI {
     id: number,
     idColaborador: number,
     periodoId: number,
+    gradoId: number
     evaluacionCompetenciasDetalles: [
         {
             id: number,
@@ -40,4 +42,26 @@ export interface gradeCompetencyI {
     competencia: CompetencyI
     descripcion: string
     id: number
+}
+
+export interface getEvaluationCompetencyByIdI {
+    colaborador: CollaboratorsGetI
+    evaluacionCompetencia: EvaluationCompetencyByIdI[]
+    idColaborador: number
+}
+
+export interface EvaluationCompetencyByIdI {
+    id: number
+    periodo: PeriodI
+    evaluacionCompetenciasDetalles: EvaluationBehaviorsI[]
+    grado: {
+        id: number
+        tipoGrado: GradesTypeGetI
+        descripcion: string
+        competencia: {
+            id: number
+            nombre: string
+            descripcion: string
+        }
+    }
 }

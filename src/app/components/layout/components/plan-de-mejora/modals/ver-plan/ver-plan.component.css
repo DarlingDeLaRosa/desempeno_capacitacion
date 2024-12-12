@@ -13,7 +13,6 @@
   overflow-y: auto;  /* Scroll vertical cuando exceda el espacio */
   width: 100%;       /* Ancho dinámico para pantallas más pequeñas */
   box-sizing: border-box; /* Para que los padding no expandan el ancho */
-
 }
 
 .tag {

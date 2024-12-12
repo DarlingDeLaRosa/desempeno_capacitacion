@@ -11,68 +11,28 @@
 </div>
 
 
-<!-- <ng-container *ngIf="isLoading">
-  <div class="container-loaderMother" style="margin-top: 100px;">
+<!-- <ng-container >
+  <div class="container-loaderMother" style="margin-top: 200px;">
     <div class="loaderMother"></div>
     <div class="loading-text">Cargando...</div>
   </div>
 </ng-container> -->
 
 
+<ng-container >
 <h3 style="margin-bottom: 30px;">Nombre del colaborador</h3>
-
-<!--
-<div>
-  <div class="row">
-    <div class="input-container">
-      <mat-form-field class="fixed-input">
-        <mat-label>Puntos fuertes</mat-label>
-        <input matInput placeholder="Agregar Punto Fuerte" (keydown.enter)="addItem('puntosFuertes')"
-          [(ngModel)]="nuevoPuntoFuerte">
-      </mat-form-field>
-    </div>
-
-    <div class="tags-container">
-      <div class="tags">
-        <span matChip class="tag" *ngFor="let item of puntosFuertes; let i = index">
-          {{ item.nombre }}
-          <mat-icon class="btnEliminar" (click)="removeItem('puntosFuertes', i)">close</mat-icon>
-        </span>
-      </div>
-    </div>
-
-  </div>
-  <div class="row">
-    <div class="input-container">
-      <mat-form-field class="fixed-input">
-        <mat-label>Area de mejora</mat-label>
-        <input matInput placeholder="Agregar area de mejora" [(ngModel)]="nuevaAreaMejora"
-          (keydown.enter)="addItem('areasMejora')">
-      </mat-form-field>
-    </div>
-
-
-    <div class="tags-container">
-      <div class="tags">
-        <span matChip class="tag green" *ngFor="let item of areasMejora;  let i = index">{{ item.nombre}}
-          <mat-icon class="btnEliminar" (click)="removeItem('areasMejora', i)">close</mat-icon>
-        </span>
-      </div>
-    </div>
-  </div>
-</div> -->
 
 <div class="cartas">
   <div class="input-container">
     <mat-form-field class="fixed-input">
-      <mat-label>Agregar area de mejora</mat-label>
+      <mat-label>Agregar puntos fuertes</mat-label>
       <input matInput placeholder="Agregar area de mejora" [(ngModel)]="nuevaAreaMejora"
       (keydown.enter)="addItem('areasMejora')">
     </mat-form-field>
   </div>
   <div class="input-container">
     <mat-form-field class="fixed-input">
-      <mat-label>Agregar puntos fuertes</mat-label>
+      <mat-label>Agregar area de mejora </mat-label>
       <input matInput placeholder="Agregar Punto Fuerte" (keydown.enter)="addItem('puntosFuertes')"
         [(ngModel)]="nuevoPuntoFuerte">
     </mat-form-field>
@@ -206,7 +166,7 @@
 </div>
 
 
-
+</ng-container>
 <!-- <div class="item-container">
   <div class="row">
     <mat-form-field class="example-full-width">
