@@ -25,10 +25,11 @@
         <th class="headerCell">Unidad organizativa</th>
         <th class="headerCell">Cargo</th>
         <th class="headerCell">Grupo ocupacional</th>
-        <th class="headerCell" style="width: 2%;"></th>
+        <th class="headerCell">Estado</th>
+        <!-- <th class="headerCell" style="width: 2%;"></th> -->
         <th class="headerCell" style="width: 2%;">
-        <th class="headerCell" style="width: 2%;">
-        <th class="headerCell" style="width: 2%;">
+        <!-- <th class="headerCell" style="width: 2%;"> -->
+        <!-- <th class="headerCell" style="width: 2%;"> -->
           <div *ngIf="isLoading ===  true" class="loader" ></div>
         </th>
       </tr>
@@ -39,9 +40,21 @@
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.departamento.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
+        <td class="dataIndiCell">Proceso de {{acuerdo.flujoObj.nombre}}</td>
         <td class="dataIndiCell">
-
-          <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
+          <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)"><mat-icon>upload_file</mat-icon>Subir documento.</button>
+            <button mat-menu-item [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active"><mat-icon>done_outline</mat-icon>Evaluar AD.</button>
+            <button mat-menu-item (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)"><mat-icon>description</mat-icon> Ver AD.</button>
+            <button mat-menu-item [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active"><mat-icon>edit</mat-icon>Editar AD.</button>
+            <button mat-menu-item (click)="commentsAgreement(acuerdo.comentarios, acuerdo.idAcuerdo)"><mat-icon>comment</mat-icon>Comentarios.</button>
+            <!-- <button mat-menu-item (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)"><mat-icon>check_small</mat-icon>Validar AD.</button> -->
+            <button mat-menu-item (click)="openAuthorizationAction(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)"><mat-icon>lock_open</mat-icon>Autorizar acción.</button>
+          </mat-menu>
+        </td>
+          
+          <!-- <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
           (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)">upload_file</mat-icon></td>
         <td class="dataIndiCell">
           <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
@@ -52,9 +65,13 @@
         <td class="dataIndiCell">
           <mat-icon class="editIcon" *ngIf="acuerdo.idAcuerdo"
             [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active">edit</mat-icon>
-        </td>
+        </td> -->
       </tr>
     </tbody>
   </table>
+</div>
+
+<div style="display: flex; justify-content: end;">
+  <button [routerLink]="[{ outlets: { 'acuerdos': ['minuta']}}]" routerLinkActive="active" class="saveButton">Realizar Minuta</button>
 </div>
 

@@ -5,6 +5,7 @@ import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interfa
 import { AcuerdoI } from '../../interfaces/acuerdo.interface';
 import { agreementService } from '../../services/acuerdo.service';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
+import { HerlperService } from '../../../../services/appHelpers.service';
 
 @Component({
   selector: 'app-mi-acuerdo',
@@ -21,6 +22,7 @@ export class MiAcuerdoComponent implements OnInit {
   totalValor:number = 0
 
   constructor(
+    public appHelper: HerlperService,
     private agreementService:agreementService,
     private systemInformation:systemInformationService
   ){}

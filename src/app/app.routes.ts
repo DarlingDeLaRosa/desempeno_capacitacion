@@ -32,6 +32,7 @@ import { AcuerdoEditarComponent } from './components/layout/components/acuerdos/
 import { MiAcuerdoComponent } from './components/layout/components/acuerdos/pages/mi-acuerdo/mi-acuerdo.component';
 import { AcuerdoEvaluacionComponent } from './components/layout/components/acuerdos/pages/acuerdo-evaluacion/acuerdo-evaluacion.component';
 import { PeriodoProcesosComponent } from './components/layout/components/mantenimiento/mantenimiento-options/periodo-procesos/periodo-procesos.component';
+import { MinutaComponent } from './components/layout/components/acuerdos/pages/minuta/minuta.component';
 
 export const routes: Routes = [
   {
@@ -55,6 +56,11 @@ export const routes: Routes = [
           {
             path: 'miacuerdo',
             component: MiAcuerdoComponent,
+            outlet: 'acuerdos'
+          },
+          {
+            path: 'minuta',
+            component: MinutaComponent,
             outlet: 'acuerdos'
           },
           {

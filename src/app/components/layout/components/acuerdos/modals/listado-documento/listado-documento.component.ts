@@ -44,6 +44,7 @@ export class ListadoDocumentoComponent implements OnInit{
       else this.documentosList = []
     })
   }
+  
   postFileAcuerdo(formdata:any){
     this.agreementservice.postFileAcuerdo(formdata).subscribe((resp)=>{
       this.SnackBar.snackbarLouder(true)

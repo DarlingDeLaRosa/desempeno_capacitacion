@@ -3,71 +3,84 @@
     <h1>Gestionar Acuerdo</h1>
   </div>
   <div>
-     <div>
-      <button class="backButton" mat-stroked-button
-      [routerLink]="['/layout/acuerdos']"><mat-icon class="backIcon">arrow_back
-      </mat-icon>Acuerdos de Desempeño</button>
+    <div>
+      <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+          class="backIcon">arrow_back
+        </mat-icon>Acuerdos de Desempeño</button>
     </div>
   </div>
 </div>
 
-<div class="staticInfoContainer" *ngIf="collaborator">
+<div class="staticInfoContainer" *ngIf="collaborator && agreement">
   <span>
-      <h3>Nombre Servidor Evaluado</h3>
-      <h4>{{collaborator.nombre}} {{collaborator.apellidos}}</h4>
+    <h3>Nombre Servidor Evaluado</h3>
+    <h4>{{collaborator.nombre}} {{collaborator.apellidos}}</h4>
   </span>
   <span>
-      <h3>Nombre del Cargo</h3>
-      <h4>{{collaborator.cargo.nombre}}</h4>
+    <h3>Nombre del Cargo</h3>
+    <h4>{{collaborator.cargo.nombre}}</h4>
   </span>
   <span *ngIf="agreement">
-      <h3>Periodo a Evaluar</h3>
-      <h4> {{agreement.periodo.nombre}}</h4>
-  </span>
-  <span>
-      <h3>Grupo Ocupacional</h3>
-      <h4>{{collaborator.grupoObj.nombre}}</h4>
+    <h3>Periodo a Evaluar</h3>
+    <h4> {{agreement.periodo.nombre}}</h4>
   </span>
   <span>
     <h3>Grupo Ocupacional</h3>
+    <h4>{{collaborator.grupoObj.nombre}}</h4>
+  </span>
+  <span>
+    <h3>Puntos de Acuerdo</h3>
     <h4>{{agreement.puntos}}</h4>
-</span>
+  </span>
 </div>
 
 <h2 style="margin-top: 20px;">Metas</h2>
 <div class="AcuerdosForms">
   <ng-container *ngIf="collaborator">
-    <form [formGroup]="goalForm">
+    <form [formGroup]="goalForm" (submit)="add()">
+
       <div style="display: flex; gap: 5px">
+
         <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
-        <mat-form-field appearance="fill" style="flex: 1">
-          <mat-label>Meta del plan operativo anual</mat-label>
-          <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="metaPoa"
-              (input)="getGoalPOA()">
-          <mat-autocomplete #auto='matAutocomplete'>
+
+          <mat-form-field appearance="fill" style="flex: 1">
+            <mat-label>Meta del plan operativo anual</mat-label>
+            <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="metaPoa" (input)="getGoalPOA()">
+            <mat-autocomplete #auto='matAutocomplete'>
               <ng-container *ngIf="goalsPoa && goalsPoa.length > 0; else noGoalPoa">
-                  <mat-option *ngFor="let goalPoa of goalsPoa" [value]="goalPoa.nombre">
-                      {{goalPoa.nombre}}
-                  </mat-option>
+                <mat-option *ngFor="let goalPoa of goalsPoa" [value]="goalPoa.nombre">
+                  {{goalPoa.nombre}}
+                </mat-option>
               </ng-container>
               <ng-template #noGoalPoa>
-                  <mat-option>No hay campos disponibles</mat-option>
+                <mat-option>No hay campos disponibles</mat-option>
               </ng-template>
-          </mat-autocomplete>
+            </mat-autocomplete>
 
-          <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
-      </mat-form-field>
-    </ng-container>
+            <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+          </mat-form-field>
+        </ng-container>
 
         <mat-form-field style="flex:1">
           <mat-label>Meta</mat-label>
-          <input matInput  formControlName="nombre">
+          <input matInput formControlName="nombre">
+          <mat-error *ngIf="goalForm.get('nombre')?.hasError('notSpecific')">
+            La meta debe ser específica y suficientemente detallada.
+          </mat-error>
+          <mat-error *ngIf="goalForm.get('nombre')?.hasError('notMeasurable')">
+            La meta debe ser medible (incluir un número o cantidad).
+          </mat-error>
+          <mat-error *ngIf="goalForm.get('nombre')?.hasError('missingTime')">
+            La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).
+          </mat-error>
         </mat-form-field>
+
       </div>
+
       <div style="display: flex; gap: 5px;">
         <mat-form-field style="flex:1">
           <mat-label>Medio de verificación</mat-label>
-          <mat-select  formControlName="idMedio">
+          <mat-select formControlName="idMedio">
             <mat-option *ngFor="let medio of verificacionMethodList" [value]="medio.idMedio">
               {{medio.nombre}}
             </mat-option>
@@ -76,88 +89,95 @@
         </mat-form-field>
         <mat-form-field style="flex:1">
           <mat-label>Valor</mat-label>
-          <input matInput type="number"  formControlName="valor">
+          <input matInput type="number" formControlName="valor">
+          <mat-error *ngIf="goalForm.get('valor')?.invalid">
+            Ingrese un valor válido.
+          </mat-error>
         </mat-form-field>
       </div>
+
       <div class="saveButtons">
-        <ng-container *ngIf="this.idEditarRegistro != null || this.indexEditando != null;">
-          <button type="submit" class="btnCerrar" (click)="cancelEdition()">Cancelar</button> &nbsp;
+        <ng-container *ngIf="this.indexEditando != null;">
+          <button type="button" class="btnCerrar" (click)="cancelEdition()">Cancelar</button> &nbsp;
         </ng-container>
-        <button type="submit" class="saveButton" (click)="add()">{{indexEditando ? 'Editar' : 'Agregar'}}</button> &nbsp;
+        <button type="submit" class="saveButton" >
+          {{indexEditando != null ? 'Editar' : 'Agregar'}}</button>
+        &nbsp;
       </div>
+
     </form>
   </ng-container>
 </div>
 
 <ng-container *ngIf="this.collaborator">
-<div class="table-container">
-  <table>
-    <thead class="headerTable">
-      <tr class="headerRow">
-        <th class="headerCell">Metas</th>
-        <th class="headerCell">Medio de verificación</th>
-        <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
-        <th class="headerCell">Meta poa</th>
-      </ng-container>
-        <th class="headerCell">Valor</th>
-        <th class="headerCell" style="width: 5%;"></th>
-        <th class="headerCell" style="width: 5%;">
-          <div *ngIf="isLoading ===  true" class="loader" ></div>
-        </th>
+  <div class="table-container">
+    <table>
+      <thead class="headerTable">
+        <tr class="headerRow">
+          <th class="headerCell">Metas</th>
+          <th class="headerCell">Medio de verificación</th>
+          <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
+            <th class="headerCell">Meta poa</th>
+          </ng-container>
+          <th class="headerCell">Valor</th>
+          <th class="headerCell" style="width: 5%;"></th>
+          <th class="headerCell" style="width: 5%;">
+            <div *ngIf="isLoading ===  true" class="loader"></div>
+          </th>
 
-        <!-- </th> -->
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="dataRow"  *ngFor="let goal of goalDetails; let i = index">
-        <td class="dataIndiCell">{{goal.nombre}}</td>
-        <td class="dataIndiCell">{{goal.nombreMedio}}</td>
-        <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
-        <td class="dataIndiCell">{{goal.metaPoa}}</td>
-      </ng-container>
-        <td class="dataIndiCell">{{goal.valor}} Puntos</td>
-        <td class="dataIndiCell">
-          <ng-container *ngIf="!goal.isTranversal">
-          <mat-icon class="editIcon" (click)="cargarDetalleEnFormularioIndex(i, goal.idMeta)">edit</mat-icon>
-        </ng-container>
-        </td>
-        <td class="dataIndiCell">
-        <ng-container *ngIf="!goal.isTranversal">
-          <mat-icon class="removeIcon" (click)="deletedetalle(i, goal.idAcuerdoDetalle)">delete
-          </mat-icon>
-        </ng-container>
-        </td>
-      </tr>
+          <!-- </th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="dataRow" *ngFor="let goal of goalDetails; let i = index">
+          <td class="dataIndiCell">{{goal.nombre}}</td>
+          <td class="dataIndiCell">{{goal.nombreMedio}}</td>
+          <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
+            <td class="dataIndiCell">{{goal.metaPoa}}</td>
+          </ng-container>
+          <td class="dataIndiCell">{{goal.valor}} Puntos</td>
+          <td class="dataIndiCell">
+            <ng-container *ngIf="!goal.isTranversal">
+              <mat-icon class="editIcon" (click)="cargarDetalleEnFormularioIndex(i, goal.idMeta)">edit</mat-icon>
+            </ng-container>
+          </td>
+          <td class="dataIndiCell">
+            <ng-container *ngIf="!goal.isTranversal">
+              <mat-icon class="removeIcon" (click)="deletedetalle(i, goal.idAcuerdoDetalle)">delete
+              </mat-icon>
+            </ng-container>
+          </td>
+        </tr>
 
-      <tr *ngIf="goalDetails.length === 0">
-        <td colspan="12">
-          <h5 class="no-record">No hay datos Registrados</h5>
-        </td>
-      </tr>
-    </tbody>
-    <tfoot >
-      <tr class="paginatorRow"  *ngIf="goalDetails.length !== 0">
-        <td class="dataIndiCell"><strong>Total</strong>:</td>
-        <td class="dataIndiCell"></td>
-        <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
-        <td class="dataIndiCell"></td>
-         </ng-container>
-        <td class="dataIndiCell" ><strong>{{totalValor}}</strong></td>
-        <td class="dataIndiCell">
+        <tr *ngIf="goalDetails.length === 0">
+          <td colspan="12">
+            <h5 class="no-record">No hay datos Registrados</h5>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="paginatorRow" *ngIf="goalDetails.length !== 0">
+          <td class="dataIndiCell"><strong>Total</strong>:</td>
+          <td class="dataIndiCell"></td>
+          <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
+            <td class="dataIndiCell"></td>
+          </ng-container>
+          <td class="dataIndiCell"><strong>{{totalValor}}</strong></td>
+          <td class="dataIndiCell">
 
-        </td>
-        <td class="dataIndiCell">
-          <span style="display: flex; align-items: center;">
+          </td>
+          <td class="dataIndiCell">
+            <span style="display: flex; align-items: center;">
 
-          </span>
-        </td>
-      </tr>
-    </tfoot>
-  </table>
-</div>
-</ng-container>
-  <div class="saveButtons" style="margin-top: 20px;">
-    <ng-container *ngIf="activateSave">
-      <button type="submit" class="saveButton" (click)="save()">Guardar Cambios</button> &nbsp;
-    </ng-container>
+            </span>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   </div>
+</ng-container>
+<div class="saveButtons" style="margin-top: 20px;">
+  <ng-container *ngIf="activateSave">
+    <button type="submit" class="saveButton" (click)="save()">Guardar Cambios</button> &nbsp;
+  </ng-container>
+</div>

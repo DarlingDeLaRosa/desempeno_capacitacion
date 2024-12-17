@@ -71,6 +71,9 @@
   font-weight: 900;
   font-size: 1.7em;
 }
+.etiqueta{
+  cursor: pointer;
+}
 
 .tag__name {
   display: inline-block;
@@ -85,12 +88,13 @@
   text-transform: lowercase;
   transition: all 0.3s ease-in-out;
 }
-.tag__name1{
+.tag__name1 {
   display: inline-block;
   color: #fff;
   font-size: 1.1em;
   background-color: #28a745;
   padding: 6px 23px 9px;
+
   border-radius: 70em;
   margin: 8px 6px 8px 0;
   margin-left: 0px;
@@ -120,24 +124,30 @@
   border-radius: 50%;
   background: #fff;
 }
+.tag__name1:hover {
+  transform: scale(1.1);
+  background-color: #ff4d4d;
+}
+.tag__name:hover {
+  transform: scale(1.1);
+  background-color: #ff4d4d;
+}
 
+.tag__name mat-icon:hover {
+  color: #ff4d4d;
+}
+.tag__name1 mat-icon:hover {
+  color: #ff4d4d;
+}
 
 .tag__name::before {
   left: 7px;
 }
 
-.tag__name::after {
-  right: 7px;
-}
 
 .tag__name1::before {
   left: 7px;
 }
-
-.tag__name1::after {
-  right: 7px;
-}
-
 
 .cartas{
 width: 100%;

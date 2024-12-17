@@ -13,7 +13,7 @@ import { ClassImports } from '../../class.components';
 export class ListPropertyViewComponent{
   
   constructor(
-    @Inject(MAT_DIALOG_DATA) 
+    @Inject(MAT_DIALOG_DATA)
     public elements: {elementList: any[], name: string, property: string},
   ) {}
 }

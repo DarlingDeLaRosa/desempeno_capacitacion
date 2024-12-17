@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="encabezado">
+        <h2>{{data.nombre}} {{data.apellido}}</h2>
+        <button mat-icon-button (click)="closeModal()" style="margin-top: -10px;">
+            <mat-icon style="color: red;">close</mat-icon>
+        </button>
+    </div>
+
+    <p style="margin: 20px 0 10px 0;">Autorizar a realizar acción. </p>
+
+    <form style=" margin: 15px 0 15px 0" [formGroup]="authorizeAccionForm"><!--(ngSubmit)="saveChanges()"-->
+
+        <div style="display: flex;">
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Proceso</mat-label>
+                <mat-select formControlName="tipoProcesoId" disableRipple>
+                    <ng-container *ngIf="processes && processes.length; else noPosition">
+                        <mat-option [value]="process.id" *ngFor="let process of processes">
+                            {{process.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noPosition>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+            
+        </div>
+
+        <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+    </form>
+</div>

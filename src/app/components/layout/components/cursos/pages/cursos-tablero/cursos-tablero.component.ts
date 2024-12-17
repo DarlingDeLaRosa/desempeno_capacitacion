@@ -27,12 +27,13 @@ export default class CursosTableroComponent implements  OnInit{
   cursoTableroList: Array<CourseGetI> = [];
   isLoading = false;
   usuarioActual!: loggedUserI
+  Rol:any
 
   constructor(
     private dialog: MatDialog,
     private courseService:CoursesServices,
     private loaderService: LoaderService,
-    private InformationService: systemInformationService,
+    public InformationService: systemInformationService,
     ){
       this.usuarioActual = InformationService.localUser;
     }
@@ -41,8 +42,9 @@ export default class CursosTableroComponent implements  OnInit{
     this.loaderService.loading$.subscribe((loading) => {
       this.isLoading = loading;
     });
-
   }
+
+
   getCursosTablero() {
     this.loaderService.show();
     this.courseService.getCoursesDashboard()

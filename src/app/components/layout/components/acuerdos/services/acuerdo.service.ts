@@ -5,6 +5,7 @@ import { systemInformationService } from '../../../services/systemInformationSer
 import { loggedUserI } from '../../../../../helpers/intranet/intranet.interface';
 import { ResponseI } from '../../../../interfaces/generalInteerfaces';
 import { GoalI } from '../../mantenimiento/mantenimiento-options/metas/interface/metas.interface';
+import { postCommentI } from '../interfaces/acuerdo.interface';
 
 @Injectable({ providedIn: 'root' })
 export class agreementService {
@@ -49,6 +50,10 @@ export class agreementService {
 
   public postGoalCalificacion(Calificacion: any) {
     return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Acuerdo/calificar_meta`, Calificacion, this.header));
+  }
+
+  public postComment(comment: postCommentI) {
+    return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Acuerdo/agregar-comentario`, comment, this.header));
   }
 
   public postFileAcuerdo(formData: any) {

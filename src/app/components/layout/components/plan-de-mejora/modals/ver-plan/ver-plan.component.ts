@@ -66,7 +66,9 @@ export class VerPlanComponent implements OnInit{
             idCategoriaRecomendacion: recomendacion.categoriaRecomendacion!.id,
             nombreCategoria: recomendacion.categoriaRecomendacion!.nombre,
             nombreTrimestre: recomendacion.comienzo!.nombre,
-            que: recomendacion.que.trim(),
+            que: {
+                 nombre: recomendacion.que.nombre.trim()
+            },
             como: recomendacion.como.trim(),
             porque: recomendacion.porque.trim(),
             comienzoId: recomendacion.comienzo!.id,

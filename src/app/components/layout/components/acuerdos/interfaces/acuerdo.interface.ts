@@ -1,27 +1,27 @@
 import { PeriodoI } from '../../../../interfaces/generalInteerfaces';
 import { CollaboratorsGetI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 
-export interface AcuerdoI{
+export interface AcuerdoI {
   idAcuerdo: number,
   idColaborador: number,
   colaboradorObj: CollaboratorsGetI
-  idTipoAcuerdo:number,
+  idTipoAcuerdo: number,
   tipoAcuerdoObj: TipoAcuerdoI,
-  idTracking:TrackingI,
+  idTracking: TrackingI,
   idFlujo: number,
   flujoObj: any,
-  puntos:number
-  comentario:string
+  puntos: number
+  comentarios: comentarioI[]
   detalles: AcuerdoDetalle[];
   documentosObj: Documento[];
   periodo: PeriodoI
 }
 
-export interface TipoAcuerdoI{
+export interface TipoAcuerdoI {
   idTipoAcuerdo: number,
-   nombre: string
+  nombre: string
 }
-export interface TrackingI{
+export interface TrackingI {
   idTraking: number,
   nombre: string,
 }
@@ -32,10 +32,8 @@ export interface AcuerdoDetalle {
   idMeta: number;
   metaObj: Meta;
   calificacion: number;
-  documentosObj:Documento
+  documentosObj: Documento
 }
-
-
 
 export interface Meta {
   idMeta: number;
@@ -43,7 +41,7 @@ export interface Meta {
   medioVerificacionObj: any;
   nombre: string;
   valor: number;
-  isTranversal:boolean;
+  isTranversal: boolean;
   metaPoa: any;
 }
 
@@ -52,9 +50,20 @@ export interface Documento {
   nombre: string;
   enlace: string;
   idAcuerdo: number;
-  idAcuerdoDetalle: number ;
-  idMeta: number ;
+  idAcuerdoDetalle: number;
+  idMeta: number;
   idProtocolo: number;
   idMinuta: number;
   fecha: string;
+}
+
+export interface postCommentI {
+  acuerdoId: number,
+  descripcion: string,
+}
+
+export interface comentarioI {
+  creadoPor: string
+  descripcion: string
+  id: number
 }

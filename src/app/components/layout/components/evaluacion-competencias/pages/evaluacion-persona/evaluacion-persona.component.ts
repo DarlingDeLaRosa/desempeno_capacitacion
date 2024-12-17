@@ -91,19 +91,17 @@ export class EvaluacionPersonaComponent implements OnInit {
     });
   }
 
-  postEvaluationPerson() {
-    this.evaluationCompetencyService.postEvaluationCompetency(this.evaluationCompetencyForm.value)
+  postEvaluationPerson(evaluation: EvaluationCompetencyI) {
+    this.evaluationCompetencyService.postEvaluationCompetency(evaluation)
       .subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => { }, this.evaluationCompetencyForm)
-        this.router.navigate(['../']); //pendiente de prueba
       })
   }
 
-  putEvaluationPerson() {
-    this.evaluationCompetencyService.putEvaluationCompetency(this.evaluationCompetencyForm.value)
+  putEvaluationPerson(evaluation: EvaluationCompetencyI) {
+    this.evaluationCompetencyService.putEvaluationCompetency(evaluation)
       .subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => { }, this.evaluationCompetencyForm)
-        this.router.navigate(['../']); //pendiente de prueba
       })
   }
 
@@ -135,19 +133,24 @@ export class EvaluacionPersonaComponent implements OnInit {
     })
   }
 
-  saveChanges() {
+  async saveChanges() {
     let groupOfCompetency = this.evaluationCompetencyForm.value.evaluacionCompetenciasDetalles
-    groupOfCompetency.map((evaluationCompetency: any) => {
 
-      this.evaluationCompetencyForm.patchValue({
+    const savePromises =  groupOfCompetency.map((evaluationCompetency: any) => {
+      let evaluationGroup = {
         id: evaluationCompetency.id,
         gradoId: evaluationCompetency.idGrado,
         idColaborador: this.person.idPersona,
         periodoId: this.systemInformationSevice.activePeriod().idPeriodo,
         evaluacionCompetenciasDetalles: evaluationCompetency.comportamientos
-      }) 
-
-      this.appHelpers.saveChanges(() => this.postEvaluationPerson(), () => this.putEvaluationPerson(), this.evaluationCompetencyForm.value.id, this.evaluationCompetencyForm)
+      }
+      this.appHelpers.saveChanges(() => this.postEvaluationPerson(evaluationGroup), () => this.putEvaluationPerson(evaluationGroup), evaluationGroup.id, this.evaluationCompetencyForm)
     })
+
+    await Promise.all(savePromises)
+
+    setTimeout(() => {
+      this.router.navigate(['layout/evaluacion-competencias']);
+    }, 1000);
   }
 }

@@ -26,6 +26,9 @@ export class PlanMejoraService {
   }
 
 
+public getResultadoPlanMejora() {
+  return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/planes-de-mejora/recomendaciones`, this.header));
+}
 public getCategoriesRecommen() {
   return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/categoria-recomendaciones`, this.header));
 }
@@ -41,9 +44,9 @@ public getPlanMejoraByIdCollabo(id:number) {
   return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/PlanMejora/colaborador/${id}`, this.header));
 }
 
-// public putCourse( courses : CourseI) {
-//   return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Curso`, courses , this.header))
-// }
+public putPlanMejora( planMejora : PlanMejoraI) {
+  return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/PlanMejora`, planMejora , this.header))
+}
 
 // public deleteCourse(id: number) {
 //   return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/Curso/${id}`, this.header))

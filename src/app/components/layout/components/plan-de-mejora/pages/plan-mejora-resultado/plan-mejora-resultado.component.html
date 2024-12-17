@@ -23,8 +23,8 @@
   <table>
       <thead class="headerTable">
           <tr class="headerRow">
-              <th class="headerCell">Curso</th>
-              <th class="headerCell">Descripción</th>
+            <th class="headerCell">Nombre</th>
+              <th class="headerCell">Categoría</th>
               <th class="headerCell">Cantidad de Solicitantes</th>
               <th class="headerCell" style="width: 5%; padding-right: 15px;">
                   <!-- <div class="loader"></div> -->
@@ -32,17 +32,11 @@
           </tr>
       </thead>
       <tbody>
-          <tr class="dataRow">
-              <td class="dataIndiCell">Item 1</td>
-              <td class="dataIndiCell">Item 1</td>
-              <td class="dataIndiCell">002</td>
-              <td class="dataIndiCell"><mat-icon  class="listIcon" (click)="openModal()">groups</mat-icon></td>
-          </tr>
-          <tr class="dataRow">
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell">Item 2</td>
-              <td class="dataIndiCell"><mat-icon  class="listIcon" (click)="openModal()">groups</mat-icon></td>
+          <tr class="dataRow" *ngFor="let resultado of ResultadoPlanMejoraList">
+            <td class="dataIndiCell">{{resultado.nombre}}</td>
+              <td class="dataIndiCell">{{resultado.categoria.nombre}}</td>
+              <td class="dataIndiCell">{{resultado.colaboradores.length}}</td>
+              <td class="dataIndiCell"><mat-icon  class="listIcon" (click)="openModal(resultado.colaboradores, resultado.nombre)">groups</mat-icon></td>
           </tr>
       </tbody>
       <tfoot>

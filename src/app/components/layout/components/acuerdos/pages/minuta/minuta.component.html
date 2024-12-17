@@ -1,0 +1,89 @@
+
+<div class="fuctionContent">
+  <div class="title">
+    <h2>Minuta de reunión de monitoreo de acuerdos de desempeño laboral</h2>
+  </div>
+  <div>
+    <div>
+      <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+          class="backIcon">arrow_back
+        </mat-icon>Acuerdos de Desempeño</button>
+    </div>
+  </div>
+</div>
+
+<div class="staticInfoContainer" *ngIf="systeminformation.currentUserSystem()">
+  <span>
+    <h3>Unidad Organizativa</h3>
+    <h4>{{this.usuario.Unidad}}</h4>
+  </span>
+  <span>
+    <h3>Fecha</h3>
+    <h4>20/25/2023</h4>
+  </span>
+  <span>
+    <h3>Supervisor:</h3>
+    <h4> {{systeminformation.currentUserSystem().nombre}} {{systeminformation.currentUserSystem().apellidos}}</h4>
+  </span>
+  <span>
+    <h3>Periodo:</h3>
+    <h4> {{systeminformation.activePeriod().nombre}}</h4>
+  </span>
+</div>
+
+<h2 style="margin-top: 20px;">Participantes</h2>
+
+<div class="table-container">
+  <table>
+    <thead class="headerTable">
+      <tr class="headerRow">
+        <th class="headerCell">Nombre</th>
+        <th class="headerCell">Cargo</th>
+        <th class="headerCell">Grupo ocupacional</th>
+        <th class="headerCell">Estado</th>
+        <th class="headerCell" style="width: 2%;">
+          <div *ngIf="isLoading ===  true" class="loader" ></div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="dataRow" *ngFor="let acuerdo of agreement">
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre}} {{acuerdo.colaboradorObj.apellidos}}</td>
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
+        <td class="dataIndiCell">Proceso de {{acuerdo.flujoObj.nombre}}</td>
+        <td class="dataIndiCell">
+          <button type="button" class="btnCerrar">Ausente</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h2 style="margin: 20px 0px 20px 0px;">Detalles de la reunión</h2>
+
+<form>
+  <div style="display: flex;">
+    <mat-form-field style="flex: 1; ">
+      <mat-label>Agenda de la reunión</mat-label>
+      <textarea matInput></textarea>
+    </mat-form-field>
+  </div>
+  <div style="display: flex;">
+    <mat-form-field style="flex: 1;">
+      <mat-label>Desarrollo de la reunión</mat-label>
+      <textarea matInput></textarea>
+    </mat-form-field>
+  </div>
+  <div style="display: flex;">
+    <mat-form-field style="flex: 1;">
+      <mat-label>Conclusiones del monitoreo de los acuerdos de desempeño</mat-label>
+      <textarea matInput ></textarea>
+    </mat-form-field>
+  </div>
+</form>
+
+<div style="display: flex; justify-content: end;">
+  <button class="saveButton">Enviar Minuta</button>
+</div>
+

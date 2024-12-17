@@ -5,6 +5,8 @@ import { ClassImports } from '../../../../../../helpers/class.components';
 import { agreementService } from '../../services/acuerdo.service';
 import { AcuerdoI } from '../../interfaces/acuerdo.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { systemInformationService } from '../../../../services/systemInformationService.service';
 
 
 @Component({
@@ -21,14 +23,21 @@ export class VerAcuerdoComponent implements OnInit {
   goalDetails!: Array<any>;
   totalCalificacion: number = 0
   totalValor: number = 0
+  commentsForm: FormGroup
 
   constructor(
-    private agreementservice: agreementService,
+    public fb: FormBuilder,
     public appHelper: HerlperService,
-
+    private agreementservice: agreementService,
+    public systemInformation: systemInformationService,
     public dialogRef: MatDialogRef<VerAcuerdoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { idPersona: number }
-  ) { }
+  ) { 
+    this.commentsForm = fb.group({
+      acuerdoId: 0,
+      descripcion: new FormControl(''),
+    })
+  }
 
   ngOnInit(): void {
     this.getAgreementByIdCollaborator()
@@ -38,8 +47,16 @@ export class VerAcuerdoComponent implements OnInit {
   getAgreementByIdCollaborator() {
     this.agreementservice.getAgreementByIdCollaborator(this.data.idPersona).subscribe((resp: any) => {
       this.agreement = resp.data;
-      console.log(this.agreement);
       this.calculadora()
+    })
+  }
+
+  postComment(){
+    this.commentsForm.patchValue({acuerdoId: this.agreement.idAcuerdo})
+    this.agreementservice.postComment(this.commentsForm.value).subscribe((res: any) => {
+      if (res.status) {
+        this.appHelper.handleResponse(res, () => this.closeModal(), this.commentsForm)
+      }
     })
   }
 
@@ -49,7 +66,7 @@ export class VerAcuerdoComponent implements OnInit {
     this.totalValor = this.agreement.detalles.reduce((acc, item) => acc + (item.metaObj.valor || 0), 0);
   }
 
-  cerrar(): void {
+  closeModal(): void {
     this.dialogRef.close();
   }
 }

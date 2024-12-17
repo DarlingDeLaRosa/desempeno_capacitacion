@@ -32,7 +32,7 @@ export class CoursesServices {
     public getCourses(page: number = 1, itemPerPage: number = 1000) {
         return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Curso?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
     }
-    
+
     public getCoursesFilter(valor:string,page:number) {
 
         const url = `${this.baseURL}/Curso/filter${valor ? `?filtro=${valor}&` :
@@ -59,7 +59,6 @@ export class CoursesServices {
     }
 
     // Modalidad
-
     public getModality() {
         return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Curso/get_modalidades`, this.header));
     }

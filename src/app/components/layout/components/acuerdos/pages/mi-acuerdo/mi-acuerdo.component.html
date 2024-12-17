@@ -9,105 +9,102 @@
   </div>
 </div>
 
-
-<div class="container">
-
-    <!-- Header -->
-
-  <ng-container *ngIf="!agreement">
-    <div class="container-loaderMother" style="margin-top: 250px;">
-      <div class="loaderMother"></div>
-      <div class="loading-text">Cargando...</div>
-    </div>
-  </ng-container>
-
-
-  <ng-container *ngIf="agreement">
-  <div class="header">
-    <div class="logo-container">
-      <img src="images.png" alt="ISFODOSU Logo" class="logo">
-      <div class="title-container">
-        <h1 class="title2">ISFODOSU</h1>
-        <p class="subtitle2">INSTITUCIÓN: Instituto Superior de Formación Docente Salome Ureña</p>
-      </div>
-    </div>
-    <div class="group-info">
-      <h2 class="group-title">Grupo Ocupacional</h2>
-      <p>{{agreement.colaboradorObj.grupoObj?.nombre || null}}</p>
-    </div>
+<ng-container *ngIf="!agreement">
+  <div class="container-loaderMother" style="margin-top: 300px;">
+    <div class="loaderMother"></div>
+    <div class="loading-text">Cargando...</div>
   </div>
+</ng-container>
 
-  <!-- Info Rows -->
-  <div class="info-row">
-    <div>
-      <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.periodo.nombre}}</p>
-    </div>
-    <div>
-      <p> <strong>UNIDAD ORGANIZATIVA:</strong> {{agreement.colaboradorObj.departamento.nombre}}</p>
-    </div>
-  </div>
+<div class="container-verAcuerdo" *ngIf="agreement">
 
-  <div class="info-row">
-    <div>
-      <p > <strong>DATOS SERVIDOR(A) EVALUADO(A)</strong></p>
-      <div class="mt-2">
-        <div>
-          <p style="margin-bottom: 5px;" ><strong>NOMBRE:  </strong>{{agreement.colaboradorObj.nombre}} {{agreement.colaboradorObj.apellidos}}</p>
-        </div>
-        <div>
-          <p ><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.cargo.nombre}}</p>
+    <div class="header">
+      <div class="logo-container">
+        <img src="images.png" alt="ISFODOSU Logo" class="logo">
+        <div class="title-container">
+          <h1 class="title2">ISFODOSU</h1>
+          <p class="subtitle2">INSTITUCIÓN: Instituto Superior de Formación Docente Salome Ureña</p>
         </div>
       </div>
-    </div>
-    <div>
-      <p><strong>DATOS SUPERVISOR(A) INMEDIATO(A)</strong></p>
-      <div class="mt-2">
-        <div>
-          <p style="margin-bottom: 5px;"><strong>NOMBRE: </strong> {{agreement.colaboradorObj.supervisorObj.nombre}} {{agreement.colaboradorObj.supervisorObj.apellidos}}</p>
-        </div>
-        <div>
-          <p ><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.supervisorObj?.cargoObj?.nombre}} </p>
+
+      <div class="group-info">
+        <h3 class="group-title">Grupo Ocupacional</h3>
+        <p>{{agreement.colaboradorObj.grupoObj.nombre }}</p>
       </div>
     </div>
-  </div>
-  </div>
 
-  <!-- Main Table -->
-  <div class="table-container">
+    <div class="info-row">
+      <div style="padding: 5px;">
+        <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.periodo.nombre}}</p>
+      </div>
+      <div style="padding: 5px;">
+        <p> <strong>UNIDAD ORGANIZATIVA:</strong> {{appHelper.getUnitOrg(agreement.colaboradorObj.division,
+          agreement.colaboradorObj.departamento, agreement.colaboradorObj.direccion,
+          agreement.colaboradorObj.viceRectoria)?.nombre}}</p>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <div style="padding: 5px;">
+        <p> <strong>DATOS SERVIDOR(A) EVALUADO(A)</strong></p>
+      </div>
+      <div style="padding: 5px;">
+        <p><strong>DATOS SUPERVISOR(A) INMEDIATO(A)</strong></p>
+      </div>
+    </div>
+
+    <div class="info-row">
+      <p style="padding: 5px;"><strong>NOMBRE: </strong>{{agreement.colaboradorObj.nombre}}
+        {{agreement.colaboradorObj.apellidos}}</p>
+      <p style="padding: 5px;"><strong>NOMBRE: </strong> {{"agreement.colaboradorObj.supervisorObj.nombre"}}
+        {{"agreement.colaboradorObj.supervisorObj.apellidos"}}</p>
+    </div>
+
+    <div class="info-row">
+      <div style="padding: 5px;">
+        <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.cargo.nombre}}</p>
+      </div>
+      <div style="padding: 5px;">
+        <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.supervisorObj.cargoObj.nombre}} </p>
+      </div>
+    </div>
+
+    <div *ngIf="agreement.colaboradorObj.supervisorObj">
+    </div>
+
+
+    <!-- Main Table -->
     <h2 class="table-title">
-      ESTABLECIMIENTO DE METAS/ RESULTADOS ESPERADOS. Valor {{agreement.puntos}} puntos
-      <br>
+      ESTABLECIMIENTO DE METAS/ RESULTADOS ESPERADOS. Valor {{agreement.puntos}} puntos <br>
       EVALUACIÓN DEL ACUERDO
     </h2>
     <table class="evaluation-table">
       <thead>
-        <tr>
-          <th class="col-no">No.</th>
-          <th class="col-goals">Metas del (de la) Servidor(a)<br>(Resultados esperados de su desempeño)</th>
-          <th class="col-value">Valor de<br>cada Meta</th>
-          <th class="col-verification">Medios de Verificación<br>(Evidencias)</th>
-          <th class="col-score">Calificación<br>otorgada</th>
-          <th class="col-observations">Observaciones</th>
-        </tr>
+        <th style="width: 5%;">No.</th>
+        <th style="width: 40%;">Metas del (de la) Servidor(a)<br>(Resultados esperados de su desempeño)</th>
+        <th style="width: 10%;">Valor de<br>cada Meta</th>
+        <th style="width: 15%;">Medios de Verificación<br>(Evidencias)</th>
+        <th style="width: 10%;">Calificación<br>otorgada</th>
+        <th style="width: 20%;">Observaciones</th>
       </thead>
       <tbody>
         <tr *ngFor="let detalle of agreement.detalles; let i = index">
-          <td>{{i + 1}}</td>
+          <td>{{i+1}}</td>
           <td>{{detalle.metaObj.nombre}}</td>
           <td>{{detalle.metaObj.valor}}</td>
           <td>{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
           <td>{{detalle.calificacion}}</td>
           <td></td>
         </tr>
-        <tr class="total-row">
-          <td colspan="2" class="bold">Total</td>
+        <tr >
+          <td></td>
+          <td colspan="1" class="bold">Total</td>
           <td class="bold">{{totalValor}}</td>
           <td class="bold">Total</td>
-          <td>{{totalCalificacion}}</td>
+          <td class="bold">{{totalCalificacion}}</td>
           <td></td>
         </tr>
       </tbody>
     </table>
-  </div>
-</ng-container>
 </div>
+

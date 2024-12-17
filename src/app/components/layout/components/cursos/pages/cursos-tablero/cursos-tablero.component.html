@@ -3,7 +3,7 @@
     <h1>Publicaciones de Cursos</h1>
   </div>
   <div>
-    <ng-container *ngIf="usuarioActual.IdDepartamento === '7'">
+    <ng-container *ngIf="InformationService.currentUserSystem().rol.nombre === 'Analista'">
       <button type="submit" class="btnNavegar"
       [routerLink]="[{ outlets: { 'cursos': ['listado']}}]"
       >Listado de cursos</button> &nbsp;

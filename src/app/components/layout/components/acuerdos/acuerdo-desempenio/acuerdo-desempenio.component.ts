@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { MaterialComponents } from '../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../helpers/class.components';
-import { CoursesServices } from '../../mantenimiento/mantenimiento-options/cursos/services/cursos.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ListadoDocumentoComponent } from '../modals/listado-documento/listado-documento.component';
 import { VerAcuerdoComponent } from '../modals/ver-acuerdo/ver-acuerdo.component';
 import { systemInformationService } from '../../../services/systemInformationService.service';
 import { agreementService } from '../services/acuerdo.service';
 import { loggedUserI } from '../../../../../helpers/intranet/intranet.interface';
-import { AcuerdoI } from '../interfaces/acuerdo.interface';
+import { AcuerdoI, comentarioI } from '../interfaces/acuerdo.interface';
 import { RolI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
-import { rolInitialState } from '../../../services/initialStates';
+import { AutorizacionAccionComponent } from '../modals/autorizacion-accion/autorizacion-accion.component';
+import { ComentariosComponent } from '../modals/comentarios/comentarios.component';
 
 @Component({
   selector: 'app-acuerdo-desempenio',
@@ -24,7 +24,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
   hijosList!: any[];
   isLoading: boolean = true;
-  systemUser: any
+  systemUser: RolI
   usuario!: loggedUserI
   agreement: Array<AcuerdoI> = []
   rol!: RolI;
@@ -35,14 +35,12 @@ export class AcuerdoDesempenioComponent implements OnInit {
     private agreementService: agreementService,
     private systemInformation: systemInformationService
   ) {
-    console.log(systemInformation.activePeriod());
+    this.systemUser = systemInformation.activeRol()
   }
 
   ngOnInit(): void {
     this.usuario = this.systemInformation.localUser;
     this.rol = this.systemInformation.activeRol();
-    console.log(this.rol);
-
     this.getAcuerdoByRol();
   }
 
@@ -56,19 +54,19 @@ export class AcuerdoDesempenioComponent implements OnInit {
     })
   }
 
-  Buscar(){
+  //buscar los por departamento y nombre del colaborador
+  Buscar() {
     if (this.searchTerm.length > 2) {
       this.agreementService.getAgreementByRol(this.usuario.idPersona, this.searchTerm).subscribe((resp: any) => {
         this.agreement = resp.data;
         console.log(this.agreement);
       });
-    } else{
+    } else {
       if (this.searchTerm.length < 1) {
         this.getAcuerdoByRol();
       }
     }
   }
-
 
   //Metodo para abrir el modal de la lista de documento
   openModalListadoDocumentos(idCollaborator: number, nombre: string, apellido: string): void {
@@ -79,7 +77,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
       data: {
         idCollaborator,
         Nombre
-      },
+      }
     })
     dialog.afterClosed().subscribe(result => {
     });
@@ -88,6 +86,15 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //Metodo para abrir el modal del acuerdo estructurado
   openModalVerAcuerdo(idPersona: number): void {
     const dialog = this.dialog.open(VerAcuerdoComponent, { data: { idPersona } })
-    // dialog.afterClosed().subscribe(result => {});
+  }
+
+  openAuthorizationAction(idPersona: number, nombre: string, apellido: string): void {
+    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido } })
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol() });
+  }
+
+  commentsAgreement(comentario: comentarioI[], idAcuerdo: number): void {
+    const dialog = this.dialog.open(ComentariosComponent, {data: {comentario, idAcuerdo }})
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol() });
   }
 }

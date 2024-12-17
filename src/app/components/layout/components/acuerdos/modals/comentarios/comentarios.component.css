@@ -1,0 +1,111 @@
+.comments-modal {
+    width: 700px;
+    min-height: 550px;
+    padding: 20px 20px 10px 20px;
+}
+
+.comments-container {
+    width: 100%;
+    height: 460px;
+    border-radius: 4px;
+    margin-top: 20px;
+    background-color: #dedede;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comments {
+    display: flex;
+    min-height: 70px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.15);
+    align-items: flex-start;
+    width: fit-content;
+    max-width: 75%;
+    word-wrap: break-word;
+}
+
+.comments.align-right {
+    margin-left: auto;
+    /* Mueve el comentario a la derecha */
+    background-color: #e6f7ff;
+    /* Opcional: Cambiar el fondo para diferenciar */
+}
+
+.initialLetter.dif-Background {
+    background-color: lightseagreen;
+    /* Opcional: Cambiar el fondo para diferenciar */
+}
+
+.initialLetter {
+    height: 50px;
+    width: 50px;
+    display: grid;
+    border-radius: 50px;
+    font-size: 20px;
+    place-items: center;
+    background-color: lightblue;
+    font-weight: 600;
+    color: white;
+}
+
+.messageContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 0 5px;
+}
+
+.headerMessage {
+    padding: 0 5px;
+}
+
+.message {
+    display: flex;
+    min-height: 25px;
+    font-size: 14px;
+    align-items: flex-end;
+    padding: 8px 5px 0 5px;
+    text-align: left;
+    white-space: pre-wrap;
+}
+
+::ng-deep .comments-container::-webkit-scrollbar {
+    width: 14px;
+}
+
+::ng-deep .comments-container::-webkit-scrollbar-track {
+    background: white;
+}
+
+::ng-deep .comments-container::-webkit-scrollbar-thumb {
+    background-color: #004b8d;
+    border-radius: 5px;
+    border-left: 8px solid white;
+}
+
+::ng-deep .comments-container::-webkit-scrollbar-thumb:hover {
+    background-color: #003366;
+}
+
+form {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    box-sizing: border-box;
+}
+
+ng-template {
+    display: grid;
+    place-items: center;
+}
+
+img {
+    max-width: 320px;
+}
