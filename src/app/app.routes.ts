@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, CanActivate } from '@angular/router';
 import { LoginComponent } from './components/auth/login/login.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { EvalucionCompetenciasComponent } from './components/layout/components/evaluacion-competencias/pages/competencias/evalucion-competencias.component';
@@ -33,16 +33,20 @@ import { MiAcuerdoComponent } from './components/layout/components/acuerdos/page
 import { AcuerdoEvaluacionComponent } from './components/layout/components/acuerdos/pages/acuerdo-evaluacion/acuerdo-evaluacion.component';
 import { PeriodoProcesosComponent } from './components/layout/components/mantenimiento/mantenimiento-options/periodo-procesos/periodo-procesos.component';
 import { MinutaComponent } from './components/layout/components/acuerdos/pages/minuta/minuta.component';
+import { LoginClassGuard } from './guards/login-class.guard';
+import { LayoutClassGuard } from './guards/layout.guard';
 
 export const routes: Routes = [
   {
-    path: 'login',
-    component: LoginComponent
+    path:'login/:token',
+    component: LoginComponent,
+    canActivate: [LayoutClassGuard]
   },
 
   {
     path: 'layout',
     component: LayoutComponent,
+    canActivate: [LoginClassGuard],
     children: [
       {
         path: 'acuerdos',

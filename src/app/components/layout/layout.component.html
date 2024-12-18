@@ -28,8 +28,8 @@
                     <mat-icon>settings</mat-icon>Mantenimiento
                 </div>
             </div>
-    
-            <div class="ConfigsideMenuContainer">
+
+            <div class="ConfigsideMenuContainer" (click)="cerrarSesion()">
                 <div class="item-menu" [routerLink]="['formulacion']" routerLinkActive="activeOut">
                     <mat-icon>logout</mat-icon>Cerrar Sesión
                 </div>

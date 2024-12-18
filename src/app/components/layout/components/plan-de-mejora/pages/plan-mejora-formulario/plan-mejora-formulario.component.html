@@ -20,7 +20,9 @@
 
 
 <ng-container >
-<h3 style="margin-bottom: 30px;">Nombre del colaborador</h3>
+  <div *ngIf="collaborator">
+    <h2 style="margin-bottom: 30px;">{{collaborator.nombre}} {{collaborator.apellidos}}</h2>
+  </div>
 
 <div class="cartas">
   <div class="input-container">

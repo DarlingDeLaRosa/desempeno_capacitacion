@@ -1,3 +1,4 @@
+import { GeneralI } from '../../../../../helpers/intranet/intranet.interface';
 import { PeriodoI } from '../../../../interfaces/generalInteerfaces';
 import { CollaboratorsGetI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 
@@ -11,10 +12,12 @@ export interface AcuerdoI {
   idFlujo: number,
   flujoObj: any,
   puntos: number
-  comentarios: comentarioI[]
+  comentarios: commentsI[]
   detalles: AcuerdoDetalle[];
   documentosObj: Documento[];
   periodo: PeriodoI
+  tipoProceso: GeneralI
+  
 }
 
 export interface TipoAcuerdoI {
@@ -62,8 +65,10 @@ export interface postCommentI {
   descripcion: string,
 }
 
-export interface comentarioI {
-  creadoPor: string
-  descripcion: string
+export interface commentsI {
   id: number
+  creadoEn: string
+  descripcion: string
+  creadoPorPersona: string
+  creadoPorUsuario: string 
 }

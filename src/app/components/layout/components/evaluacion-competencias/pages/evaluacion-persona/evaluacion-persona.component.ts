@@ -34,8 +34,8 @@ export class EvaluacionPersonaComponent implements OnInit {
   ) {
     this.evaluationCompetencyForm = this.fb.group({
       id: new FormControl(0),
-      evaluacionCompetenciasDetalles: this.fb.array([]),
       gradoId: new FormControl(0, Validators.required),
+      evaluacionCompetenciasDetalles: this.fb.array([]),
       periodoId: new FormControl(0, Validators.required),
       idColaborador: new FormControl(0, Validators.required),
     })

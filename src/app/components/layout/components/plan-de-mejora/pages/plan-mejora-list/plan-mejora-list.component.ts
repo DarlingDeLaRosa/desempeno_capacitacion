@@ -21,12 +21,12 @@ import { Router } from '@angular/router';
 export class PlanMejoraListComponent implements OnInit{
 
   usuario!: loggedUserI
-  agreementList :Array<AcuerdoI> = []
+  agreementList! : AcuerdoI[]
   searchTerm: string = '';
 
   constructor(
     private agreementService:agreementService,
-    private systemInformation:systemInformationService,
+    public systemInformation:systemInformationService,
     private dialog: MatDialog,
     private router: Router
   ){

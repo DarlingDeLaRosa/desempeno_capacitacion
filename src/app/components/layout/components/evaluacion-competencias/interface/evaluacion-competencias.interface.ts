@@ -65,3 +65,16 @@ export interface EvaluationCompetencyByIdI {
         }
     }
 }
+
+export interface EvaluationCompetencyTestI {
+    competenciaObj: CompetencyI
+    comportamientosObj: behaviorsI[]
+    descripcion: string
+    idGrado: number
+    tipoGradoObj: GradesTypeGetI
+}
+
+export interface evaluationAgreementCalificationI{
+    calificacionComportamiento: {id: number, nombre: string, puntos: number}
+    comportamiento: behaviorsI
+}

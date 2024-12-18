@@ -5,8 +5,7 @@
   </div>
   <div>
     <button type="submit" class="btnNavegar"
-    [routerLink]="[{ outlets: { 'acuerdos': ['miacuerdo']}}]" routerLinkActive="active"
-    >Mi Acuerdo de Desempeño</button> &nbsp;
+    [routerLink]="[{ outlets: { 'acuerdos': ['miacuerdo']}}]" routerLinkActive="active">Mi Acuerdo de Desempeño</button> &nbsp;
   </div>
 </div>
 <div class="filters">
@@ -24,9 +23,9 @@
         <th class="headerCell">Nombre</th>
         <th class="headerCell">Unidad organizativa</th>
         <th class="headerCell">Cargo</th>
-        <th class="headerCell">Grupo ocupacional</th>
+        <th class="headerCell">G.O</th>
+        <th class="headerCell">Etapa</th>
         <th class="headerCell">Estado</th>
-        <!-- <th class="headerCell" style="width: 2%;"></th> -->
         <th class="headerCell" style="width: 2%;">
         <!-- <th class="headerCell" style="width: 2%;"> -->
         <!-- <th class="headerCell" style="width: 2%;"> -->
@@ -40,17 +39,18 @@
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.departamento.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
+        <td class="dataIndiCell">{{acuerdo.tipoProceso.nombre}}</td>
         <td class="dataIndiCell">Proceso de {{acuerdo.flujoObj.nombre}}</td>
         <td class="dataIndiCell">
           <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)"><mat-icon>upload_file</mat-icon>Subir documento.</button>
-            <button mat-menu-item [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active"><mat-icon>done_outline</mat-icon>Evaluar AD.</button>
-            <button mat-menu-item (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)"><mat-icon>description</mat-icon> Ver AD.</button>
-            <button mat-menu-item [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active"><mat-icon>edit</mat-icon>Editar AD.</button>
-            <button mat-menu-item (click)="commentsAgreement(acuerdo.comentarios, acuerdo.idAcuerdo)"><mat-icon>comment</mat-icon>Comentarios.</button>
+            <button mat-menu-item (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)"><mat-icon>upload_file</mat-icon>Documentos</button>
+            <button mat-menu-item [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active"><mat-icon>done_outline</mat-icon>Evaluar AD</button>
+            <button mat-menu-item (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)"><mat-icon>description</mat-icon> Ver AD</button>
+            <button mat-menu-item [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active"><mat-icon>edit</mat-icon>Editar AD</button>
+            <button mat-menu-item (click)="commentsAgreement(acuerdo.idAcuerdo, acuerdo.colaboradorObj.nombre + ' ' + acuerdo.colaboradorObj.apellidos)"><mat-icon>comment</mat-icon>Comentarios</button>
             <!-- <button mat-menu-item (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)"><mat-icon>check_small</mat-icon>Validar AD.</button> -->
-            <button mat-menu-item (click)="openAuthorizationAction(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)"><mat-icon>lock_open</mat-icon>Autorizar acción.</button>
+            <button mat-menu-item (click)="openAuthorizationAction(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.idAcuerdo)"><mat-icon>lock_open</mat-icon>Autorizar acción</button>
           </mat-menu>
         </td>
           

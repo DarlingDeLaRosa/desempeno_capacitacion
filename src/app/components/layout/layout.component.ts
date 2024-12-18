@@ -3,6 +3,7 @@ import { MaterialComponents,} from '../../helpers/material.components';
 import { ClassImports } from '../../helpers/class.components';
 import { systemInformationService } from './services/systemInformationService.service';
 import { loggedUserI } from '../../helpers/intranet/intranet.interface';
+import { SnackBars } from './services/snackBars.service';
 
 @Component({
   selector: 'app-layout',
@@ -16,7 +17,8 @@ export class LayoutComponent implements OnInit{
   usuario!: loggedUserI
 
   constructor(
-    private systemInformationService: systemInformationService
+    private systemInformationService: systemInformationService,
+    private SnackBar: SnackBars,
   ){}
 
   ngOnInit(): void {
@@ -25,9 +27,20 @@ export class LayoutComponent implements OnInit{
 
   sidenavOpened: boolean = false;
   dropdownOpen: boolean = false;
-  
+
   toggleDropdown(event: Event) {
     event.stopPropagation();
     this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  async  cerrarSesion() {
+    let remove: boolean = await this.SnackBar.snackbarConfirmation("Está seguro que desea cerrar la sesión ?", '')
+    if (remove) {
+      this.onLogout()
+    }
+  }
+  onLogout() {
+    this.systemInformationService.logout();
+     window.location.href = 'https://intranet.isfodosu.edu.do/#/home/home';
   }
 }

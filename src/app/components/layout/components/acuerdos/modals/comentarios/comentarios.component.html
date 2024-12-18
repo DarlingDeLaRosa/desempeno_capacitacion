@@ -1,43 +1,45 @@
-<div class="comments-modal">
+<div class="comments-modal" [ngClass]="{ 'expand-width': comments.length > 0 }">
 
-    <h3>Acuerdo de Desempeno de Darling De la Rosa</h3>
-    <div class="comments-container" *ngIf="data.comentario.length > 0; else noCommets">
-        <div 
-            class="comments" 
-            *ngFor="let comment of data.comentario" 
-            [ngClass]="{
-                'align-right': comment.creadoPor === systemInformation.currentUserSystem().username
-                
+    <h3>Comentarios de acuerdo de desempeño.</h3>
+    <br>
+    <h4>{{data.fullName}}</h4>
+    <div class="comments-container" *ngIf="comments.length > 0">
+        <div class="comments" *ngFor="let comment of comments" [ngClass]="{
+                'align-right': comment.creadoPorUsuario === systemInformation.currentUserSystem().username
             }">
-            
-            <div 
-            class="initialLetter"
-            [ngClass]="{
-                'dif-Background': comment.creadoPor === systemInformation.currentUserSystem().username
-            }"
-            >{{comment.creadoPor.charAt(0).toUpperCase()}}</div>
+
+            <div class="initialLetter" [ngClass]="{
+                'dif-Background': comment.creadoPorUsuario === systemInformation.currentUserSystem().username
+            }">{{comment.creadoPorPersona.charAt(0).toUpperCase()}}</div>
             <div class="messageContainer">
                 <div class="headerMessage">
-                    <h3>{{comment.creadoPor}}</h3>
-                    <h5>10/12/24 - 12/12/24</h5>
+                    <h4>{{comment.creadoPorPersona}}</h4>
+                    <h5>{{comment.creadoEn | date: 'dd/MM/yy HH:mm'}}</h5>
                 </div>
                 <div class="message">{{comment.descripcion}}</div>
             </div>
         </div>
     </div>
-    
-    <ng-template class="empty-list" #noCommets>
-        <img src="nodata.jpg" alt="No courses available">
-    </ng-template>
 
-    <form [formGroup]="commentsForm" (submit)="postComment()">
+    <div class="empty-list" *ngIf="comments && comments.length == 0">
+        <img src="nodata.jpg" alt="No courses available">
+    </div>
+
+    <form [formGroup]="commentsForm" (submit)="postComment()" *ngIf="comments.length > 0">
         <mat-form-field appearance="fill" style="flex: 3;">
             <mat-label>Escribe un mensaje</mat-label>
             <input matInput formControlName="descripcion">
         </mat-form-field>
 
-        <button type="submit" style="border: none; background-color: white; height: 60px;"> 
+        <button type="submit" style="border: none; background-color: white; height: 60px;">
             <mat-icon style="margin: 0 0 0 5px; cursor: pointer; color: #4CAF50;">send</mat-icon>
         </button>
-      </form>
+    </form>
+
+    <ng-container *ngIf="!comments">
+        <div class="container-loaderMother" style="margin-top: 100px;">
+            <div class="loaderMother"></div>
+            <div class="loading-text">Cargando...</div>
+        </div>
+    </ng-container>
 </div>

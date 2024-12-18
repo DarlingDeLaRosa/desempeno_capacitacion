@@ -7,7 +7,7 @@ import { VerAcuerdoComponent } from '../modals/ver-acuerdo/ver-acuerdo.component
 import { systemInformationService } from '../../../services/systemInformationService.service';
 import { agreementService } from '../services/acuerdo.service';
 import { loggedUserI } from '../../../../../helpers/intranet/intranet.interface';
-import { AcuerdoI, comentarioI } from '../interfaces/acuerdo.interface';
+import { AcuerdoI } from '../interfaces/acuerdo.interface';
 import { RolI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 import { AutorizacionAccionComponent } from '../modals/autorizacion-accion/autorizacion-accion.component';
 import { ComentariosComponent } from '../modals/comentarios/comentarios.component';
@@ -33,7 +33,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private agreementService: agreementService,
-    private systemInformation: systemInformationService
+    public systemInformation: systemInformationService
   ) {
     this.systemUser = systemInformation.activeRol()
   }
@@ -86,15 +86,16 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //Metodo para abrir el modal del acuerdo estructurado
   openModalVerAcuerdo(idPersona: number): void {
     const dialog = this.dialog.open(VerAcuerdoComponent, { data: { idPersona } })
-  }
-
-  openAuthorizationAction(idPersona: number, nombre: string, apellido: string): void {
-    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido } })
     dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol() });
   }
 
-  commentsAgreement(comentario: comentarioI[], idAcuerdo: number): void {
-    const dialog = this.dialog.open(ComentariosComponent, {data: {comentario, idAcuerdo }})
+  openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
+    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo  } })
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol() });
+  }
+
+  commentsAgreement(idAcuerdo: number , fullName: string): void {
+    const dialog = this.dialog.open(ComentariosComponent, {data:  {idAcuerdo, fullName}  })
     dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol() });
   }
 }

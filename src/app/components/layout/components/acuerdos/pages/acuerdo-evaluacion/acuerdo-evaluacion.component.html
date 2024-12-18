@@ -1,4 +1,3 @@
-
 <!-- <div class="empty-list" *ngIf="!agreement">
   <img src="nodata.jpg" alt="No courses available">
 </div> -->
@@ -8,10 +7,10 @@
     <h1>Evaluación de Acuerdo</h1>
   </div>
   <div>
-     <div>
-      <button class="backButton" mat-stroked-button
-      [routerLink]="['/layout/acuerdos']"><mat-icon class="backIcon">arrow_back
-      </mat-icon>Acuerdos de Desempeño</button>
+    <div>
+      <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+          class="backIcon">arrow_back
+        </mat-icon>Acuerdos de Desempeño</button>
     </div>
   </div>
 </div>
@@ -19,24 +18,24 @@
 
 <div class="staticInfoContainer" *ngIf="agreement">
   <span>
-      <h3>Nombre Servidor Evaluado</h3>
-      <h4>{{agreement.colaboradorObj.nombre}} {{agreement.colaboradorObj.apellidos}}</h4>
+    <h3>Nombre Servidor Evaluado</h3>
+    <h4>{{agreement.colaboradorObj.nombre}} {{agreement.colaboradorObj.apellidos}}</h4>
   </span>
   <span>
-      <h3>Nombre del Cargo</h3>
-      <h4>{{agreement.colaboradorObj.cargo.nombre}}</h4>
+    <h3>Nombre del Cargo</h3>
+    <h4>{{agreement.colaboradorObj.cargo.nombre}}</h4>
   </span>
   <span>
-      <h3>Periodo a Evaluar</h3>
-      <h4>{{agreement.periodo.nombre}}</h4>
+    <h3>Periodo a Evaluar</h3>
+    <h4>{{agreement.periodo.nombre}}</h4>
   </span>
   <span>
-      <h3>Grupo Ocupacional</h3>
-      <h4>{{agreement.colaboradorObj.grupoObj.nombre}}</h4>
+    <h3>Grupo Ocupacional</h3>
+    <h4>{{agreement.colaboradorObj.grupoObj.nombre}}</h4>
   </span>
 </div>
 
-<h2 style="margin: 15px 0px 15px 0px;">Lista de Metas</h2>
+<h2 style="margin: 15px 0px 15px 0px; font-size: 20px;">Lista de Metas</h2>
 
 <div class="table-container">
   <table>
@@ -48,12 +47,12 @@
         <th class="headerCell">Calificación</th>
         <th class="headerCell"></th>
 
-          <div *ngIf="isLoading ===  true" class="loader" ></div>
+        <div *ngIf="isLoading ===  true" class="loader"></div>
         <!-- </th> -->
       </tr>
     </thead>
     <tbody>
-      <tr class="dataRow"  *ngFor="let goal of goalDetails; let i = index">
+      <tr class="dataRow" *ngFor="let goal of goalDetails; let i = index">
         <td class="dataIndiCell">{{goal.nombre}}</td>
         <td class="dataIndiCell">{{goal.nombreMedio}}</td>
         <td class="dataIndiCell">{{goal.valor}}</td>
@@ -70,11 +69,11 @@
       </tr>
     </tbody>
     <tfoot>
-      <tr class="paginatorRow"  *ngIf="goalDetails.length !== 0">
+      <tr class="paginatorRow" *ngIf="goalDetails.length !== 0">
         <td class="dataIndiCell">Total:</td>
         <td class="dataIndiCell"></td>
-        <td class="dataIndiCell" ><strong>{{totalValor}}</strong></td>
-        <td class="dataIndiCell" ><strong>{{totalCalificacion}}</strong></td>
+        <td class="dataIndiCell"><strong>{{totalValor}}</strong></td>
+        <td class="dataIndiCell"><strong>{{totalCalificacion}}</strong></td>
 
         <td class="dataIndiCell">
           <span style="display: flex; align-items: center;">
@@ -84,4 +83,42 @@
       </tr>
     </tfoot>
   </table>
+</div>
+
+<div style="margin: 15px 0px 15px 0px;" *ngIf="agreement.tipoAcuerdoObj.idTipoAcuerdo == 2">
+  <h2 style="font-size: 20px;">Lista de Comportamientos</h2>
+  <h4 style="margin: 15px 0 15px 0 ;">Evalúe los diferentes comportamientos probatorios.</h4>
+
+  <form [formGroup]="evaluationCompetencyForm" (submit)="saveChanges()">
+    <div class="evaluacionComportamientoContainer">
+      <div class="cabeceraComportamiento">
+        <h4>Comportamiento</h4>
+        <h4>Insatisfactorio</h4>
+        <h4>Regular</h4>
+        <h4>Bueno</h4>
+        <h4>Excelente</h4>
+      </div>
+
+      <div formArrayName="evaluacionCompetenciasDetalles"
+        *ngFor="let behavior of evaluationCompetencyForm.get('evaluacionCompetenciasDetalles')?.value ; let c = index">
+        <div [formGroupName]="c" class="evaluacionComportamiento">
+          <div class="comportamiento">
+            <p>{{behavior.comportamientoNombre}}</p>
+          </div>
+          <label class="radioGroupComportamiento"><input type="radio" [value]="2"
+              formControlName="calificacionComportamientoId" /></label>
+          <label class="radioGroupComportamiento"><input type="radio" [value]="3"
+              formControlName="calificacionComportamientoId" /></label>
+          <label class="radioGroupComportamiento"><input type="radio" [value]="4"
+              formControlName="calificacionComportamientoId" /> </label>
+          <label class="radioGroupComportamiento"><input type="radio" [value]="6"
+              formControlName="calificacionComportamientoId" /></label>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+      <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+    </div>
+  </form>
 </div>

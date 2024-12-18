@@ -7,6 +7,7 @@ import { AcuerdoI } from '../../interfaces/acuerdo.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
+import { SnackBars } from '../../../../services/snackBars.service';
 
 
 @Component({
@@ -27,12 +28,13 @@ export class VerAcuerdoComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder,
+    public snackBar: SnackBars,
     public appHelper: HerlperService,
     private agreementservice: agreementService,
     public systemInformation: systemInformationService,
     public dialogRef: MatDialogRef<VerAcuerdoComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { idPersona: number }
-  ) { 
+  ) {
     this.commentsForm = fb.group({
       acuerdoId: 0,
       descripcion: new FormControl(''),
@@ -51,13 +53,29 @@ export class VerAcuerdoComponent implements OnInit {
     })
   }
 
-  postComment(){
-    this.commentsForm.patchValue({acuerdoId: this.agreement.idAcuerdo})
+  postComment() {
+    this.commentsForm.patchValue({ acuerdoId: this.agreement.idAcuerdo })
     this.agreementservice.postComment(this.commentsForm.value).subscribe((res: any) => {
       if (res.status) {
         this.appHelper.handleResponse(res, () => this.closeModal(), this.commentsForm)
       }
     })
+  }
+
+  async agreementDesicion(decision: boolean) {
+    let flowData
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation(`Esta seguro de evaluar el acuerdo como ${decision ? 'CORRECTO' : 'INCORRECTO'}`, '')
+
+    if (removeDecision) {
+      decision ? flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 1 }
+        : flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: 2 }
+
+      this.agreementservice.updateFlow(flowData).subscribe((res: any) => {
+        if (res.status) {
+          this.appHelper.handleResponse(res, () => this.closeModal(), this.commentsForm)
+        }
+      })
+    }
   }
 
   //metodo para calcular la Calificaicon total y el valor total

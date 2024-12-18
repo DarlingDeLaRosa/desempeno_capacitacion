@@ -45,8 +45,6 @@ export class EvalucionCompetenciasComponent implements OnInit {
     this.evaluationCompetencyService.getEvaluationCompetencies().subscribe((res: any) => {
       this.supervisorWithSubordinates = res.data.colaboradores;
       this.evaluationsCompetencies = res.data.evaluacionesCompetencias;
-      console.log(this.evaluationsCompetencies);
-      
     })
   }
 }

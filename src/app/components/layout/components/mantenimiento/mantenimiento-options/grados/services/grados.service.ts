@@ -24,8 +24,8 @@ export class GradesServices {
         this.header = { headers: this.headers };
     }
 
-    public getGrades(page: number = 1, itemPerPage: number = 1000) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Grado?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
+    public getGrades(page: number = 1, itemPerPage: number = 1000, isTest: boolean = false) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Grado?numeroPagina=${page}&tamanoPagina=${itemPerPage}&probatorio=${isTest}`, this.header));
     }
 
     public postGrade(grade: GradesI) {

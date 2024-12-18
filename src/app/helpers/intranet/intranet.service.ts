@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HerlperService } from '../../components/layout/services/appHelpers.service';
 import { systemInformationService } from '../../components/layout/services/systemInformationService.service';
+import { Observable, catchError, throwError } from 'rxjs';
+import { ResponseI } from '../../components/interfaces/generalInteerfaces';
+import { SnackBars } from '../../components/layout/services/snackBars.service';
 
 @Injectable({ providedIn: 'root' })
 
@@ -19,8 +22,9 @@ export class IntranetServices {
         private http: HttpClient,
         private appHelpers: HerlperService,
         private systemInformation: systemInformationService,
+        private SnackBar: SnackBars,
     ) {
-        this.token = this.systemInformation.getToken;
+        this.token = this.systemInformation.TokenIntranet;
         this.baseURL = this.systemInformation.getIntranetURL;
         this.idSistema = this.systemInformation.getSistema;
         this.sigebiURL = this.systemInformation.getSigebiURL;
@@ -93,7 +97,23 @@ export class IntranetServices {
     }
 
    //peticion para el loguin a un sistema de intraanet
-   public postUserLogin(crendenciales: any) {
-    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/User/post/login`, crendenciales , this.header))
+  //  public postUserLogin(crendenciales: any) {
+  //   return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/User/post/login`, crendenciales , this.header))
+  //   }
+
+
+    postAutorizacion(auth:any): Observable<ResponseI> {
+       return this.http.post<ResponseI>(`${this.baseURL}/User/post/login`, auth)
+         .pipe(catchError((error) => {
+           this.authError();
+           this.SnackBar.snackbarError('El usuario no está registrado en este sistema');
+           setTimeout(() => {
+             window.location.href = 'https://intranet.isfodosu.edu.do/#/login';
+           }, 5000);
+           return throwError(error) }))
+     }
+
+     authError(){
+      sessionStorage.clear();
     }
 }

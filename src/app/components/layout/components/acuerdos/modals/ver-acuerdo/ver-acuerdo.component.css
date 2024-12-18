@@ -1,6 +1,7 @@
 .container-verAcuerdo {
   margin: 20px;
   border: 1px solid black;
+  min-width: 1450px;
 }
 
 .header {

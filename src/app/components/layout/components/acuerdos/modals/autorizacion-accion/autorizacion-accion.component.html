@@ -8,13 +8,13 @@
 
     <p style="margin: 20px 0 10px 0;">Autorizar a realizar acción. </p>
 
-    <form style=" margin: 15px 0 15px 0" [formGroup]="authorizeAccionForm"><!--(ngSubmit)="saveChanges()"-->
+    <form style=" margin: 15px 0 15px 0" [formGroup]="authorizeAccionForm" (ngSubmit)="postProcessChange()">
 
         <div style="display: flex;">
 
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Proceso</mat-label>
-                <mat-select formControlName="tipoProcesoId" disableRipple>
+                <mat-select formControlName="processId" disableRipple>
                     <ng-container *ngIf="processes && processes.length; else noPosition">
                         <mat-option [value]="process.id" *ngFor="let process of processes">
                             {{process.nombre}}
@@ -27,7 +27,8 @@
             </mat-form-field>
             
         </div>
-
-        <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+        <div style="display: flex; justify-content: end;">
+            <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
+        </div>
     </form>
 </div>

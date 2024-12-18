@@ -1,7 +1,10 @@
 .comments-modal {
+    padding: 20px 20px 10px 20px;
+}
+
+.comments-modal.expand-width {
     width: 700px;
     min-height: 550px;
-    padding: 20px 20px 10px 20px;
 }
 
 .comments-container {
@@ -34,9 +37,11 @@
 
 .comments.align-right {
     margin-left: auto;
-    /* Mueve el comentario a la derecha */
     background-color: #e6f7ff;
-    /* Opcional: Cambiar el fondo para diferenciar */
+}
+
+.comments.aling-center{
+    margin: auto;
 }
 
 .initialLetter.dif-Background {
@@ -108,4 +113,9 @@ ng-template {
 
 img {
     max-width: 320px;
+}
+
+.startConversation{
+    display: grid;
+    place-items: center;
 }

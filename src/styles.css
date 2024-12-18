@@ -69,6 +69,7 @@ h6 {
     -webkit-text-stroke: 0.5px #4CAF50;
     font-family: 'Montserrat', sans-serif;
 }
+
 .btnInfo {
   color: #004b8d;
   border: #004b8d solid 1px;
@@ -88,6 +89,16 @@ h6 {
 .backButton, .backIcon{
     color: #565656 !important;
 }
+
+.saveButton:hover,
+.cleanButton:hover,
+.btnCerrar:hover,
+.btnInfo:hover,
+.btnNavegar:hover,
+.backButton:hover {
+    background-color: #efefef;
+}
+
 
 /*/////////////////////////////
         Tables Styles

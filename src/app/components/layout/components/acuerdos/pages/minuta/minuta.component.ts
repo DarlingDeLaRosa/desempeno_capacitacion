@@ -8,6 +8,8 @@ import { systemInformationService } from '../../../../services/systemInformation
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 import { AcuerdoI } from '../../interfaces/acuerdo.interface';
 import { agreementService } from '../../services/acuerdo.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MotivoAusenciaMinutaComponent } from '../../modals/motivo-ausencia-minuta/motivo-ausencia-minuta.component';
 
 @Component({
   selector: 'app-minuta',
@@ -26,6 +28,7 @@ export class MinutaComponent implements OnInit{
 
   constructor(
     private agreementService: agreementService,
+    private dialog: MatDialog,
     public systeminformation:systemInformationService,
   ){}
 
@@ -46,11 +49,13 @@ export class MinutaComponent implements OnInit{
   }
 
 
-  // getPeopleById() {
-  //   this.intranetService.getPeopleById(this.idRegistro).subscribe((resp: any) => {
-  //     this.collaborator = resp.data;
-  //     this.isLoading2 = false;
-  //     this.getAgreementByIdCollaborator();
-  //   })
-  // }
+  openModalCalificacion(): void {
+    const dialog = this.dialog.open(MotivoAusenciaMinutaComponent, {
+      width: '700px',
+    })
+
+    dialog.afterClosed().subscribe(result => {
+
+    });
+  }
 }

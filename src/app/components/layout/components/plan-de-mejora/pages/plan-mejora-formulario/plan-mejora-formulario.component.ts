@@ -13,6 +13,8 @@ import { HerlperService } from '../../../../services/appHelpers.service';
 import { CoursesServices } from '../../../mantenimiento/mantenimiento-options/cursos/services/cursos.service';
 import { ModalityI } from '../../../mantenimiento/mantenimiento-options/cursos/interfaces/cursos.interface';
 import { Observable, map, of, startWith } from 'rxjs';
+import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
+import { IntranetServices } from '../../../../../../helpers/intranet/intranet.service';
 
 @Component({
   selector: 'app-plan-mejora-formulario',
@@ -40,6 +42,7 @@ export class PlanMejoraFormularioComponent implements OnInit {
   idPlanMejora: number | null = null
   planMejoraObtenido!: PlanMejoraI;
   statusCode: number = 0;
+  collaborator!: CollaboratorsGetI;
 
 
   recommendations: string[] = [];
@@ -54,7 +57,8 @@ export class PlanMejoraFormularioComponent implements OnInit {
     private route: ActivatedRoute,
     private systemInformationSevice: systemInformationService,
     private appHelpers: HerlperService,
-    private cursosService: CoursesServices
+    private cursosService: CoursesServices,
+    private intranetService:IntranetServices
 
   ) {
     this.recommenForm = fb.group({
@@ -75,10 +79,21 @@ export class PlanMejoraFormularioComponent implements OnInit {
   ngOnInit(): void {
     this.idColaborador = Number(this.route.snapshot.paramMap.get('id'));
     this.getCategoriesRecommend();
+    this.getPeopleById()
     this.getModalidad();
     this.getTrimestres();
     this.getPlanMejoraByIdCollabo();
   }
+
+  getPeopleById() {
+    if (this.idColaborador) {
+      this.intranetService.getPeopleById(this.idColaborador).subscribe((resp: any) => {
+        this.collaborator = resp.data;
+        console.log(this.collaborator);
+      })
+    }
+  }
+
 
   onSelectCourseOrWorkshop(event: any): void {
     console.log(event);

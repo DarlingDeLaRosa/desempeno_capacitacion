@@ -27,7 +27,7 @@
               <th class="headerCell">Categoría</th>
               <th class="headerCell">Cantidad de Solicitantes</th>
               <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                  <!-- <div class="loader"></div> -->
+                  <div *ngIf="!ResultadoPlanMejoraList" class="loader"></div>
               </th>
           </tr>
       </thead>
@@ -39,12 +39,11 @@
               <td class="dataIndiCell"><mat-icon  class="listIcon" (click)="openModal(resultado.colaboradores, resultado.nombre)">groups</mat-icon></td>
           </tr>
       </tbody>
-      <tfoot>
+      <!-- <tfoot>
           <tr class="paginatorRow">
               <td class="dataIndiCell"></td>
               <td class="dataIndiCell"></td>
               <td class="dataIndiCell">
-                  <!-- Placeholder para paginación -->
               </td>
               <td class="dataIndiCell">
                   <span style="display: flex; align-items: center;">
@@ -54,7 +53,7 @@
                   </span>
               </td>
           </tr>
-      </tfoot>
+      </tfoot> -->
   </table>
 </div>
 

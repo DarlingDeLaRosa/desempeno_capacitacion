@@ -8,7 +8,7 @@
     </div>
 </div>
 
-  <h3 style="margin-bottom: 5px;" >Meta</h3>
+  <h3 style="margin-bottom: 10px;" >Meta</h3>
   <div class="container2">
     <div class="description">
       <p>
@@ -23,7 +23,7 @@
     <p>Medio Verifiación: {{goal.nombreMedio}}</p>
   </div>
 
-  <h3 style="margin-bottom: 20px; margin-top: 20px;">Calificación y documento de veficaición</h3>
+  <h3 style="margin: 20px 0 10px 0;">Calificación y documento de veficación</h3>
 
   <form [formGroup]="califiacionForm">
   <div style="display: flex; gap: 5px">
@@ -55,8 +55,8 @@
     </div>
   </form>
   <div class="modal-actions">
-    <button mat-button (click)="cerrar()" class="cancel-button">Cancelar</button>
-    <button mat-raised-button color="primary" (click)="enviarDatos()">Guardar</button>
+    <button class="cleanButton" (click)="cerrar()">Cancelar</button>
+    <button class="saveButton" (click)="enviarDatos()">Guardar</button>
   </div>
 </div>
 

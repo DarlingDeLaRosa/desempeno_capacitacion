@@ -17,7 +17,7 @@ import { ResultadoRecomendacionComponent } from '../../modals/resultado-recomend
 })
 export class PlanMejoraResultadoComponent implements OnInit {
 
-  ResultadoPlanMejoraList: Array<RecomendacionesPlanMejoraI> = []
+  ResultadoPlanMejoraList!: RecomendacionesPlanMejoraI [];
 
   constructor(
     public dialog: MatDialog,

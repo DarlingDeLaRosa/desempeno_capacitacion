@@ -7,6 +7,7 @@ import { HerlperService } from '../../../../services/appHelpers.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { typeProcessesI } from '../../../mantenimiento/mantenimiento-options/asignacion-acuerdo/interfaces/asignacion-acuerdo.interface';
 import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
+import { agreementService } from '../../services/acuerdo.service';
 
 @Component({
   selector: 'app-autorizacion-accion',
@@ -20,15 +21,14 @@ export class AutorizacionAccionComponent implements OnInit{
   constructor(
     public fb: FormBuilder,
     public snackBar: SnackBars,
-    private appHelpers: HerlperService,
+    private appHelper: HerlperService,
+    private agreementservice: agreementService,
     private periodProcessService: PeriodsProcessServices,
     private dialogRef: MatDialogRef<AutorizacionAccionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {idPersona: number,  nombre: string, apellido: string},
+    @Inject(MAT_DIALOG_DATA) public data: {idPersona: number,  nombre: string, apellido: string, idAcuerdo: number},
   ) {
     this.authorizeAccionForm = fb.group({
-      idAuthorize: 0,
-      idProcess: new FormControl(''),
-      personaId: new FormControl('', Validators.required),
+      processId: 0,
     })
   }
 
@@ -47,4 +47,20 @@ export class AutorizacionAccionComponent implements OnInit{
   closeModal(): void {
     this.dialogRef.close();
   }
+
+  async postProcessChange() {
+    let processData
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation(`¿Esta seguro de cambiar el proceso del acuerdo de desempeño ?`, 'Esto permitira a usuarios hacer cambios que el proceso permita.')
+
+    if (removeDecision) {
+       processData = { acuerdoId: this.data.idAcuerdo, procesoId: this.authorizeAccionForm.value.processId }
+
+      this.agreementservice.updateProcess(processData).subscribe((res: any) => {
+        if (res.status) {
+          this.appHelper.handleResponse(res, () => this.closeModal(), this.authorizeAccionForm)
+        }
+      })
+    }
+  }
+
 }
