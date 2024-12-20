@@ -1,20 +1,28 @@
-
 <div class="fuctionContent">
   <div class="title">
     <h1>Acuerdo de Desempeño</h1>
   </div>
-  <div>
-    <button type="submit" class="btnNavegar"
-    [routerLink]="[{ outlets: { 'acuerdos': ['miacuerdo']}}]" routerLinkActive="active">Mi Acuerdo de Desempeño</button> &nbsp;
+  <div >
+    <button *ngIf="this.systemInformation.activeRol().nombre == 'Encargado' || this.systemInformation.activeRol().nombre == 'Analista'" type="submit" class="btnNavegar" [routerLink]="[{ outlets: { 'acuerdos': ['minutaLista']}}]"
+      routerLinkActive="active">Minutas</button> &nbsp;
+
+    <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" type="submit" class="btnNavegar" [routerLink]="[{ outlets: { 'acuerdos': ['miacuerdo']}}]"
+      routerLinkActive="active">Mi Acuerdo de Desempeño</button> &nbsp;
   </div>
+
 </div>
-<div class="filters">
+<div class="filters" *ngIf="systemInformation.activeRol().nombre != 'supervisado'">
   <mat-form-field appearance="fill" style="width: 300px;">
     <mat-label>Buscar</mat-label>
-    <input matInput [(ngModel)]="searchTerm" (input)="Buscar()"> <!--[(ngModel)]="questionName" (input)="getPregunta()"-->
+    <input matInput [(ngModel)]="searchTerm" (input)="Buscar()">
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
 </div>
+
+<h3 *ngIf="systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado'; else noSup ">{{usuario.Unidad}}</h3>
+<ng-template #noSup>
+  <h3>LISTA DE ACUERDOS DE DESEMPEÑO TRABAJADOS.</h3>
+</ng-template>
 
 <div class="table-container">
   <table>
@@ -27,9 +35,9 @@
         <th class="headerCell">Etapa</th>
         <th class="headerCell">Estado</th>
         <th class="headerCell" style="width: 2%;">
-        <!-- <th class="headerCell" style="width: 2%;"> -->
-        <!-- <th class="headerCell" style="width: 2%;"> -->
-          <div *ngIf="isLoading ===  true" class="loader" ></div>
+          <!-- <th class="headerCell" style="width: 2%;"> -->
+          <!-- <th class="headerCell" style="width: 2%;"> -->
+          <div *ngIf="isLoading ===  true" class="loader"></div>
         </th>
       </tr>
     </thead>
@@ -44,34 +52,69 @@
         <td class="dataIndiCell">
           <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)"><mat-icon>upload_file</mat-icon>Documentos</button>
-            <button mat-menu-item [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active"><mat-icon>done_outline</mat-icon>Evaluar AD</button>
-            <button mat-menu-item (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)"><mat-icon>description</mat-icon> Ver AD</button>
-            <button mat-menu-item [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active"><mat-icon>edit</mat-icon>Editar AD</button>
-            <button mat-menu-item (click)="commentsAgreement(acuerdo.idAcuerdo, acuerdo.colaboradorObj.nombre + ' ' + acuerdo.colaboradorObj.apellidos)"><mat-icon>comment</mat-icon>Comentarios</button>
-            <!-- <button mat-menu-item (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)"><mat-icon>check_small</mat-icon>Validar AD.</button> -->
-            <button mat-menu-item (click)="openAuthorizationAction(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.idAcuerdo)"><mat-icon>lock_open</mat-icon>Autorizar acción</button>
+
+            <button mat-menu-item *ngIf="acuerdo.flujoObj.idFlujo == 4"
+              (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)">
+              <mat-icon>upload_file</mat-icon>Documentos
+            </button>
+
+
+            <button mat-menu-item
+              *ngIf="acuerdo.detalles.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo' "
+              [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]"
+              routerLinkActive="active">
+              <mat-icon>done_outline</mat-icon>Evaluar AD
+            </button>
+
+
+            <button mat-menu-item *ngIf="acuerdo.detalles.length > 0"
+              (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)">
+              <mat-icon>description</mat-icon>Ver AD
+            </button>
+
+
+            <button mat-menu-item
+              *ngIf="acuerdo.flujoObj.idFlujo == 1 &&  systemInformation.activeRol().nombre == 'Supervisor' || acuerdo.flujoObj.idFlujo == 2 &&  systemInformation.activeRol().nombre == 'Supervisor'"
+              [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]"
+              routerLinkActive="active">
+              <mat-icon>edit</mat-icon>Crear/Editar AD
+            </button>
+
+
+            <button mat-menu-item *ngIf="acuerdo.detalles.length > 0 && acuerdo.comentarios.length > 0"
+              (click)="commentsAgreement(acuerdo.idAcuerdo, acuerdo.colaboradorObj.nombre + ' ' + acuerdo.colaboradorObj.apellidos)">
+              <mat-icon>comment</mat-icon>Comentarios
+            </button>
+
+
+            <button mat-menu-item
+              *ngIf="acuerdo.detalles.length > 0 && this.systemInformation.activeRol().nombre == 'Encargado' || acuerdo.detalles.length > 0 && this.systemInformation.activeRol().nombre == 'Analista'"
+              (click)="openAuthorizationAction(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.idAcuerdo)">
+              <mat-icon>lock_open</mat-icon>Autorizar acción
+            </button>
+
+
+            <ng-container *ngIf="!(
+                acuerdo.flujoObj.idFlujo == 4 ||
+                (acuerdo.detalles.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo') ||
+                acuerdo.detalles.length > 0 ||
+                (acuerdo.flujoObj.idFlujo == 1 && systemInformation.activeRol().nombre == 'Supervisor' || acuerdo.flujoObj.idFlujo == 2 && systemInformation.activeRol().nombre == 'Supervisor') ||
+                (acuerdo.detalles.length > 0 && acuerdo.comentarios.length > 0) ||
+                (acuerdo.detalles.length > 0 && (this.systemInformation.activeRol().nombre == 'Encargado' || this.systemInformation.activeRol().nombre == 'Analista'))
+              )">
+              <button mat-menu-item disabled>
+                <mat-icon>info</mat-icon>No hay elementos disponibles en este momento.
+              </button>
+            </ng-container>
+
           </mat-menu>
         </td>
-          
-          <!-- <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
-          (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)">upload_file</mat-icon></td>
-        <td class="dataIndiCell">
-          <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
-          [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active">done_outline</mat-icon></td>
-        <td class="dataIndiCell">
-          <mat-icon class="listIcon" *ngIf="acuerdo.idAcuerdo"
-          (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)">description</mat-icon></td>
-        <td class="dataIndiCell">
-          <mat-icon class="editIcon" *ngIf="acuerdo.idAcuerdo"
-            [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]" routerLinkActive="active">edit</mat-icon>
-        </td> -->
       </tr>
     </tbody>
   </table>
 </div>
 
 <div style="display: flex; justify-content: end;">
-  <button [routerLink]="[{ outlets: { 'acuerdos': ['minuta']}}]" routerLinkActive="active" class="saveButton">Realizar Minuta</button>
+  <button [routerLink]="[{ outlets: { 'acuerdos': ['minuta']}}]" routerLinkActive="active" class="saveButton">Realizar
+    Minuta</button>
 </div>
-

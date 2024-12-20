@@ -34,7 +34,12 @@
   </span>
 </div>
 
-<h2 style="margin-top: 20px;">Metas</h2>
+<app-loader-box *ngIf="!collaborator && !agreement"></app-loader-box>
+
+<div style="margin-top: 15px; display: flex; justify-content: space-between;">
+  <h2>Metas</h2>
+  <button class="btnInfo"><mat-icon>question_mark</mat-icon></button>
+</div>
 <div class="AcuerdosForms">
   <ng-container *ngIf="collaborator">
     <form [formGroup]="goalForm" (submit)="add()">
@@ -64,13 +69,16 @@
         <mat-form-field style="flex:1">
           <mat-label>Meta</mat-label>
           <input matInput formControlName="nombre">
+          
           <mat-error *ngIf="goalForm.get('nombre')?.hasError('notSpecific')">
             La meta debe ser específica y suficientemente detallada.
           </mat-error>
-          <mat-error *ngIf="goalForm.get('nombre')?.hasError('notMeasurable')">
+          <mat-error *ngIf="goalForm.get('nombre')?.hasError('notMeasurable') && !goalForm.get('nombre')?.hasError('notSpecific')">
             La meta debe ser medible (incluir un número o cantidad).
           </mat-error>
-          <mat-error *ngIf="goalForm.get('nombre')?.hasError('missingTime')">
+          <mat-error *ngIf="goalForm.get('nombre')?.hasError('missingTime') && 
+                             !goalForm.get('nombre')?.hasError('notSpecific') &&
+                             !goalForm.get('nombre')?.hasError('notMeasurable')">
             La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).
           </mat-error>
         </mat-form-field>

@@ -16,11 +16,12 @@ import { GradesGetI, behaviorsI } from '../../../mantenimiento/mantenimiento-opt
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { EvaluationCompetencyTestI, evaluationAgreementCalificationI } from '../../../evaluacion-competencias/interface/evaluacion-competencias.interface';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
+import { LoaderBoxComponent } from '../../../../../../helpers/components/loader-box/loader-box.component';
 
 @Component({
   selector: 'app-acuerdo-evaluacion',
   standalone: true,
-  imports: [MaterialComponents, ClassImports],
+  imports: [MaterialComponents, ClassImports, LoaderBoxComponent],
   templateUrl: './acuerdo-evaluacion.component.html',
   styleUrl: './acuerdo-evaluacion.component.css'
 })
@@ -107,7 +108,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
 
       (this.evaluationCompetencyForm.get('evaluacionCompetenciasDetalles') as FormArray).push(behaviorGroup)
       console.log(this.evaluationCompetencyForm.value);
-      
+
     })
   }
 
@@ -178,7 +179,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
     })
 
     console.log(this.evaluationCompetencyForm.value);
-    
+
     this.appHelpers.saveChanges(() => this.postEvaluationBehaviorTest(), () => this.putEvaluationBehaviorTest(), this.evaluationCompetencyForm.value.id, this.evaluationCompetencyForm)
   }
 }

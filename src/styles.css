@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
-*{
-  font-family: 'Montserrat', sans-serif;
+* {
+    font-family: 'Montserrat', sans-serif;
 }
 
 /*/////////////////////////////
@@ -33,7 +33,7 @@ h6 {
     align-items: center;
     background-color: #eee;
     border-left: #004b8d 4px solid;
-    border-radius: 0 18.5px 18.5px 0 ;
+    border-radius: 0 18.5px 18.5px 0;
 }
 
 .Stitle {
@@ -58,6 +58,7 @@ h6 {
     -webkit-text-stroke: 0.5px #004b8d;
     font-family: 'Montserrat', sans-serif;
 }
+
 .btnNavegar {
     color: #4CAF50;
     border: #4CAF50 solid 1px;
@@ -71,22 +72,24 @@ h6 {
 }
 
 .btnInfo {
-  color: #004b8d;
-  border: #004b8d solid 1px;
-  background-color: white;
-  border-radius: 5px;
-  height: 35px;
-  cursor: pointer;
-  -webkit-text-stroke: 0.5px #004b8d;
+    color: #004b8d;
+    border: #004b8d solid 1px;
+    background-color: white;
+    border-radius: 5px;
+    height: 35px;
+    cursor: pointer;
+    -webkit-text-stroke: 0.5px #004b8d;
 }
 
-.cleanButton, .btnCerrar {
+.cleanButton,
+.btnCerrar {
     color: red;
     border: red solid 1px;
     -webkit-text-stroke: 0.5px red;
 }
 
-.backButton, .backIcon{
+.backButton,
+.backIcon {
     color: #565656 !important;
 }
 
@@ -99,6 +102,10 @@ h6 {
     background-color: #efefef;
 }
 
+.btnImprimir {
+    display: flex !important;
+    align-items: center !important;
+}
 
 /*/////////////////////////////
         Tables Styles
@@ -154,14 +161,15 @@ table {
     padding-left: 15px;
 }
 
-.dataIndiCell{
+.dataIndiCell {
     max-width: 200px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.dataIndiCell, .paginationCell {
+.dataIndiCell,
+.paginationCell {
     padding: 12px 16px;
     font-family: 'Montserrat', sans-serif;
     font-size: 14px;
@@ -169,7 +177,7 @@ table {
     border-bottom: 1px solid #ddd;
 }
 
-.paginationCell{
+.paginationCell {
     padding: 8px 0;
 
 }
@@ -208,20 +216,26 @@ table {
 }
 
 .loading-text {
-  font-size: 17px;
-  color: #121212;
-  display: flex;
-  justify-items: center;
+    font-size: 17px;
+    color: #121212;
+    display: flex;
+    justify-items: center;
 }
-.container-loaderMother{
-  display: grid;
-  justify-content: center;
-  justify-items: center;
+
+.container-loaderMother {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /**/
@@ -231,7 +245,9 @@ table {
         Icons Styles
 /////////////////////////////*/
 
-.editIcon, .removeIcon, .listIcon {
+.editIcon,
+.removeIcon,
+.listIcon {
     color: #4CAF50;
     cursor: pointer;
     transition: color 0.3s ease;
@@ -241,7 +257,7 @@ table {
     color: #388E3C;
 }
 
-.removeIcon{
+.removeIcon {
     color: #F44336;
 }
 
@@ -249,7 +265,7 @@ table {
     color: #D32F2F;
 }
 
-.listIcon{
+.listIcon {
     color: #004b8d;
 }
 
@@ -257,12 +273,12 @@ table {
     color: #002c52;
 }
 
-.rowIcon{
+.rowIcon {
     cursor: pointer;
     color: #888;
 }
 
-.rowIcon:hover{
+.rowIcon:hover {
     color: black;
 }
 
@@ -270,7 +286,7 @@ table {
         Components Styles
 /////////////////////////////*/
 
-.modal{
+.modal {
     padding: 20px;
 }
 
@@ -278,14 +294,14 @@ table {
         Others Styles
 /////////////////////////////*/
 
-.fuctionContent{
+.fuctionContent {
     display: flex;
     justify-content: space-between;
     /* align-items: center; */
     padding: 10px 0 20px 0;
 }
 
-.filters{
+.filters {
     display: flex;
     justify-content: end;
     margin-top: -15px !important;
@@ -305,19 +321,19 @@ table {
 }
 
 .empty-list {
-  text-align: center;
+    text-align: center;
 }
 
 .empty-list img {
-  max-width: 550px;
+    max-width: 550px;
 }
 
 .empty-list p {
-  font-size: 1.2rem;
-  color: #555;
+    font-size: 1.2rem;
+    color: #555;
 }
 
 .no-record {
-  text-align: center;
-  height: 30px;
+    text-align: center;
+    height: 30px;
 }

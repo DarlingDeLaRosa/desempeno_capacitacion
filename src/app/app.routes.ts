@@ -35,6 +35,7 @@ import { PeriodoProcesosComponent } from './components/layout/components/manteni
 import { MinutaComponent } from './components/layout/components/acuerdos/pages/minuta/minuta.component';
 import { LoginClassGuard } from './guards/login-class.guard';
 import { LayoutClassGuard } from './guards/layout.guard';
+import { MinutaListComponent } from './components/layout/components/acuerdos/pages/minuta-list/minuta-list.component';
 
 export const routes: Routes = [
   {
@@ -65,6 +66,11 @@ export const routes: Routes = [
           {
             path: 'minuta',
             component: MinutaComponent,
+            outlet: 'acuerdos'
+          },
+          {
+            path: 'minutaLista',
+            component: MinutaListComponent,
             outlet: 'acuerdos'
           },
           {

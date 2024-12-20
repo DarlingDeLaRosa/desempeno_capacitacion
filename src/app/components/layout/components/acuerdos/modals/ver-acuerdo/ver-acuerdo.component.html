@@ -1,129 +1,141 @@
-<ng-container *ngIf="!agreement">
-  <div class="container-loaderMother" style="margin: 20px;">
-    <div class="loaderMother"></div>
-    <div class="loading-text">Cargando...</div>
-  </div>
-</ng-container>
+<div style="margin: 20px 20px 0 20px;">
+  <ng-container *ngIf="!agreement">
+    <div class="container-loaderMother" style="margin: 20px;">
+      <div class="loaderMother"></div>
+      <div class="loading-text">Cargando...</div>
+    </div>
+  </ng-container>
 
 
-<div style="margin: 20px 20px 0 20px; display: flex; justify-content: space-between;">
-  <h2>Acuerdo de desempeño.</h2>
-  <span style="display: flex; gap: 5px;" *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3">
-    <button type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
-    <button type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
-  </span>
-</div>
+  <div style="display: flex; justify-content: space-between;" *ngIf="agreement">
+    <h2>Acuerdo de desempeño.</h2>
 
-<div class="container-verAcuerdo" *ngIf="agreement">
+    <div>
+      <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" style="margin-right: 50px;" matTooltip="Imprimir" class="btnNavegar" printSectionId="AD"
+        [useExistingCss]="true" ngxPrint><mat-icon style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
 
-  <div class="header">
-    <div class="logo-container">
-      <img src="images.png" alt="ISFODOSU Logo" class="logo">
-      <div class="title-container">
-        <h1 class="title2">ISFODOSU</h1>
-        <p class="subtitle2">INSTITUCIÓN: Instituto Superior de Formación Docente Salome Ureña</p>
+      <div style="display: flex; gap: 5px;"
+        *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3">
+
+        <button type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
+        <button type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
       </div>
     </div>
+  </div>
 
-    <div class="group-info">
-      <h3 class="group-title">Grupo Ocupacional</h3>
-      <p>{{agreement.colaboradorObj.grupoObj.nombre }}</p>
+  <div id="AD">
+    <div class="container-verAcuerdo" *ngIf="agreement">
+
+      <div class="header">
+        <div class="logo-container">
+          <img src="images.png" alt="ISFODOSU Logo" class="logo">
+          <div class="title-container">
+            <h1 class="title2">ISFODOSU</h1>
+            <p class="subtitle2">INSTITUCIÓN: Instituto Superior de Formación Docente Salome Ureña</p>
+          </div>
+        </div>
+
+        <div class="group-info">
+          <h3 class="group-title">Grupo Ocupacional</h3>
+          <p>{{agreement.colaboradorObj.grupoObj.nombre }}</p>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div style="padding: 5px;">
+          <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.periodo.nombre}}</p>
+        </div>
+        <div style="padding: 5px;">
+          <p> <strong>UNIDAD ORGANIZATIVA:</strong> {{appHelper.getUnitOrg(agreement.colaboradorObj.division,
+            agreement.colaboradorObj.departamento, agreement.colaboradorObj.direccion,
+            agreement.colaboradorObj.viceRectoria)?.nombre}}</p>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <div style="padding: 5px;">
+          <p> <strong>DATOS SERVIDOR(A) EVALUADO(A)</strong></p>
+        </div>
+        <div style="padding: 5px;">
+          <p><strong>DATOS SUPERVISOR(A) INMEDIATO(A)</strong></p>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <p style="padding: 5px;"><strong>NOMBRE: </strong>{{agreement.colaboradorObj.nombre}}
+          {{agreement.colaboradorObj.apellidos}}</p>
+        <p style="padding: 5px;"><strong>NOMBRE: </strong> {{agreement.colaboradorObj.supervisorObj.nombre}}
+          {{agreement.colaboradorObj.supervisorObj.apellidos}}</p>
+      </div>
+
+      <div class="info-row">
+        <div style="padding: 5px;">
+          <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.cargo.nombre}}</p>
+        </div>
+        <div style="padding: 5px;">
+          <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.supervisorObj.cargoObj.nombre}} </p>
+        </div>
+      </div>
+
+      <div *ngIf="agreement.colaboradorObj.supervisorObj">
+      </div>
+
+
+      <!-- Main Table -->
+      <h2 class="table-title">
+        ESTABLECIMIENTO DE METAS/ RESULTADOS ESPERADOS. Valor {{agreement.puntos}} puntos <br>
+        EVALUACIÓN DEL ACUERDO
+      </h2>
+      <table class="evaluation-table">
+        <thead>
+          <th style="width: 5%;">No.</th>
+          <th style="width: 40%;">Metas del (de la) Servidor(a)<br>(Resultados esperados de su desempeño)</th>
+          <th style="width: 10%;">Valor de<br>cada Meta</th>
+          <th style="width: 15%;">Medios de Verificación<br>(Evidencias)</th>
+          <th style="width: 10%;">Calificación<br>otorgada</th>
+          <th style="width: 20%;">Observaciones</th>
+        </thead>
+        <tbody>
+          <tr *ngFor="let detalle of agreement.detalles; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{detalle.metaObj.nombre}}</td>
+            <td>{{detalle.metaObj.valor}}</td>
+            <td>{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
+            <td>{{detalle.calificacion}}</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colspan="1" class="bold">Total</td>
+            <td class="bold">{{totalValor}}</td>
+            <td class="bold">Total</td>
+            <td class="bold">{{totalCalificacion}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="info-row">
-    <div style="padding: 5px;">
-      <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.periodo.nombre}}</p>
-    </div>
-    <div style="padding: 5px;">
-      <p> <strong>UNIDAD ORGANIZATIVA:</strong> {{appHelper.getUnitOrg(agreement.colaboradorObj.division,
-        agreement.colaboradorObj.departamento, agreement.colaboradorObj.direccion,
-        agreement.colaboradorObj.viceRectoria)?.nombre}}</p>
-    </div>
+  <div style="display: flex; margin: 0 20px 15px 20px;"
+    *ngIf="agreement && systemInformation.activeRol().nombre == 'Analista' || systemInformation.activeRol().nombre == 'Encargado'  ">
+    <form style="width: 100%;" [formGroup]="commentsForm" (submit)="postComment()">
+      <div style="display: flex; align-items: end;">
+        <mat-form-field style="flex: 1;">
+          <mat-label>¿Algun comentario o correcion necesaria?</mat-label>
+          <textarea matInput formControlName="descripcion"></textarea>
+        </mat-form-field>
+
+        <button type="submit" style="border: none; background-color: white; height: 95px;">
+          <mat-icon style="margin: 0 0 0 5px; cursor: pointer; color: #4CAF50;">send</mat-icon>
+        </button>
+      </div>
+
+      <!-- <div style="display: flex; justify-content: end; gap: 5px;">
+        <button type="button" class="cleanButton" (click)="closeModal()">Cerrar</button>
+        <button type="submit" class="saveButton">Guardar cambios</button>
+      </div> -->
+
+    </form>
   </div>
-
-  <div class="info-row">
-    <div style="padding: 5px;">
-      <p> <strong>DATOS SERVIDOR(A) EVALUADO(A)</strong></p>
-    </div>
-    <div style="padding: 5px;">
-      <p><strong>DATOS SUPERVISOR(A) INMEDIATO(A)</strong></p>
-    </div>
-  </div>
-
-  <div class="info-row">
-    <p style="padding: 5px;"><strong>NOMBRE: </strong>{{agreement.colaboradorObj.nombre}}
-      {{agreement.colaboradorObj.apellidos}}</p>
-    <p style="padding: 5px;"><strong>NOMBRE: </strong> {{agreement.colaboradorObj.supervisorObj.nombre}}
-      {{agreement.colaboradorObj.supervisorObj.apellidos}}</p>
-  </div>
-
-  <div class="info-row">
-    <div style="padding: 5px;">
-      <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.cargo.nombre}}</p>
-    </div>
-    <div style="padding: 5px;">
-      <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.supervisorObj.cargoObj.nombre}} </p>
-    </div>
-  </div>
-
-  <div *ngIf="agreement.colaboradorObj.supervisorObj">
-  </div>
-
-
-  <!-- Main Table -->
-  <h2 class="table-title">
-    ESTABLECIMIENTO DE METAS/ RESULTADOS ESPERADOS. Valor {{agreement.puntos}} puntos <br>
-    EVALUACIÓN DEL ACUERDO
-  </h2>
-  <table class="evaluation-table">
-    <thead>
-      <th style="width: 5%;">No.</th>
-      <th style="width: 40%;">Metas del (de la) Servidor(a)<br>(Resultados esperados de su desempeño)</th>
-      <th style="width: 10%;">Valor de<br>cada Meta</th>
-      <th style="width: 15%;">Medios de Verificación<br>(Evidencias)</th>
-      <th style="width: 10%;">Calificación<br>otorgada</th>
-      <th style="width: 20%;">Observaciones</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let detalle of agreement.detalles; let i = index">
-        <td>{{i+1}}</td>
-        <td>{{detalle.metaObj.nombre}}</td>
-        <td>{{detalle.metaObj.valor}}</td>
-        <td>{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
-        <td>{{detalle.calificacion}}</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td colspan="1" class="bold">Total</td>
-        <td class="bold">{{totalValor}}</td>
-        <td class="bold">Total</td>
-        <td class="bold">{{totalCalificacion}}</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div style="display: flex; margin: 0 20px 15px 20px;"
-  *ngIf="agreement && systemInformation.activeRol().nombre == 'Analista' || systemInformation.activeRol().nombre == 'Encargado'  ">
-  <form style="width: 100%;" [formGroup]="commentsForm" (submit)="postComment()">
-    <div style="display: flex; align-items: end;">
-      <mat-form-field style="flex: 1;">
-        <mat-label>¿Algun comentario o correcion necesaria?</mat-label>
-        <textarea matInput formControlName="descripcion"></textarea>
-      </mat-form-field>
-
-      <button type="submit" style="border: none; background-color: white; height: 95px;">
-        <mat-icon style="margin: 0 0 0 5px; cursor: pointer; color: #4CAF50;">send</mat-icon>
-      </button>
-    </div>
-
-    <!-- <div style="display: flex; justify-content: end; gap: 5px;">
-      <button type="button" class="cleanButton" (click)="closeModal()">Cerrar</button>
-      <button type="submit" class="saveButton">Guardar cambios</button>
-    </div> -->
-
-  </form>
 </div>

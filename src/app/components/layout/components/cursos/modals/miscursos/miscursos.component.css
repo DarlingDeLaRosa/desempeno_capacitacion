@@ -4,15 +4,11 @@ button.cancel-button {
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  margin: -40px 10px 10px 0px;
-
 }
 
 .table-container {
   flex-grow: 1;
-  /* height:  240px; */
   overflow-y: auto;
-  max-height:  240px;
 }
 
 ::ng-deep .table-container::-webkit-scrollbar {
@@ -31,4 +27,9 @@ button.cancel-button {
 
 ::ng-deep .table-container::-webkit-scrollbar-thumb:hover {
   background-color: #003366;
+}
+
+.myCurseContainer{
+  padding: 15px;
+  min-width: 700px;
 }

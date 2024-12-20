@@ -13,8 +13,6 @@ import { finalize } from 'rxjs';
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 
-
-
 @Component({
   selector: 'app-cursos-tablero',
   standalone: true,
@@ -52,21 +50,18 @@ export default class CursosTableroComponent implements  OnInit{
         finalize(() => this.loaderService.hide()))
       .subscribe({ next: (resp) => {
           this.cursoTableroList = resp.data;
-          console.log(this.cursoTableroList);
         }
       });
   }
-  openModal(): void {
-    const dialogRef = this.dialog.open(MiscursosComponent, {
-      width: '900px',
-      height: '700px',
 
-    });
+  openModal(): void {
+    const dialogRef = this.dialog.open(MiscursosComponent);
 
     dialogRef.afterClosed().subscribe(result => {
       this.getCursosTablero();
     });
   }
+
   openModalCursosIncribir(course:CourseGetI): void {
     if (!course.interno) {
       window.open(course.link, '_blank');

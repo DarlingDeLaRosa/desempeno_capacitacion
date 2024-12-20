@@ -3,7 +3,7 @@
 </div> -->
 
 <div class="fuctionContent">
-  <div class="title">
+  <div class="title" >
     <h1>Evaluación de Acuerdo</h1>
   </div>
   <div>
@@ -14,7 +14,11 @@
     </div>
   </div>
 </div>
-<h2 style="margin-bottom: 15px;">Colaborador</h2>
+
+<div style="margin-bottom: 15px; display: flex; justify-content: space-between;">
+  <h2>Colaborador</h2>
+  <button class="btnInfo"><mat-icon>question_mark</mat-icon></button>
+</div>
 
 <div class="staticInfoContainer" *ngIf="agreement">
   <span>
@@ -34,6 +38,8 @@
     <h4>{{agreement.colaboradorObj.grupoObj.nombre}}</h4>
   </span>
 </div>
+
+<app-loader-box *ngIf="!agreement"></app-loader-box>
 
 <h2 style="margin: 15px 0px 15px 0px; font-size: 20px;">Lista de Metas</h2>
 
@@ -85,7 +91,7 @@
   </table>
 </div>
 
-<div style="margin: 15px 0px 15px 0px;" *ngIf="agreement.tipoAcuerdoObj.idTipoAcuerdo == 2">
+<div style="margin: 15px 0px 15px 0px;" *ngIf="agreement && agreement.tipoAcuerdoObj.idTipoAcuerdo == 2 ">
   <h2 style="font-size: 20px;">Lista de Comportamientos</h2>
   <h4 style="margin: 15px 0 15px 0 ;">Evalúe los diferentes comportamientos probatorios.</h4>
 
@@ -122,3 +128,5 @@
     </div>
   </form>
 </div>
+
+

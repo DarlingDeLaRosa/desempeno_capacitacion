@@ -1,7 +1,6 @@
-
 <div class="fuctionContent">
   <div class="title">
-    <h2>Minuta de reunión de monitoreo de acuerdos de desempeño laboral</h2>
+    <h2>Minuta de reunión de acuerdos de desempeño</h2>
   </div>
   <div>
     <div>
@@ -42,7 +41,7 @@
         <th class="headerCell">Grupo ocupacional</th>
         <th class="headerCell">Estado</th>
         <th class="headerCell" style="width: 2%;">
-          <div *ngIf="isLoading ===  true" class="loader" ></div>
+          <div *ngIf="isLoading ===  true" class="loader"></div>
         </th>
       </tr>
     </thead>
@@ -53,7 +52,8 @@
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
         <td class="dataIndiCell">Proceso de {{acuerdo.flujoObj.nombre}}</td>
         <td class="dataIndiCell">
-          <button type="button" class="btnCerrar" (click)="openModalCalificacion()">Ausente</button>
+          <button type="button" class="btnCerrar"
+            (click)="openModalMotivoAusencia(acuerdo.colaboradorObj.idPersona)">Ausente</button>
         </td>
       </tr>
     </tbody>
@@ -62,28 +62,44 @@
 
 <h2 style="margin: 20px 0px 20px 0px;">Detalles de la reunión</h2>
 
-<form>
+<form [formGroup]="formMinuta">
+
+  <div style="display: flex;">
+    <mat-form-field appearance="fill" style="flex: 1">
+      <mat-label>Proceso</mat-label>
+      <mat-select formControlName="tipoProcesoId" disableRipple>
+        <ng-container *ngIf="periodsProcess && periodsProcess.length; else noPosition">
+          <mat-option [value]="process.idPeriodoAcuerdo" *ngFor="let process of periodsProcess">
+            {{process.tipoProceso.nombre}}
+          </mat-option>
+        </ng-container>
+        <ng-template #noPosition>
+          <mat-option>No hay campos disponibles</mat-option>
+        </ng-template>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
   <div style="display: flex;">
     <mat-form-field style="flex: 1; ">
       <mat-label>Agenda de la reunión</mat-label>
-      <textarea matInput></textarea>
+      <textarea matInput formControlName="agendaReunion"></textarea>
     </mat-form-field>
   </div>
   <div style="display: flex;">
     <mat-form-field style="flex: 1;">
       <mat-label>Desarrollo de la reunión</mat-label>
-      <textarea matInput></textarea>
+      <textarea matInput formControlName="desarrollo"></textarea>
     </mat-form-field>
   </div>
   <div style="display: flex;">
     <mat-form-field style="flex: 1;">
       <mat-label>Conclusiones del monitoreo de los acuerdos de desempeño</mat-label>
-      <textarea matInput ></textarea>
+      <textarea matInput formControlName="conclusiones"></textarea>
     </mat-form-field>
   </div>
 </form>
 
 <div style="display: flex; justify-content: end;">
-  <button class="saveButton">Enviar Minuta</button>
+  <button class="saveButton" (click)="save()">Enviar Minuta</button>
 </div>
-

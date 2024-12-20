@@ -10,14 +10,14 @@ export interface AcuerdoI {
   tipoAcuerdoObj: TipoAcuerdoI,
   idTracking: TrackingI,
   idFlujo: number,
-  flujoObj: any,
+  flujoObj: {idFlujo:number, nombre: string},
   puntos: number
   comentarios: commentsI[]
   detalles: AcuerdoDetalle[];
   documentosObj: Documento[];
   periodo: PeriodoI
   tipoProceso: GeneralI
-  
+
 }
 
 export interface TipoAcuerdoI {
@@ -70,5 +70,20 @@ export interface commentsI {
   creadoEn: string
   descripcion: string
   creadoPorPersona: string
-  creadoPorUsuario: string 
+  creadoPorUsuario: string
+}
+
+export interface MinutaAsistenciaI {
+  idColaborador: number;
+  ausente: boolean;
+  motivoAusencia: string | null;
+}
+
+export interface MinutaI {
+  desarrollo: string;
+  conclusion: string;
+  agendaReunion: string;
+  periodoAcuerdoId: number;
+  supervisorId: number;
+  minutaAsistencia: MinutaAsistenciaI[];
 }

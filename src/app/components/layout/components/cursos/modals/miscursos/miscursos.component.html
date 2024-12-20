@@ -1,104 +1,100 @@
-<div style="margin: 10px;">
-  <h1 >Mis Cursos</h1>
+<div class="myCurseContainer">
+  <h2>Mis Cursos</h2>
+
+  <div class="table-container">
+    <h3>Pendientes</h3>
+    <table>
+      <thead class="headerTable">
+        <tr class="headerRow">
+          <th class="headerCell">Curso</th>
+          <th class="headerCell">Fecha Inicio</th>
+          <th class="headerCell">Fecha Fin</th>
+          <th class="headerCell" style="width: 5%; padding-right: 15px;">
+            <div *ngIf="isloading ===  true" class="loader"></div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+      <tbody>
+        <tr class="dataRow" *ngFor="let item of cursosPendiente">
+          <td class="dataIndiCell">{{item.nombre}}</td>
+          <td class="dataIndiCell">{{item.fechaInicio | date}}</td>
+          <td class="dataIndiCell">{{item.fechaFin | date}}</td>
+          <td class="dataIndiCell"><mat-icon class="removeIcon"
+              (click)="deleteInscripcion(item.inscripcionesObj[0].idInscripcion)">logout</mat-icon></td>
+        </tr>
+        <tr *ngIf="cursosPendiente.length === 0 && isloading == false">
+          <td colspan="12">
+            <h5 class="no-record">No hay datos Registrados</h5>
+          </td>
+        </tr>
+
+      </tbody>
+      <!-- <tfoot *ngIf="cursosPendiente.length !== 0">
+            <tr class="paginatorRow">
+                <td class="dataIndiCell"></td>
+                <td class="dataIndiCell"></td>
+                <td class="dataIndiCell">
+                </td>
+                <td class="dataIndiCell">
+                    <span style="display: flex; align-items: center;">
+                        <mat-icon class="">navigate_before</mat-icon>
+                        <h5 style="margin: 0;"></h5>
+                        <mat-icon class="">navigate_next</mat-icon>
+                    </span>
+                </td>
+            </tr>
+        </tfoot> -->
+    </table>
+  </div>
+
+  <div class="table-container">
+    <h3>Completados</h3>
+    <table>
+      <thead class="headerTable">
+        <tr class="headerRow">
+          <th class="headerCell">Curso</th>
+          <th class="headerCell">Fecha Inicio</th>
+          <th class="headerCell">Fecha Fin</th>
+          <th class="headerCell" style="width: 5%; padding-right: 15px;">
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="dataRow" *ngFor="let item of cursosCompletado">
+          <td class="dataIndiCell">{{item.nombre}}</td>
+          <td class="dataIndiCell">{{item.fechaInicio | date}}</td>
+          <td class="dataIndiCell">{{item.fechaFin | date}}</td>
+          <td class="dataIndiCell">
+          </td>
+        </tr>
+        <tr *ngIf="cursosCompletado.length === 0">
+          <td colspan="12">
+            <h5 class="no-record">No hay datos Registrados</h5>
+          </td>
+        </tr>
+      </tbody>
+      <!-- <tfoot *ngIf="cursosCompletado.length !== 0">
+            <tr class="paginatorRow">
+                <td class="dataIndiCell"></td>
+                <td class="dataIndiCell"></td>
+                <td class="dataIndiCell">
+                </td>
+                <td class="dataIndiCell">
+                    <span style="display: flex; align-items: center;">
+                        <mat-icon class="">navigate_before</mat-icon>
+                        <h5 style="margin: 0;"></h5>
+                        <mat-icon class="">navigate_next</mat-icon>
+                    </span>
+                </td>
+            </tr>
+        </tfoot> -->
+    </table>
+  </div>
+
+
+  <mat-dialog-actions class="modal-actions">
+    <button type="button" class="cleanButton" (click)="cerrar()" >Cerrar</button>
+  </mat-dialog-actions>
+
 </div>
-<h1 mat-dialog-title>Pendientes</h1>
-<mat-dialog-content>
-  <div class="table-container">
-    <table>
-        <thead class="headerTable">
-            <tr class="headerRow">
-                <th class="headerCell">Curso</th>
-                <th class="headerCell">Fecha Inicio</th>
-                <th class="headerCell">Fecha Fin</th>
-                <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                  <div *ngIf="isloading ===  true" class="loader" ></div>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-          <tbody>
-            <tr class="dataRow" *ngFor="let item of cursosPendiente">
-                <td class="dataIndiCell">{{item.nombre}}</td>
-                <td class="dataIndiCell">{{item.fechaInicio | date}}</td>
-                <td class="dataIndiCell">{{item.fechaFin | date}}</td>
-                <td class="dataIndiCell"><mat-icon  class="removeIcon"
-                  (click)="deleteInscripcion(item.inscripcionesObj[0].idInscripcion)">logout</mat-icon></td>
-            </tr>
-            <tr *ngIf="cursosPendiente.length === 0 && isloading == false">
-              <td colspan="12">
-                <h5 class="no-record">No hay datos Registrados</h5>
-              </td>
-            </tr>
-
-        </tbody>
-        <!-- <tfoot *ngIf="cursosPendiente.length !== 0">
-            <tr class="paginatorRow">
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell">
-                </td>
-                <td class="dataIndiCell">
-                    <span style="display: flex; align-items: center;">
-                        <mat-icon class="">navigate_before</mat-icon>
-                        <h5 style="margin: 0;"></h5>
-                        <mat-icon class="">navigate_next</mat-icon>
-                    </span>
-                </td>
-            </tr>
-        </tfoot> -->
-    </table>
-  </div>
-
-</mat-dialog-content>
-<h1 mat-dialog-title style="margin-top: -50px;">Completados</h1>
-<mat-dialog-content>
-  <div class="table-container">
-    <table>
-        <thead class="headerTable">
-            <tr class="headerRow">
-                <th class="headerCell">Curso</th>
-                <th class="headerCell">Fecha Inicio</th>
-                <th class="headerCell">Fecha Fin</th>
-                <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="dataRow" *ngFor="let item of cursosCompletado">
-                <td class="dataIndiCell">{{item.nombre}}</td>
-                <td class="dataIndiCell">{{item.fechaInicio | date}}</td>
-                <td class="dataIndiCell">{{item.fechaFin | date}}</td>
-                <td class="dataIndiCell">
-                 </td>
-            </tr>
-            <tr *ngIf="cursosCompletado.length === 0">
-              <td colspan="12">
-                <h5 class="no-record">No hay datos Registrados</h5>
-              </td>
-            </tr>
-        </tbody>
-        <!-- <tfoot *ngIf="cursosCompletado.length !== 0">
-            <tr class="paginatorRow">
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"></td>
-                <td class="dataIndiCell">
-                </td>
-                <td class="dataIndiCell">
-                    <span style="display: flex; align-items: center;">
-                        <mat-icon class="">navigate_before</mat-icon>
-                        <h5 style="margin: 0;"></h5>
-                        <mat-icon class="">navigate_next</mat-icon>
-                    </span>
-                </td>
-            </tr>
-        </tfoot> -->
-    </table>
-  </div>
-
-</mat-dialog-content>
-
-<mat-dialog-actions class="modal-actions">
-  <button mat-button (click)="cerrar()" class="cancel-button">Cerrar</button>
-</mat-dialog-actions>
-
-

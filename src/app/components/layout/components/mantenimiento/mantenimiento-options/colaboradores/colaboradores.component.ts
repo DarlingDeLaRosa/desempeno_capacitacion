@@ -234,13 +234,18 @@ export class ColaboradoresComponent implements OnInit {
         }),
         switchMap((res: any) => {
           if (res.data) {
+            let agreementType: number
+            this.collaboratorForm.value.noResolucion != null ? agreementType = 2 : agreementType = 1 
+            
             this.asignationAgreement = {
               idAsignacion: 0,
               idColaborador: res.data.idPersona,
-              idTipoAcuerdo: 2,
+              idTipoAcuerdo: agreementType,
               periodoId: this.systemInformationService.activePeriod().idPeriodo,
-              acuerdosDuracionId: 3,
+              acuerdosDuracionId: agreementType,
             };
+
+
             return this.asignationAgreementService.postAsignationAgreement(this.asignationAgreement);
           }
           return EMPTY;
@@ -337,10 +342,7 @@ export class ColaboradoresComponent implements OnInit {
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
-    this.collaboratorForm.patchValue({ idSistema: this.systemInformationService.getSistema })
-    console.log(this.collaboratorForm.value);
-    console.log(JSON.stringify(this.collaboratorForm.value));
-
+    this.collaboratorForm.patchValue({ idSistema: this.systemInformationService.getSistema });
     this.appHelpers.saveChanges(() => this.postCollaborator(), () => this.putCollaborator(), this.collaboratorForm.value.idUsuario, this.collaboratorForm)
   }
 

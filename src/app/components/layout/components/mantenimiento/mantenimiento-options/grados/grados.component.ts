@@ -33,7 +33,7 @@ export class GradosComponent implements OnInit {
     private competencyService: CompetencyServices,
   ) {
     this.gradesForm = fb.group({
-      idGrado: 0,
+      idGrado: new FormControl(0),
       idCompetencia: new FormControl('', Validators.required),
       nombre: new FormControl(''),
       descripcion: new FormControl(''),
@@ -76,6 +76,8 @@ export class GradosComponent implements OnInit {
 
   // Metodo para inicializar los cinco comportamientos de cada grado 
   initializeBehaviors() {
+    this.behaviors.clear()
+
     for (let i = 0; i < 5; i++) {
       this.behaviors.push(
         this.fb.group({
@@ -105,9 +107,10 @@ export class GradosComponent implements OnInit {
 
   // Metodo para crear los grados
   postGrade() {
+    this.gradesForm.patchValue({idGrado: 0})
     this.gradeService.postGrade(this.gradesForm.value)
       .subscribe((res: any) => {
-        this.appHelpers.handleResponse(res, () => this.getGrades(), this.gradesForm)
+        this.appHelpers.handleResponse(res, () => this.getGrades(), this.gradesForm, ()=> this.initializeBehaviors())
       })
   }
 
@@ -115,7 +118,7 @@ export class GradosComponent implements OnInit {
   putGrade() {
     this.gradeService.putGrade(this.gradesForm.value)
       .subscribe((res: any) => {
-        this.appHelpers.handleResponse(res, () => this.getGrades(), this.gradesForm)
+        this.appHelpers.handleResponse(res, () => this.getGrades(), this.gradesForm, ()=> this.initializeBehaviors())
       })
   }
 
@@ -147,7 +150,6 @@ export class GradosComponent implements OnInit {
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
     this.appHelpers.saveChanges(() => this.postGrade(), () => this.putGrade(), this.gradesForm.value.idGrado, this.gradesForm)
-    console.log(this.gradesForm.value);
   }
 
   //Metodo para llamar a la siguiente pagina

@@ -17,11 +17,12 @@ import { agreementService } from '../../services/acuerdo.service';
 import { AcuerdoI } from '../../interfaces/acuerdo.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { PeriodI } from '../../../mantenimiento/mantenimiento-options/periodos/interfaces/periodo.interface';
+import { LoaderBoxComponent } from '../../../../../../helpers/components/loader-box/loader-box.component';
 
 @Component({
   selector: 'app-acuerdo-editar',
   standalone: true,
-  imports: [MaterialComponents, ClassImports],
+  imports: [MaterialComponents, ClassImports, LoaderBoxComponent],
   templateUrl: './acuerdo-editar.component.html',
   styleUrl: './acuerdo-editar.component.css'
 })
@@ -71,7 +72,6 @@ export class AcuerdoEditarComponent implements OnInit {
     this.getVerificationMethod();
     this.getGoalPOA()
   }
-
 
   smartValidator() {
     return (control: any) => {
@@ -269,7 +269,7 @@ export class AcuerdoEditarComponent implements OnInit {
   async deletedetalle(index: number, idDetalle: number) {
     if (idDetalle) {
       this.deleteGoaDetail(idDetalle)
-    }else{
+    } else {
       if (index > -1 && index < this.goalDetails.length) {
         let removeDecision: boolean = await this.SnackBar.snackbarConfirmation()
         if (removeDecision) {
@@ -288,8 +288,9 @@ export class AcuerdoEditarComponent implements OnInit {
     if (removeDecision) {
       this.SnackBar.snackbarLouder(true)
       this.agreementservice.deleteGoalDetail(id)
-        .subscribe((res: any) => { this.appHelpers.handleResponse(res, () =>
-          this.getAgreementByIdCollaborator(), this.goalForm , () => this.cancelEdition())
+        .subscribe((res: any) => {
+          this.appHelpers.handleResponse(res, () =>
+            this.getAgreementByIdCollaborator(), this.goalForm, () => this.cancelEdition())
         })
     }
   }

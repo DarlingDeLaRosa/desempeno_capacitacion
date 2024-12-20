@@ -17,7 +17,7 @@ export class LayoutComponent implements OnInit{
   usuario!: loggedUserI
 
   constructor(
-    private systemInformationService: systemInformationService,
+    public systemInformationService: systemInformationService,
     private SnackBar: SnackBars,
   ){}
 

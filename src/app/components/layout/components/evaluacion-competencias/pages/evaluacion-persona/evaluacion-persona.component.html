@@ -27,7 +27,9 @@
     </span>
 </div>
 
-<form [formGroup]="evaluationCompetencyForm" (submit)="saveChanges()">
+<app-loader-box *ngIf="!person"></app-loader-box>
+
+<form [formGroup]="evaluationCompetencyForm" (submit)="saveChanges()" *ngIf="!loading" >
     <div formArrayName="evaluacionCompetenciasDetalles">
         <div *ngFor="let competency of evaluationCompetencyForm.get('evaluacionCompetenciasDetalles')?.value , let i = index"
             [formGroupName]="i">
@@ -72,3 +74,9 @@
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
     </div>
 </form>
+
+<div *ngIf="loading">
+    <h3 style="margin: 15px 0 15px 0 ;">Competencias</h3>
+    <app-loader-box></app-loader-box>
+    <app-loader-box></app-loader-box>
+</div>

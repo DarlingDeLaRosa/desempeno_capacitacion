@@ -26,10 +26,10 @@ export class EvalucionCompetenciasComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     public appHelper: HerlperService,
-    private systemInformationService: systemInformationService,
+    public systemInformation:systemInformationService,
     private evaluationCompetencyService: EvaluationCompetencyServices,
   ) {
-    this.userLogged = systemInformationService.localUser
+    this.userLogged = systemInformation.localUser
   }
 
   ngOnInit(): void {

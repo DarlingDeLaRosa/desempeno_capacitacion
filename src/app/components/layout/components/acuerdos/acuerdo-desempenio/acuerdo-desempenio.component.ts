@@ -24,23 +24,19 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
   hijosList!: any[];
   isLoading: boolean = true;
-  systemUser: RolI
   usuario!: loggedUserI
   agreement: Array<AcuerdoI> = []
-  rol!: RolI;
   searchTerm: string = '';
 
   constructor(
     private dialog: MatDialog,
     private agreementService: agreementService,
     public systemInformation: systemInformationService
-  ) {
-    this.systemUser = systemInformation.activeRol()
-  }
+  ) {}
 
   ngOnInit(): void {
     this.usuario = this.systemInformation.localUser;
-    this.rol = this.systemInformation.activeRol();
+    this.systemInformation.activeRol();
     this.getAcuerdoByRol();
   }
 
@@ -49,7 +45,8 @@ export class AcuerdoDesempenioComponent implements OnInit {
     this.isLoading = true;
     this.agreementService.getAgreementByRol(this.usuario.idPersona, '').subscribe((resp: any) => {
       this.agreement = resp.data;
-      console.log(this.agreement);
+      console.log(resp.data);
+      
       this.isLoading = false;
     })
   }

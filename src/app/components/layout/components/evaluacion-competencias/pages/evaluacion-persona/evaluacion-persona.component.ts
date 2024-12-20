@@ -12,11 +12,12 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { behaviorsI } from '../../../mantenimiento/mantenimiento-options/grados/interfaces/grados.interfaces';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { EvaluationBehaviorsI, EvaluationCompetencyByIdI, EvaluationCompetencyGetI, EvaluationCompetencyI, getEvaluationCompetencyByIdI } from '../../interface/evaluacion-competencias.interface';
+import { LoaderBoxComponent } from '../../../../../../helpers/components/loader-box/loader-box.component';
 
 @Component({
   selector: 'app-evaluacion-persona',
   standalone: true,
-  imports: [MaterialComponents, ClassImports],
+  imports: [MaterialComponents, ClassImports, LoaderBoxComponent],
   templateUrl: './evaluacion-persona.component.html',
   styleUrl: './evaluacion-persona.component.css'
 })
@@ -43,6 +44,7 @@ export class EvaluacionPersonaComponent implements OnInit {
 
   collaboratorId!: number;
   person!: CollaboratorsGetI
+  loading: boolean = true
   evaluationCompetencyForm: FormGroup
   evaluationCompetency: EvaluationCompetencyGetI[] = []
 
@@ -88,6 +90,7 @@ export class EvaluacionPersonaComponent implements OnInit {
         (this.evaluationCompetencyForm.get('evaluacionCompetenciasDetalles') as FormArray).push(competency)
         console.log(this.evaluationCompetencyForm.value);
       })
+      this.loading = false
     });
   }
 
@@ -106,8 +109,6 @@ export class EvaluacionPersonaComponent implements OnInit {
   }
 
   setDataEditEvaluationCompetency(evaluations: getEvaluationCompetencyByIdI) {
-    console.log(evaluations);
-
     evaluations.evaluacionCompetencia.map((asignationCompetency: EvaluationCompetencyByIdI) => {
       const behaviorGroup = this.fb.array(
         asignationCompetency.evaluacionCompetenciasDetalles.map((behavior: EvaluationBehaviorsI) => {
@@ -129,14 +130,14 @@ export class EvaluacionPersonaComponent implements OnInit {
       });
 
       (this.evaluationCompetencyForm.get('evaluacionCompetenciasDetalles') as FormArray).push(competency)
-      console.log(this.evaluationCompetencyForm.value);
+      this.loading = false
     })
   }
 
   async saveChanges() {
     let groupOfCompetency = this.evaluationCompetencyForm.value.evaluacionCompetenciasDetalles
 
-    const savePromises =  groupOfCompetency.map((evaluationCompetency: any) => {
+    const savePromises = groupOfCompetency.map((evaluationCompetency: any) => {
       let evaluationGroup = {
         id: evaluationCompetency.id,
         gradoId: evaluationCompetency.idGrado,

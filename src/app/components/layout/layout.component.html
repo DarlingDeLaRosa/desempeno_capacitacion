@@ -13,17 +13,17 @@
             <a class="item-menu" [routerLink]="['/layout/cursos']" routerLinkActive="active">
                 <mat-icon>collections_bookmark</mat-icon>Cursos
             </a>
-            <a class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
+            <a *ngIf="this.systemInformationService.activeRol().nombre !== 'supervisado'" class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
                 <mat-icon>star</mat-icon>Plan de mejora
             </a>
-            <a class="item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
+            <a *ngIf="this.systemInformationService.activeRol().nombre !== 'supervisado'" class="item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
                 <mat-icon>description</mat-icon>Evaluación de competencias
             </a>
 
         </div>
 
         <div >
-            <div class="ConfigsideMenuContainer">
+            <div class="ConfigsideMenuContainer" *ngIf="this.systemInformationService.activeRol().nombre !== 'Supervisor' && this.systemInformationService.activeRol().nombre !== 'supervisado'">
                 <div class="item-menu" [routerLink]="['/layout/mantenimiento']" routerLinkActive="activeOut">
                     <mat-icon>settings</mat-icon>Mantenimiento
                 </div>

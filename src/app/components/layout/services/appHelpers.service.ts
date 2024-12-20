@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, catchError, finalize, throwError } from 'rxjs';
 import { SnackBars } from './snackBars.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { LoaderService } from '../../../helpers/service/loader.service';
 import { DepartmentI, DivisionI, DirectionI, ViceRectorate } from '../components/mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 
@@ -32,15 +32,13 @@ export class HerlperService {
     //Maneja las respuestas de las peticiones lanzando un mensaje, reiniciando un formulario o llamando la funcion get para obtener los datos actualizados.
     handleResponse(response: any, onSuccess: () => void, formToReset?: FormGroup, onSecondSuccess?: () => void) {
         if (response.status) {
-            console.log('SI LLEGO');
-            
             this.snackBar.snackbarLouder(false);
-            // setTimeout(() => {
+            setTimeout(() => {
                 this.snackBar.snackbarSuccess();
                 onSuccess();
                 formToReset?.reset();
                 if (onSecondSuccess != undefined) onSecondSuccess();
-            // }, 500);
+            }, 500);
         } else {
             this.snackBar.snackbarLouder(false);
             this.snackBar.snackbarError('Ocurrio un error la operación no se realizo correctamente.')
