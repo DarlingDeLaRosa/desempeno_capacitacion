@@ -41,7 +41,7 @@ export class GradosComponent implements OnInit {
       comportamientos: this.fb.array([])
     })
   }
-  
+
   page: number = 1
   grades!: GradesGetI[]
   gradesForm: FormGroup
@@ -66,7 +66,7 @@ export class GradosComponent implements OnInit {
       })
   }
 
-  // Metodo para obtener todos los tipos de grados 
+  // Metodo para obtener todos los tipos de grados
   getTypeGrades() {
     this.typeGradeService.getTypesGrades()
       .subscribe((res: any) => {
@@ -74,7 +74,7 @@ export class GradosComponent implements OnInit {
       })
   }
 
-  // Metodo para inicializar los cinco comportamientos de cada grado 
+  // Metodo para inicializar los cinco comportamientos de cada grado
   initializeBehaviors() {
     this.behaviors.clear()
 
@@ -93,12 +93,10 @@ export class GradosComponent implements OnInit {
     this.dialog.open(ListPropertyViewComponent, { data: { elementList, name, property } })
   }
 
-  // Metodo para obtener todos los grados 
+  // Metodo para obtener todos los grados
   getGrades() {
     this.gradeService.getGrades(this.page, 10)
       .subscribe((res: any) => {
-        console.log(res);
-        
         this.grades = res.data;
         const {currentPage ,totalItem, totalPage} = res
         this.pagination = {currentPage ,totalItem, totalPage}

@@ -51,10 +51,8 @@ export class CursosInscribirComponent implements OnInit {
 
 //metodo para hacer una inscripcion
   postInscripcion() {
-    console.log(this.inscripcionForm.value);
     this.cursoService.postIncripcion(this.inscripcionForm.value)
       .subscribe((res: any) => {
-        console.log(res);
         this.appHelpers.handleResponse(res, () => this.cerrar(), this.inscripcionForm)
       })
   }

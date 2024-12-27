@@ -50,4 +50,8 @@ export class CollaboratorServices {
     public getPersonByID(id: number) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, this.header));
     }
+
+    public getPersonFilterByName(name: string) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/filter/${name}`, this.header));
+    }
 }   

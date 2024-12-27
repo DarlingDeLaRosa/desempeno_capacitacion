@@ -34,8 +34,6 @@ export class MiscursosComponent implements OnInit{
 
 
 ngOnInit(): void {
-  console.log();
-
   this.getIncripcionesColaborador()
 }
 
@@ -47,7 +45,6 @@ getIncripcionesColaborador(){
 
     this.cursosCompletado = this.cursosList.filter(curso => curso.idEstado === 1);
     this.cursosPendiente = this.cursosList.filter(curso => curso.idEstado === 2);
-    console.log(this.cursosPendiente);
     this.isloading = false
   })
 }

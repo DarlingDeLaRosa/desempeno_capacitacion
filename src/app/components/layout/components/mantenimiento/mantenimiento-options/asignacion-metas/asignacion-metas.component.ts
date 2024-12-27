@@ -51,12 +51,12 @@ export class AsignacionMetasComponent implements OnInit {
   }
 
   // Metodo para obtener todos los grupos ocupacionales
-  validateMetaPOA(goal: GoalGetI) {
-    if (this.asignationGoalForm.value.idGrupo == 5 && goal.metaPoa == null) {
-      this.snackBar.snackbarWarning('La meta seleccionada debe estar atada a una meta del POA para ser asignada al grupo ocupacional V.', 7000)
-      this.asignationGoalForm.get('idMeta')?.reset()
-    }
-  }
+  // validateMetaPOA(goal: GoalGetI) {
+  //   if (this.asignationGoalForm.value.idGrupo == 5 && goal.metaPoa == null) {
+  //     this.snackBar.snackbarWarning('La meta seleccionada debe estar atada a una meta del POA para ser asignada al grupo ocupacional V.', 7000)
+  //     this.asignationGoalForm.get('idMeta')?.reset()
+  //   }
+  // }
 
   // Metodo para obtener todos los grupos ocupacionales
   getOcupationalGroup() {
@@ -68,7 +68,7 @@ export class AsignacionMetasComponent implements OnInit {
 
   // Metodo para obtener todos las metas
   getGoals() {
-    this.goalService.getGoals()
+    this.goalService.getGoals(1, 1000, true)
       .subscribe((res: any) => {
         this.goals = res.data;
       })

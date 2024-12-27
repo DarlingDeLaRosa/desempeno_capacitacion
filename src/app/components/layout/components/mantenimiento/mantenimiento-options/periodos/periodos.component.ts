@@ -54,8 +54,7 @@ export class PeriodosComponent implements OnInit {
     this.periodService.getPeriods(this.page, 10)
       .subscribe((res: any) => {
         this.periods = res.data;
-        console.log(this.periods);
-        
+
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }
       })
@@ -63,6 +62,7 @@ export class PeriodosComponent implements OnInit {
 
   // Metodo para crear los periodos
   postPeriod() {
+    this.periodsForm.patchValue({idPeriodo: 0})
     this.periodService.postPeriod(this.periodsForm.value)
       .subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => this.getPeriods(), this.periodsForm)
@@ -77,7 +77,7 @@ export class PeriodosComponent implements OnInit {
       })
   }
 
-  // Metodo para eliminar los periodos 
+  // Metodo para eliminar los periodos
   async deletePeriod(id: number) {
     let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
 

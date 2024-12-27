@@ -1,1 +1,53 @@
-<p>minuta-list works!</p>
+<div class="fuctionContent">
+  <div class="title">
+    <h1>Lista de Minutas</h1>
+  </div>
+  <div>
+    <div>
+      <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+          class="backIcon">arrow_back
+        </mat-icon>Acuerdos de Desempeño</button>
+    </div>
+  </div>
+</div>
+
+<div class="filters" *ngIf="systemInformation.activeRol().nombre != 'supervisado'">
+  <mat-form-field appearance="fill" style="width: 300px;">
+    <mat-label>Buscar</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="Buscar()">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+</div>
+
+<div class="table-container">
+  <table>
+    <thead class="headerTable">
+      <tr class="headerRow">
+        <th class="headerCell">Nombre</th>
+        <th class="headerCell">Unidad organizativa</th>
+        <th class="headerCell">Cargo</th>
+        <th class="headerCell">Nivel</th>
+        <th class="headerCell">Proceso</th>
+        <th class="headerCell"></th>
+        <th class="headerCell" style="width: 2%;">
+          <div *ngIf="!minutaList" class="loader"></div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="dataRow" *ngFor="let minuta of minutaList">
+        <td class="dataIndiCell">{{minuta.supervisor!.nombre}} {{minuta.supervisor!.apellidos}}</td>
+        <td class="dataIndiCell">{{appHelper.getUnitOrg(minuta.supervisor!.division,
+          minuta.supervisor!.departamento, minuta.supervisor!.direccion,
+          minuta.supervisor!.viceRectoria)?.nombre}}</td>
+        <td class="dataIndiCell">{{minuta.supervisor!.cargo.nombre}}</td>
+        <td class="dataIndiCell">{{minuta.supervisor!.grupoObj.nombre}}</td>
+        <td class="dataIndiCell">{{minuta.periodoAcuerdo!.tipoProceso.nombre}}</td>
+        <td class="dataIndiCell">
+            <mat-icon class="listIcon" >description</mat-icon>
+        </td>
+        <td class="dataIndiCell"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

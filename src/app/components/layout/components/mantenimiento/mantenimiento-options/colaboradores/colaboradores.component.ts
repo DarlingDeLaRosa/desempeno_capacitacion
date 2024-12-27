@@ -13,7 +13,7 @@ import { OcupationalGroupI } from '../../../../../../helpers/intranet/intranet.i
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { asignationAgreementI } from '../asignacion-acuerdo/interfaces/asignacion-acuerdo.interface';
 import { AsignationAgreementServices } from '../asignacion-acuerdo/services/asignacion-acuerdo.service';
-import { DepartmentI, DirectionI, DivisionI, PositionI, LocationI, ViceRectorate, RolI, PersonI } from './interfaces/colaboradores.interface';
+import { DepartmentI, DirectionI, DivisionI, PositionI, LocationI, ViceRectorate, RolI, PersonI, CollaboratorsGetI } from './interfaces/colaboradores.interface';
 
 @Component({
   selector: 'app-colaboradores',
@@ -57,6 +57,7 @@ export class ColaboradoresComponent implements OnInit {
       idGrupoDesempenia: new FormControl(null),
       noResolucion: new FormControl(null),
       idEstado: new FormControl(1),
+      idSupervisor: new FormControl('', Validators.required),
       idSistema: new FormControl('', Validators.required),
       diferentPosition: new FormControl(false)
     })
@@ -70,6 +71,7 @@ export class ColaboradoresComponent implements OnInit {
   div: boolean = true
   periodId: number = 0
   adminCareer!: boolean
+  supervisors!: CollaboratorsGetI[]
   locations!: LocationI[]
   divisions!: DivisionI[]
   positions!: PositionI[]
@@ -92,6 +94,13 @@ export class ColaboradoresComponent implements OnInit {
     this.getCollaborators()
     this.getViceRectorates()
     this.getOcupationalGroup()
+  }
+
+  //Metodo para mostrar el nombre en el input
+  displaySUPName(sup: CollaboratorsGetI): string {
+    console.log(sup);
+
+    return sup ? `${sup.nombre} ${sup.apellidos}` : '';
   }
 
   // Metodo para ocultar unidades organiativas dependiendo de la necesaria
@@ -208,12 +217,21 @@ export class ColaboradoresComponent implements OnInit {
       })
   }
 
+  getSupervisorByName() {
+    if (this.collaboratorForm.value.idSupervisor.length < 3) {
+      this.supervisors = []
+    } else {
+      this.collaboratorService.getPersonFilterByName(this.collaboratorForm.value.idSupervisor)
+        .subscribe((res: any) => {
+          this.supervisors = res.data
+        })
+    }
+  }
+
   // Metodo para obtener todos los colaboradores
   getCollaborators() {
     this.collaboratorService.getCollaborators(this.page, 10)
       .subscribe((res: any) => {
-        console.log(res);
-        
         this.collaborators = res.data;
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }
@@ -235,8 +253,8 @@ export class ColaboradoresComponent implements OnInit {
         switchMap((res: any) => {
           if (res.data) {
             let agreementType: number
-            this.collaboratorForm.value.noResolucion != null ? agreementType = 2 : agreementType = 1 
-            
+            this.collaboratorForm.value.noResolucion != null ? agreementType = 2 : agreementType = 1
+
             this.asignationAgreement = {
               idAsignacion: 0,
               idColaborador: res.data.idPersona,
@@ -279,17 +297,15 @@ export class ColaboradoresComponent implements OnInit {
 
   // Metodo para eliminar un colaborador
   async deleteCollaborator(idUsuario: number, idPersona: number) {
-    console.log(idUsuario);
     let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
 
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
-      
+
       this.collaboratorService.deleteCollaborator(idUsuario)
         .pipe(
           switchMap((res: any) => {
             this.appHelpers.handleResponse(res, () => this.getCollaborators(), this.collaboratorForm)
-            console.log(res);
 
             return of(res)
           }),
@@ -310,7 +326,6 @@ export class ColaboradoresComponent implements OnInit {
               }, 2000);
             }
           }, (error) => {
-            console.log(error);
             this.snackBar.snackbarError('Ocurrió un error al momento de eliminar la asignación de acuerdo del usuario eliminado. Por favor proceda a eliminarlo manualmente.');
           }
         )
@@ -325,6 +340,12 @@ export class ColaboradoresComponent implements OnInit {
 
   // Metodo asignar valores y habilitar la edición de un registro
   async setValueToEdit(collaborator: PersonI) {
+
+    this.snackBar.snackbarLouder(true)
+    this.collaboratorService.getPersonByID(collaborator.persona.idSupervisor).subscribe((res: any) => {
+      this.collaboratorForm.patchValue({ idSupervisor: res.data })
+    })
+
     let diferentPosition = collaborator.persona.idCargoDesempenia ? true : false
 
     await this.onCareerSelectionChange(collaborator.persona.carreraAdministrativa)
@@ -338,12 +359,25 @@ export class ColaboradoresComponent implements OnInit {
     })
 
     this.hidingUnitOrg()
+    this.snackBar.snackbarLouder(false)
+    console.log(this.collaboratorForm.value);
+    
   }
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
-    this.collaboratorForm.patchValue({ idSistema: this.systemInformationService.getSistema });
-    this.appHelpers.saveChanges(() => this.postCollaborator(), () => this.putCollaborator(), this.collaboratorForm.value.idUsuario, this.collaboratorForm)
+    let idSup = this.collaboratorForm.value.idSupervisor
+    this.collaboratorForm.patchValue({
+      idSistema: this.systemInformationService.getSistema,
+      idSupervisor: idSup.idPersona
+    });
+
+    if (this.collaboratorForm.value.idSupervisor == undefined) {
+      this.snackBar.snackbarError('El supervisor es incorrecto, Asegurese de seleccionar uno de la barra de opciones.', 5000)
+    }
+    else {
+      this.appHelpers.saveChanges(() => this.postCollaborator(), () => this.putCollaborator(), this.collaboratorForm.value.idUsuario, this.collaboratorForm)
+    }
   }
 
   //Metodo para llamar a la siguiente pagina

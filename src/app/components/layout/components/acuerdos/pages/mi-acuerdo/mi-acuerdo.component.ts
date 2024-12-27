@@ -35,7 +35,6 @@ export class MiAcuerdoComponent implements OnInit {
   getAgreementByIdCollaborator(){
     this.agreementService.getAgreementByIdCollaborator(this.usuario.idPersona).subscribe((resp:any)=>{
       this.agreement = resp.data;
-      console.log(this.agreement);
     })
   }
 

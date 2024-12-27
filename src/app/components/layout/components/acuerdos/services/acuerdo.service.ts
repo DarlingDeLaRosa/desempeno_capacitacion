@@ -46,6 +46,10 @@ export class agreementService {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/get_acuerdo_by_idcolaborador/${idCollaborator}`, this.header));
   }
 
+  public getAgreementById(idAgreement: number) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/${idAgreement}`, this.header));
+  }
+
   public postAgreementGoalDetails(detalleMeta: any) {
     return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Acuerdo/insert_details`, detalleMeta, this.header));
   }

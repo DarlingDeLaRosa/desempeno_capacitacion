@@ -88,7 +88,6 @@ export class EvaluacionPersonaComponent implements OnInit {
         });
 
         (this.evaluationCompetencyForm.get('evaluacionCompetenciasDetalles') as FormArray).push(competency)
-        console.log(this.evaluationCompetencyForm.value);
       })
       this.loading = false
     });

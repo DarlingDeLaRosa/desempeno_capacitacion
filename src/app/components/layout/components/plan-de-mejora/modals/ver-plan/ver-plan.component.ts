@@ -56,9 +56,7 @@ export class VerPlanComponent implements OnInit{
 
     this.planMejoraService.getPlanMejoraByIdCollabo(this.data.idCollaborator!).subscribe((resp: any) => {
       this.planMejoraObtenido = resp.data;
-      console.log(resp);
       this.isLoading = false
-      console.log(this.planMejoraObtenido);
 
       if (resp.data != null) {
         this.planMejoraObtenido.recomendacionesFormativas.map((recomendacion) => {

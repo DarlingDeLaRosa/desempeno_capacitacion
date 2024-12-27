@@ -37,7 +37,6 @@ export class CoursesServices {
 
         const url = `${this.baseURL}/Curso/filter${valor ? `?filtro=${valor}&` :
          '?'}numeroPagina=${page}&tamanoPagina=10`;
-        console.log(url);
 
         return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(url, this.header));
     }

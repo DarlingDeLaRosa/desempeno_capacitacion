@@ -56,15 +56,15 @@
     <div class="info-row">
       <p style="padding: 5px;"><strong>NOMBRE: </strong>{{agreement.colaboradorObj.nombre}}
         {{agreement.colaboradorObj.apellidos}}</p>
-      <p style="padding: 5px;"><strong>NOMBRE: </strong> {{"agreement.colaboradorObj.supervisorObj.nombre"}}
-        {{"agreement.colaboradorObj.supervisorObj.apellidos"}}</p>
+      <p style="padding: 5px;" *ngIf="agreement.colaboradorObj.supervisorObj"><strong>NOMBRE: </strong> {{agreement.colaboradorObj.supervisorObj.nombre}}
+        {{agreement.colaboradorObj.supervisorObj.apellidos}}</p>
     </div>
 
     <div class="info-row">
       <div style="padding: 5px;">
         <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.cargo.nombre}}</p>
       </div>
-      <div style="padding: 5px;">
+      <div style="padding: 5px;" *ngIf="">
         <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.supervisorObj.cargoObj.nombre}} </p>
       </div>
     </div>
@@ -105,6 +105,20 @@
           <td></td>
         </tr>
       </tbody>
+    </table>
+    <table class="evaluation-table">
+      <thead>
+        <th style="width: 50%;">Firma Supervisor/a Inmediato/a:</th>
+        <th style="width: 50%;">Firma Supervisor/a Inmediato/a:</th>
+      </thead>
+      <thead>
+        <th style="width: 50%;">Firma Servidor/a:</th>
+        <th style="width: 50%;">Firma Servidor/a:</th>
+      </thead>
+      <thead>
+        <th style="width: 50%; border-bottom: none;">Fecha del Acuerdo:</th>
+        <th style="width: 50%; border-bottom: none;">Fecha de la Evaluación:</th>
+      </thead>
     </table>
 </div>
 

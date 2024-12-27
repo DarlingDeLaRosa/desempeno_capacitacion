@@ -17,50 +17,54 @@ import { HerlperService } from '../../../../services/appHelpers.service';
 import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
 import { periodProcessGetI } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
 import { Router } from '@angular/router';
+import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
+import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
 
 @Component({
   selector: 'app-minuta',
   standalone: true,
-  imports: [ClassImports,MaterialComponents],
-  providers:[IntranetServices,systemInformationService,MinutaService,PeriodsProcessServices],
+  imports: [ClassImports, MaterialComponents],
+  providers: [IntranetServices, systemInformationService, MinutaService, PeriodsProcessServices],
   templateUrl: './minuta.component.html',
   styleUrl: './minuta.component.css'
 })
-export class MinutaComponent implements OnInit{
+export class MinutaComponent implements OnInit {
 
   collaborator!: any;
   usuario!: loggedUserI
   isLoading: boolean = true;
   agreement: Array<AcuerdoI> = []
-  colaboradoresMinuta!: MinutaAsistenciaI [];
+  colaboradoresMinuta!: MinutaAsistenciaI[];
   formMinuta!: FormGroup;
   periodsProcess!: periodProcessGetI[]
-
-
+  idPeriodsProcessActive!: number
+  protocol!: ProtocolI
 
   constructor(
     private fb: FormBuilder,
     private agreementService: agreementService,
     private dialog: MatDialog,
     private periodProcessService: PeriodsProcessServices,
-    public systeminformation:systemInformationService,
+    public systeminformation: systemInformationService,
     private SnackBar: SnackBars,
-    private minutaService:MinutaService,
+    private minutaService: MinutaService,
     private appHelpers: HerlperService,
-    private router: Router
-  ){
+    private router: Router,
+    private protocolService: ProtocolsServices,
+  ) {
     this.formMinuta = fb.group({
-      agendaReunion: new FormControl<string>('',[Validators.required]),
-      desarrollo: new FormControl<string>('',[Validators.required]),
-      conclusiones: new FormControl<string>('',[Validators.required]),
-      tipoProcesoId: new FormControl<number>(0,[Validators.required]),
+      agendaReunion: new FormControl<string>('', [Validators.required]),
+      desarrollo: new FormControl<string>('', [Validators.required]),
+      conclusiones: new FormControl<string>('', [Validators.required]),
+      tipoProcesoId: new FormControl<number>(0, [Validators.required]),
     })
   }
 
   ngOnInit(): void {
     this.usuario = this.systeminformation.localUser;
-    console.log(this.usuario);
     this.getPeriodsProcess()
+    this.getPeriodsProcessActive()
+    this.getProtocol()
     this.getAcuerdoByRol()
   }
 
@@ -68,7 +72,6 @@ export class MinutaComponent implements OnInit{
     this.isLoading = true;
     this.agreementService.getAgreementByRol(this.usuario.idPersona, '').subscribe((resp: any) => {
       this.agreement = resp.data;
-
       this.colaboradoresMinuta = this.agreement.map((acuerdo) => ({
         idColaborador: acuerdo.colaboradorObj.idPersona,
         ausente: false,
@@ -77,7 +80,27 @@ export class MinutaComponent implements OnInit{
       this.isLoading = false;
     })
   }
+  //metodo para obtener el proceso
+  getPeriodsProcess() {
+    this.periodProcessService.getPeriodProcesses(1, 10)
+      .subscribe((res: any) => {
+        this.periodsProcess = res.data;
+      })
+  }
+  //metodo para obtener el proceso del acuerdo activo
+  getPeriodsProcessActive() {
+    this.periodProcessService.getPeriodProcessesActive()
+      .subscribe((res: any) => {
+        this.idPeriodsProcessActive = res.data.idPeriodoAcuerdo;
+      })
+  }
 
+  getProtocol() {
+    this.protocolService.getProtocolById(21)
+      .subscribe((res: any) => {
+        this.protocol = res.data;
+      })
+  }
   openModalMotivoAusencia(id: number): void {
     const colaborador = this.colaboradoresMinuta.find((c) => c.idColaborador === id);
 
@@ -93,34 +116,30 @@ export class MinutaComponent implements OnInit{
         if (index !== -1) {
           this.colaboradoresMinuta[index] = result;
         }
-        console.log('Datos actualizados:', this.colaboradoresMinuta);
       }
     });
   }
 
-  getPeriodsProcess() {
-    this.periodProcessService.getPeriodProcesses(1, 10)
-      .subscribe((res: any) => {
-        this.periodsProcess = res.data;
-        console.log(this.periodsProcess);
-      })
-  }
 
-  NavegarAcuerdos(){
+
+  //nevega a la lista de acuerdos
+  NavegarAcuerdos() {
     this.router.navigate(['/layout/acuerdos'])
   }
 
-  postMinuta(){
+  // metodo para armar objeto de minuta y hacer el post
+  postMinuta() {
     const Minuta: MinutaI = {
       desarrollo: this.formMinuta.get('desarrollo')?.value,
       conclusion: this.formMinuta.get('desarrollo')?.value,
       agendaReunion: this.formMinuta.get('agendaReunion')?.value,
-      periodoAcuerdoId: this.formMinuta.get('tipoProcesoId')?.value,
+      periodoAcuerdoId: this.idPeriodsProcessActive,
       supervisorId: Number(this.usuario.idPersona),
       minutaAsistencia: this.colaboradoresMinuta.map((colaborador) => (
-        { idColaborador: colaborador.idColaborador,
+        {
+          idColaborador: colaborador.idColaborador,
           ausente: colaborador.ausente,
-          motivoAusencia:colaborador.motivoAusencia
+          motivoAusencia: colaborador.motivoAusencia
         })),
     }
 
@@ -130,13 +149,14 @@ export class MinutaComponent implements OnInit{
     })
   }
 
-  save(){
+  //Metodo para guardar minuta
+  save() {
     if (this.formMinuta.invalid) {
       this.SnackBar.snackbarError('Debes completar el formulario para guardar'); return
     }
-    if (this.formMinuta.get('tipoProcesoId')?.value == 0 ) {
-      this.SnackBar.snackbarError('Debes seleccionar un proseso para guardar'); return
-    }
+    // if (this.formMinuta.get('tipoProcesoId')?.value == 0) {
+    //   this.SnackBar.snackbarError('Debes seleccionar un proseso para guardar'); return
+    // }
     this.postMinuta()
 
   }

@@ -50,6 +50,16 @@
         </div>
       </ng-container>
     </div>
+    <div>
+
+      <mat-form-field appearance="fill" style="width: 100%;">
+        <mat-label>Observación</mat-label>
+        <input matInput formControlName="observacion">
+        <mat-error *ngIf="califiacionForm.get('observacion')?.hasError('muyCorta')">
+          La meta debe ser mas corta.
+        </mat-error>
+      </mat-form-field>
+    </div>
   </form>
   <div class="modal-actions">
     <button class="cleanButton" (click)="cerrar()">Cancelar</button>

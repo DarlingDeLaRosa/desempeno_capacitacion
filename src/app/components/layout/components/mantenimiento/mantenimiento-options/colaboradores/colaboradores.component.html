@@ -71,7 +71,7 @@
         </div>
 
         <div style="display: flex; gap: 5px;">
-            
+
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Recinto</mat-label>
                 <mat-select formControlName="idRecinto" disableRipple>
@@ -100,7 +100,24 @@
                 </mat-select>
             </mat-form-field>
 
-            <div style="flex: 1"></div>
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Supervisor</mat-label>
+                <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="idSupervisor" 
+                (input)="getSupervisorByName()">
+                
+                <mat-autocomplete #auto='matAutocomplete' [displayWith]="displaySUPName">
+                    <ng-container *ngIf="supervisors && supervisors.length > 0; else noGoalPoa">
+                        <mat-option *ngFor="let supervisor of supervisors" [value]="supervisor">
+                            {{supervisor.nombre}} {{supervisor.apellidos}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noGoalPoa>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+            </mat-form-field>
 
         </div>
 
@@ -216,10 +233,13 @@
         </div>
 
         <div class="matRadioChoice">
-            <h4 style="margin-right: 20px;">¿El empleado desempeña un cargo o grupo ocupacional diferente al establecido?</h4>
+            <h4 style="margin-right: 20px;">¿El empleado desempeña un cargo o grupo ocupacional diferente al
+                establecido?</h4>
             <mat-radio-group formControlName="diferentPosition">
-                <mat-radio-button [value]="false" [checked]="true" color="primary" (click)="onPositionSelectionChange(false)">No</mat-radio-button>
-                <mat-radio-button [value]="true" color="primary" (click)="onPositionSelectionChange(true)">Si</mat-radio-button>
+                <mat-radio-button [value]="false" [checked]="true" color="primary"
+                    (click)="onPositionSelectionChange(false)">No</mat-radio-button>
+                <mat-radio-button [value]="true" color="primary"
+                    (click)="onPositionSelectionChange(true)">Si</mat-radio-button>
             </mat-radio-group>
         </div>
 
@@ -258,8 +278,8 @@
         </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button type="button" class="cleanButton" *ngIf="collaboratorForm.value.idUsuario"
-            (click)="clearForm()" >Limpiar edición</button>
+        <button type="button" class="cleanButton" *ngIf="collaboratorForm.value.idUsuario" (click)="clearForm()">Limpiar
+            edición</button>
 
     </form>
 
@@ -283,16 +303,20 @@
             <tbody *ngIf="collaborators && collaborators.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let collaborator of collaborators">
                     <td class="dataIndiCell">{{collaborator.persona.nombre}} {{collaborator.persona.apellidos}}</td>
-                    <td class="dataIndiCell">{{collaborator.persona.recinto.nombre}} ({{collaborator.persona.recinto.siglas}})</td>
+                    <td class="dataIndiCell">{{collaborator.persona.recinto.nombre}}
+                        ({{collaborator.persona.recinto.siglas}})</td>
                     <td class="dataIndiCell">{{collaborator.persona.cargo.nombre}}</td>
                     <td class="dataIndiCell">{{collaborator.persona.estadoObj.nombre}}</td>
                     <td class="dataIndiCell">{{collaborator.persona.grupoObj.nombre}}</td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(collaborator)" class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon (click)="deleteCollaborator(collaborator.idUsuario, collaborator.idPersona)" class="removeIcon">delete</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(collaborator)"
+                            class="editIcon">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon
+                            (click)="deleteCollaborator(collaborator.idUsuario, collaborator.idPersona)"
+                            class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot *ngIf="pagination && pagination.totalPage">
-                <tr class="paginatorRow" >
+                <tr class="paginatorRow">
                     <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
                         <td class="dataIndiCell"></td>
                     </ng-container>

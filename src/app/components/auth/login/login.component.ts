@@ -51,7 +51,6 @@ export class LoginComponent implements OnInit{
       idSistema: this.systeminformation.idSystem
     };
       this.intranService.postAutorizacion(auth).subscribe((resp: any) => {
-        console.log(resp);
         if (resp.success === true) {
           this.systeminformation.userRol.set(resp.data.rol)
           this.systeminformation.userSystem.set(resp.data)
@@ -61,7 +60,6 @@ export class LoginComponent implements OnInit{
           this.isLoading = false;
           this.router.navigate(['/layout/acuerdos']);
           // this.systeminformation.Datos()
-          console.log('Bienvenido');
           ('Bienvenido');
         }else {
           console.log('Este usuario no está registado en el sistema');

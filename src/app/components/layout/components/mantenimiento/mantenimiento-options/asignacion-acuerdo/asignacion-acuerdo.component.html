@@ -63,10 +63,9 @@
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Periodo a evaluar</mat-label>
                 <mat-select formControlName="acuerdosDuracionId" disableRipple>
-                    <mat-option [value]="1">3 meses</mat-option>
-                    <mat-option [value]="2">6 meses</mat-option>
-                    <mat-option [value]="3">12 meses</mat-option>
-
+                    <mat-option [value]="duration.id" *ngFor="let duration of agreementsDurations" >
+                        {{duration.duracion}}
+                    </mat-option>
                     <ng-template #noRol>
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>

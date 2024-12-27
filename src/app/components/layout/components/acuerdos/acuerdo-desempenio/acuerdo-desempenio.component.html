@@ -3,7 +3,7 @@
     <h1>Acuerdo de Desempeño</h1>
   </div>
   <div >
-    <button *ngIf="this.systemInformation.activeRol().nombre == 'Encargado' || this.systemInformation.activeRol().nombre == 'Analista'" type="submit" class="btnNavegar" [routerLink]="[{ outlets: { 'acuerdos': ['minutaLista']}}]"
+    <button *ngIf="this.systemInformation.activeRol().nombre !== 'supervisado'" type="submit" class="btnNavegar" [routerLink]="[{ outlets: { 'acuerdos': ['minutaLista']}}]"
       routerLinkActive="active">Minutas</button> &nbsp;
 
     <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" type="submit" class="btnNavegar" [routerLink]="[{ outlets: { 'acuerdos': ['miacuerdo']}}]"
@@ -41,10 +41,12 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf=" agreement.length > 0; else noElements">
       <tr class="dataRow" *ngFor="let acuerdo of agreement">
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre}} {{acuerdo.colaboradorObj.apellidos}}</td>
-        <td class="dataIndiCell">{{acuerdo.colaboradorObj.departamento.nombre}}</td>
+        <td class="dataIndiCell">{{appHelpers.getUnitOrg(acuerdo.colaboradorObj.division,
+          acuerdo.colaboradorObj.departamento, acuerdo.colaboradorObj.direccion,
+          acuerdo.colaboradorObj.viceRectoria)?.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.tipoProceso.nombre}}</td>
@@ -68,7 +70,7 @@
 
 
             <button mat-menu-item *ngIf="acuerdo.detalles.length > 0"
-              (click)="openModalVerAcuerdo(acuerdo.colaboradorObj.idPersona)">
+              (click)="openModalVerAcuerdo(acuerdo.idAcuerdo)">
               <mat-icon>description</mat-icon>Ver AD
             </button>
 
@@ -111,10 +113,20 @@
         </td>
       </tr>
     </tbody>
+    <ng-template #noElements>
+      <tbody>
+          <tr class="dataRow">
+              <td class="dataIndiCell">No hay elementos que mostrar.</td>
+              <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
+                  <td class="dataIndiCell"></td>
+              </ng-container>
+          </tr>
+      </tbody>
+  </ng-template>
   </table>
 </div>
 
 <div style="display: flex; justify-content: end;">
-  <button [routerLink]="[{ outlets: { 'acuerdos': ['minuta']}}]" routerLinkActive="active" class="saveButton">Realizar
+  <button *ngIf="systemInformation.activeRol().nombre == 'Supervisor' && appHelpers.ableToMakeMinuta(agreement)" [routerLink]="[{ outlets: { 'acuerdos': ['minuta']}}]" routerLinkActive="active" class="saveButton">Realizar
     Minuta</button>
 </div>

@@ -40,7 +40,7 @@ export class AutorizacionAccionComponent implements OnInit{
   }
   
   getProcesses() {
-    this.periodProcessService.getTypeProcess()
+    this.periodProcessService.getTypeProcess(true)
       .subscribe((res: any) => { this.processes = res.data; })
   }
   

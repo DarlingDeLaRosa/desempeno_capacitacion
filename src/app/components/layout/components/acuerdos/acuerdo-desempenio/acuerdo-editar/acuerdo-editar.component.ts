@@ -18,6 +18,8 @@ import { AcuerdoI } from '../../interfaces/acuerdo.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { PeriodI } from '../../../mantenimiento/mantenimiento-options/periodos/interfaces/periodo.interface';
 import { LoaderBoxComponent } from '../../../../../../helpers/components/loader-box/loader-box.component';
+import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
+import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
 
 @Component({
   selector: 'app-acuerdo-editar',
@@ -44,15 +46,18 @@ export class AcuerdoEditarComponent implements OnInit {
   activateSave: boolean = false;
   isLoading: boolean = true
   isLoading2: boolean = true
+  protocol!: ProtocolI
 
   constructor(
     private route: ActivatedRoute,
+
     private intranetService: IntranetServices,
     private goalsServices: GoalsServices,
     private agreementservice: agreementService,
     private fb: FormBuilder,
     private SnackBar: SnackBars,
     private appHelpers: HerlperService,
+    private protocolService: ProtocolsServices,
     private informationService: systemInformationService,
   ) {
     this.usuarioActual = informationService.localUser;
@@ -71,6 +76,7 @@ export class AcuerdoEditarComponent implements OnInit {
     this.getPeopleById();
     this.getVerificationMethod();
     this.getGoalPOA()
+    this.getProtocol()
   }
 
   smartValidator() {
@@ -111,6 +117,13 @@ export class AcuerdoEditarComponent implements OnInit {
     })
   }
 
+  getProtocol() {
+    this.protocolService.getProtocolById(20)
+      .subscribe((res: any) => {
+        this.protocol = res.data;
+      })
+  }
+
   //metodo para obtener la lista de metodos de verificacion
   getVerificationMethod() {
     this.goalsServices.getVerificationMethod().subscribe((resp: any) => {
@@ -137,7 +150,6 @@ export class AcuerdoEditarComponent implements OnInit {
   getAgreementByIdCollaborator() {
     this.agreementservice.getAgreementByCollaborator(this.collaborator.idPersona, this.collaborator.grupoObj.idGrupo).subscribe((resp: any) => {
       this.agreement = resp.data;
-      console.log(this.agreement);
       //hace un map a los detalles del acuerdo y lo agrega al arreglo del detalle que tenemos
       this.goalDetails = this.agreement.detalles.map((detalle: any) => {
         return {
@@ -170,8 +182,6 @@ export class AcuerdoEditarComponent implements OnInit {
         isTranversal: detalle.isTranversal
       }
     }));
-    console.log(acuerdoParaPost);
-
     this.agreementservice.postAgreementGoalDetails(acuerdoParaPost).subscribe((resp: any) => {
       this.SnackBar.snackbarLouder(true)
       this.appHelpers.handleResponse(resp, () => this.getAgreementByIdCollaborator())
@@ -195,7 +205,6 @@ export class AcuerdoEditarComponent implements OnInit {
       isTranversal: detalle.isTranversal ?? false
     });
     this.goalForm.reset();
-    console.log(this.goalDetails);
     this.calcularTotalValor()
     this.activateSave = true;
   }
@@ -218,7 +227,6 @@ export class AcuerdoEditarComponent implements OnInit {
       this.goalForm.reset();
       this.calcularTotalValor()
       this.activateSave = true;
-      console.log(this.indexEditando);
     }
   }
 
@@ -253,7 +261,6 @@ export class AcuerdoEditarComponent implements OnInit {
   cargarDetalleEnFormularioIndex(index: number, ideditarRegistro: number) {
     if (index > -1 && index < this.goalDetails.length) {
       const detalle = this.goalDetails[index];
-      console.log(this.goalDetails[index]);
       this.goalForm.patchValue({
         idMeta: detalle.idMeta,
         idMedio: detalle.idMedio,

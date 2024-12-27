@@ -54,4 +54,9 @@ export class AsignationAgreementServices {
     public getAsignationAgreementsByDNI(dni: string) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionAcuerdo/colaborador/${dni}`, this.header));
     }
+
+    //duracion del acuerdo 
+    public getAgreementDurations() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/duracion-acuerdos`, this.header));
+    }
 }

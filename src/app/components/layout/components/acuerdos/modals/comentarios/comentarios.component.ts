@@ -41,12 +41,12 @@ export class ComentariosComponent implements OnInit{
 
   getComments(){
     this.agreementservice.getComments(this.data.idAcuerdo).subscribe((res: any) => {
-      console.log(res.data);
       this.comments = res.data
     })
   }
 
   postComment(){
+    if (this.commentsForm.value.descripcion.length == 0 ) return
     this.commentsForm.patchValue({acuerdoId: this.data.idAcuerdo})
     this.agreementservice.postComment(this.commentsForm.value).subscribe((res: any) => {
       if (res.status) {

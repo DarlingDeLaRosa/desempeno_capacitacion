@@ -6,7 +6,7 @@ import { IntranetServices } from '../../../../../../helpers/intranet/intranet.se
 import { CollaboratorServices } from '../colaboradores/services/colaboradores.service';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../../helpers/class.components';
-import { asignationAgreementGetI, typeAgreementI, typeProcessesI } from './interfaces/asignacion-acuerdo.interface';
+import { asignationAgreementGetI, durationAgreementI, typeAgreementI, typeProcessesI } from './interfaces/asignacion-acuerdo.interface';
 import { CollaboratorsGetI, LocationI, PersonI } from '../colaboradores/interfaces/colaboradores.interface';
 import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 import { AsignationAgreementServices } from './services/asignacion-acuerdo.service';
@@ -51,11 +51,13 @@ export class AsignacionAcuerdoComponent implements OnInit {
   typeAgreements!: typeAgreementI[]
   asignationAgreementForm: FormGroup
   asignationsAgreement!: asignationAgreementGetI[]
+  agreementsDurations!: durationAgreementI[]
   asignationCollaborators!: asignationAgreementGetI[]
 
   ngOnInit(): void {
     this.getTypeAgreement()
     this.getAsignationAgreement()
+    this.getDurationAgreements()
   }
 
   // Metodo para obtener todos los colaboradores
@@ -63,11 +65,17 @@ export class AsignacionAcuerdoComponent implements OnInit {
     this.asignationAgreementService.getAsignationAgreements(this.page, 10)
       .subscribe((res: any) => {
         this.asignationsAgreement = res.data;
-        console.log(res);
-        
+
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }
-        return
+      })
+  }
+
+  // Metodo para obtener las duraciones de los acuerdos
+  getDurationAgreements() {
+    this.asignationAgreementService.getAgreementDurations()
+      .subscribe((res: any) => {
+        this.agreementsDurations = res.data
       })
   }
 
@@ -84,16 +92,15 @@ export class AsignacionAcuerdoComponent implements OnInit {
 
     this.asignationAgreementService.getAsignationAgreementsByDNI(this.asignationAgreementForm.value.cedula)
       .subscribe((res: any) => {
-        console.log(res);
-        
-        if (res.data)
+        if (res.data){
           this.setValueToEdit(res.data)
-          this.createSecondAsignation()
+          if (res.data.idAsignacion > 0) this.createSecondAsignation()
+        }
       })
   }
 
   async createSecondAsignation() {
-    let addNewAsignation: boolean = await this.snackBar.snackbarConfirmation('¿Desea agregar una nueva asignación de acuerdo? ','Aplicable a procesos de ascenso, promoción y cambios a carrera administrativa.')
+    let addNewAsignation: boolean = await this.snackBar.snackbarConfirmation('¿Desea agregar una nueva asignación de acuerdo? ', 'Aplicable a procesos de ascenso, promoción y cambios a carrera administrativa.')
     if (addNewAsignation) {
       this.asignationAgreementForm.patchValue({
         idAsignacion: 0,
@@ -106,7 +113,6 @@ export class AsignacionAcuerdoComponent implements OnInit {
   postAsignationAgreement() {
     this.asignationAgreementService.postAsignationAgreement(this.asignationAgreementForm.value)
       .subscribe((res: any) => {
-        console.log(res);
 
         this.appHelpers.handleResponse(res, () => this.getAsignationAgreement(), this.asignationAgreementForm)
       })
@@ -119,12 +125,12 @@ export class AsignacionAcuerdoComponent implements OnInit {
       })
   }
 
-  async deleteAsignationAgreement(idAsignation: number){
+  async deleteAsignationAgreement(idAsignation: number) {
     let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
       this.asignationAgreementService.deleteAsignationAgreement(idAsignation)
-      .subscribe((res:any) =>{ this.appHelpers.handleResponse(res, () => this.getAsignationAgreement(), this.asignationAgreementForm)})
+        .subscribe((res: any) => { this.appHelpers.handleResponse(res, () => this.getAsignationAgreement(), this.asignationAgreementForm) })
     }
   }
 

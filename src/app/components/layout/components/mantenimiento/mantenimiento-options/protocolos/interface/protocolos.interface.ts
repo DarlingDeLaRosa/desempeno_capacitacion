@@ -1,7 +1,5 @@
 export interface ProtocolI {
     idProtocolo: number
-    nombre: string
-    idTipoProtocolo: number
     tipoProtocoloObj: TypeProtocolI
     documentosObj: DocumentI[]
 }

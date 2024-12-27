@@ -17,6 +17,8 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { EvaluationCompetencyTestI, evaluationAgreementCalificationI } from '../../../evaluacion-competencias/interface/evaluacion-competencias.interface';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { LoaderBoxComponent } from '../../../../../../helpers/components/loader-box/loader-box.component';
+import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
+import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
 
 @Component({
   selector: 'app-acuerdo-evaluacion',
@@ -36,6 +38,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
   totalCalificacion: number = 0;
   collaborator!: CollaboratorsGetI;
   evaluationCompetencyForm: FormGroup
+  protocol!: ProtocolI
 
   constructor(
     public fb: FormBuilder,
@@ -45,6 +48,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
     private appHelpers: HerlperService,
     private gradeService: GradesServices,
     private intranetService: IntranetServices,
+    private protocolService: ProtocolsServices,
     private agreementservice: agreementService,
     public systemInformationSevice: systemInformationService,
   ) {
@@ -60,6 +64,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
   ngOnInit(): void {
     this.idpersona = Number(this.route.snapshot.paramMap.get('id'));
     this.getAgreementByIdCollaborator();
+    this.getProtocol()
   }
 
   //Metodo para obtener grado de los comportamientos probatorios
@@ -68,6 +73,13 @@ export class AcuerdoEvaluacionComponent implements OnInit {
       .subscribe((res: any) => {
         this.grade = res.data;
         this.setPostBehaviors(this.grade[0])
+      })
+  }
+
+  getProtocol() {
+    this.protocolService.getProtocolById(22)
+      .subscribe((res: any) => {
+        this.protocol = res.data;
       })
   }
 
@@ -107,8 +119,6 @@ export class AcuerdoEvaluacionComponent implements OnInit {
       });
 
       (this.evaluationCompetencyForm.get('evaluacionCompetenciasDetalles') as FormArray).push(behaviorGroup)
-      console.log(this.evaluationCompetencyForm.value);
-
     })
   }
 
@@ -116,7 +126,6 @@ export class AcuerdoEvaluacionComponent implements OnInit {
   getAgreementByIdCollaborator() {
     this.agreementservice.getAgreementByIdCollaborator(this.idpersona).subscribe((resp: any) => {
       this.agreement = resp.data;
-      console.log(this.agreement);
       //hace un map a los detalles del acuerdo y lo agrega al arreglo del detalle que tenemos
       this.goalDetails = this.agreement.detalles.map((detalle: any) => {
         return {
@@ -125,6 +134,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
           nombre: detalle.metaObj.nombre,
           nombreMedio: detalle.metaObj.medioVerificacionObj.nombre,
           valor: detalle.metaObj.valor,
+          observacion: detalle.observaciones,
           calificacion: detalle.calificacion,
           enlaceDoc: detalle.documentosObj[0]?.enlace || null,
           nombreDoc: detalle.documentosObj[0]?.nombre || null
@@ -178,7 +188,6 @@ export class AcuerdoEvaluacionComponent implements OnInit {
       periodoId: this.systemInformationSevice.activePeriod().idPeriodo,
     })
 
-    console.log(this.evaluationCompetencyForm.value);
 
     this.appHelpers.saveChanges(() => this.postEvaluationBehaviorTest(), () => this.putEvaluationBehaviorTest(), this.evaluationCompetencyForm.value.id, this.evaluationCompetencyForm)
   }

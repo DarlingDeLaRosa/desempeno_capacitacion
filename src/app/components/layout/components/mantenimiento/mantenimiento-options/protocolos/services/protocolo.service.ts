@@ -40,6 +40,10 @@ export class ProtocolsServices {
         return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/Protocolo/${id}`, this.header))
     }
 
+    public getProtocolById(id: number) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Protocolo/${id}`, this.header));
+    }
+
     // Medoto para obtener todos los tipos de protocolos 
 
     public getTypeProtocols() {

@@ -11,6 +11,7 @@ import { AcuerdoI } from '../interfaces/acuerdo.interface';
 import { RolI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 import { AutorizacionAccionComponent } from '../modals/autorizacion-accion/autorizacion-accion.component';
 import { ComentariosComponent } from '../modals/comentarios/comentarios.component';
+import { HerlperService } from '../../../services/appHelpers.service';
 
 @Component({
   selector: 'app-acuerdo-desempenio',
@@ -30,6 +31,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    public appHelpers: HerlperService,
     private agreementService: agreementService,
     public systemInformation: systemInformationService
   ) {}
@@ -37,16 +39,14 @@ export class AcuerdoDesempenioComponent implements OnInit {
   ngOnInit(): void {
     this.usuario = this.systemInformation.localUser;
     this.systemInformation.activeRol();
-    this.getAcuerdoByRol();
+    this.getAcuerdoByRol('');
   }
 
   //Metodo para traer la lista de los hijos de los supervisores
-  getAcuerdoByRol() {
+  getAcuerdoByRol(term:string) {
     this.isLoading = true;
-    this.agreementService.getAgreementByRol(this.usuario.idPersona, '').subscribe((resp: any) => {
+    this.agreementService.getAgreementByRol(this.usuario.idPersona, term).subscribe((resp: any) => {
       this.agreement = resp.data;
-      console.log(resp.data);
-      
       this.isLoading = false;
     })
   }
@@ -54,13 +54,10 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //buscar los por departamento y nombre del colaborador
   Buscar() {
     if (this.searchTerm.length > 2) {
-      this.agreementService.getAgreementByRol(this.usuario.idPersona, this.searchTerm).subscribe((resp: any) => {
-        this.agreement = resp.data;
-        console.log(this.agreement);
-      });
+      this.getAcuerdoByRol(this.searchTerm)
     } else {
       if (this.searchTerm.length < 1) {
-        this.getAcuerdoByRol();
+        this.getAcuerdoByRol('');
       }
     }
   }
@@ -81,18 +78,18 @@ export class AcuerdoDesempenioComponent implements OnInit {
   }
 
   //Metodo para abrir el modal del acuerdo estructurado
-  openModalVerAcuerdo(idPersona: number): void {
-    const dialog = this.dialog.open(VerAcuerdoComponent, { data: { idPersona } })
-    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol() });
+  openModalVerAcuerdo(idAgreement: number): void {
+    const dialog = this.dialog.open(VerAcuerdoComponent, { data: { idAgreement } })
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
   }
 
   openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
     const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo  } })
-    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol() });
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = ''});
   }
 
   commentsAgreement(idAcuerdo: number , fullName: string): void {
     const dialog = this.dialog.open(ComentariosComponent, {data:  {idAcuerdo, fullName}  })
-    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol() });
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol('');this.searchTerm = '' });
   }
 }

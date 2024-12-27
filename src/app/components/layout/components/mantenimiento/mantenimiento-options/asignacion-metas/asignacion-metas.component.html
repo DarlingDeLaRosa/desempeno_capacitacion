@@ -21,7 +21,7 @@
                 <mat-label>Metas</mat-label>
                 <mat-select formControlName="idMeta" disableRipple>
                     <ng-container *ngIf="goals && goals.length; else noGoal">
-                        <mat-option (click)="validateMetaPOA(goal)" [value]="goal.idMeta" *ngFor="let goal of goals">
+                        <mat-option [value]="goal.idMeta" *ngFor="let goal of goals"> <!--(click)="validateMetaPOA(goal)"-->
                             {{goal.nombre}}
                         </mat-option>
                     </ng-container>

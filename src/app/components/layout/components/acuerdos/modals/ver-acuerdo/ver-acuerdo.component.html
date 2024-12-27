@@ -10,9 +10,7 @@
   <div style="display: flex; justify-content: space-between;" *ngIf="agreement">
     <h2>Acuerdo de desempeño.</h2>
 
-    <div>
-      <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" style="margin-right: 50px;" matTooltip="Imprimir" class="btnNavegar" printSectionId="AD"
-        [useExistingCss]="true" ngxPrint><mat-icon style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
+    <div style="display: flex; gap: 5px; ">
 
       <div style="display: flex; gap: 5px;"
         *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3">
@@ -20,6 +18,10 @@
         <button type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
         <button type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
       </div>
+
+      <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" style="margin-left: 50px;" matTooltip="Imprimir" class="btnNavegar" printSectionId="AD"
+        [useExistingCss]="true" ngxPrint ><mat-icon style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
+
     </div>
   </div>
 
@@ -102,17 +104,31 @@
             <td>{{detalle.metaObj.valor}}</td>
             <td>{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
             <td>{{detalle.calificacion}}</td>
-            <td></td>
+            <td>{{detalle.observaciones || null}}</td>
           </tr>
           <tr>
             <td></td>
-            <td colspan="1" class="bold">Total</td>
-            <td class="bold">{{totalValor}}</td>
-            <td class="bold">Total</td>
+            <td style="background-color: #ccc; text-align: end; font-weight: 600;">Total</td>
+            <td>{{totalValor}}</td>
+            <td class="bold" style="background-color: #ccc; font-weight: 600;">Total(Puntos obtenidos)</td>
             <td class="bold">{{totalCalificacion}}</td>
             <td></td>
           </tr>
         </tbody>
+      </table>
+      <table class="evaluation-table">
+        <thead>
+          <th style="width: 50%;">Firma Supervisor/a Inmediato/a:</th>
+          <th style="width: 50%;">Firma Supervisor/a Inmediato/a:</th>
+        </thead>
+        <thead>
+          <th style="width: 50%;">Firma Servidor/a:</th>
+          <th style="width: 50%;">Firma Servidor/a:</th>
+        </thead>
+        <thead>
+          <th style="width: 50%; border-bottom: none;">Fecha del Acuerdo:</th>
+          <th style="width: 50%; border-bottom: none;">Fecha de la Evaluación:</th>
+        </thead>
       </table>
     </div>
   </div>

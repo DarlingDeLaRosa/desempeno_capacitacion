@@ -58,7 +58,7 @@ export class InscribirListaComponent implements OnInit {
         departamento: new FormControl(''),
       })
   }
-  
+
   ngOnInit(): void {
 
   }
@@ -70,8 +70,6 @@ export class InscribirListaComponent implements OnInit {
     if (autoCompleteValue && autoCompleteValue.length > 3) {
       this.intranetService.findPeopleByUser(autoCompleteValue)
         .subscribe((res: any) => {
-          console.log(res);
-
           this.filteredCollaborator = res.data
         })
     } else {
@@ -82,7 +80,6 @@ export class InscribirListaComponent implements OnInit {
   //se ejecuta cuando seleciono un colaborador en el search
   onCollaboratorSelected(collaorator: CollaboratorsGetI) {
     this.selectedCollaborator = collaorator;
-    console.log(this.selectedCollaborator);
 
     //setear valores a los formularios
     this.findForm.patchValue({
@@ -117,8 +114,6 @@ export class InscribirListaComponent implements OnInit {
 
 
   save() {
-    console.log(this.inscripcionForm.value);
-
     if (this.inscripcionForm.invalid || (this.inscripcionForm.get('idColaborador')?.value === 0)) {
       this.snackbar.snackbarError('Debes completar el formulario para gurardar');
       return;

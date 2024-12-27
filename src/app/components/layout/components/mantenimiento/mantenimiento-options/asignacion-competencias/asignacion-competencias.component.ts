@@ -38,7 +38,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
       idCompetencia: new FormControl('', Validators.required),
     })
   }
-  
+
   page: number = 1
   pagination!: PaginationI
   gradesTypes!: GradesGetI[]
@@ -73,18 +73,15 @@ export class AsignacionCompetenciasComponent implements OnInit {
   getCompetencyById(idCompetency: number) {
     this.competencyService.getCompetencyById(idCompetency)
       .subscribe((res: any) => {
-        console.log(res);
-        
         this.gradesTypes = res.data.gradosObj;
       })
   }
 
-  // Metodo para obtener todas las asignaciones de competencias 
+  // Metodo para obtener todas las asignaciones de competencias
   getAsignationCompetencies() {
     this.asignationCompetenciesService.getAsignationCompetencies(this.page, 10)
       .subscribe((res: any) => {
         this.asignationCompetencies = res.data;
-        console.log(this.asignationCompetencies);
         const {currentPage ,totalItem, totalPage} = res
         this.pagination = {currentPage ,totalItem, totalPage}
       })
@@ -106,7 +103,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
       })
   }
 
-  // Metodo para eliminar las asignaciones de competencias 
+  // Metodo para eliminar las asignaciones de competencias
   async deleteAsignationCompetency(id: number) {
     let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
 
@@ -135,7 +132,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
       this.getAsignationCompetencies()
     }
   }
-  
+
   //Metodo para llamar a la pagina anterior
   previousPage() {
     if (this.page > 1) {

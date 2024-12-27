@@ -18,7 +18,7 @@ import { ClassImports } from '../../../../../../helpers/class.components';
   styleUrl: './periodo-procesos.component.css'
 })
 export class PeriodoProcesosComponent implements OnInit{
-  
+
   constructor(
     public fb: FormBuilder,
     public snackBar: SnackBars,
@@ -27,8 +27,8 @@ export class PeriodoProcesosComponent implements OnInit{
     private systemInformationSevice: systemInformationService,
   ) {
     this.periodsProcessForm = fb.group({
-      idPeriodoAcuerdo: 0,
-      periodoId: 0,
+      idPeriodoAcuerdo: new FormControl(0),
+      periodoId: new FormControl(0),
       fechaInicio: new FormControl('', Validators.required),
       fechaFin: new FormControl('', Validators.required),
       fechaProroga: new FormControl(null),
@@ -59,7 +59,6 @@ export class PeriodoProcesosComponent implements OnInit{
     this.periodProcessService.getPeriodProcesses(this.page, 10)
       .subscribe((res: any) => {
         this.periodsProcess = res.data;
-        console.log(this.periodsProcess);
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }
       })
@@ -67,6 +66,7 @@ export class PeriodoProcesosComponent implements OnInit{
 
   // Metodo para crear los periodos de los procesos
   postPeriodProcess() {
+    this.periodsProcessForm.patchValue({idPeriodoAcuerdo: 0})
     this.periodProcessService.postPeriodProcess(this.periodsProcessForm.value)
       .subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => this.getPeriodsProcess(), this.periodsProcessForm)
@@ -93,13 +93,16 @@ export class PeriodoProcesosComponent implements OnInit{
   }
 
   // Metodo asignar valores y habilitar la edición de un registro
-  setValueToEdit(Period: periodProcessGetI) {
-    this.periodsProcessForm.reset(Period)
+  setValueToEdit(period: periodProcessGetI) {
+    this.periodsProcessForm.reset(period)
+    this.periodsProcessForm.patchValue({
+      tipoProcesoId: period.tipoProceso.id
+    })
   }
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
-        this.periodsProcessForm.patchValue({periodoId: this.systemInformationSevice.activePeriod().idPeriodo })
+    this.periodsProcessForm.patchValue({periodoId: this.systemInformationSevice.activePeriod().idPeriodo })
     this.appHelpers.saveChanges(() => this.postPeriodProcess(), () => this.putPeriodProcess(), this.periodsProcessForm.value.idPeriodoAcuerdo, this.periodsProcessForm)
   }
 

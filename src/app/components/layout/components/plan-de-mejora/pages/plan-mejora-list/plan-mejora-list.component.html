@@ -34,7 +34,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody  *ngIf=" agreementList.length > 0; else noElements">
       <tr class="dataRow" *ngFor="let persona of agreementList">
         <td class="dataIndiCell">{{persona.colaboradorObj.nombre}} {{persona.colaboradorObj.apellidos}}</td>
         <td class="dataIndiCell">{{persona.colaboradorObj.departamento.nombre}}</td>
@@ -47,6 +47,16 @@
         </td>
       </tr>
     </tbody>
+    <ng-template #noElements>
+      <tbody>
+          <tr class="dataRow">
+              <td class="dataIndiCell">No hay elementos que mostrar.</td>
+              <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
+                  <td class="dataIndiCell"></td>
+              </ng-container>
+          </tr>
+      </tbody>
+  </ng-template>
     <!-- <tfoot>
       <tr class="paginatorRow">
         <td class="dataIndiCell"></td>

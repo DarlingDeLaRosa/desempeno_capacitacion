@@ -33,7 +33,7 @@ export class VerAcuerdoComponent implements OnInit {
     private agreementservice: agreementService,
     public systemInformation: systemInformationService,
     public dialogRef: MatDialogRef<VerAcuerdoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { idPersona: number }
+    @Inject(MAT_DIALOG_DATA) public data: { idAgreement: number }
   ) {
     this.commentsForm = fb.group({
       acuerdoId: 0,
@@ -47,8 +47,10 @@ export class VerAcuerdoComponent implements OnInit {
 
   //metodo para obterner el acuerdo segun el id del collaborador
   getAgreementByIdCollaborator() {
-    this.agreementservice.getAgreementByIdCollaborator(this.data.idPersona).subscribe((resp: any) => {
+    this.agreementservice.getAgreementById(this.data.idAgreement).subscribe((resp: any) => {
       this.agreement = resp.data;
+      console.log(this.agreement);
+
       this.calculadora()
     })
   }

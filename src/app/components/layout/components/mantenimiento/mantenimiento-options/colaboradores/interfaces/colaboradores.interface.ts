@@ -46,6 +46,7 @@ export interface CollaboratorsGetI {
     departamento: DepartmentI
     division: DivisionI,
     direccion: DirectionI
+    idSupervisor: number
     hijos: any
     cursosPendientes: CourseGetI[];
     viceRectoria: ViceRectorate,

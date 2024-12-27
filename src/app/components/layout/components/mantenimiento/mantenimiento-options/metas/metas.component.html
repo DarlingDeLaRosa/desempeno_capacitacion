@@ -4,10 +4,22 @@
 
         <div style="display: flex; gap: 5px;">
 
-            <mat-form-field appearance="fill" style="flex: 2;">
-                <mat-label>Nombre</mat-label>
+            <mat-form-field style="flex:1">
+                <mat-label>Meta</mat-label>
                 <input matInput formControlName="nombre">
-            </mat-form-field>
+                
+                <mat-error *ngIf="goalsForm.get('nombre')?.hasError('notSpecific')">
+                  La meta debe ser específica y suficientemente detallada.
+                </mat-error>
+                <mat-error *ngIf="goalsForm.get('nombre')?.hasError('notMeasurable') && !goalsForm.get('nombre')?.hasError('notSpecific')">
+                  La meta debe ser medible (incluir un número o cantidad).
+                </mat-error>
+                <mat-error *ngIf="goalsForm.get('nombre')?.hasError('missingTime') && 
+                                   !goalsForm.get('nombre')?.hasError('notSpecific') &&
+                                   !goalsForm.get('nombre')?.hasError('notMeasurable')">
+                  La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).
+                </mat-error>
+              </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Medio de Verificación</mat-label>

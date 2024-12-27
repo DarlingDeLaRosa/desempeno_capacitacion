@@ -32,7 +32,6 @@ export class PlanMejoraResultadoComponent implements OnInit {
   getResultadoPlanMejore() {
     this.planmejoraService.getResultadoPlanMejora().subscribe((resp: any) => {
       this.ResultadoPlanMejoraList = resp.data;
-      console.log(this.ResultadoPlanMejoraList);
     })
   }
 
@@ -43,7 +42,6 @@ export class PlanMejoraResultadoComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('El modal fue cerrado');
     });
   }
 

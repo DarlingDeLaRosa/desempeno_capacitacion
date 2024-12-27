@@ -30,7 +30,7 @@ export class MetasComponent implements OnInit {
       metaPoa: new FormControl(''),
       isTranversal: new FormControl(true),
       valor: new FormControl('', Validators.required),
-      nombre: new FormControl('', Validators.required),
+      nombre: new FormControl('', [Validators.required,  this.smartValidator()]),
       idMedio: new FormControl('', Validators.required),
     })
   }
@@ -46,6 +46,35 @@ export class MetasComponent implements OnInit {
     this.getGoals()
     this.getGoalPOA()
     this.getVerificationMethod()
+  }
+
+  smartValidator() {
+    return (control: any) => {
+      const value = control.value || '';
+      const errors: any = {};
+
+      // Validación de referencia temporal (día, mes, año)
+      const timeRegex =
+        /(\b\d{1,2}\b\sde\s(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\sdel?\s\d{4})|((enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\sdel?\s\d{4})|(\ben\s?el?\s?\d{4})/i;;
+      if (!timeRegex.test(value)) {
+        errors['missingTime'] =
+          'La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).';
+      }
+
+      // Verificar que sea medible (incluye un número o cantidad)
+      if (!/\d/.test(value)) {
+        errors['notMeasurable'] =
+          'La meta debe ser medible (incluir un número o cantidad).';
+      }
+
+      // Validar que sea específica (mínimo 10 caracteres como ejemplo)
+      if (value.length < 20) {
+        errors['notSpecific'] =
+          'La meta debe ser específica y suficientemente detallada.';
+      }
+
+      return Object.keys(errors).length ? errors : null;
+    };
   }
 
   // Metodo para obtener todas las metas del POA
@@ -83,6 +112,7 @@ export class MetasComponent implements OnInit {
 
   // Metodo para crear las asignaciones de competencias
   postGoal() {
+    this.goalsForm.patchValue({idMeta: 0})
     this.goalService.postGoal(this.goalsForm.value)
       .subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => this.getGoals(), this.goalsForm)
@@ -111,10 +141,12 @@ export class MetasComponent implements OnInit {
   // Metodo asignar valores y habilitar la edición de un registro
   setValueToEdit(goal: GoalGetI) {
     this.goalsForm.reset(goal)
+    this.goalsForm.patchValue({ idMedio: goal.medioVerificacionObj.idMedio })
   }
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
+    this.goalsForm.patchValue({isTranversal: true})
     this.appHelpers.saveChanges(() => this.postGoal(), () => this.putGoal(), this.goalsForm.value.idMeta, this.goalsForm)
   }
 

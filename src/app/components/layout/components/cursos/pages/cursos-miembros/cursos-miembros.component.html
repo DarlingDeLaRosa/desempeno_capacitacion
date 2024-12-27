@@ -2,55 +2,52 @@
 
   <div style="margin: 10px;" class="title">
     <div>
-      <h1 >Cursos Miembros del Equipo</h1>
+      <h1>Cursos Miembros del Equipo</h1>
     </div>
   </div>
-    <div>
-      <button class="backButton" mat-stroked-button
-      [routerLink]="['../']"><mat-icon class="backIcon">arrow_back
+  <div>
+    <button class="backButton" mat-stroked-button [routerLink]="['../']"><mat-icon class="backIcon">arrow_back
       </mat-icon>Publicaciones de Cursos</button>
-    </div>
+  </div>
 </div>
 
-<ng-container *ngFor="let hijo of hijosList">
+<div *ngFor="let hijo of hijosList">
 
-
-  <h2 style="margin: 10px;" >{{hijo.nombre}} {{hijo.apellidos}}</h2>
-
-  <div class="table-container">
+  <div class="table-container" *ngIf="hijo.cursosPendientes.length > 0 ">
+  
+    <h2 style="margin: 10px;">{{hijo.nombre}} {{hijo.apellidos}}</h2>
     <table>
-        <thead class="headerTable">
-            <tr class="headerRow">
-                <th class="headerCell">Curso</th>
-                <th class="headerCell">Fecha Inicio</th>
-                <th class="headerCell">Fecha Fin</th>
-                <th class="headerCell">Final Inscripcion</th>
-                <th class="headerCell" style="width: 5%; padding-right: 15px;">
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="dataRow" *ngFor="let curso of hijo.cursosPendientes">
-                <td class="dataIndiCell">{{curso.nombre || null}}</td>
-                <td class="dataIndiCell">{{curso.fechaInicio | date}}</td>
-                <td class="dataIndiCell">{{curso.fechaFin| date}}</td>
-                <td class="dataIndiCell">{{curso.fechaFinInscripcion|date}}</td>
-                <td class="dataIndiCell">
-                  <mat-icon  class="removeIcon"
-                  (click)="deleteInscripcion(curso.inscripcionesObj[0].idInscripcion)">logout</mat-icon></td>
-            </tr>
-              <tr *ngIf="hijo.cursosPendientes.length === 0">
-              <td colspan="12">
-                <h5 class="no-record">No hay datos Registrados</h5>
-              </td>
-            </tr>
-        </tbody>
+      <thead class="headerTable">
+        <tr class="headerRow">
+          <th class="headerCell">Curso</th>
+          <th class="headerCell">Fecha Inicio</th>
+          <th class="headerCell">Fecha Fin</th>
+          <th class="headerCell">Final Inscripcion</th>
+          <th class="headerCell" style="width: 5%; padding-right: 15px;">
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="dataRow" *ngFor="let curso of hijo.cursosPendientes">
+          <td class="dataIndiCell">{{curso.nombre || null}}</td>
+          <td class="dataIndiCell">{{curso.fechaInicio | date}}</td>
+          <td class="dataIndiCell">{{curso.fechaFin| date}}</td>
+          <td class="dataIndiCell">{{curso.fechaFinInscripcion|date}}</td>
+          <td class="dataIndiCell">
+            <mat-icon class="removeIcon"
+              (click)="deleteInscripcion(curso.inscripcionesObj[0].idInscripcion)">logout</mat-icon>
+          </td>
+        </tr>
+        <tr *ngIf="hijo.cursosPendientes.length === 0">
+          <td colspan="12">
+            <h5 class="no-record">No hay datos Registrados</h5>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
+</div>
 
-</ng-container>
-
-
-
-
-
+<div class="empty-list" *ngIf="appHelpers.pendingCurse(hijosList)">
+  <img src="nodata.jpg" alt="No courses available">
+</div>

@@ -44,7 +44,7 @@ export class ListadoDocumentoComponent implements OnInit{
       else this.documentosList = []
     })
   }
-  
+
   postFileAcuerdo(formdata:any){
     this.agreementservice.postFileAcuerdo(formdata).subscribe((resp)=>{
       this.SnackBar.snackbarLouder(true)
@@ -58,8 +58,6 @@ export class ListadoDocumentoComponent implements OnInit{
     if (fileInput.files && fileInput.files.length > 0) {
       this.selectedFile = fileInput.files[0];
       this.selectedFileName = this.selectedFile.name;
-      console.log(this.selectedFile);
-
     }
   }
   async deleteDocument(id: number) {
@@ -91,10 +89,6 @@ export class ListadoDocumentoComponent implements OnInit{
       formData.append('IdAcuerdo', this.acuerdo.idAcuerdo.toString());
     this.postFileAcuerdo(formData);
     }
-    // Crear el FormData y agregar el archivo y la otra propiedad
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
   }
 
   cerrar(): void {

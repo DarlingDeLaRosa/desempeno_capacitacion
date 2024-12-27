@@ -1,4 +1,4 @@
-mat-sidenav-container{
+mat-sidenav-container {
     background-color: #edf2fa;
 }
 
@@ -18,16 +18,19 @@ mat-sidenav {
     box-sizing: border-box;
 }
 
-.routerOuletContainer{
+.routerOuletContainer {
     margin-top: 1vh;
-    min-height: 81vh;
+    height: 85vh;
+    overflow-y: auto;
     border-radius: 15px;
     background-color: #fff;
     padding: 20px;
+    box-sizing: border-box;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
 }
 
-.logosideMenuContainer, .ConfigsideMenuContainer {
+.logosideMenuContainer,
+.ConfigsideMenuContainer {
     height: 9vh;
     display: grid;
     cursor: pointer;
@@ -38,7 +41,7 @@ mat-sidenav {
     box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
 }
 
-.ConfigsideMenuContainer{
+.ConfigsideMenuContainer {
     height: 5vh;
     margin: 9px 0;
 }
@@ -135,15 +138,34 @@ mat-sidenav {
     font-family: 'Montserrat', sans-serif;
 }
 
-.active, .activeOut {
+.active,
+.activeOut {
     background-color: #49aa42;
 }
 
-.activeOut{
+.activeOut {
     border-radius: 15px;
     height: 100%;
 }
 
 .btnMenuContainer {
     position: relative;
+}
+
+::ng-deep .routerOuletContainer::-webkit-scrollbar {
+    width: 12px;
+}
+
+::ng-deep .routerOuletContainer::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+::ng-deep .routerOuletContainer::-webkit-scrollbar-thumb {
+    background-color: #004b8d;
+    border-radius: 15px;
+    border-left: 8px solid #ffffff;
+}
+
+::ng-deep .routerOuletContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #003366;
 }

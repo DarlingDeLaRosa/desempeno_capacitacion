@@ -33,3 +33,7 @@ export interface typeAgreementI {
     puntuacion: number
 }
 
+export interface durationAgreementI {
+    id: number,
+    duracion: string
+}

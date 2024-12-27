@@ -44,7 +44,7 @@ export class CursosMantenimientoComponent implements OnInit {
       idModalidad: new FormControl(''),
       costoPersona: new FormControl(0),
       costoTotal: new FormControl(0),
-      idEstado: new FormControl(null),
+      idEstado: new FormControl(0),
       link: new FormControl(''),
       periodoId: new FormControl(''),
     })
@@ -85,25 +85,24 @@ export class CursosMantenimientoComponent implements OnInit {
         }
       })
   }
-  
+
   // Metodo para obtener todos los proveedores por nombre
   getSuppliersByRsFilter() {
-    const suplidorValue = this.coursesForm.value.suplidor;
-    if (suplidorValue && suplidorValue.length >= 3) {
-      this.getSuppliersByRs(suplidorValue)
+    if (this.coursesForm.value.suplidor&& this.coursesForm.value.suplidor.length >= 3) {
+      this.getSuppliersByRs(this.coursesForm.value.suplidor)
     } else {
       this.suppliersRs = [];
     }
   }
 
-  // Metodo para obtener todos los proveedores 
+  // Metodo para obtener todos los proveedores
   getSuppliersByRs( rs: any = '') {
     this.intranetService.findProveedorByRS(rs)
     .subscribe((res: any) => {
       this.suppliersRs = res.data;
     });
   }
-  
+
   // Metodo para completar el campo de RNC en el formulario
   setValueRs(suplier: SuppliersI) {
     this.coursesForm.patchValue({ rnc: suplier.rnc })
@@ -129,8 +128,6 @@ export class CursosMantenimientoComponent implements OnInit {
   getCourses() {
     this.coursesService.getCourses(this.page, 10)
       .subscribe((res: any) => {
-        console.log(res);
-        
         this.courses = res.data;
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }

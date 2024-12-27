@@ -65,8 +65,6 @@ export class ProtocolosComponent implements OnInit {
     this.protocolService.getProtocols(this.page, 10)
       .subscribe((res: any) => {
         this.protocols = res.data;
-        console.log(res);
-
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }
       })
@@ -123,9 +121,12 @@ export class ProtocolosComponent implements OnInit {
 
   // Metodo asignar valores y habilitar la edición de un registro
   setValueToEdit(protocol: ProtocolI) {
-    this.protocolForm.reset(protocol)
-    this.snackBar.snackbarWarning('El documento a subir debe ser seleccionado nueva vez.', 4000)
-    
+    this.protocolForm.patchValue({
+      idProtocolo: protocol.idProtocolo,
+      idTipoProtocolo: protocol.tipoProtocoloObj.idTipoProtocolo
+    })
+    this.snackBar.snackbarWarning('El documento a subir debe ser seleccionado nueva vez.', 5000)
+
   }
 
   // Metodo para manejar las funciones de editar y crear con el mismo onSubmit del formulario

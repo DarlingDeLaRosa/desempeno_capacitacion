@@ -27,6 +27,9 @@ export class PeriodsProcessServices {
     public getPeriodProcesses(page: number = 1, itemPerPage: number = 1000) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/PeriodoAcuerdo?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
     }
+    public getPeriodProcessesActive() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/PeriodoAcuerdo/activo`, this.header));
+    }
 
     public postPeriodProcess(periodProcess: periodProcessI) {
         return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/PeriodoAcuerdo`, periodProcess, this.header))
@@ -41,8 +44,8 @@ export class PeriodsProcessServices {
     }
 
     //endpoint tipos de procesos
-    public getTypeProcess() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/tipos-procesos`, this.header));
+    public getTypeProcess(agreement: boolean| string = ''  ) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/tipos-procesos?acuerdo=${agreement}`, this.header));
     }
 
 }

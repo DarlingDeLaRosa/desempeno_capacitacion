@@ -89,14 +89,12 @@ export class PlanMejoraFormularioComponent implements OnInit {
     if (this.idColaborador) {
       this.intranetService.getPeopleById(this.idColaborador).subscribe((resp: any) => {
         this.collaborator = resp.data;
-        console.log(this.collaborator);
       })
     }
   }
 
 
   onSelectCourseOrWorkshop(event: any): void {
-    console.log(event);
     const selectedId = event.value; // ID del curso o taller seleccionado
     const selected = this.categoriesRecommenList.find(item => item.id === selectedId);
 
@@ -104,7 +102,6 @@ export class PlanMejoraFormularioComponent implements OnInit {
     this.recommendations = selected
       ? selected.planMejoraRecomendaciones.map(recommendation => recommendation.nombre)
       : [];
-    console.log(this.recommendations);
 
     // Configurar la lista filtrada
     this.filteredRecommendations = this.recommenForm.get('que')!.valueChanges.pipe(
@@ -156,7 +153,6 @@ export class PlanMejoraFormularioComponent implements OnInit {
 
     this.planMejoraService.getPlanMejoraByIdCollabo(this.idColaborador!).subscribe((resp: any) => {
       this.planMejoraObtenido = resp.data;
-      console.log(this.planMejoraObtenido);
 
       this.statusCode == resp.statusCode
       if (resp.statusCode == 200) {
@@ -200,7 +196,6 @@ export class PlanMejoraFormularioComponent implements OnInit {
   getCategoriesRecommend() {
     this.planMejoraService.getCategoriesRecommen().subscribe((resp: any) => {
       this.categoriesRecommenList = resp.data;
-      console.log(this.categoriesRecommenList);
     })
   }
   //metodo para obtener las modalidades
@@ -243,7 +238,6 @@ export class PlanMejoraFormularioComponent implements OnInit {
       comienzoId: detalle.comienzoId,
     });
     this.recommenForm.reset();
-    console.log(this.recommendDetails);
   }
 
   //este metodo agrega los datos que contiene el formulario al arrego de detalle
@@ -273,7 +267,6 @@ export class PlanMejoraFormularioComponent implements OnInit {
     const trimestreSeleccionado = this.trimestresList.find(m => m.id === detalle.comienzoId);
 
     if (this.indexEditando !== null) {
-      console.log(this.indexEditando);
       this.recommendDetails[this.indexEditando].que.nombre = this.recommenForm.get('que')?.value || '';
       this.recommendDetails[this.indexEditando].idCategoriaRecomendacion = this.recommenForm.get('idCategoriaRecomendacion')?.value;
       this.recommendDetails[this.indexEditando].como = this.recommenForm.get('como')?.value || '';
@@ -328,7 +321,6 @@ export class PlanMejoraFormularioComponent implements OnInit {
 
 //Metodo para editar un plan de mejora
   putPlanMejora(planMejora:PlanMejoraI){
-    console.log(planMejora);
 
     this.planMejoraService.putPlanMejora(planMejora).subscribe((resp: any) => {
       this.SnackBar.snackbarLouder(true)
@@ -357,13 +349,10 @@ export class PlanMejoraFormularioComponent implements OnInit {
       })),
     }
 
-    console.log('Plan enviado',planMejora);
 
     if (this.idPlanMejora) {
-      console.log('editando');
       this.putPlanMejora(planMejora)
     }else{
-      console.log('agregando');
       this.postPlanMejora(planMejora)
     }
 

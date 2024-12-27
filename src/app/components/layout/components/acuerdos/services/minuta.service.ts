@@ -28,11 +28,12 @@ export class MinutaService {
     this.usuario = systemInformation.localUser;
   }
 
-  //peticion para traer todos los acuerdos
-  // public getAgreement() {
-  //   return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo`, this.header));
-  // }
+  //peticion para traer todos las minutas
+  public getMinuta(term:string | null) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?Term=${term}`, this.header));
+  }
 
+ //peticion para hacer el post de una minuta
   public postMinuta(Minuta: MinutaI) {
     return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Minutas`, Minuta, this.header));
   }

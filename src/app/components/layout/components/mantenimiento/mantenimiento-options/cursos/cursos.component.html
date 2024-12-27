@@ -86,7 +86,7 @@
 
         <div style="display: flex; gap: 5px;">
 
-            <mat-form-field appearance="fill" [style]=" coursesForm.value.interno ? 'flex: 1': 'width: 300px' ">
+            <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Modalidad</mat-label>
                 <mat-select formControlName="idModalidad" disableRipple>
                     <ng-container *ngIf="modalities && modalities.length; else noModality">
@@ -100,7 +100,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="fill" style="width: 25%;" *ngIf="coursesForm.value.interno">
+            <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Estado</mat-label>
                 <mat-select formControlName="idEstado" disableRipple>
                     <ng-container *ngIf="states && states.length; else noState">
@@ -114,7 +114,7 @@
                 </mat-select>
             </mat-form-field>
 
-            <mat-form-field appearance="fill" style="width: 25%;">
+            <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Costo Total</mat-label>
                 <input matInput type="number" formControlName="costoTotal">
             </mat-form-field>

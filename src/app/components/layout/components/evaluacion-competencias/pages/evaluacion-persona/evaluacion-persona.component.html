@@ -19,7 +19,6 @@
     <span>
         <h3>Periodo a Evaluar</h3>
         <h4>{{this.systemInformationSevice.activePeriod().nombre}}</h4>
-        <!-- <h4>{{systemInformationSevice.getMonths(period.fechaInicio.getMonth())}} - {{systemInformationSevice.getMonths(period.fechaFin.getMonth())}} {{period.fechaFin.getFullYear()}}</h4> -->
     </span>
     <span>
         <h3>Grupo Ocupacional</h3>
@@ -77,6 +76,5 @@
 
 <div *ngIf="loading">
     <h3 style="margin: 15px 0 15px 0 ;">Competencias</h3>
-    <app-loader-box></app-loader-box>
     <app-loader-box></app-loader-box>
 </div>

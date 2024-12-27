@@ -1,6 +1,7 @@
 import { GeneralI } from '../../../../../helpers/intranet/intranet.interface';
 import { PeriodoI } from '../../../../interfaces/generalInteerfaces';
 import { CollaboratorsGetI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
+import { periodProcessGetI, periodProcessI } from '../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
 
 export interface AcuerdoI {
   idAcuerdo: number,
@@ -36,6 +37,7 @@ export interface AcuerdoDetalle {
   metaObj: Meta;
   calificacion: number;
   documentosObj: Documento
+  observaciones:string
 }
 
 export interface Meta {
@@ -84,6 +86,8 @@ export interface MinutaI {
   conclusion: string;
   agendaReunion: string;
   periodoAcuerdoId: number;
+  supervisor?: CollaboratorsGetI;
+  periodoAcuerdo?: periodProcessGetI;
   supervisorId: number;
   minutaAsistencia: MinutaAsistenciaI[];
 }

@@ -4,6 +4,7 @@ import { SnackBars } from './snackBars.service';
 import { FormGroup } from '@angular/forms';
 import { LoaderService } from '../../../helpers/service/loader.service';
 import { DepartmentI, DivisionI, DirectionI, ViceRectorate } from '../components/mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
+import { AcuerdoI } from '../components/acuerdos/interfaces/acuerdo.interface';
 
 @Injectable({ providedIn: "root" })
 
@@ -59,5 +60,13 @@ export class HerlperService {
         return [division, department, direction, vicerectorate].find(
             unit => unit.nombre !== "NO ASIGNADO" && unit.nombre !== "N/A"
         );
+    }
+
+    ableToMakeMinuta(agreements: AcuerdoI[]): boolean {
+        return agreements.every((agreementPerson: AcuerdoI) => agreementPerson.flujoObj.idFlujo === 4);
+    }
+
+    pendingCurse(listCourse: any[]): boolean {
+        return listCourse.every((course: any) => course.cursosPendientes.length == 0);
     }
 }

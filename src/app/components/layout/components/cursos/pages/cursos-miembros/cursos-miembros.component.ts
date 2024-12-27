@@ -10,43 +10,42 @@ import { SnackBars } from '../../../../services/snackBars.service';
 @Component({
   selector: 'app-cursos-miembros',
   standalone: true,
-  imports: [MaterialComponents,ClassImports],
+  imports: [MaterialComponents, ClassImports],
   templateUrl: './cursos-miembros.component.html',
   styleUrl: './cursos-miembros.component.css'
 })
-export class CursosMiembrosComponent implements OnInit{
+export class CursosMiembrosComponent implements OnInit {
 
-  hijosList!: any[] ;
-  isLoading:boolean = true;
+  hijosList!: any[];
+  isLoading: boolean = true;
 
   constructor
-  (
-    private cursosService: CoursesServices,
-    public snackBar: SnackBars,
-    private appHelpers: HerlperService,
-  ) {}
+    (
+      private cursosService: CoursesServices,
+      public snackBar: SnackBars,
+      public appHelpers: HerlperService,
+    ) { }
 
   ngOnInit(): void {
     this.getHijosColaborador();
   }
 
-  getHijosColaborador(){
+  getHijosColaborador() {
     this.isLoading = true;
-    this.cursosService.getHijosColaborador().subscribe((resp:any)=>{
+    this.cursosService.getHijosColaborador().subscribe((resp: any) => {
       this.hijosList = resp.data.hijos;
+      console.log(this.hijosList);
+      
       this.isLoading = false;
     })
   }
 
-async deleteInscripcion(id: number) {
-  let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
-  if (removeDecision) {
-    this.snackBar.snackbarLouder(true)
-    this.cursosService.deleteInscripcion(id)
-      .subscribe((res: any) => { this.appHelpers.handleResponse(res, () => this.getHijosColaborador()) })
+  async deleteInscripcion(id: number) {
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
+    if (removeDecision) {
+      this.snackBar.snackbarLouder(true)
+      this.cursosService.deleteInscripcion(id)
+        .subscribe((res: any) => { this.appHelpers.handleResponse(res, () => this.getHijosColaborador()) })
+    }
   }
-}
-
-
-
 }
