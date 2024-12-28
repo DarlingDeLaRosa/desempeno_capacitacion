@@ -36,6 +36,8 @@ import { MinutaComponent } from './components/layout/components/acuerdos/pages/m
 import { LoginClassGuard } from './guards/login-class.guard';
 import { LayoutClassGuard } from './guards/layout.guard';
 import { MinutaListComponent } from './components/layout/components/acuerdos/pages/minuta-list/minuta-list.component';
+import { VerAcuerdoComponent } from './components/layout/components/acuerdos/modals/ver-acuerdo/ver-acuerdo.component';
+import { VerComportamientosProbatoriosComponent } from './components/layout/components/acuerdos/pages/ver-comportamientos-probatorios/ver-comportamientos-probatorios.component';
 
 export const routes: Routes = [
   {
@@ -71,6 +73,16 @@ export const routes: Routes = [
           {
             path: 'minutaLista',
             component: MinutaListComponent,
+            outlet: 'acuerdos'
+          },
+          {
+            path: 'ver-acuerdo/:id',
+            component: VerAcuerdoComponent,
+            outlet: 'acuerdos'
+          },
+          {
+            path: 'comportamientos/:id',
+            component: VerComportamientosProbatoriosComponent,
             outlet: 'acuerdos'
           },
           {

@@ -1,5 +1,15 @@
-<div style="margin: 10px 15px 0 15px;">
+<div class="fuctionContent">
+  <div class="title">
+    <h1>Acuerdo de Desempeño</h1>
+  </div>
+  <div>
+    <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+        class="backIcon">arrow_back
+      </mat-icon>Acuerdos de Desempeño</button>
+  </div>
+</div>
 
+<div>
   <ng-container *ngIf="!agreement">
     <div class="container-loaderMother" style="margin: 20px;">
       <div class="loaderMother"></div>
@@ -8,28 +18,30 @@
   </ng-container>
 
 
-  <div style="display: flex; justify-content: space-between;" *ngIf="agreement">
-    <h2>Acuerdo de desempeño.</h2>
+  <div style="display: flex; justify-content: space-between; margin-bottom: 15px;" *ngIf="agreement">
+    <div style="display: flex; gap: 5px;"
+      *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3">
 
-    <div style="display: flex; gap: 5px; ">
-
-      <div style="display: flex; gap: 5px;"
-        *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3">
-
-        <button type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
-        <button type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
-      </div>
-
-      <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" style="margin-left: 50px;" matTooltip="Imprimir" class="btnNavegar" printSectionId="AD"
-        [useExistingCss]="true" ngxPrint ><mat-icon style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
-
+      <button type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
+      <button type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
     </div>
+
+    <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" style="margin-left: 50px;"
+      matTooltip="Imprimir" class="btnNavegar" printSectionId="AD" [useExistingCss]="true" ngxPrint><mat-icon
+        style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
   </div>
 
-  <div id="AD">
-    <div class="container-verAcuerdo" *ngIf="agreement">
+  <div id="AD"  *ngIf="agreement">
+    <div class="logo-container" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 4">
+      <img src="images.png" alt="ISFODOSU Logo" class="logo">
+      <div class="title-container">
+        <h1 class="title2">ISFODOSU</h1>
+        <p class="subtitle2">Instituto Superior de Formación Docente Salome Ureña</p>
+      </div>
+    </div>
+    <div class="container-verAcuerdo">
 
-      <div class="header">
+      <div class="header" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
         <div class="logo-container">
           <img src="images.png" alt="ISFODOSU Logo" class="logo">
           <div class="title-container">
@@ -39,9 +51,17 @@
         </div>
 
         <div class="group-info">
-          <h3 class="group-title">Grupo Ocupacional</h3>
-          <p>{{agreement.colaboradorObj.grupoObj.nombre }}</p>
+          <div style=" border-bottom: 1px solid black; width: 100%; box-sizing: border-box;"></div>
+          <div></div>
         </div>
+      </div>
+      
+      <div style="padding: 5px; border-bottom: 1px solid black;">
+        <p style="text-align: center;"> <strong>SUB-SISTEMA DE EVALUACIÓN DEL DESEMPEÑO LABORAL</strong></p>
+      </div>
+
+      <div style="padding: 5px; border-bottom: 1px solid black;">
+        <p style="text-align: center;"> <strong>Formulario para Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales  I, II, III y IV</strong></p>
       </div>
 
       <div style="padding: 5px; border-bottom: 1px solid black;">
@@ -68,10 +88,11 @@
         </div>
       </div>
 
-      <div class="info-row" >
+      <div class="info-row">
         <p style="padding: 10px 5px 5px 5px;"><strong>NOMBRE: </strong>{{agreement.colaboradorObj.nombre}}
           {{agreement.colaboradorObj.apellidos}}</p>
-        <p style="padding: 10px 5px 5px 5px;"><strong>NOMBRE: </strong> {{agreement.colaboradorObj.supervisorObj.nombre}}
+        <p style="padding: 10px 5px 5px 5px;"><strong>NOMBRE: </strong>
+          {{agreement.colaboradorObj.supervisorObj.nombre}}
           {{agreement.colaboradorObj.supervisorObj.apellidos}}</p>
       </div>
 
@@ -84,15 +105,28 @@
         </div>
       </div>
 
-      <div class="table-title">
-        <div style="grid-column: 1/5; display: flex; align-items: end; padding: 8px 8px 2px 8px;"><strong>Valor del Componente LOGRO DE METAS: {{agreement.tipoAcuerdoObj.puntuacion}} puntos</strong></div>
-        <div style="grid-column: 5/7; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0;"><strong>Evaluación de las Metas</strong></div>
+      <div class="table-title" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 4">
+        <div style="grid-column: 1/5; display: flex; align-items: end; padding: 8px 8px 2px 8px;"><strong>Valor del
+            Componente LOGRO DE METAS: {{agreement.tipoAcuerdoObj.puntuacion}} puntos</strong></div>
+        <div style="grid-column: 5/7; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0;">
+          <strong>Evaluación de las Metas</strong></div>
+      </div>
+
+      <div style="padding: 5px; border-bottom: 1px solid black;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
+        <p> <strong>Valor del Componente LOGRO DE METAS: {{agreement.tipoAcuerdoObj.puntuacion}} puntos</strong></p>
+      </div>
+
+      <div class="table-title-GOV" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
+        <div style="grid-column: 1/6; display: flex; padding: 8px 8px 2px 8px; text-align: center; background-color: #C5D9F1;"><strong>Recuerde la necesaria alineación de las Metas del Acuerdo de Desempeño laboral del directivo del área con las Metas del Plan Operativo Anual (POA) de la unidad</strong></div>
+        <div style="grid-column: 6/8; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0; background-color: #C5D9F1;">
+          <strong>Evaluación de las Metas</strong></div>
       </div>
 
       <table class="evaluation-table">
         <thead>
           <th style="width: 3%; text-align: center;">No.</th>
-          <th style="width: 37%; text-align: center;">Metas del (de la) Servidor(a)<br>(Resultados esperados de su desempeño)</th>
+          <th style="width: 20%; text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">Metas del Plan Operativo Anual -POA- de la Unidad Organizativa </th>
+          <th style="text-align: center;" [ngClass]="agreement.colaboradorObj.grupoObj.idGrupo == 5 ? 'width: 20%;' : 'width: 37%;' ">Metas del (de la) Servidor (a)</th>
           <th style="width: 10%; text-align: center;">Ponderación o Valor en puntos de las Metas</th>
           <th style="width: 20%; text-align: center;">Medios de Verificación o Evidencias de logro de cada Meta</th>
           <th style="width: 10%; text-align: center;">Calificación Otorgada</th>
@@ -101,6 +135,7 @@
         <tbody>
           <tr *ngFor="let detalle of agreement.detalles; let i = index">
             <td style="text-align: center; font-weight: 600;">{{i+1}}</td>
+            <td *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">{{detalle.metaObj.metaPoa || ''}}</td>
             <td>{{detalle.metaObj.nombre}}</td>
             <td style="text-align: center;">{{detalle.metaObj.valor}}</td>
             <td style="text-align: center;">{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
@@ -109,9 +144,10 @@
           </tr>
           <tr>
             <td></td>
+            <td  *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5"></td>
             <td style="text-align: end; font-weight: 600;">Total</td>
             <td style="text-align: center; font-weight: 600;">{{totalValor}}</td>
-            <td style="font-weight: 600; text-align: end;" >Total</td>
+            <td style="font-weight: 600; text-align: end;">Total</td>
             <td style="text-align: center; font-weight: 600;">{{totalCalificacion}}</td>
             <td></td>
           </tr>
@@ -147,7 +183,7 @@
     </div>
   </div>
 
-  <div style="display: flex; margin: 0 5px 15px 5px;"
+  <div style="display: flex; margin: 0;"
     *ngIf="agreement && systemInformation.activeRol().nombre == 'Analista' || agreement && systemInformation.activeRol().nombre == 'Encargado'  ">
     <form style="width: 100%;" [formGroup]="commentsForm" (submit)="postComment()">
       <div style="display: flex; align-items: end;">

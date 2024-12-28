@@ -78,10 +78,10 @@ export class AcuerdoDesempenioComponent implements OnInit {
   }
 
   //Metodo para abrir el modal del acuerdo estructurado
-  openModalVerAcuerdo(idAgreement: number): void {
-    const dialog = this.dialog.open(VerAcuerdoComponent, { data: { idAgreement } })
-    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
-  }
+  // openModalVerAcuerdo(idAgreement: number): void {
+  //   const dialog = this.dialog.open(VerAcuerdoComponent, { data: { idAgreement } })
+  //   dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
+  // }
 
   openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
     const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo  } })

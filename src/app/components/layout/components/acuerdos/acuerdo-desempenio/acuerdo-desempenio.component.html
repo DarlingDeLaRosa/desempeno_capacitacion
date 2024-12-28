@@ -72,14 +72,19 @@
             </button>
 
 
-            <button mat-menu-item *ngIf="acuerdo.detalles.length > 0" (click)="openModalVerAcuerdo(acuerdo.idAcuerdo)">
+            <button mat-menu-item *ngIf="acuerdo.detalles.length > 0"
+              [routerLink]="[{ outlets: { 'acuerdos': ['ver-acuerdo', acuerdo.idAcuerdo]}}]">
               <mat-icon>description</mat-icon>Ver AD
             </button>
 
+            <button mat-menu-item *ngIf="acuerdo.detalles.length > 0 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2"
+              [routerLink]="[{ outlets: { 'acuerdos': ['comportamientos', acuerdo.idAcuerdo]}}]">
+              <mat-icon>psychology</mat-icon>Ver Comportamientos
+            </button>
 
             <button mat-menu-item
               *ngIf="acuerdo.flujoObj.idFlujo == 1 &&  systemInformation.activeRol().nombre == 'Supervisor' || acuerdo.flujoObj.idFlujo == 2 &&  systemInformation.activeRol().nombre == 'Supervisor'"
-              [routerLink]="[{ outlets: { 'acuerdos': ['editar',acuerdo.colaboradorObj.idPersona]}}]"
+              [routerLink]="[{ outlets: { 'acuerdos': ['editar', acuerdo.colaboradorObj.idPersona]}}]"
               routerLinkActive="active">
               <mat-icon>edit</mat-icon>Crear/Editar AD
             </button>
@@ -130,8 +135,7 @@
 
 <div style="display: flex; justify-content: end;">
   <button
+    *ngIf="agreement && agreement.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && appHelpers.ableToMakeMinuta(agreement)"
     [routerLink]="[{ outlets: { 'acuerdos': ['minuta']}}]" routerLinkActive="active" class="saveButton">Realizar
     Minuta</button>
-    <!-- *ngIf="agreement && agreement.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && appHelpers.ableToMakeMinuta(agreement)" -->
-    
 </div>

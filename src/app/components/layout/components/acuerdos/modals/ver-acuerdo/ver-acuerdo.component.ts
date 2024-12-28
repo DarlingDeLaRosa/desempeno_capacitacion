@@ -8,6 +8,7 @@ import { HerlperService } from '../../../../services/appHelpers.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { SnackBars } from '../../../../services/snackBars.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -25,15 +26,17 @@ export class VerAcuerdoComponent implements OnInit {
   totalCalificacion: number = 0
   totalValor: number = 0
   commentsForm: FormGroup
+  idAgreement:number = 0
 
   constructor(
     public fb: FormBuilder,
     public snackBar: SnackBars,
+    private route: ActivatedRoute,
     public appHelper: HerlperService,
     private agreementservice: agreementService,
     public systemInformation: systemInformationService,
-    public dialogRef: MatDialogRef<VerAcuerdoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { idAgreement: number }
+    // public dialogRef: MatDialogRef<VerAcuerdoComponent>,
+    // @Inject(MAT_DIALOG_DATA) public data: { idAgreement: number }
   ) {
     this.commentsForm = fb.group({
       acuerdoId: 0,
@@ -42,12 +45,13 @@ export class VerAcuerdoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.idAgreement = Number(this.route.snapshot.paramMap.get('id'));
     this.getAgreementByIdCollaborator()
   }
 
   //metodo para obterner el acuerdo segun el id del collaborador
   getAgreementByIdCollaborator() {
-    this.agreementservice.getAgreementById(this.data.idAgreement).subscribe((resp: any) => {
+    this.agreementservice.getAgreementById(this.idAgreement).subscribe((resp: any) => {
       this.agreement = resp.data;
       console.log(this.agreement);
 
@@ -59,7 +63,7 @@ export class VerAcuerdoComponent implements OnInit {
     this.commentsForm.patchValue({ acuerdoId: this.agreement.idAcuerdo })
     this.agreementservice.postComment(this.commentsForm.value).subscribe((res: any) => {
       if (res.status) {
-        this.appHelper.handleResponse(res, () => this.closeModal(), this.commentsForm)
+        this.appHelper.handleResponse(res, () => {}, this.commentsForm)
       }
     })
   }
@@ -74,7 +78,7 @@ export class VerAcuerdoComponent implements OnInit {
 
       this.agreementservice.updateFlow(flowData).subscribe((res: any) => {
         if (res.status) {
-          this.appHelper.handleResponse(res, () => this.closeModal(), this.commentsForm)
+          this.appHelper.handleResponse(res, () => {}, this.commentsForm)
         }
       })
     }
@@ -86,7 +90,7 @@ export class VerAcuerdoComponent implements OnInit {
     this.totalValor = this.agreement.detalles.reduce((acc, item) => acc + (item.metaObj.valor || 0), 0);
   }
 
-  closeModal(): void {
-    this.dialogRef.close();
-  }
+  // closeModal(): void {
+  //   this.dialogRef.close();
+  // }
 }
