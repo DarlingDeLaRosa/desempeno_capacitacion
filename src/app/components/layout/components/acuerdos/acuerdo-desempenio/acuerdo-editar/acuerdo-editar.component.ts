@@ -86,7 +86,7 @@ export class AcuerdoEditarComponent implements OnInit {
 
       // Validación de referencia temporal (día, mes, año)
       const timeRegex =
-        /(\b\d{1,2}\b\sde\s(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\sdel?\s\d{4})|((enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\sdel?\s\d{4})|(\ben\s?el?\s?\d{4})/i;;
+        /(\b\d{1,2}\b\sde\s(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\sdel?\s\d{4})|((enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\sdel?\s\d{4})|(\ben\s?el?\s?\d{4})/i;
       if (!timeRegex.test(value)) {
         errors['missingTime'] =
           'La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).';
@@ -96,6 +96,17 @@ export class AcuerdoEditarComponent implements OnInit {
       if (!/\d/.test(value)) {
         errors['notMeasurable'] =
           'La meta debe ser medible (incluir un número o cantidad).';
+      } else {
+        // Verificar si existe un número aparte de los de la referencia temporal
+        const numbers = value.match(/\d+/g) || [];
+        const timeMatches = value.match(timeRegex) || [];
+        const timeNumbers = (timeMatches.join(' ').match(/\d+/g) || []);
+
+        const hasAdditionalNumber = numbers.some((num : any)=> !timeNumbers.includes(num));
+        if (!hasAdditionalNumber) {
+          errors['numberOutsideTime'] =
+            'La meta debe incluir un número que permita medir su cumplimiento, fuera de la referencia temporal.';
+        }
       }
 
       // Validar que sea específica (mínimo 10 caracteres como ejemplo)
@@ -118,7 +129,7 @@ export class AcuerdoEditarComponent implements OnInit {
   }
 
   getProtocol() {
-    this.protocolService.getProtocolById(20)
+    this.protocolService.getProtocolByTypeProtocolId(4)
       .subscribe((res: any) => {
         this.protocol = res.data;
       })
@@ -150,6 +161,8 @@ export class AcuerdoEditarComponent implements OnInit {
   getAgreementByIdCollaborator() {
     this.agreementservice.getAgreementByCollaborator(this.collaborator.idPersona, this.collaborator.grupoObj.idGrupo).subscribe((resp: any) => {
       this.agreement = resp.data;
+      console.log(this.agreement);
+
       //hace un map a los detalles del acuerdo y lo agrega al arreglo del detalle que tenemos
       this.goalDetails = this.agreement.detalles.map((detalle: any) => {
         return {
@@ -164,6 +177,8 @@ export class AcuerdoEditarComponent implements OnInit {
           isTranversal: detalle.metaObj.isTranversal,
         };
       });
+      console.log(this.goalDetails);
+
       this.isLoading = false;
       this.calcularTotalValor()
     })
@@ -182,6 +197,8 @@ export class AcuerdoEditarComponent implements OnInit {
         isTranversal: detalle.isTranversal
       }
     }));
+  console.log(acuerdoParaPost);
+
     this.agreementservice.postAgreementGoalDetails(acuerdoParaPost).subscribe((resp: any) => {
       this.SnackBar.snackbarLouder(true)
       this.appHelpers.handleResponse(resp, () => this.getAgreementByIdCollaborator())

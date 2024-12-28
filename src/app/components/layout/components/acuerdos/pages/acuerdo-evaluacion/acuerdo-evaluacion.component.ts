@@ -77,7 +77,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
   }
 
   getProtocol() {
-    this.protocolService.getProtocolById(22)
+    this.protocolService.getProtocolByTypeProtocolId(6)
       .subscribe((res: any) => {
         this.protocol = res.data;
       })

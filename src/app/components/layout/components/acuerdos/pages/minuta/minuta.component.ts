@@ -53,9 +53,9 @@ export class MinutaComponent implements OnInit {
     private protocolService: ProtocolsServices,
   ) {
     this.formMinuta = fb.group({
-      agendaReunion: new FormControl<string>('', [Validators.required]),
-      desarrollo: new FormControl<string>('', [Validators.required]),
-      conclusiones: new FormControl<string>('', [Validators.required]),
+      agendaReunion: new FormControl<string>('', [Validators.required,  this.Validator()]),
+      desarrollo: new FormControl<string>('', [Validators.required,  this.Validator()]),
+      conclusiones: new FormControl<string>('', [Validators.required,  this.Validator()]),
       tipoProcesoId: new FormControl<number>(0, [Validators.required]),
     })
   }
@@ -80,6 +80,7 @@ export class MinutaComponent implements OnInit {
       this.isLoading = false;
     })
   }
+
   //metodo para obtener el proceso
   getPeriodsProcess() {
     this.periodProcessService.getPeriodProcesses(1, 10)
@@ -87,6 +88,7 @@ export class MinutaComponent implements OnInit {
         this.periodsProcess = res.data;
       })
   }
+
   //metodo para obtener el proceso del acuerdo activo
   getPeriodsProcessActive() {
     this.periodProcessService.getPeriodProcessesActive()
@@ -96,11 +98,12 @@ export class MinutaComponent implements OnInit {
   }
 
   getProtocol() {
-    this.protocolService.getProtocolById(21)
+    this.protocolService.getProtocolByTypeProtocolId(5)
       .subscribe((res: any) => {
         this.protocol = res.data;
       })
   }
+
   openModalMotivoAusencia(id: number): void {
     const colaborador = this.colaboradoresMinuta.find((c) => c.idColaborador === id);
 
@@ -120,7 +123,19 @@ export class MinutaComponent implements OnInit {
     });
   }
 
+  Validator() {
+    return (control: any) => {
+      const value = control.value || '';
+      const errors: any = {};
+      // Validar que sea específica (mínimo 10 caracteres como ejemplo)
+      if (value.length > 40) {
+        errors['Muylargo'] =
+          'Has excedido el máximo de caracteres permitidos.';
+      }
 
+      return Object.keys(errors).length ? errors : null;
+    };
+  }
 
   //nevega a la lista de acuerdos
   NavegarAcuerdos() {
@@ -152,7 +167,7 @@ export class MinutaComponent implements OnInit {
   //Metodo para guardar minuta
   save() {
     if (this.formMinuta.invalid) {
-      this.SnackBar.snackbarError('Debes completar el formulario para guardar'); return
+      this.SnackBar.snackbarError('El formulario es inválido'); return
     }
     // if (this.formMinuta.get('tipoProcesoId')?.value == 0) {
     //   this.SnackBar.snackbarError('Debes seleccionar un proseso para guardar'); return

@@ -24,6 +24,7 @@ export interface AcuerdoI {
 export interface TipoAcuerdoI {
   idTipoAcuerdo: number,
   nombre: string
+  puntuacion: number
 }
 export interface TrackingI {
   idTraking: number,

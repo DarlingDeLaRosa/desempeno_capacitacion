@@ -240,6 +240,8 @@ export class ColaboradoresComponent implements OnInit {
 
   // Metodo para crear un colaborador y crear la asignacion de acuerdo de desempeno
   postCollaborator() {
+    let agreementType: number
+
     this.collaboratorService.postCollaborator(this.collaboratorForm.value)
       .pipe(
         switchMap((res: any) => {
@@ -252,7 +254,6 @@ export class ColaboradoresComponent implements OnInit {
         }),
         switchMap((res: any) => {
           if (res.data) {
-            let agreementType: number
             this.collaboratorForm.value.noResolucion != null ? agreementType = 2 : agreementType = 1
 
             this.asignationAgreement = {
@@ -262,7 +263,6 @@ export class ColaboradoresComponent implements OnInit {
               periodoId: this.systemInformationService.activePeriod().idPeriodo,
               acuerdosDuracionId: agreementType,
             };
-
 
             return this.asignationAgreementService.postAsignationAgreement(this.asignationAgreement);
           }
@@ -274,7 +274,7 @@ export class ColaboradoresComponent implements OnInit {
           if (res.status) {
             setTimeout(() => {
               this.snackBar.snackbarStaySuccess(
-                'Al usuario nuevo se le asignó un acuerdo de desempeño probatorio con una duración de 6 meses.',
+                `Al usuario nuevo se le asignó un acuerdo de desempeño ${agreementType == 1 ? '' : 'probatorio'} ${agreementType == 1 ? 'con duración de 12 meses' : 'con duración de 6 meses'}.`,
                 'Para realizar cambios navegue a la sección de asignación de acuerdos.'
               );
             }, 2000);

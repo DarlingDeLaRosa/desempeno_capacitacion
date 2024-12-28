@@ -44,6 +44,10 @@ export class ProtocolsServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Protocolo/${id}`, this.header));
     }
 
+    public getProtocolByTypeProtocolId(id: number) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Protocolo/tipo-protocolo/${id}`, this.header));
+    }
+
     // Medoto para obtener todos los tipos de protocolos 
 
     public getTypeProtocols() {

@@ -36,13 +36,13 @@
 
 <app-loader-box *ngIf="!collaborator && !agreement"></app-loader-box>
 
-<div style="margin-top: 15px; display: flex; justify-content: space-between;" >
+<div style="margin-top: 15px; display: flex; justify-content: space-between;">
   <h2>Metas</h2>
-  <!-- <a *ngIf="protocol.documentosObj.length > 0" target="_blank" class="btnInfo" [href]="protocol.documentosObj[0].enlace" style="padding: 8px 7px 0 7px; text-decoration: none;" ><mat-icon>question_mark</mat-icon></a> -->
+  <a *ngIf="protocol && protocol.documentosObj.length > 0" target="_blank" class="btnInfo" [href]="protocol.documentosObj[0].enlace" style="padding: 4px 3px 0 3px; text-decoration: none; height: 30px;" ><mat-icon>question_mark</mat-icon></a>
 </div>
 
 <div class="AcuerdosForms" *ngIf="collaborator">
-  <div >
+  <div>
     <form [formGroup]="goalForm" (submit)="add()">
 
       <div style="display: flex; gap: 5px">
@@ -71,16 +71,30 @@
           <mat-label>Meta</mat-label>
           <input matInput formControlName="nombre">
 
+          <!-- Error: La meta no es específica -->
           <mat-error *ngIf="goalForm.get('nombre')?.hasError('notSpecific')">
             La meta debe ser específica y suficientemente detallada.
           </mat-error>
-          <mat-error *ngIf="goalForm.get('nombre')?.hasError('notMeasurable') && !goalForm.get('nombre')?.hasError('notSpecific')">
+
+          <!-- Error: La meta no es medible -->
+          <mat-error *ngIf="goalForm.get('nombre')?.hasError('notMeasurable') && 
+                   !goalForm.get('nombre')?.hasError('notSpecific')">
             La meta debe ser medible (incluir un número o cantidad).
           </mat-error>
-          <mat-error *ngIf="goalForm.get('nombre')?.hasError('missingTime') &&
-                             !goalForm.get('nombre')?.hasError('notSpecific') &&
-                             !goalForm.get('nombre')?.hasError('notMeasurable')">
+
+          <!-- Error: Falta referencia temporal -->
+          <mat-error *ngIf="goalForm.get('nombre')?.hasError('missingTime') && 
+                   !goalForm.get('nombre')?.hasError('notSpecific') && 
+                   !goalForm.get('nombre')?.hasError('notMeasurable')">
             La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).
+          </mat-error>
+
+          <!-- Error: Falta un número adicional fuera de la referencia temporal -->
+          <mat-error *ngIf="goalForm.get('nombre')?.hasError('numberOutsideTime') && 
+                   !goalForm.get('nombre')?.hasError('notSpecific') && 
+                   !goalForm.get('nombre')?.hasError('notMeasurable') && 
+                   !goalForm.get('nombre')?.hasError('missingTime')">
+            La meta debe incluir un número que permita medir su cumplimiento, fuera de la referencia temporal.
           </mat-error>
         </mat-form-field>
 
@@ -109,7 +123,7 @@
         <ng-container *ngIf="this.indexEditando != null;">
           <button type="button" class="btnCerrar" (click)="cancelEdition()">Cancelar</button> &nbsp;
         </ng-container>
-        <button type="submit" class="saveButton" >
+        <button type="submit" class="saveButton">
           {{indexEditando != null ? 'Editar' : 'Agregar'}}</button>
         &nbsp;
       </div>
@@ -144,12 +158,12 @@
           </ng-container>
           <td class="dataIndiCell">{{goal.valor}} Puntos</td>
           <td class="dataIndiCell">
-            <ng-container *ngIf="!goal.isTranversal">
+            <ng-container *ngIf="goal.isTranversal != true">
               <mat-icon class="editIcon" (click)="cargarDetalleEnFormularioIndex(i, goal.idMeta)">edit</mat-icon>
             </ng-container>
           </td>
           <td class="dataIndiCell">
-            <ng-container *ngIf="!goal.isTranversal">
+            <ng-container *ngIf="goal.isTranversal != true">
               <mat-icon class="removeIcon" (click)="deletedetalle(i, goal.idAcuerdoDetalle)">delete
               </mat-icon>
             </ng-container>
@@ -158,17 +172,17 @@
       </tbody>
       <ng-template #noElements>
         <tbody>
-            <tr class="dataRow">
-              <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
-                <td class="dataIndiCell"></td>
-              </ng-container>
-                <td class="dataIndiCell">No hay elementos que mostrar.</td>
-                <ng-container *ngFor="let td of [1, 2, 3, 5]">
-                    <td class="dataIndiCell"></td>
-                </ng-container>
-            </tr>
+          <tr class="dataRow">
+            <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
+              <td class="dataIndiCell"></td>
+            </ng-container>
+            <td class="dataIndiCell">No hay elementos que mostrar.</td>
+            <ng-container *ngFor="let td of [1, 2, 3, 5]">
+              <td class="dataIndiCell"></td>
+            </ng-container>
+          </tr>
         </tbody>
-    </ng-template>
+      </ng-template>
       <tfoot>
         <tr class="paginatorRow" *ngIf="goalDetails.length !== 0">
           <td class="dataIndiCell"><strong>Total</strong>:</td>

@@ -7,19 +7,33 @@
             <mat-form-field style="flex:1">
                 <mat-label>Meta</mat-label>
                 <input matInput formControlName="nombre">
-                
+
+                <!-- Error: La meta no es específica -->
                 <mat-error *ngIf="goalsForm.get('nombre')?.hasError('notSpecific')">
-                  La meta debe ser específica y suficientemente detallada.
+                    La meta debe ser específica y suficientemente detallada.
                 </mat-error>
-                <mat-error *ngIf="goalsForm.get('nombre')?.hasError('notMeasurable') && !goalsForm.get('nombre')?.hasError('notSpecific')">
-                  La meta debe ser medible (incluir un número o cantidad).
+
+                <!-- Error: La meta no es medible -->
+                <mat-error *ngIf="goalsForm.get('nombre')?.hasError('notMeasurable') && 
+                         !goalsForm.get('nombre')?.hasError('notSpecific')">
+                    La meta debe ser medible (incluir un número o cantidad).
                 </mat-error>
+
+                <!-- Error: Falta referencia temporal -->
                 <mat-error *ngIf="goalsForm.get('nombre')?.hasError('missingTime') && 
-                                   !goalsForm.get('nombre')?.hasError('notSpecific') &&
-                                   !goalsForm.get('nombre')?.hasError('notMeasurable')">
-                  La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).
+                         !goalsForm.get('nombre')?.hasError('notSpecific') && 
+                         !goalsForm.get('nombre')?.hasError('notMeasurable')">
+                    La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).
                 </mat-error>
-              </mat-form-field>
+
+                <!-- Error: Falta un número adicional fuera de la referencia temporal -->
+                <mat-error *ngIf="goalsForm.get('nombre')?.hasError('numberOutsideTime') && 
+                         !goalsForm.get('nombre')?.hasError('notSpecific') && 
+                         !goalsForm.get('nombre')?.hasError('notMeasurable') && 
+                         !goalsForm.get('nombre')?.hasError('missingTime')">
+                    La meta debe incluir un número que permita medir su cumplimiento, fuera de la referencia temporal.
+                </mat-error>
+            </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Medio de Verificación</mat-label>
@@ -44,7 +58,7 @@
                 <input matInput type="number" formControlName="valor">
             </mat-form-field>
 
-            
+
             <mat-form-field appearance="fill" style="flex: 2">
                 <mat-label>Meta del plan operativo anual</mat-label>
                 <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="metaPoa"
@@ -92,12 +106,14 @@
                     <td class="dataIndiCell">{{goal.medioVerificacionObj.nombre}}</td>
                     <td class="dataIndiCell">{{goal.valor}} Puntos</td>
                     <td class="dataIndiCell">{{goal.metaPoa ? goal.metaPoa : 'No Asignado'}}</td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(goal)" class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon (click)="deleteGoal(goal.idMeta)" class="removeIcon">delete</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(goal)" class="editIcon">edit</mat-icon>
+                    </td>
+                    <td class="dataIndiCell"><mat-icon (click)="deleteGoal(goal.idMeta)"
+                            class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot *ngIf="pagination && pagination.totalPage">
-                <tr class="paginatorRow" >
+                <tr class="paginatorRow">
                     <ng-container *ngFor="let td of [1, 2, 3, 4]">
                         <td class="dataIndiCell"></td>
                     </ng-container>

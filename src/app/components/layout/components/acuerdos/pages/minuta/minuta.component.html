@@ -32,7 +32,7 @@
 
 <div style="margin-top: 15px; display: flex; justify-content: space-between;" >
   <h2 style="display: flex; align-items: end;">Participantes</h2>
-  <!-- <a *ngIf="protocol" target="_blank" class="btnInfo" [href]="protocol.documentosObj[0].enlace" style="padding: 8px 7px 0 7px; text-decoration: none;" ><mat-icon>question_mark</mat-icon></a> -->
+  <a *ngIf="protocol && protocol.documentosObj.length > 0" target="_blank" class="btnInfo" [href]="protocol.documentosObj[0].enlace" style="padding: 4px 3px 0 3px; text-decoration: none; height: 30px;" ><mat-icon>question_mark</mat-icon></a>
 </div>
 
 <div class="table-container">
@@ -87,18 +87,27 @@
     <mat-form-field style="flex: 1; ">
       <mat-label>Agenda de la reunión</mat-label>
       <textarea matInput formControlName="agendaReunion"></textarea>
+      <mat-error *ngIf="formMinuta.get('agendaReunion')?.hasError('Muylargo')">
+        La meta debe ser mas corta.
+      </mat-error>
     </mat-form-field>
   </div>
   <div style="display: flex;">
     <mat-form-field style="flex: 1;">
       <mat-label>Desarrollo de la reunión</mat-label>
       <textarea matInput formControlName="desarrollo"></textarea>
+      <mat-error *ngIf="formMinuta.get('desarrollo')?.hasError('Muylargo')">
+        La meta debe ser mas corta.
+      </mat-error>
     </mat-form-field>
   </div>
   <div style="display: flex;">
     <mat-form-field style="flex: 1;">
       <mat-label>Conclusiones del monitoreo de los acuerdos de desempeño</mat-label>
       <textarea matInput formControlName="conclusiones"></textarea>
+      <mat-error *ngIf="formMinuta.get('conclusiones')?.hasError('Muylargo')">
+        La meta debe ser mas corta.
+      </mat-error>
     </mat-form-field>
   </div>
 </form>
