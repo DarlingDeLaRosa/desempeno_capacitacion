@@ -1,1 +1,130 @@
-<p>ver-comportamientos-probatorios works!</p>
+<div class="fuctionContent">
+    <div class="title">
+        <h1>Comportamientos de Acuerdo de Desempeño Probatorio</h1>
+    </div>
+    <div>
+        <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+                class="backIcon">arrow_back
+            </mat-icon>Acuerdos de Desempeño</button>
+    </div>
+</div>
+
+<ng-container *ngIf="">
+    <div class="container-loaderMother" style="margin: 20px;">
+        <div class="loaderMother"></div>
+        <div class="loading-text">Cargando...</div>
+    </div>
+</ng-container>
+
+<div style="display: flex; justify-content: end; margin-bottom: 15px;" *ngIf="systemInformation.activeRol().nombre !== 'supervisado'">
+    <button matTooltip="Imprimir" class="btnNavegar" printSectionId="CADP" [useExistingCss]="true" ngxPrint><mat-icon
+            style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
+</div>
+
+<div class="probatorio_container" id="CADP">
+    <div class="header-container">
+        <div style="border-bottom: 1px solid black; text-align: center; padding: 5px 0;"><strong>COMPONENTE II. COMPORTAMIENTOS EN EL
+                DESEMPEÑO. VALOR 40 PUNTOS</strong></div>
+        <div style=" padding: 10px;">
+            <p>
+                <strong>Instrucciones para evaluar:</strong> Lea cuidadosamente cada aspecto seleccionado, los
+                comportamientos descritos y la escala de calificación establecida en este renglón para realizar una
+                valoración justa. Considere los incidentes críticos del (la) servidor(a) registrados para el período de
+                evaluación. La Escala de calificación siguiente se refiere a la frecuencia con que el (la) servidor(a)
+                muestra la conducta descrita en los distintos aspectos.
+            </p>
+            <ol>
+                <li><strong>Insatisfactorio</strong> El (la) Servidor (a) <strong>rara vez</strong> se comporta de la
+                    forma como se describe el factor. Debe realizar esfuerzos extraordinarios para mejorar el aspecto
+                    evaluado.</li>
+                <li><strong>Regular:</strong> El (la) Servidor (a) <strong> algunas veces</strong> se comporta de la
+                    forma como se describe el factor. Debe mejorar el aspecto evaluado.</li>
+                <li><strong> Bueno.</strong> El (la) Servidor (a) <strong>con frecuencia</strong> se comporta de la
+                    forma como se describe el factor. Debe mejorar para poder ser considerado modelo del factor
+                    evaluado.</li>
+                <li><strong>Excelente.</strong> El (la) Servidor (a) <strong>siempre</strong> se comporta de la forma
+                    como se describe el factor. Es un modelo organizacional positivo en este aspecto.</li>
+            </ol>
+
+            <p><strong>
+                    Califique cada aspecto en el espacio en blanco colocando el número pertinente de acuerdo a la escala
+                    y sume los puntos obtenidos
+                </strong></p>
+        </div>
+    </div>
+
+    <table class="evaluation-table">
+        <thead>
+            <tr>
+                <th class="headerCell"><strong>ASPECTOS A EVALUAR</strong></th>
+                <th class="headerCell"><strong>CALIFICACIÓN EN PUNTOS</strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="dataRow">
+                <td><strong>1. CUMPLIMIENTO DE NORMAS E INSTRUCCIONES</strong>. Actúa con apego y respeto a las normas,
+                    políticas, procedimientos e instrucciones de trabajo de la institución. Considere las normas
+                    relativas al código de vestimenta, entre otras disposiciones que apliquen. </td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>2. ASISTENCIA:</strong> Hace acto de presencia los días establecidos de labores en su
+                    trabajo.</td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>3. PUNTUALIDAD:</strong> Actúa con apego y respeto a las normas, políticas, procedimientos e
+                    instrucciones de trabajo de la institución. Considere las normas relativas al código de vestimenta,
+                    entre otras disposiciones que apliquen. </td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>4. ADAPTABILIDAD:</strong> Capacidad para adecuarse, insertarse e interactuar eficazmente en
+                    nuevas situaciones referidas al ambiente de trabajo, a la supervisión, a los compañeros de trabajo y
+                    con los clientes internos y externos. Modifica su conducta y muestra versatilidad en el
+                    comportamiento para adaptarse a distintos contextos y personas, de manera rápida. </td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>5. COMPROMISO:</strong> Asume como propios los objetivos de la unidad organizativa en donde
+                    labora y los de la entidad. Previene, advierte y supera obstáculos que interfieren con el logro de
+                    las metas definidas; y cumple con los deberes y responsabilidades de su cargo. </td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>6. AUTOCONTROL:</strong> Dominio de sí mismo. Mantiene controladas las propias emociones y
+                    evita reacciones negativas ante provocaciones, oposición u hostilidad de otros, o cuando se trabaja
+                    en condiciones de estrés. Muestra resistencia a condiciones constante de estrés por la demanda de
+                    servicios o de trabajo.</td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>7. CONFIABILIDAD- INTEGRIDAD:</strong> Establece relaciones basadas en el respeto mutuo y la
+                    confianza. Muestra coherencia entre acciones, conducta y palabras. Asume la responsabilidad de los
+                    propios errores. Actúa con honestidad, se desempeña de acuerdo a las normas éticas establecidas.
+                </td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>8. COLABORACION:</strong> Trabaja en colaboración con otras personas de formación
+                    multidisciplinaria, con otras áreas de la organización u organismos externos con los que deba
+                    interactuar para lograr los objetivos de su área y de la institución. Muestra actitudes positivas
+                    respecto de los demás y comprensión interpersonal. </td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>9. PERSEVERANCIA:</strong> Se muestra firme y constante en la realización de acciones y
+                    emprendimientos de manera estable o continua hasta lograr el objetivo. </td>
+                <td></td>
+            </tr>
+            <tr class="dataRow">
+                <td><strong>10. RELACIONES INTERPERSONALES:</strong> Establece comunicación efectiva con sus superiores,
+                    compañeros(as) de trabajo, usuarios(as) de los servicios y visitantes. Interactúa con terceros de
+                    manera positiva, se comunica con respeto y cortesía y establece lazos con otros mediante la
+                    comunicación efectiva.</td>
+                <td></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,24 @@
+.probatorio_container {
+    display: grid;
+    place-items: center;
+}
+
+.header-container {
+    border: 1px solid black;
+    border-bottom: none;
+    box-sizing: border-box;
+    width: 80%;
+}
+
+.evaluation-table {
+    width: 80%;
+    border-collapse: collapse;
+    border-radius: 0;
+    background-color: white;
+}
+
+.evaluation-table th, 
+.evaluation-table td {
+  border: 1px solid black; 
+  padding: 8px; 
+}

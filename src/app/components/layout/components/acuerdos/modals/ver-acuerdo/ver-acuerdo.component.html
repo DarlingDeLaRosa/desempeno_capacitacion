@@ -20,13 +20,13 @@
 
   <div style="display: flex; justify-content: space-between; margin-bottom: 15px;" *ngIf="agreement">
     <div style="display: flex; gap: 5px;"
-      *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3">
+      >
 
-      <button type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
-      <button type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
+      <button *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3" type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
+      <button *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3" type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
     </div>
 
-    <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" style="margin-left: 50px;"
+    <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" 
       matTooltip="Imprimir" class="btnNavegar" printSectionId="AD" [useExistingCss]="true" ngxPrint><mat-icon
         style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
   </div>
