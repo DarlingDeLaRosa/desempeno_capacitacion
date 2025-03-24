@@ -19,17 +19,17 @@ export class CollaboratorServices {
         private appHelpers: HerlperService,
         private systemInformation: systemInformationService,
     ) {
-        this.token = this.systemInformation.getToken;
+        this.token = JSON.parse(sessionStorage.getItem("userToken")!);
         this.systemId = this.systemInformation.getSistema;
         this.baseURL = this.systemInformation.getIntranetURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
         this.header = { headers: this.headers };
     }
 
-    public getCollaborators(page: number = 1, itemPerPage: number = 1000) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/User/getusuariossistema/${this.systemId}?currentPage=${page}&totalItem=${itemPerPage}`, this.header));
+    public getCollaborators(page: number = 1, itemPerPage: number = 1000, name: string = '') {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/User/getusuariossistema/${this.systemId}?filter=${name}&currentPage=${page}&totalItem=${itemPerPage}`, this.header));
     }
-    
+
     public postCollaborator( collaborator : CollaboratorsI) {
         return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/User`, collaborator, this.header))
     }
@@ -45,8 +45,8 @@ export class CollaboratorServices {
     public getCollaboratorByDNI(identification: string) { //page: number = 1, itemPerPage: number = 1000
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/User/getusuario_by_cedula/${this.systemId}/${identification}`, this.header));
     }
-    
-    // Get de personas 
+
+    // Get de personas
     public getPersonByID(id: number) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, this.header));
     }
@@ -54,4 +54,4 @@ export class CollaboratorServices {
     public getPersonFilterByName(name: string) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/filter/${name}`, this.header));
     }
-}   
+}

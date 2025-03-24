@@ -27,7 +27,6 @@ export class VerComportamientosProbatoriosComponent implements OnInit {
   getBehaviorsTested() {
     this.agreementservice.getBehaviorTest()
       .subscribe((res: any) => {
-        console.log(res);
       })
   }
 }

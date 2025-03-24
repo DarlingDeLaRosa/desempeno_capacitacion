@@ -1,5 +1,5 @@
 import { EMPTY, of, switchMap } from 'rxjs';
-import { Component, OnInit, effect } from '@angular/core';
+import { Component, OnInit, computed, effect } from '@angular/core';
 import { SnackBars } from '../../../../services/snackBars.service';
 import { PeriodI } from '../periodos/interfaces/periodo.interface';
 import { CollaboratorServices } from './services/colaboradores.service';
@@ -39,18 +39,19 @@ export class ColaboradoresComponent implements OnInit {
       cedula: new FormControl('', [Validators.required, Validators.maxLength(11)]),
       nombre: new FormControl('', Validators.required),
       sexo: new FormControl('', Validators.required),
-      edad: new FormControl('', Validators.required),
+      // edad: new FormControl('', Validators.required),
       supervisor: new FormControl('', Validators.required),
       apellidos: new FormControl('', Validators.required),
       usuario: new FormControl('', Validators.required),
       idRol: new FormControl('', Validators.required),
       carreraAdministrativa: new FormControl(false, Validators.required),
       fechaIngreso: new FormControl('', Validators.required),
-      idCargo: new FormControl(0, Validators.required),
+      fechaNacimiento: new FormControl('', Validators.required),
       idGrupo: new FormControl(0, Validators.required),
-      idDepartamento: new FormControl(null),
-      idDireccion: new FormControl(null),
+      idCargo: new FormControl('', Validators.required),
       idViceRectoria: new FormControl(null),
+      idDireccion: new FormControl(null),
+      idDepartamento: new FormControl(null),
       idDivision: new FormControl(null),
       idRecinto: new FormControl('', Validators.required),
       idCargoDesempenia: new FormControl(null),
@@ -60,6 +61,10 @@ export class ColaboradoresComponent implements OnInit {
       idSupervisor: new FormControl('', Validators.required),
       idSistema: new FormControl('', Validators.required),
       diferentPosition: new FormControl(false)
+    })
+
+    this.filterForm = fb.group({
+      filter: new FormControl('')
     })
   }
 
@@ -80,40 +85,48 @@ export class ColaboradoresComponent implements OnInit {
   directions!: DirectionI[]
   departments!: DepartmentI[]
   collaboratorForm: FormGroup
+  filterForm: FormGroup
   viceRectorates!: ViceRectorate[]
   ocupationalGroups!: OcupationalGroupI[]
   asignationAgreement!: asignationAgreementI
 
   ngOnInit(): void {
     this.getRoles()
-    this.getDivision()
-    this.getPositions()
+    // this.getDivision()
+    // this.getPositions()
     this.getLocations()
-    this.getDirections()
-    this.getDepartments()
+    // this.getDirections()
+    // this.getDepartments()
     this.getCollaborators()
-    this.getViceRectorates()
+    // this.getViceRectorates()
     this.getOcupationalGroup()
   }
 
   //Metodo para mostrar el nombre en el input
   displaySUPName(sup: CollaboratorsGetI): string {
-    console.log(sup);
-
     return sup ? `${sup.nombre} ${sup.apellidos}` : '';
   }
+
+  displayName(name: any): string {
+    return name ? `${name.nombre}` : '';
+  }
+
+  readonly dateFormatString = computed(() => {
+      return 'DD/MM/YYYY';
+  });
+
 
   // Metodo para ocultar unidades organiativas dependiendo de la necesaria
   hidingUnitOrg() {
     const { idViceRectoria, idDireccion, idDepartamento, idDivision } = this.collaboratorForm.value
 
-    if (idViceRectoria > 0) this.dir = this.dep = this.div = false
+    if (idDivision && idDivision.id > 0) this.vic = this.dep = this.dir = false
 
-    else if (idDireccion > 0) this.vic = this.dep = this.div = false
+    else if (idDepartamento && idDepartamento.idDepartamento > 0) this.vic = this.dir = this.div = false
 
-    else if (idDepartamento > 0) this.vic = this.dir = this.div = false
-
-    else if (idDivision > 0) this.vic = this.dep = this.dir = false
+    else if (idDireccion && idDireccion.idDireccion > 0) this.vic = this.dep = this.div = false
+ 
+    else if (idViceRectoria && idViceRectoria.idViceRectoria > 0) this.dir = this.dep = this.div = false
 
     else this.vic = this.dep = this.div = this.dir = true
   }
@@ -160,12 +173,12 @@ export class ColaboradoresComponent implements OnInit {
   }
 
   // Metodo para obtener todos los cargos
-  getPositions() {
-    this.intranetService.getPositions()
-      .subscribe((res: any) => {
-        this.positions = res.data;
-      })
-  }
+  // getPositions() {
+  //   this.intranetService.getPositions()
+  //     .subscribe((res: any) => {
+  //       this.positions = res.data;
+  //     })
+  // }
 
   // Metodo para obtener todos los recintos
   getLocations() {
@@ -176,44 +189,48 @@ export class ColaboradoresComponent implements OnInit {
   }
 
   // Metodo para obtener todos los vicerrectorias
-  getViceRectorates() {
-    this.intranetService.getViceRectorates()
-      .subscribe((res: any) => {
-        this.viceRectorates = res.data;
-      })
-  }
+  // getViceRectorates() {
+  //   this.intranetService.getViceRectorates()
+  //     .subscribe((res: any) => {
+  //       this.viceRectorates = res.data;
+  //     })
+  // }
 
   // Metodo para obtener todos los direcciones
-  getDirections() {
-    this.intranetService.getDirections()
-      .subscribe((res: any) => {
-        this.directions = res.data;
-      })
-  }
+  // getDirections() {
+  //   this.intranetService.getDirections()
+  //     .subscribe((res: any) => {
+  //       this.directions = res.data;
+  //     })
+  // }
 
   // Metodo para obtener todos los departamentos
-  getDepartments() {
-    this.intranetService.getDepartments()
-      .subscribe((res: any) => {
-        this.departments = res.data;
-      })
-  }
+  // getDepartments() {
+  //   this.intranetService.getDepartments()
+  //     .subscribe((res: any) => {
+  //       this.departments = res.data;
+  //     })
+  // }
 
   // Metodo para obtener todos los divisiones
-  getDivision() {
-    this.intranetService.getDivisions()
-      .subscribe((res: any) => {
-        this.divisions = res.data;
-      })
-  }
+  // getDivision() {
+  //   this.intranetService.getDivisions()
+  //     .subscribe((res: any) => {
+  //       this.divisions = res.data;
+  //     })
+  // }
 
   // Metodo para obtener todos los colaboradores
   getPersonaByDNI() {
     if (this.collaboratorForm.value.cedula.length < 7) return
-
+    
     this.collaboratorService.getCollaboratorByDNI(this.collaboratorForm.value.cedula)
       .subscribe((res: any) => {
-        if (res.data) this.setValueToEdit(res.data)
+        if (res.data.idUsuario > 0) {
+          this.setValueToEdit(res.data)
+        } else {
+          this.setPersonValue(res.data.persona)
+        }
       })
   }
 
@@ -228,19 +245,78 @@ export class ColaboradoresComponent implements OnInit {
     }
   }
 
+  getCargoByName() {
+    if (this.collaboratorForm.value.idCargo.length < 3) {
+      this.positions = []
+    } else {
+      this.intranetService.getPositionsByName(this.collaboratorForm.value.idCargo)
+        .subscribe((res: any) => {
+          this.positions = res.data
+        })
+    }
+  }
+
+  getViceRectorateByName() {
+    if (this.collaboratorForm.value.idViceRectoria.length < 3) {
+      this.viceRectorates = []
+    } else {
+      this.intranetService.getViceRectoratesByName(this.collaboratorForm.value.idViceRectoria)
+        .subscribe((res: any) => {
+          this.viceRectorates = res.data
+        })
+    }
+  }
+
+  getDirectionByName() {
+    if (this.collaboratorForm.value.idDireccion.length < 3) {
+      this.directions = []
+    } else {
+      this.intranetService.getDirectionByName(this.collaboratorForm.value.idDireccion)
+        .subscribe((res: any) => {
+          this.directions = res.data
+        })
+    }
+  }
+
+  getDeparmentByName() {
+    if (this.collaboratorForm.value.idDepartamento.length < 3) {
+      this.departments = []
+    } else {
+      this.intranetService.getDepartmentByName(this.collaboratorForm.value.idDepartamento)
+        .subscribe((res: any) => {
+          this.departments = res.data
+        })
+    }
+  }
+
+  getDivisionByName() {
+    if (this.collaboratorForm.value.idDivision.length < 3) {
+      this.divisions = []
+    } else {
+      this.intranetService.getDivisionByName(this.collaboratorForm.value.idDivision)
+        .subscribe((res: any) => {
+          this.divisions = res.data
+        })
+    }
+  }
+
+  //Metodo para filtrar colaboradores 
   // Metodo para obtener todos los colaboradores
   getCollaborators() {
-    this.collaboratorService.getCollaborators(this.page, 10)
+    this.collaboratorService.getCollaborators(this.page, 10, this.filterForm.value.filter)
       .subscribe((res: any) => {
         this.collaborators = res.data;
-        const { currentPage, totalItem, totalPage } = res
+        let { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }
+
+        if (currentPage > totalPage) { this.page = 1 }
       })
   }
 
   // Metodo para crear un colaborador y crear la asignacion de acuerdo de desempeno
   postCollaborator() {
     let agreementType: number
+    let months: number
 
     this.collaboratorService.postCollaborator(this.collaboratorForm.value)
       .pipe(
@@ -254,14 +330,20 @@ export class ColaboradoresComponent implements OnInit {
         }),
         switchMap((res: any) => {
           if (res.data) {
-            this.collaboratorForm.value.noResolucion != null ? agreementType = 2 : agreementType = 1
+            if (this.collaboratorForm.value.noResolucion != null) {
+              agreementType = 2
+              months = 6
+            } else {
+              agreementType = 1
+              months = 12
+            }
 
             this.asignationAgreement = {
               idAsignacion: 0,
               idColaborador: res.data.idPersona,
               idTipoAcuerdo: agreementType,
               periodoId: this.systemInformationService.activePeriod().idPeriodo,
-              acuerdosDuracionId: agreementType,
+              acuerdosDuracionId: months,
             };
 
             return this.asignationAgreementService.postAsignationAgreement(this.asignationAgreement);
@@ -282,7 +364,7 @@ export class ColaboradoresComponent implements OnInit {
         },
         (error: any) => {
           console.error('Error al realizar las operaciones:', error);
-          this.snackBar.snackbarError('Ocurrió un error al momento de asignarle un acuerdo de desempeño. Por favor procesa a crearlo manualmente.');
+          this.snackBar.snackbarError('Ocurrió un error al momento de asignarle un acuerdo de desempeño. Por favor proceda a crearlo manualmente.');
         }
       );
   }
@@ -338,13 +420,37 @@ export class ColaboradoresComponent implements OnInit {
     this.onPositionSelectionChange(false)
   }
 
+  // Metodo para  asignar los valores de persona, antes de crear un usuario
+
+  async setPersonValue(persona: CollaboratorsGetI){
+    this.collaboratorForm.patchValue({
+      nombre: persona.nombre? persona.nombre : '',
+      sexo: persona.sexo? persona.sexo : 0,
+      apellidos: persona.apellidos ? persona.apellidos : '',
+      usuario: persona.usuario? persona.usuario: 0,
+      idGrupo: persona.grupoObj ? persona.grupoObj.idGrupo : 0,
+      fechaIngreso: persona.fechaIngreso ? persona.fechaIngreso : '',
+      fechaNacimiento: persona.fechaNacimiento ? persona.fechaNacimiento : '',
+      idCargo:  persona.cargo && persona.cargo.nombre != "N/A" ? persona.cargo : 0,
+      idViceRectoria: persona.viceRectoria && persona.viceRectoria.nombre != "NO ASIGNADO" && persona.viceRectoria.nombre != "N/A"  ? persona.viceRectoria : 0,
+      idDireccion: persona.direccion && persona.direccion.nombre != "NO ASIGNADO" && persona.direccion.nombre != "N/A" ? persona.direccion : 0,
+      idDepartamento: persona.departamento && persona.departamento.nombre != "NO ASIGNADO" && persona.departamento.nombre != "N/A" ? persona.departamento : 0,
+      idDivision: persona.division && persona.division.nombre != "NO ASIGNADO" && persona.division.nombre != "N/A" ? persona.division : 0,
+      idRecinto: persona.recinto.idRecinto,
+      idEstado: persona.idEstado,
+    })
+    await this.hidingUnitOrg()
+  }
+  
   // Metodo asignar valores y habilitar la edición de un registro
   async setValueToEdit(collaborator: PersonI) {
-
+    
     this.snackBar.snackbarLouder(true)
-    this.collaboratorService.getPersonByID(collaborator.persona.idSupervisor).subscribe((res: any) => {
-      this.collaboratorForm.patchValue({ idSupervisor: res.data })
-    })
+    if (collaborator.persona.idSupervisor) {
+      this.collaboratorService.getPersonByID(collaborator.persona.idSupervisor).subscribe((res: any) => {
+        this.collaboratorForm.patchValue({ idSupervisor: res.data })
+      })
+    }
 
     let diferentPosition = collaborator.persona.idCargoDesempenia ? true : false
 
@@ -353,29 +459,50 @@ export class ColaboradoresComponent implements OnInit {
 
     this.collaboratorForm.reset(collaborator.persona)
     this.collaboratorForm.patchValue({
+      idCargoDesempenia: collaborator.persona.cargoDesempeniaObj,
       idUsuario: collaborator.idUsuario,
       idRol: collaborator.rol.idRol,
-      diferentPosition: diferentPosition
+      diferentPosition: diferentPosition,
+      idCargo: collaborator.persona.cargo,
+      idViceRectoria: collaborator.persona.viceRectoria.nombre != "NO ASIGNADO" && collaborator.persona.viceRectoria.nombre != "N/A" ? collaborator.persona.viceRectoria : 0,
+      idDireccion: collaborator.persona.direccion.nombre != "NO ASIGNADO" && collaborator.persona.direccion.nombre != "N/A" ? collaborator.persona.direccion : 0,
+      idDepartamento: collaborator.persona.departamento.nombre != "NO ASIGNADO" && collaborator.persona.departamento.nombre != "N/A" ? collaborator.persona.departamento : 0,
+      idDivision: collaborator.persona.division.nombre != "NO ASIGNADO" && collaborator.persona.division.nombre != "N/A" ? collaborator.persona.division : 0,
     })
 
     this.hidingUnitOrg()
     this.snackBar.snackbarLouder(false)
-    console.log(this.collaboratorForm.value);
-    
   }
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
     let idSup = this.collaboratorForm.value.idSupervisor
-    this.collaboratorForm.patchValue({
-      idSistema: this.systemInformationService.getSistema,
-      idSupervisor: idSup.idPersona
-    });
+    let idPos = this.collaboratorForm.value.idCargo
+    let idVic = this.collaboratorForm.value.idViceRectoria
+    let idDir = this.collaboratorForm.value.idDireccion
+    let idDep = this.collaboratorForm.value.idDepartamento
+    let idDiv = this.collaboratorForm.value.idDivision
+
+    // if (!this.collaboratorForm.valid) return
+
+    this.collaboratorForm.patchValue({ idSistema: this.systemInformationService.getSistema })
 
     if (this.collaboratorForm.value.idSupervisor == undefined) {
+      this.collaboratorForm.patchValue({ idSupervisor: idSup.idPersona });
       this.snackBar.snackbarError('El supervisor es incorrecto, Asegurese de seleccionar uno de la barra de opciones.', 5000)
     }
     else {
+      if (this.collaboratorForm.value.idUsuario > 0 || this.collaboratorForm.value.idUsuario == null) { this.collaboratorForm.patchValue({ idSupervisor: idSup.idPersona }); }
+      // if ( ) { this.collaboratorForm.patchValue({ idSupervisor: idSup.idPersona }); }
+
+      this.collaboratorForm.patchValue({
+        idCargo: idPos.idCargo,
+        idViceRectoria: idVic ? idVic.idViceRectoria : null,
+        idDireccion: idDir ? idDir.idDireccion : null,
+        idDepartamento: idDep ? idDep.idDepartamento : null,
+        idDivision: idDiv ? idDiv.id : null,
+      });
+
       this.appHelpers.saveChanges(() => this.postCollaborator(), () => this.putCollaborator(), this.collaboratorForm.value.idUsuario, this.collaboratorForm)
     }
   }

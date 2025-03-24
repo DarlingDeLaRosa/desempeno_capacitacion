@@ -27,23 +27,28 @@
 
         <div style="display: flex; gap: 5px;">
 
-            <mat-form-field appearance="fill" style="flex: 1;">
+            <!-- <mat-form-field appearance="fill" style="flex: 1;">
                 <mat-label>Edad</mat-label>
                 <input type="number" matInput formControlName="edad">
-            </mat-form-field>
+            </mat-form-field> -->
 
             <mat-form-field appearance="fill" style="flex: 1.5">
                 <mat-label>Cargo</mat-label>
-                <mat-select formControlName="idCargo" disableRipple>
+                <input matInput [matAutocomplete]="charge" appearance="fill" formControlName="idCargo"
+                    (input)="getCargoByName()">
+
+                <mat-autocomplete #charge="matAutocomplete" [displayWith]="displayName">
                     <ng-container *ngIf="positions && positions.length; else noPosition">
-                        <mat-option [value]="position.idCargo" *ngFor="let position of positions">
+                        <mat-option [value]="position" *ngFor="let position of positions">
                             {{position.nombre}}
                         </mat-option>
                     </ng-container>
                     <ng-template #noPosition>
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>
-                </mat-select>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1">
@@ -51,6 +56,13 @@
                 <input matInput [matDatepicker]="picker" formControlName="fechaIngreso">
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Fecha de nacimineto</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="fechaNacimiento">
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1">
@@ -102,13 +114,13 @@
 
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Supervisor</mat-label>
-                <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="idSupervisor" 
-                (input)="getSupervisorByName()">
-                
+                <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="idSupervisor"
+                    (input)="getSupervisorByName()">
+
                 <mat-autocomplete #auto='matAutocomplete' [displayWith]="displaySUPName">
                     <ng-container *ngIf="supervisors && supervisors.length > 0; else noGoalPoa">
                         <mat-option *ngFor="let supervisor of supervisors" [value]="supervisor">
-                            {{supervisor.nombre}} {{supervisor.apellidos}}
+                            {{supervisor.nombre | titlecase }} {{supervisor.apellidos | titlecase }}
                         </mat-option>
                     </ng-container>
                     <ng-template #noGoalPoa>
@@ -120,7 +132,6 @@
             </mat-form-field>
 
         </div>
-
 
         <div class="matRadioChoice">
             <h4 style="margin-right: 20px;">¿Cual es el sexo de la persona?</h4>
@@ -142,47 +153,66 @@
 
             <mat-form-field appearance="fill" style="flex: 1" *ngIf="vic">
                 <mat-label>Vicerrectoria</mat-label>
-                <mat-select formControlName="idViceRectoria" disableRipple (selectionChange)="hidingUnitOrg()">
+                <input matInput [matAutocomplete]="idViceRectoria" appearance="fill" formControlName="idViceRectoria"
+                    (input)="getViceRectorateByName()">
+
+                <mat-autocomplete #idViceRectoria="matAutocomplete" [displayWith]="displayName"
+                    (optionSelected)="hidingUnitOrg()">
                     <ng-container *ngIf="viceRectorates && viceRectorates.length; else noviceRectorate">
                         <mat-option [value]="null">NO APLICA</mat-option>
-                        <mat-option [value]="viceRectorate.idViceRectoria" *ngFor="let viceRectorate of viceRectorates">
-                            {{viceRectorate.nombre}}
+                        <mat-option [value]="viceRectorate" *ngFor="let viceRectorate of viceRectorates">
+                            {{viceRectorate.nombre | titlecase }}
                         </mat-option>
                     </ng-container>
                     <ng-template #noviceRectorate>
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>
-                </mat-select>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1" *ngIf="dir">
                 <mat-label>Dirección</mat-label>
-                <mat-select formControlName="idDireccion" disableRipple (selectionChange)="hidingUnitOrg()">
+                <input matInput [matAutocomplete]="direction" appearance="fill" formControlName="idDireccion"
+                    (input)="getDirectionByName()">
+
+                <mat-autocomplete #direction="matAutocomplete" [displayWith]="displayName"
+                    (optionSelected)="hidingUnitOrg()">
                     <ng-container *ngIf="directions && directions.length; else noDirection">
                         <mat-option [value]="null">NO APLICA</mat-option>
-                        <mat-option [value]="direction.idDireccion" *ngFor="let direction of directions">
-                            {{direction.nombre}}
+                        <mat-option [value]="direction" *ngFor="let direction of directions">
+                            {{direction.nombre | titlecase }}
                         </mat-option>
                     </ng-container>
                     <ng-template #noDirection>
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>
-                </mat-select>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
             </mat-form-field>
+
 
             <mat-form-field appearance="fill" style="flex: 1" *ngIf="dep">
                 <mat-label>Departamento</mat-label>
-                <mat-select formControlName="idDepartamento" disableRipple (selectionChange)="hidingUnitOrg()">
-                    <mat-option [value]="null">NO APLICA</mat-option>
+                <input matInput [matAutocomplete]="idDepartamento" appearance="fill" formControlName="idDepartamento"
+                    (input)="getDeparmentByName()">
+
+                <mat-autocomplete #idDepartamento="matAutocomplete" [displayWith]="displayName"
+                    (optionSelected)="hidingUnitOrg()">
                     <ng-container *ngIf="departments && departments.length; else noDepartment">
-                        <mat-option [value]="department.idDepartamento" *ngFor="let department of departments">
-                            {{department.nombre}}
+                        <mat-option [value]="null">NO APLICA</mat-option>
+                        <mat-option [value]="department" *ngFor="let department of departments">
+                            {{department.nombre | titlecase }}
                         </mat-option>
                     </ng-container>
                     <ng-template #noDepartment>
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>
-                </mat-select>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
             </mat-form-field>
 
             <div style="flex: 1" *ngIf="vic == false || dir == false || dep == false"></div>
@@ -193,18 +223,25 @@
 
             <mat-form-field appearance="fill" style="flex: 1" *ngIf="div">
                 <mat-label>División</mat-label>
-                <mat-select formControlName="idDivision" disableRipple (selectionChange)="hidingUnitOrg()">
+                <input matInput [matAutocomplete]="idDivision" appearance="fill" formControlName="idDivision"
+                    (input)="getDivisionByName()">
+
+                <mat-autocomplete #idDivision="matAutocomplete" [displayWith]="displayName"
+                    (optionSelected)="hidingUnitOrg()">
                     <ng-container *ngIf="divisions && divisions.length; else noDivision">
                         <mat-option [value]="null">NO APLICA</mat-option>
-                        <mat-option [value]="division.id" *ngFor="let division of divisions">
-                            {{division.nombre}}
+                        <mat-option [value]="division" *ngFor="let division of divisions">
+                            {{division.nombre | titlecase }}
                         </mat-option>
                     </ng-container>
                     <ng-template #noDivision>
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>
-                </mat-select>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
             </mat-form-field>
+
 
             <div style="flex: 1"></div>
             <div style="flex: 1"></div>
@@ -247,16 +284,21 @@
 
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Cargo desempeñado</mat-label>
-                <mat-select formControlName="idCargoDesempenia" disableRipple>
+                <input matInput [matAutocomplete]="charge" appearance="fill" formControlName="idCargoDesempenia"
+                    (input)="getCargoByName()">
+
+                <mat-autocomplete #charge="matAutocomplete" [displayWith]="displayName">
                     <ng-container *ngIf="positions && positions.length; else noDPosition">
-                        <mat-option [value]="position.idCargo" *ngFor="let position of positions">
-                            {{position.nombre}}
+                        <mat-option [value]="position" *ngFor="let position of positions">
+                            {{position.nombre | titlecase }}
                         </mat-option>
                     </ng-container>
                     <ng-template #noDPosition>
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>
-                </mat-select>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1">
@@ -283,9 +325,20 @@
 
     </form>
 
-    <h3 class="Stitle">Listado de Colaboradores</h3>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3 class="Stitle">Listado de Colaboradores</h3>
+        
+        <form [formGroup]="filterForm">
+            <mat-form-field appearance="fill" >
+                <mat-label>Buscar por nombre</mat-label>
+                <input matInput formControlName="filter" (input)="getCollaborators()">
+                <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+        </form>
 
-    <div class="table-container">
+    </div>
+
+    <div class="table-container" style="margin-top: 0;">
         <table>
             <thead class="headerTable">
                 <tr class="headerRow">
@@ -302,12 +355,14 @@
             </thead>
             <tbody *ngIf="collaborators && collaborators.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let collaborator of collaborators">
-                    <td class="dataIndiCell">{{collaborator.persona.nombre}} {{collaborator.persona.apellidos}}</td>
+                    <td class="dataIndiCell">{{collaborator.persona.nombre | titlecase }}
+                        {{collaborator.persona.apellidos | titlecase }}</td>
                     <td class="dataIndiCell">{{collaborator.persona.recinto.nombre}}
                         ({{collaborator.persona.recinto.siglas}})</td>
-                    <td class="dataIndiCell">{{collaborator.persona.cargo.nombre}}</td>
+                    <td class="dataIndiCell">{{collaborator.persona.cargo.nombre | titlecase}}</td>
                     <td class="dataIndiCell">{{collaborator.persona.estadoObj.nombre}}</td>
-                    <td class="dataIndiCell">{{collaborator.persona.grupoObj.nombre}}</td>
+                    <td class="dataIndiCell">{{collaborator.persona.grupoObj ? collaborator.persona.grupoObj.nombre :
+                        'No Asignado'}}</td>
                     <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(collaborator)"
                             class="editIcon">edit</mat-icon></td>
                     <td class="dataIndiCell"><mat-icon
@@ -343,3 +398,93 @@
         </tbody>
     </ng-template>
 </div>
+
+
+<!-- 
+<div style="display: flex; gap: 5px;">
+
+    <mat-form-field appearance="fill" style="flex: 1" *ngIf="vic">
+        <mat-label>Vicerrectoria</mat-label>
+        <input matInput [matAutocomplete]="idViceRectoria" appearance="fill" formControlName="idViceRectoria" 
+        (input)="getSupervisorByName()">
+
+        <mat-autocomplete #idViceRectoria="matAutocomplete" [displayWith]="displayName">
+            <ng-container *ngIf="viceRectorates && viceRectorates.length; else noviceRectorate">
+                <mat-option [value]="null">NO APLICA</mat-option>
+                <mat-option [value]="viceRectorate.idViceRectoria" *ngFor="let viceRectorate of viceRectorates">
+                    {{viceRectorate.nombre}}
+                </mat-option>
+            </ng-container>
+            <ng-template #noviceRectorate>
+                <mat-option>No hay campos disponibles</mat-option>
+            </ng-template>
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="flex: 1" *ngIf="dir">
+        <mat-label>Dirección</mat-label>
+        <input matInput [matAutocomplete]="direction" appearance="fill" formControlName="idDireccion" 
+        (input)="getSupervisorByName()">
+
+        <mat-autocomplete #direction="matAutocomplete" [displayWith]="displayName" >
+            <ng-container *ngIf="directions && directions.length; else noDirection">
+                <mat-option [value]="null">NO APLICA</mat-option>
+                <mat-option [value]="direction" *ngFor="let direction of directions">
+                    {{direction.nombre}}
+                </mat-option>
+            </ng-container>
+            <ng-template #noDirection>
+                <mat-option>No hay campos disponibles</mat-option>
+            </ng-template>
+        </mat-autocomplete>
+
+        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="flex: 1" *ngIf="dep">
+        <mat-label>Departamento</mat-label>
+        <input matInput [matAutocomplete]="idDepartamento" appearance="fill" formControlName="idDepartamento" 
+        (input)="getSupervisorByName()">
+
+        <mat-autocomplete #idDepartamento="matAutocomplete" >
+            <mat-option [value]="null">NO APLICA</mat-option>
+            <ng-container *ngIf="departments && departments.length; else noDepartment">
+                <mat-option [value]="department.idDepartamento" *ngFor="let department of departments">
+                    {{department.nombre}}
+                </mat-option>
+            </ng-container>
+            <ng-template #noDepartment>
+                <mat-option>No hay campos disponibles</mat-option>
+            </ng-template>
+        </mat-autocomplete>
+
+        <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+    </mat-form-field>
+
+    <div style="flex: 1" *ngIf="vic == false || dir == false || dep == false"></div>
+    <div style="flex: 1" *ngIf="vic == false || dir == false || dep == false"></div>
+</div> 
+
+<mat-form-field appearance="fill" style="flex: 1" *ngIf="div">
+                <mat-label>División</mat-label>
+                <input matInput [matAutocomplete]="idDivision" appearance="fill" formControlName="idDivision" 
+                (input)="getSupervisorByName()">
+
+                <mat-autocomplete #idDivision="matAutocomplete" [displayWith]="displayName">
+                    <ng-container *ngIf="divisions && divisions.length; else noDivision">
+                        <mat-option [value]="null">NO APLICA</mat-option>
+                        <mat-option [value]="division" *ngFor="let division of divisions">
+                            {{division.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noDivision>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-autocomplete>
+
+                <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+            </mat-form-field>
+
+            
+
+-->

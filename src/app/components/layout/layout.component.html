@@ -13,10 +13,10 @@
             <a class="item-menu" [routerLink]="['/layout/cursos']" routerLinkActive="active">
                 <mat-icon>collections_bookmark</mat-icon>Cursos
             </a>
-            <a *ngIf="this.systemInformationService.activeRol().nombre !== 'supervisado'" class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
+            <a *ngIf="improvePlan && appHelpers.isTodayInRange(improvePlan.fechaInicio, improvePlan.fechaFin) && this.systemInformationService.activeRol().nombre !== 'supervisado'" class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
                 <mat-icon>star</mat-icon>Plan de mejora
             </a>
-            <a *ngIf="this.systemInformationService.activeRol().nombre !== 'supervisado'" class="item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
+            <a *ngIf="evaluationComptency && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && this.systemInformationService.activeRol().nombre !== 'supervisado'" class="item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
                 <mat-icon>description</mat-icon>Evaluación de competencias
             </a>
 

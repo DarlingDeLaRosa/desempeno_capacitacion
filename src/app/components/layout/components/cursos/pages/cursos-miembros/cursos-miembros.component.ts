@@ -34,8 +34,6 @@ export class CursosMiembrosComponent implements OnInit {
     this.isLoading = true;
     this.cursosService.getHijosColaborador().subscribe((resp: any) => {
       this.hijosList = resp.data.hijos;
-      console.log(this.hijosList);
-      
       this.isLoading = false;
     })
   }

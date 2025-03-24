@@ -12,6 +12,9 @@ import { RolI } from '../../mantenimiento/mantenimiento-options/colaboradores/in
 import { AutorizacionAccionComponent } from '../modals/autorizacion-accion/autorizacion-accion.component';
 import { ComentariosComponent } from '../modals/comentarios/comentarios.component';
 import { HerlperService } from '../../../services/appHelpers.service';
+import { PeriodsProcessServices } from '../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
+import { periodProcessGetI } from '../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
+import { PaginationI } from '../../../../interfaces/generalInteerfaces';
 
 @Component({
   selector: 'app-acuerdo-desempenio',
@@ -25,33 +28,49 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
   hijosList!: any[];
   isLoading: boolean = true;
+  page: number = 1
+  pagination!: PaginationI
   usuario!: loggedUserI
   agreement: Array<AcuerdoI> = []
   searchTerm: string = '';
+  activeProcess!: periodProcessGetI
 
   constructor(
     private dialog: MatDialog,
     public appHelpers: HerlperService,
     private agreementService: agreementService,
-    public systemInformation: systemInformationService
-  ) {}
+    public systemInformation: systemInformationService,
+    private periodProcessService: PeriodsProcessServices,
+  ) { }
 
   ngOnInit(): void {
     this.usuario = this.systemInformation.localUser;
     this.systemInformation.activeRol();
+    this.getActiveAgreementPeriod()
     this.getAcuerdoByRol('');
   }
 
+  getActiveAgreementPeriod() {
+    this.periodProcessService.getPeriodProcessesActive()
+      .subscribe((res: any) => {
+        if (res) this.activeProcess = res.data
+      })
+  }
+
   //Metodo para traer la lista de los hijos de los supervisores
-  getAcuerdoByRol(term:string) {
+  getAcuerdoByRol(term: string) {
     this.isLoading = true;
-    this.agreementService.getAgreementByRol(this.usuario.idPersona, term).subscribe((resp: any) => {
+    this.agreementService.getAgreementByRol(this.usuario.idPersona, term, this.page, 10).subscribe((resp: any) => {
       this.agreement = resp.data;
+      let { currentPage, totalItem, totalPage } = resp
+      this.pagination = { currentPage, totalItem, totalPage }
+
+      if (currentPage > totalPage) { this.page = 1 }
       this.isLoading = false;
     })
   }
 
-  //buscar los por departamento y nombre del colaborador
+  //buscar por departamento y nombre del colaborador
   Buscar() {
     if (this.searchTerm.length > 2) {
       this.getAcuerdoByRol(this.searchTerm)
@@ -84,12 +103,28 @@ export class AcuerdoDesempenioComponent implements OnInit {
   // }
 
   openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
-    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo  } })
-    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = ''});
+    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo } })
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
   }
 
-  commentsAgreement(idAcuerdo: number , fullName: string): void {
-    const dialog = this.dialog.open(ComentariosComponent, {data:  {idAcuerdo, fullName}  })
-    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol('');this.searchTerm = '' });
+  commentsAgreement(idAcuerdo: number, fullName: string): void {
+    const dialog = this.dialog.open(ComentariosComponent, { data: { idAcuerdo, fullName } })
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
+  }
+
+  //Metodo para llamar a la siguiente pagina
+  nextPage() {
+    if (this.page < this.pagination.totalPage) {
+      this.page += 1
+      this.getAcuerdoByRol(this.searchTerm)
+    }
+  }
+
+  //Metodo para llamar a la pagina anterior
+  previousPage() {
+    if (this.page > 1) {
+      this.page -= 1
+        ; this.getAcuerdoByRol(this.searchTerm)
+    }
   }
 }

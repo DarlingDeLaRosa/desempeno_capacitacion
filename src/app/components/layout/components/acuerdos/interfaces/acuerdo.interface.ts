@@ -11,14 +11,14 @@ export interface AcuerdoI {
   tipoAcuerdoObj: TipoAcuerdoI,
   idTracking: TrackingI,
   idFlujo: number,
-  flujoObj: {idFlujo:number, nombre: string},
+  flujoObj: { idFlujo:number, nombre: string },
   puntos: number
   comentarios: commentsI[]
   detalles: AcuerdoDetalle[];
   documentosObj: Documento[];
   periodo: PeriodoI
   tipoProceso: GeneralI
-
+  acuerdoDuracion: { id:  number, duracion: string, periodo: string },
 }
 
 export interface TipoAcuerdoI {
@@ -38,7 +38,7 @@ export interface AcuerdoDetalle {
   metaObj: Meta;
   calificacion: number;
   documentosObj: Documento
-  observaciones:string
+  observaciones?:string
 }
 
 export interface Meta {

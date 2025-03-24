@@ -19,26 +19,26 @@
 
 
   <div style="display: flex; justify-content: space-between; margin-bottom: 15px;" *ngIf="agreement">
-    <div style="display: flex; gap: 5px;"
-      >
-
+    <div style="display: flex; gap: 5px;">
       <button *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3" type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
       <button *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3" type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
     </div>
 
-    <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" 
+    <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'"
       matTooltip="Imprimir" class="btnNavegar" printSectionId="AD" [useExistingCss]="true" ngxPrint><mat-icon
         style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
   </div>
 
-  <div id="AD"  *ngIf="agreement">
-    <div class="logo-container" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 4">
+  <div id="AD" *ngIf="agreement">
+
+    <div class="logo-container" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo != 5">
       <img src="images.png" alt="ISFODOSU Logo" class="logo">
       <div class="title-container">
         <h1 class="title2">ISFODOSU</h1>
         <p class="subtitle2">Instituto Superior de Formación Docente Salome Ureña</p>
       </div>
     </div>
+
     <div class="container-verAcuerdo">
 
       <div class="header" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
@@ -55,22 +55,23 @@
           <div></div>
         </div>
       </div>
-      
+
       <div style="padding: 5px; border-bottom: 1px solid black;">
         <p style="text-align: center;"> <strong>SUB-SISTEMA DE EVALUACIÓN DEL DESEMPEÑO LABORAL</strong></p>
       </div>
 
       <div style="padding: 5px; border-bottom: 1px solid black;">
-        <p style="text-align: center;"> <strong>Formulario para Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales  I, II, III y IV</strong></p>
+        <p style="text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo != 5"> <strong>Formulario para Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales  I, II, III y IV</strong></p>
+        <p style="text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5"> <strong>Formulario para Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales  V</strong></p>
       </div>
 
       <div style="padding: 5px; border-bottom: 1px solid black;">
-        <p> <strong>INSTITUCIÓN:</strong> {{agreement.periodo.nombre}}</p>
+        <p> <strong>INSTITUCIÓN:</strong> Instituto Superior de Formación Docente Salome Ureña</p>
       </div>
 
       <div class="info-row">
         <div style="padding: 5px;">
-          <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.periodo.nombre}}</p>
+          <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.acuerdoDuracion.periodo}}</p>
         </div>
         <div style="padding: 5px;">
           <p> <strong>UNIDAD ORGANIZATIVA:</strong> {{appHelper.getUnitOrg(agreement.colaboradorObj.division,
@@ -105,7 +106,7 @@
         </div>
       </div>
 
-      <div class="table-title" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 4">
+      <div class="table-title" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo != 5">
         <div style="grid-column: 1/5; display: flex; align-items: end; padding: 8px 8px 2px 8px;"><strong>Valor del
             Componente LOGRO DE METAS: {{agreement.tipoAcuerdoObj.puntuacion}} puntos</strong></div>
         <div style="grid-column: 5/7; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0;">
@@ -140,7 +141,7 @@
             <td style="text-align: center;">{{detalle.metaObj.valor}}</td>
             <td style="text-align: center;">{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
             <td style="text-align: center;">{{detalle.calificacion}}</td>
-            <td>{{detalle.observaciones || null}}</td>
+            <td>{{detalle.observaciones}}</td>
           </tr>
           <tr>
             <td></td>
@@ -201,7 +202,6 @@
         <button type="button" class="cleanButton" (click)="closeModal()">Cerrar</button>
         <button type="submit" class="saveButton">Guardar cambios</button>
       </div> -->
-
     </form>
   </div>
 </div>

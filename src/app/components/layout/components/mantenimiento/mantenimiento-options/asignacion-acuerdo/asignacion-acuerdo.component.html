@@ -101,14 +101,14 @@
             </thead>
             <tbody *ngIf="asignationsAgreement && asignationsAgreement.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let asignationAgreement of asignationsAgreement">
-                    <td class="dataIndiCell">{{asignationAgreement.colaborador.nombre}}
-                        {{asignationAgreement.colaborador.apellidos}}</td>
+                    <td class="dataIndiCell">{{asignationAgreement.colaborador.nombre | titlecase}}
+                        {{asignationAgreement.colaborador.apellidos | titlecase }}</td>
                     <td class="dataIndiCell">{{asignationAgreement.colaborador.cedula || 'No Asignado'}}</td>
                     <td class="dataIndiCell">{{asignationAgreement.colaborador.cargo.nombre}}</td>
                     <td class="dataIndiCell">{{asignationAgreement.tipoAcuerdoObj.nombre}}</td>
                     <td class="dataIndiCell">{{appHelpers.getUnitOrg(asignationAgreement.colaborador.division,
                         asignationAgreement.colaborador.departamento, asignationAgreement.colaborador.direccion,
-                        asignationAgreement.colaborador.viceRectoria)?.nombre}}</td>
+                        asignationAgreement.colaborador.viceRectoria)?.nombre | titlecase}}</td>
                     <!-- <td class="dataIndiCell">{{asignationAgreement.colaborador.recinto.nombre}}</td> -->
                     <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(asignationAgreement)" class="editIcon">edit</mat-icon></td>
                     <td class="dataIndiCell"><mat-icon (click)="deleteAsignationAgreement(asignationAgreement.idAsignacion)" class="removeIcon">delete</mat-icon></td>

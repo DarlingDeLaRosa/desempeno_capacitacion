@@ -19,9 +19,10 @@ export class AppComponent implements OnInit {
     private systemInformation: systemInformationService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+   this.systemInformation.setUserToken(JSON.parse(sessionStorage.getItem("userToken")!))
+  }
 
-  
 
   //metodo para obtener el token del sistema
   // getUserSystem() {

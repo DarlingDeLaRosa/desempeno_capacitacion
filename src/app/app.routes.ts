@@ -43,13 +43,13 @@ export const routes: Routes = [
   {
     path:'login/:token',
     component: LoginComponent,
-    canActivate: [LayoutClassGuard]
+    // canActivate: [LayoutClassGuard]
   },
 
   {
     path: 'layout',
     component: LayoutComponent,
-    canActivate: [LoginClassGuard],
+    // canActivate: [LoginClassGuard],
     children: [
       {
         path: 'acuerdos',

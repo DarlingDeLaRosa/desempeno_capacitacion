@@ -20,7 +20,8 @@ export class EncargadoGuard implements CanActivate {
 
   canActivate(): boolean {
     // Verifica si el usuario pertenece al departamento de desempeño y lo deja pasar a la ruta, sino lo manda al tablero de cursos
-    if (this.usuarioActual && this.InformationService.currentUserSystem().rol.nombre === 'Analista') {
+    if ((this.usuarioActual && this.InformationService.currentUserSystem().rol.nombre === 'Analista')||
+    (this.usuarioActual && this.InformationService.currentUserSystem().rol.nombre === 'Encargado')) {
       return true;
     } else {
       this.router.navigate(['/layout/cursos']);

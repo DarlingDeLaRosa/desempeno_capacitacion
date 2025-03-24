@@ -53,8 +53,6 @@ export class VerAcuerdoComponent implements OnInit {
   getAgreementByIdCollaborator() {
     this.agreementservice.getAgreementById(this.idAgreement).subscribe((resp: any) => {
       this.agreement = resp.data;
-      console.log(this.agreement);
-
       this.calculadora()
     })
   }

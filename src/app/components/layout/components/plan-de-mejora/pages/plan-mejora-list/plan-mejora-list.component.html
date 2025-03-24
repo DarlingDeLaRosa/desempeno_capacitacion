@@ -34,7 +34,8 @@
         </th>
       </tr>
     </thead>
-    <tbody  *ngIf=" agreementList.length > 0; else noElements">
+
+    <tbody  *ngIf="!agreementList; else noElements">
       <tr class="dataRow" *ngFor="let persona of agreementList">
         <td class="dataIndiCell">{{persona.colaboradorObj.nombre}} {{persona.colaboradorObj.apellidos}}</td>
         <td class="dataIndiCell">{{persona.colaboradorObj.departamento.nombre}}</td>

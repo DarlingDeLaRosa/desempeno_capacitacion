@@ -20,12 +20,17 @@
   </mat-form-field>
 </div>
 
-<h3
-  *ngIf="systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado'; else noSup ">
-  {{usuario.Unidad}}</h3>
-<ng-template #noSup>
-  <h3>LISTA DE ACUERDOS DE DESEMPEÑO TRABAJADOS.</h3>
-</ng-template>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <h3
+    *ngIf="systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado'; else noSup ">
+    {{usuario.Unidad}}</h3>
+  <ng-template #noSup>
+    <h3>Acuerdos De Desempeño Trabajados.</h3>
+  </ng-template>
+
+  <h5 style="color: green;" *ngIf="activeProcess">{{activeProcess.tipoProceso.nombre}}: {{activeProcess.fechaInicio | date: 'dd/MM/yyyy'}} -
+    {{activeProcess.fechaFin | date: 'dd/MM/yyyy'}}</h5>
+</div>
 
 <div class="table-container">
   <table>
@@ -37,7 +42,7 @@
         <th class="headerCell">G.O</th>
         <th class="headerCell">Etapa</th>
         <th class="headerCell">Estado</th>
-        <th class="headerCell" style="width: 2%;">
+        <th class="headerCell" style="width: 6%;">
           <!-- <th class="headerCell" style="width: 2%;"> -->
           <!-- <th class="headerCell" style="width: 2%;"> -->
           <div *ngIf="isLoading ===  true" class="loader"></div>
@@ -46,10 +51,10 @@
     </thead>
     <tbody *ngIf=" agreement.length > 0; else noElements">
       <tr class="dataRow" *ngFor="let acuerdo of agreement">
-        <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre}} {{acuerdo.colaboradorObj.apellidos}}</td>
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre | titlecase }} {{acuerdo.colaboradorObj.apellidos | titlecase }}</td>
         <td class="dataIndiCell">{{appHelpers.getUnitOrg(acuerdo.colaboradorObj.division,
           acuerdo.colaboradorObj.departamento, acuerdo.colaboradorObj.direccion,
-          acuerdo.colaboradorObj.viceRectoria)?.nombre}}</td>
+          acuerdo.colaboradorObj.viceRectoria)?.nombre | titlecase }}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
         <td class="dataIndiCell">{{acuerdo.tipoProceso.nombre}}</td>
@@ -63,9 +68,8 @@
               <mat-icon>upload_file</mat-icon>Documentos
             </button>
 
-
             <button mat-menu-item
-              *ngIf="acuerdo.detalles.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo' "
+              *ngIf="activeProcess && activeProcess.tipoProceso.id == 5 && acuerdo.detalles.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo' "
               [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]"
               routerLinkActive="active">
               <mat-icon>done_outline</mat-icon>Evaluar AD
@@ -77,13 +81,17 @@
               <mat-icon>description</mat-icon>Ver AD
             </button>
 
-            <button mat-menu-item *ngIf="acuerdo.detalles.length > 0 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2"
+            <button mat-menu-item *ngIf="activeProcess && acuerdo.detalles.length > 0 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 && activeProcess.tipoProceso.id == 5"
               [routerLink]="[{ outlets: { 'acuerdos': ['comportamientos', acuerdo.idAcuerdo]}}]">
               <mat-icon>psychology</mat-icon>Ver Comportamientos
             </button>
 
             <button mat-menu-item
-              *ngIf="acuerdo.flujoObj.idFlujo == 1 &&  systemInformation.activeRol().nombre == 'Supervisor' || acuerdo.flujoObj.idFlujo == 2 &&  systemInformation.activeRol().nombre == 'Supervisor'"
+              *ngIf="
+                activeProcess &&
+                (activeProcess.tipoProceso.id == 1 || activeProcess.tipoProceso.id == 2  || activeProcess.tipoProceso.id == 3)
+                && acuerdo.flujoObj.idFlujo == 1 
+                && systemInformation.activeRol().nombre == 'Supervisor' || acuerdo.flujoObj.idFlujo == 2 &&  systemInformation.activeRol().nombre == 'Supervisor'"
               [routerLink]="[{ outlets: { 'acuerdos': ['editar', acuerdo.colaboradorObj.idPersona]}}]"
               routerLinkActive="active">
               <mat-icon>edit</mat-icon>Crear/Editar AD
@@ -120,6 +128,21 @@
         </td>
       </tr>
     </tbody>
+    <tfoot *ngIf="pagination && pagination.totalPage">
+      <tr class="paginatorRow">
+          <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
+              <td class="dataIndiCell"></td>
+          </ng-container>
+          <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+          <td class="paginationCell">
+              <span style="display: flex; align-items: center;">
+                  <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                  <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                  <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+              </span>
+          </td>
+      </tr>
+  </tfoot>
     <ng-template #noElements>
       <tbody>
         <tr class="dataRow">

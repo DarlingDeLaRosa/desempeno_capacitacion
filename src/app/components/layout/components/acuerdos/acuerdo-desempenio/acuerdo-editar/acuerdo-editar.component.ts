@@ -161,8 +161,6 @@ export class AcuerdoEditarComponent implements OnInit {
   getAgreementByIdCollaborator() {
     this.agreementservice.getAgreementByCollaborator(this.collaborator.idPersona, this.collaborator.grupoObj.idGrupo).subscribe((resp: any) => {
       this.agreement = resp.data;
-      console.log(this.agreement);
-
       //hace un map a los detalles del acuerdo y lo agrega al arreglo del detalle que tenemos
       this.goalDetails = this.agreement.detalles.map((detalle: any) => {
         return {
@@ -177,8 +175,6 @@ export class AcuerdoEditarComponent implements OnInit {
           isTranversal: detalle.metaObj.isTranversal,
         };
       });
-      console.log(this.goalDetails);
-
       this.isLoading = false;
       this.calcularTotalValor()
     })
@@ -197,10 +193,9 @@ export class AcuerdoEditarComponent implements OnInit {
         isTranversal: detalle.isTranversal
       }
     }));
-  console.log(acuerdoParaPost);
 
+    this.SnackBar.snackbarLouder(true)
     this.agreementservice.postAgreementGoalDetails(acuerdoParaPost).subscribe((resp: any) => {
-      this.SnackBar.snackbarLouder(true)
       this.appHelpers.handleResponse(resp, () => this.getAgreementByIdCollaborator())
       this.activateSave = false;
     })

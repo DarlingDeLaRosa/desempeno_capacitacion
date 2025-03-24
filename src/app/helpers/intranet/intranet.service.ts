@@ -11,12 +11,15 @@ import { SnackBars } from '../../components/layout/services/snackBars.service';
 export class IntranetServices {
 
     private token: string;
+    // private tokenSession: string;
     private baseURL: string;
     private sigebiURL: string;
     private isfoplannerURL: string;
-    private headers: HttpHeaders;
     private idSistema: number
+    private headers: HttpHeaders;
     private header: { headers: HttpHeaders };
+    // private headersSeccion: HttpHeaders;
+    // private headerSeccion: { headers: HttpHeaders };
 
     constructor(
         private http: HttpClient,
@@ -25,12 +28,16 @@ export class IntranetServices {
         private SnackBar: SnackBars,
     ) {
         this.token = this.systemInformation.TokenIntranet;
+        // this.tokenSession = JSON.parse(sessionStorage.getItem("tokenIntranet")!);;
         this.baseURL = this.systemInformation.getIntranetURL;
         this.idSistema = this.systemInformation.getSistema;
         this.sigebiURL = this.systemInformation.getSigebiURL;
         this.isfoplannerURL = this.systemInformation.getIsfoplannerURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
         this.header = { headers: this.headers };
+
+        // this.headersSeccion = new HttpHeaders({ 'Authorization': this.tokenSession });
+        // this.headerSeccion = { headers: this.headersSeccion };
     }
 
     // Peticion de Grupo ocupacional
@@ -43,6 +50,11 @@ export class IntranetServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallcargos`, this.header));
     }
 
+    // Peticion de cargos
+    public getPositionsByName(name: string) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallcargos/${name}`, this.header));
+    }
+
     // Peticion de recintos
     public getLocations() {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallrecintos`, this.header));
@@ -53,9 +65,17 @@ export class IntranetServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldivisiones`, this.header));
     }
 
+    public getDivisionByName(division: string) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldivisionesfilter/${division}`, this.header));
+    }
+
     // Peticion de departamentos
     public getDepartments() {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldepartamento`, this.header));
+    }
+
+    public getDepartmentByName(deparment: string) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldepartamentofilter/${deparment}`, this.header));
     }
 
     // Peticion de direcciones
@@ -63,9 +83,17 @@ export class IntranetServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldireccion`, this.header));
     }
 
+    public getDirectionByName(direction: string) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldireccionesfilter/${direction}`, this.header));
+    }
+
     // Peticion de rectorias
     public getViceRectorates() {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallvicerectorias`, this.header));
+    }
+
+    public getViceRectoratesByName(viceRectorate: string) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallvicerectoriasfilter/${viceRectorate}`, this.header));
     }
 
     // Peticion de Roles
@@ -96,24 +124,25 @@ export class IntranetServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, this.header))
     }
 
-   //peticion para el loguin a un sistema de intraanet
-  //  public postUserLogin(crendenciales: any) {
-  //   return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/User/post/login`, crendenciales , this.header))
-  //   }
+    //peticion para el loguin a un sistema de intraanet
+    //  public postUserLogin(crendenciales: any) {
+    //   return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/User/post/login`, crendenciales , this.header))
+    //   }
 
 
-    postAutorizacion(auth:any): Observable<ResponseI> {
-       return this.http.post<ResponseI>(`${this.baseURL}/User/post/login`, auth)
-         .pipe(catchError((error) => {
-           this.authError();
-           this.SnackBar.snackbarError('El usuario no está registrado en este sistema');
-           setTimeout(() => {
-             window.location.href = 'https://intranet.isfodosu.edu.do/#/login';
-           }, 5000);
-           return throwError(error) }))
-     }
+    postAutorizacion(auth: any): Observable<ResponseI> {
+        return this.http.post<ResponseI>(`${this.baseURL}/User/post/login`, auth)
+            .pipe(catchError((error) => {
+                this.authError();
+                this.SnackBar.snackbarError('El usuario no está registrado en este sistema');
+                setTimeout(() => {
+                    window.location.href = 'https://intranet.isfodosu.edu.do/#/login';
+                }, 5000);
+                return throwError(error)
+            }))
+    }
 
-     authError(){
-      sessionStorage.clear();
+    authError() {
+        sessionStorage.clear();
     }
 }

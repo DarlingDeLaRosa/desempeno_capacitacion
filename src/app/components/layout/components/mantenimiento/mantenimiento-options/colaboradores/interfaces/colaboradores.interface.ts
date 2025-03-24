@@ -33,6 +33,7 @@ export interface CollaboratorsGetI {
     estado: boolean,
     cedula: string,
     fechaIngreso: Date,
+    fechaNacimiento: Date,
     sexo: string,
     edad: number,
     supervisor: boolean,
@@ -48,6 +49,7 @@ export interface CollaboratorsGetI {
     direccion: DirectionI
     idSupervisor: number
     hijos: any
+    idEstado: number
     cursosPendientes: CourseGetI[];
     viceRectoria: ViceRectorate,
     recinto: LocationI

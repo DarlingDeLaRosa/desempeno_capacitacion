@@ -69,4 +69,17 @@ export class HerlperService {
     pendingCurse(listCourse: any[]): boolean {
         return listCourse.every((course: any) => course.cursosPendientes.length == 0);
     }
+
+    isTodayInRange(startDate: string | Date, endDate: string | Date): boolean {
+        const today = new Date();
+        const start = new Date(startDate);
+        const end = new Date(endDate);    
+    
+        // Normalizar las fechas (eliminar horas, minutos y segundos)
+        today.setHours(0, 0, 0, 0);
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+    
+        return today >= start && today <= end;
+      }
 }
