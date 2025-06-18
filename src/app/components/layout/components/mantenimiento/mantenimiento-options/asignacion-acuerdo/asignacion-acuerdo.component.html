@@ -103,7 +103,7 @@
                 <tr class="dataRow" *ngFor="let asignationAgreement of asignationsAgreement">
                     <td class="dataIndiCell">{{asignationAgreement.colaborador.nombre | titlecase}}
                         {{asignationAgreement.colaborador.apellidos | titlecase }}</td>
-                    <td class="dataIndiCell">{{asignationAgreement.colaborador.cedula || 'No Asignado'}}</td>
+                    <td class="dataIndiCell">{{asignationAgreement.colaborador.cedula ? asignationAgreement.colaborador.cedula : 'No Asignado'}}</td>
                     <td class="dataIndiCell">{{asignationAgreement.colaborador.cargo.nombre}}</td>
                     <td class="dataIndiCell">{{asignationAgreement.tipoAcuerdoObj.nombre}}</td>
                     <td class="dataIndiCell">{{appHelpers.getUnitOrg(asignationAgreement.colaborador.division,

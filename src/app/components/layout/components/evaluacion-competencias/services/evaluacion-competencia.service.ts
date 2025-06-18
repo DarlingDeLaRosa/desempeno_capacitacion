@@ -21,7 +21,7 @@ export class EvaluationCompetencyServices {
         private appHelpers: HerlperService,
         private systemInformation: systemInformationService,
     ) {
-      this.token = JSON.parse(sessionStorage.getItem("userToken")!);
+        this.token = JSON.parse(sessionStorage.getItem("userToken")!);
         this.baseURL = this.systemInformation.getURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
         this.header = { headers: this.headers };
@@ -29,20 +29,21 @@ export class EvaluationCompetencyServices {
     }
 
 
-    public getEvaluationCompetencies(collaboratorId: number = this.usuario.idPersona) {
-        return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/EvaluacionCompetencia/colaborador/${collaboratorId}`, this.header));
+    public getEvaluationCompetencies(isSup: boolean = false) {
+        let collaboratorId: number = this.usuario.idPersona
+        return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/EvaluacionCompetencia/colaborador/${collaboratorId}?supervisor=${isSup}&CurrentPage=1&PageSize=10`, this.header));
     }
 
-    public postEvaluationCompetency( evaluationCompetency : EvaluationCompetencyI) {
-        return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/EvaluacionCompetencia`, evaluationCompetency , this.header))
+    public postEvaluationCompetency(evaluationCompetency: EvaluationCompetencyI) {
+        return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/EvaluacionCompetencia`, evaluationCompetency, this.header))
     }
 
     public getEvaluationCompetenciesByIdPerson(collaboratorId: number) {
         return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/EvaluacionCompetencia/colaborador-id/${collaboratorId}`, this.header));
     }
 
-    public putEvaluationCompetency( evaluationCompetency : EvaluationCompetencyI) {
-        return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/EvaluacionCompetencia`, evaluationCompetency , this.header))
+    public putEvaluationCompetency(evaluationCompetency: EvaluationCompetencyI) {
+        return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/EvaluacionCompetencia`, evaluationCompetency, this.header))
     }
 
     // public deleteCourse(id: number) {

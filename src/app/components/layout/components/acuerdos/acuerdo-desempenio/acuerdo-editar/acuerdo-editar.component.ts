@@ -5,11 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { IntranetServices } from '../../../../../../helpers/intranet/intranet.service';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 import { GoalsServices } from '../../../mantenimiento/mantenimiento-options/metas/services/meta.service';
-import { GoalI, VerificationMethodI } from '../../../mantenimiento/mantenimiento-options/metas/interface/metas.interface';
-import { ResponseI } from '../../../../../interfaces/generalInteerfaces';
+import { VerificationMethodI } from '../../../mantenimiento/mantenimiento-options/metas/interface/metas.interface';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { SnackBar } from '../../../../../../helpers/components/snackBar/snackBar.component';
-import { SnackbarError } from '../../../../../../helpers/components/snackBarError/snackbarError.component';
 import { SnackBars } from '../../../../services/snackBars.service';
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
@@ -50,7 +47,6 @@ export class AcuerdoEditarComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-
     private intranetService: IntranetServices,
     private goalsServices: GoalsServices,
     private agreementservice: agreementService,

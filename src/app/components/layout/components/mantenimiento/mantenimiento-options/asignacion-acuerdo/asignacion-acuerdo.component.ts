@@ -64,6 +64,8 @@ export class AsignacionAcuerdoComponent implements OnInit {
   getAsignationAgreement() {
     this.asignationAgreementService.getAsignationAgreements(this.page, 10)
       .subscribe((res: any) => {
+        console.log(res);
+        
         this.asignationsAgreement = res.data;
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }

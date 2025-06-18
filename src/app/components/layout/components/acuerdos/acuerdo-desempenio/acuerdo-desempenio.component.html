@@ -21,15 +21,24 @@
 </div>
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
-  <h3
-    *ngIf="systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado'; else noSup ">
-    {{usuario.Unidad}}</h3>
-  <ng-template #noSup>
-    <h3>Acuerdos De Desempeño Trabajados.</h3>
-  </ng-template>
+  <div style="display: flex; flex-direction: column; ">
+    <h3
+      *ngIf="systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado' || this.systemInformation.activeRol().nombre == 'Encargado' && selectGroup; else noSup ">
+      {{usuario.Unidad}}</h3>
+    <ng-template #noSup>
+      <h3>Acuerdos De Desempeño Trabajados.</h3>
+    </ng-template>
 
-  <h5 style="color: green;" *ngIf="activeProcess">{{activeProcess.tipoProceso.nombre}}: {{activeProcess.fechaInicio | date: 'dd/MM/yyyy'}} -
-    {{activeProcess.fechaFin | date: 'dd/MM/yyyy'}}</h5>
+    <h5 style="color: green;" *ngIf="activeProcess">{{activeProcess.tipoProceso.nombre}}: {{activeProcess.fechaInicio |
+      date: 'dd/MM/yyyy'}} -
+      {{activeProcess.fechaFin | date: 'dd/MM/yyyy'}}</h5>
+  </div>
+
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+    *ngIf="this.systemInformation.activeRol().nombre == 'Encargado'" [(ngModel)]="selectGroup">
+    <mat-button-toggle [value]="false" (click)="getAcuerdoByRol('')">Todos los Colaboradores</mat-button-toggle>
+    <mat-button-toggle [value]="true" (click)="getAcuerdoByRol('')">Mis Supervisados</mat-button-toggle>
+  </mat-button-toggle-group>
 </div>
 
 <div class="table-container">
@@ -51,7 +60,9 @@
     </thead>
     <tbody *ngIf=" agreement.length > 0; else noElements">
       <tr class="dataRow" *ngFor="let acuerdo of agreement">
-        <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre | titlecase }} {{acuerdo.colaboradorObj.apellidos | titlecase }}</td>
+        <!-- <ng-container *ngIf="acuerdo.colaboradorObj.estadoObj.idEstado == 1"></ng-container> -->
+        <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre | titlecase }} {{acuerdo.colaboradorObj.apellidos |
+          titlecase }}</td>
         <td class="dataIndiCell">{{appHelpers.getUnitOrg(acuerdo.colaboradorObj.division,
           acuerdo.colaboradorObj.departamento, acuerdo.colaboradorObj.direccion,
           acuerdo.colaboradorObj.viceRectoria)?.nombre | titlecase }}</td>
@@ -64,62 +75,64 @@
           <mat-menu #menu="matMenu">
 
             <button mat-menu-item *ngIf="acuerdo.flujoObj.idFlujo == 4"
-              (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos)">
+              (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.colaboradorObj.estadoObj.idEstado)">
               <mat-icon>upload_file</mat-icon>Documentos
             </button>
 
             <button mat-menu-item
-              *ngIf="activeProcess && activeProcess.tipoProceso.id == 5 && acuerdo.detalles.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo' "
+              *ngIf="acuerdo.colaboradorObj.estadoObj.idEstado == 1 && activeProcess && activeProcess.tipoProceso.id == 5 && acuerdo.detalles.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo' || systemInformation.activeRol().nombre == 'Encargado' && selectGroup && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo'"
               [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]"
               routerLinkActive="active">
               <mat-icon>done_outline</mat-icon>Evaluar AD
             </button>
-
 
             <button mat-menu-item *ngIf="acuerdo.detalles.length > 0"
               [routerLink]="[{ outlets: { 'acuerdos': ['ver-acuerdo', acuerdo.idAcuerdo]}}]">
               <mat-icon>description</mat-icon>Ver AD
             </button>
 
-            <button mat-menu-item *ngIf="activeProcess && acuerdo.detalles.length > 0 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 && activeProcess.tipoProceso.id == 5"
+            <button mat-menu-item
+              *ngIf="activeProcess && acuerdo.detalles.length > 0 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 && activeProcess.tipoProceso.id == 5"
               [routerLink]="[{ outlets: { 'acuerdos': ['comportamientos', acuerdo.idAcuerdo]}}]">
               <mat-icon>psychology</mat-icon>Ver Comportamientos
             </button>
 
             <button mat-menu-item
               *ngIf="
-                activeProcess &&
+                activeProcess && acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
                 (activeProcess.tipoProceso.id == 1 || activeProcess.tipoProceso.id == 2  || activeProcess.tipoProceso.id == 3)
-                && acuerdo.flujoObj.idFlujo == 1 
-                && systemInformation.activeRol().nombre == 'Supervisor' || acuerdo.flujoObj.idFlujo == 2 &&  systemInformation.activeRol().nombre == 'Supervisor'"
+                && (systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'Encargado' &&  selectGroup)"
               [routerLink]="[{ outlets: { 'acuerdos': ['editar', acuerdo.colaboradorObj.idPersona]}}]"
               routerLinkActive="active">
               <mat-icon>edit</mat-icon>Crear/Editar AD
             </button>
 
-
             <button mat-menu-item *ngIf="acuerdo.detalles.length > 0 && acuerdo.comentarios.length > 0"
-              (click)="commentsAgreement(acuerdo.idAcuerdo, acuerdo.colaboradorObj.nombre + ' ' + acuerdo.colaboradorObj.apellidos)">
+              (click)="commentsAgreement(acuerdo.idAcuerdo, acuerdo.colaboradorObj.nombre + ' ' + acuerdo.colaboradorObj.apellidos, acuerdo.colaboradorObj.estadoObj.idEstado)">
               <mat-icon>comment</mat-icon>Comentarios
             </button>
 
-
             <button mat-menu-item
-              *ngIf="acuerdo.detalles.length > 0 && this.systemInformation.activeRol().nombre == 'Encargado' || acuerdo.detalles.length > 0 && this.systemInformation.activeRol().nombre == 'Analista'"
+              *ngIf="acuerdo.colaboradorObj.estadoObj.idEstado == 1 && acuerdo.detalles.length > 0 && this.systemInformation.activeRol().nombre == 'Encargado' && selectGroup == false || acuerdo.detalles.length > 0 && this.systemInformation.activeRol().nombre == 'Analista'"
               (click)="openAuthorizationAction(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.idAcuerdo)">
               <mat-icon>lock_open</mat-icon>Autorizar acción
             </button>
 
+            <button
+              *ngIf="activeProcess == null && systemInformation.activeRol().nombre == 'Supervisor' || activeProcess == null && systemInformation.activeRol().nombre == 'Encargado' && selectGroup"
+              mat-menu-item disabled>
+              <mat-icon>info</mat-icon>Periodo de edición de acuerdos de desempeño no disponible.
+            </button>
 
             <ng-container *ngIf="!(
-                acuerdo.flujoObj.idFlujo == 4 ||
+                acuerdo.flujoObj.idFlujo == 4 ||  
                 (acuerdo.detalles.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo') ||
                 acuerdo.detalles.length > 0 ||
                 (acuerdo.flujoObj.idFlujo == 1 && systemInformation.activeRol().nombre == 'Supervisor' || acuerdo.flujoObj.idFlujo == 2 && systemInformation.activeRol().nombre == 'Supervisor') ||
                 (acuerdo.detalles.length > 0 && acuerdo.comentarios.length > 0) ||
                 (acuerdo.detalles.length > 0 && (this.systemInformation.activeRol().nombre == 'Encargado' || this.systemInformation.activeRol().nombre == 'Analista'))
               )">
-              <button mat-menu-item disabled>
+              <button mat-menu-item disabled *ngIf="systemInformation.activeRol().nombre !== 'Encargado' && selectGroup || systemInformation.activeRol().nombre == 'Encargado' && selectGroup == false || systemInformation.activeRol().nombre !== 'Encargado'  ">
                 <mat-icon>info</mat-icon>No hay elementos disponibles en este momento.
               </button>
             </ng-container>
@@ -130,19 +143,19 @@
     </tbody>
     <tfoot *ngIf="pagination && pagination.totalPage">
       <tr class="paginatorRow">
-          <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
-              <td class="dataIndiCell"></td>
-          </ng-container>
-          <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
-          <td class="paginationCell">
-              <span style="display: flex; align-items: center;">
-                  <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
-                  <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-                  <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
-              </span>
-          </td>
+        <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
+          <td class="dataIndiCell"></td>
+        </ng-container>
+        <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+        <td class="paginationCell">
+          <span style="display: flex; align-items: center;">
+            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+            <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+          </span>
+        </td>
       </tr>
-  </tfoot>
+    </tfoot>
     <ng-template #noElements>
       <tbody>
         <tr class="dataRow">

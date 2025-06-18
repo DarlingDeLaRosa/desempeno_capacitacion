@@ -1,10 +1,11 @@
 <h2 class="Stitle">Asignación de competencias</h2>
 <div>
     <form style=" margin: 15px 0 35px 0" [formGroup]="asignationCompetencyForm" (ngSubmit)="saveChanges()">
+        
         <div style="display: flex;">
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Grupo Ocupacional</mat-label>
-                <mat-select formControlName="idGrupo" disableRipple>
+                <mat-select formControlName="idGrupo" disableRipple > <!--(selectionChange)="activeSup($event.value)"-->
                     <ng-container *ngIf="ocupationalGroup && ocupationalGroup.length; else noOcupationalGroup">
                         <mat-option [value]="ocupational.idGrupo" *ngFor="let ocupational of ocupationalGroup">
                             {{ocupational.nombre}}
@@ -43,8 +44,16 @@
                         <mat-option>No hay campos disponibles</mat-option>
                     </ng-template>
                 </mat-select>
-            </mat-form-field><br>
+            </mat-form-field>
         </div>
+
+        <!-- <div class="matRadioChoice" *ngIf="showSupGOII">
+            <h4 style="margin-right: 20px;">¿Esta competencia le corresponderá al Grupo II responsable de supervisar?</h4>
+            <mat-radio-group formControlName="isSup">
+                <mat-radio-button [value]="true" color="primary">Si</mat-radio-button>
+                <mat-radio-button [value]="false" color="primary">No</mat-radio-button>
+            </mat-radio-group>
+        </div> -->
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
         <button type="button" class="cleanButton" (click)="asignationCompetencyForm.reset()"
@@ -69,7 +78,7 @@
             </thead>
             <tbody *ngIf="asignationCompetencies && asignationCompetencies.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let asignationCompetency of asignationCompetencies">
-                    <td class="dataIndiCell"> Grupo {{asignationCompetency.grupoOcupacionlObj.nombre}}</td>
+                    <td class="dataIndiCell">{{asignationCompetency.grupoOcupacionlObj.nombre}}</td>
                     <td class="dataIndiCell">{{asignationCompetency.competenciaObj.nombre}}</td>
                     <td class="dataIndiCell">{{asignationCompetency.gradoObj.tipoGradoObj.nombre}}</td>
                     <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(asignationCompetency)"

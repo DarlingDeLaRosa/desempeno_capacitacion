@@ -27,6 +27,7 @@ import { PaginationI } from '../../../../interfaces/generalInteerfaces';
 export class AcuerdoDesempenioComponent implements OnInit {
 
   hijosList!: any[];
+  selectGroup: boolean = false
   isLoading: boolean = true;
   page: number = 1
   pagination!: PaginationI
@@ -51,8 +52,9 @@ export class AcuerdoDesempenioComponent implements OnInit {
   }
 
   getActiveAgreementPeriod() {
-    this.periodProcessService.getPeriodProcessesActive()
+    this.periodProcessService.getPeriodProcessesActive(true)
       .subscribe((res: any) => {
+        console.log(res);
         if (res) this.activeProcess = res.data
       })
   }
@@ -60,12 +62,14 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //Metodo para traer la lista de los hijos de los supervisores
   getAcuerdoByRol(term: string) {
     this.isLoading = true;
-    this.agreementService.getAgreementByRol(this.usuario.idPersona, term, this.page, 10).subscribe((resp: any) => {
+    this.agreementService.getAgreementByRol(this.usuario.idPersona, term, this.selectGroup, this.page, 10).subscribe((resp: any) => {
       this.agreement = resp.data;
+      console.log(this.agreement);
+      
       let { currentPage, totalItem, totalPage } = resp
       this.pagination = { currentPage, totalItem, totalPage }
 
-      if (currentPage > totalPage) { this.page = 1 }
+      // if (currentPage > totalPage) { this.page = 1 }
       this.isLoading = false;
     })
   }
@@ -82,14 +86,15 @@ export class AcuerdoDesempenioComponent implements OnInit {
   }
 
   //Metodo para abrir el modal de la lista de documento
-  openModalListadoDocumentos(idCollaborator: number, nombre: string, apellido: string): void {
+  openModalListadoDocumentos(idCollaborator: number, nombre: string, apellido: string, estado: number): void {
     const Nombre = nombre + ' ' + apellido;
     const dialog = this.dialog.open(ListadoDocumentoComponent, {
       width: '750px',
       height: '505px',
       data: {
         idCollaborator,
-        Nombre
+        Nombre, 
+        estado
       }
     })
     dialog.afterClosed().subscribe(result => {
@@ -107,8 +112,8 @@ export class AcuerdoDesempenioComponent implements OnInit {
     dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
   }
 
-  commentsAgreement(idAcuerdo: number, fullName: string): void {
-    const dialog = this.dialog.open(ComentariosComponent, { data: { idAcuerdo, fullName } })
+  commentsAgreement(idAcuerdo: number, fullName: string, estado: number): void {
+    const dialog = this.dialog.open(ComentariosComponent, { data: { idAcuerdo, fullName, estado } })
     dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
   }
 

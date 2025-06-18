@@ -18,7 +18,7 @@ export class AsignationCompetenciesServices {
         private appHelpers: HerlperService,
         private systemInformation: systemInformationService,
     ) {
-        this.token = this.systemInformation.getToken;
+      this.token = JSON.parse(sessionStorage.getItem("userToken")!);
         this.baseURL = this.systemInformation.getURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
         this.header = { headers: this.headers };

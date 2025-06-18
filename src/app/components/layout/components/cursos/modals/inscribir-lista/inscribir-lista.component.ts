@@ -70,7 +70,7 @@ export class InscribirListaComponent implements OnInit {
     if (autoCompleteValue && autoCompleteValue.length > 3) {
       this.intranetService.findPeopleByUser(autoCompleteValue)
         .subscribe((res: any) => {
-          this.filteredCollaborator = res.data
+          this.filteredCollaborator = res.data.filter((users: CollaboratorsGetI)=>{ return users.estadoObj.idEstado == 1 })
         })
     } else {
       this.filteredCollaborator = []

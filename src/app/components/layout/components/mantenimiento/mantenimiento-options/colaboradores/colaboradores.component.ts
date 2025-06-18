@@ -1,7 +1,6 @@
 import { EMPTY, of, switchMap } from 'rxjs';
 import { Component, OnInit, computed, effect } from '@angular/core';
 import { SnackBars } from '../../../../services/snackBars.service';
-import { PeriodI } from '../periodos/interfaces/periodo.interface';
 import { CollaboratorServices } from './services/colaboradores.service';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { ClassImports } from '../../../../../../helpers/class.components';
@@ -13,7 +12,7 @@ import { OcupationalGroupI } from '../../../../../../helpers/intranet/intranet.i
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { asignationAgreementI } from '../asignacion-acuerdo/interfaces/asignacion-acuerdo.interface';
 import { AsignationAgreementServices } from '../asignacion-acuerdo/services/asignacion-acuerdo.service';
-import { DepartmentI, DirectionI, DivisionI, PositionI, LocationI, ViceRectorate, RolI, PersonI, CollaboratorsGetI } from './interfaces/colaboradores.interface';
+import { DepartmentI, DirectionI, DivisionI, PositionI, LocationI, ViceRectorate, RolI, PersonI, CollaboratorsGetI, CollaboratorsI } from './interfaces/colaboradores.interface';
 
 @Component({
   selector: 'app-colaboradores',
@@ -66,6 +65,11 @@ export class ColaboradoresComponent implements OnInit {
     this.filterForm = fb.group({
       filter: new FormControl('')
     })
+
+    this.statusForm = fb.group({
+      idPersona: new FormControl('', Validators.required),
+      idEstado: new FormControl('', Validators.required)
+    })
   }
 
   roles!: RolI[]
@@ -86,6 +90,7 @@ export class ColaboradoresComponent implements OnInit {
   departments!: DepartmentI[]
   collaboratorForm: FormGroup
   filterForm: FormGroup
+  statusForm: FormGroup
   viceRectorates!: ViceRectorate[]
   ocupationalGroups!: OcupationalGroupI[]
   asignationAgreement!: asignationAgreementI
@@ -155,6 +160,27 @@ export class ColaboradoresComponent implements OnInit {
     control?.updateValueAndValidity();
     control?.reset();
   }
+
+  async changeStatus(collaborator: PersonI) {
+    const newState = collaborator.persona.estadoObj.idEstado === 1 ? 2 : 1;
+    this.statusForm.patchValue({ idPersona: collaborator.persona.idPersona, idEstado: newState })
+
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation('¿Estas seguro de cambiar el estado de este colaborador?', 'Una vez inactivo, no podrá realizar acciones en el sistema. Solo tendrá acceso de consulta.')
+
+    if (removeDecision) {
+    
+      this.collaboratorService.putChangePersonStatus(this.statusForm.value).subscribe((res: any) => {
+        this.appHelpers.handleResponse(res, () => this.getCollaborators(), this.statusForm)
+      });
+    }
+  }
+
+  // toggleActivatePerson(idPeriodo: number){
+  //   this.periodService.putActivatePeriod(idPeriodo)
+  //     .subscribe((res: any) => {
+  //       this.appHelpers.handleResponse(res, () => this.getPeriods(), this.periodsForm)
+  //     })
+  // }
 
   // Metodo para obtener todos los grupos ocupacionales
   getRoles() {

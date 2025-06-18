@@ -25,7 +25,7 @@
         <img src="nodata.jpg" alt="No courses available">
     </div>
 
-    <form [formGroup]="commentsForm" (submit)="postComment()" *ngIf="comments.length > 0">
+    <form [formGroup]="commentsForm" (submit)="postComment()" *ngIf="comments.length > 0 && data.estado == 1">
         <mat-form-field appearance="fill" style="flex: 3;">
             <mat-label>Escribe un mensaje</mat-label>
             <input matInput formControlName="descripcion">

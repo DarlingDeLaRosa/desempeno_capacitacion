@@ -27,7 +27,7 @@ export class ComentariosComponent implements OnInit{
     public dialogRef: MatDialogRef<ComentariosComponent>,
     public systemInformation: systemInformationService,
     @Inject(MAT_DIALOG_DATA)
-    public data: {idAcuerdo: number, fullName: string},
+    public data: {idAcuerdo: number, fullName: string, estado: number},
   ){
     this.commentsForm = fb.group({
       acuerdoId: 0,

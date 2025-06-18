@@ -20,6 +20,7 @@ import { HerlperService } from '../../../../services/appHelpers.service';
 export class EvalucionCompetenciasComponent implements OnInit {
 
   userLogged!: loggedUserI
+  selectGroup: boolean = false
   supervisorWithSubordinates!: CollaboratorsGetI[]
   evaluationsCompetencies!: EvaluationCompetencyGetI[]
 
@@ -42,7 +43,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
   }
 
   getSupervisorWithSubordinates() {
-    this.evaluationCompetencyService.getEvaluationCompetencies().subscribe((res: any) => {
+    this.evaluationCompetencyService.getEvaluationCompetencies(this.selectGroup).subscribe((res: any) => {
       this.supervisorWithSubordinates = res.data.colaboradores;
       this.evaluationsCompetencies = res.data.evaluacionesCompetencias;
     })

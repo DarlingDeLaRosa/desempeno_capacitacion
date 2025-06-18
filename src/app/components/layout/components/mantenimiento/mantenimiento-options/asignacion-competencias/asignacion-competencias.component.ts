@@ -33,6 +33,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
   ) {
     this.asignationCompetencyForm = fb.group({
       idAsignacion: 0,
+      // isSup: new FormControl(false),
       idGrupo: new FormControl('', Validators.required),
       idGrado: new FormControl('', Validators.required),
       idCompetencia: new FormControl('', Validators.required),
@@ -43,6 +44,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
   pagination!: PaginationI
   gradesTypes!: GradesGetI[]
   competencies!: CompetencyI[]
+  showSupGOII: boolean = false
   asignationCompetencyForm: FormGroup
   ocupationalGroup!: OcupationalGroupI[]
   asignationCompetencies!: AsignationGetCompetencyI[]
@@ -52,6 +54,11 @@ export class AsignacionCompetenciasComponent implements OnInit {
     this.getOcupationalGroup()
     this.getAsignationCompetencies()
   }
+
+  // activeSup(event: number) {
+  //   if (event == 2) this.showSupGOII = true
+  //   else this.showSupGOII = false
+  // }
 
   // Metodo para obtener todos los grupos ocupacionales
   getOcupationalGroup() {
@@ -82,8 +89,8 @@ export class AsignacionCompetenciasComponent implements OnInit {
     this.asignationCompetenciesService.getAsignationCompetencies(this.page, 10)
       .subscribe((res: any) => {
         this.asignationCompetencies = res.data;
-        const {currentPage ,totalItem, totalPage} = res
-        this.pagination = {currentPage ,totalItem, totalPage}
+        const { currentPage, totalItem, totalPage } = res
+        this.pagination = { currentPage, totalItem, totalPage }
       })
   }
 
@@ -122,11 +129,13 @@ export class AsignacionCompetenciasComponent implements OnInit {
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
-    this.appHelpers.saveChanges(() => this.postAsignationCompetency(), () => this.putAsignationCompetency(), this.asignationCompetencyForm.value.idAsignacion, this.asignationCompetencyForm)
+    console.log(this.asignationCompetencyForm.value);
+    
+    // this.appHelpers.saveChanges(() => this.postAsignationCompetency(), () => this.putAsignationCompetency(), this.asignationCompetencyForm.value.idAsignacion, this.asignationCompetencyForm)
   }
 
-   //Metodo para llamar a la siguiente pagina
-   nextPage() {
+  //Metodo para llamar a la siguiente pagina
+  nextPage() {
     if (this.page < this.pagination.totalPage) {
       this.page += 1
       this.getAsignationCompetencies()
@@ -137,7 +146,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
   previousPage() {
     if (this.page > 1) {
       this.page -= 1
-      ;this.getAsignationCompetencies()
+        ; this.getAsignationCompetencies()
     }
   }
 }

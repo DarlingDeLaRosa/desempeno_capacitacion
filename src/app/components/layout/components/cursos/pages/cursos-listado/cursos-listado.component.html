@@ -44,7 +44,7 @@
               <td class="dataIndiCell">{{item.fechaInicioInscripcion |date}}</td>
               <td class="dataIndiCell">{{item.fechaFinInscripcion |date}}</td>
               <td class="dataIndiCell">{{item.inscripcionesObj.length}} / {{item.cuposDisponibles}}</td>
-              <td class="dataIndiCell">{{item.estadoCursoObj?.nombre|| null}}</td>
+              <td class="dataIndiCell">{{item.estadoCursoObj.nombre ? item.estadoCursoObj.nombre : ''}}</td>
               <td  class="dataIndiCell">
                   <ng-container *ngIf="(item.idEstado == 2) && (item.inscripcionesObj.length != item.cuposDisponibles)">
                   <mat-icon  class="editIcon" (click)=" openModalIncribirLista(item)">edit_note</mat-icon>

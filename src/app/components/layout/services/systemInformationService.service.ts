@@ -17,7 +17,7 @@ export class systemInformationService {
   private userToken: string = "";
 
   private UrlIntranet: string = 'https://intranet.isfodosu.edu.do/api'
-  // private UrlIntranet: string = 'http://172.25.0.12:3003'
+  // private URLDevelopment: string = 'http://172.25.0.12:4005/api'
   private URLDevelopment: string = 'https://acuerdos.isfodosu.edu.do/api'
   // private URLDevelopment: string = 'http://172.25.0.12:4005'
   private UrlSIGEBI: string = 'https://sigebi.isfodosu.edu.do/sigebiapi'
@@ -42,6 +42,7 @@ export class systemInformationService {
       this.makeRequests();
     });
   }
+  
   private checkToken(): Promise<void> {
     return new Promise((resolve) => {
       this.TokenIntranet = sessionStorage.getItem("tokenIntranet") ?? '';

@@ -38,8 +38,8 @@ export class agreementService {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/get_by_idcolaborador/${idCollaborator}/${idGroup}`, this.header));
   }
 
-  public getAgreementByRol(idCollaborator: number, term:string, page: number = 1, pageSize: number = 1000) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador/${idCollaborator}?term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
+  public getAgreementByRol(idCollaborator: number, term:string, supervisor: boolean = false, page: number = 1, pageSize: number = 1000) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador/${idCollaborator}?supervisor=${supervisor}&term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
   }
 
   public getAgreementByIdCollaborator(idCollaborator: number) {

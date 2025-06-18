@@ -32,6 +32,7 @@ export class AsignacionMetasComponent implements OnInit {
 
     this.asignationGoalForm = fb.group({
       idAsignacion: 0,
+      isSup: new FormControl(false),
       idGrupo: new FormControl('', Validators.required),
       idMeta: new FormControl('', Validators.required),
     })
@@ -40,6 +41,7 @@ export class AsignacionMetasComponent implements OnInit {
   page: number = 1
   goals!: GoalGetI[]
   pagination!: PaginationI
+  showSupGOII: boolean = false
   asignationGoalForm: FormGroup
   ocupationalGroup!: OcupationalGroupI[]
   asignationGoals!: AsignationGoalGetI[]

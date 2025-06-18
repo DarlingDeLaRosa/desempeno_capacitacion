@@ -4,11 +4,11 @@ mat-sidenav-container {
 
 mat-sidenav {
     border: none;
-    width: 250px;
     display: grid;
-    padding-top: 1px;
     border-radius: 15px;
     background-color: #edf2fa;
+    /* width: 260px; */
+    /* padding-top: 1px; */
 }
 
 .componentsContent {

@@ -11,10 +11,18 @@
     <!-- [(ngModel)]="questionName" (input)="getPregunta()" -->
 </div>
 
-<h3 *ngIf="this.systemInformation.activeRol().nombre == 'Supervisor'; else noSup ">{{userLogged.Unidad}}</h3>
-<ng-template #noSup>
-  <h3>LISTA DE PLANES DE MEJORA TRABAJADOS.</h3>
-</ng-template>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h3 *ngIf="this.systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado' || this.systemInformation.activeRol().nombre == 'Encargado' && selectGroup; else noSup ">{{userLogged.Unidad}}</h3>
+    <ng-template #noSup>
+        <h3>Lista De Planes De Mejora Trabajados.</h3>
+    </ng-template>
+
+    <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
+    *ngIf="this.systemInformation.activeRol().nombre == 'Encargado'" [(ngModel)]="selectGroup">
+    <mat-button-toggle [value]="false" (click)="getSupervisorWithSubordinates()">Todos los Colaboradores</mat-button-toggle>
+    <mat-button-toggle [value]="true" (click)="getSupervisorWithSubordinates()">Mis Supervisados</mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
 
 <div class="table-container">
     <table>

@@ -38,7 +38,7 @@
 
     </div>
 
-    <div style="display: flex; gap: 5px">
+    <div style="display: flex; gap: 5px" *ngIf="data.estado == 1">
       <div class="file-upload-container" (click)="fileInput.click()">
         <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
         <span class="file-upload-name">

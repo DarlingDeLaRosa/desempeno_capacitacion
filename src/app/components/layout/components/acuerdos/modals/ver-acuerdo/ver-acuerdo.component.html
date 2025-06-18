@@ -18,7 +18,7 @@
   </ng-container>
 
 
-  <div style="display: flex; justify-content: space-between; margin-bottom: 15px;" *ngIf="agreement">
+  <div style="display: flex; justify-content: space-between; margin-bottom: 15px;" *ngIf="agreement && agreement.colaboradorObj.estadoObj.idEstado == 1">
     <div style="display: flex; gap: 5px;">
       <button *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3" type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
       <button *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3" type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
@@ -185,7 +185,7 @@
   </div>
 
   <div style="display: flex; margin: 0;"
-    *ngIf="agreement && systemInformation.activeRol().nombre == 'Analista' || agreement && systemInformation.activeRol().nombre == 'Encargado'  ">
+    *ngIf="agreement && systemInformation.activeRol().nombre == 'Analista' && agreement.colaboradorObj.estadoObj.idEstado == 1 || agreement && systemInformation.activeRol().nombre == 'Encargado' && agreement.colaboradorObj.estadoObj.idEstado == 1 ">
     <form style="width: 100%;" [formGroup]="commentsForm" (submit)="postComment()">
       <div style="display: flex; align-items: end;">
         <mat-form-field style="flex: 1;">

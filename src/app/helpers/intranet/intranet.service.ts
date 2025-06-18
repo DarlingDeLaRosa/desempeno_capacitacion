@@ -17,7 +17,9 @@ export class IntranetServices {
     private isfoplannerURL: string;
     private idSistema: number
     private headers: HttpHeaders;
+    private headersIsfo: HttpHeaders;
     private header: { headers: HttpHeaders };
+    private headerIsfop: {headers: HttpHeaders}
     // private headersSeccion: HttpHeaders;
     // private headerSeccion: { headers: HttpHeaders };
 
@@ -27,15 +29,16 @@ export class IntranetServices {
         private systemInformation: systemInformationService,
         private SnackBar: SnackBars,
     ) {
-        this.token = this.systemInformation.TokenIntranet;
+        this.token = JSON.parse(sessionStorage.getItem("tokenIntranet")!);;
         // this.tokenSession = JSON.parse(sessionStorage.getItem("tokenIntranet")!);;
         this.baseURL = this.systemInformation.getIntranetURL;
         this.idSistema = this.systemInformation.getSistema;
         this.sigebiURL = this.systemInformation.getSigebiURL;
         this.isfoplannerURL = this.systemInformation.getIsfoplannerURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
+        this.headersIsfo = new HttpHeaders({ 'Authorization': 'Bearer ' + this.token });
         this.header = { headers: this.headers };
-
+        this.headerIsfop = { headers: this.headersIsfo };
         // this.headersSeccion = new HttpHeaders({ 'Authorization': this.tokenSession });
         // this.headerSeccion = { headers: this.headersSeccion };
     }
@@ -112,7 +115,7 @@ export class IntranetServices {
 
     // Metas Plan Operativo Anual
     public getGoalPOA(meta: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.isfoplannerURL}/IndicadoresGestion?CurrentPage=1&PageSize=20&buscar=${meta}`, this.header));
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.isfoplannerURL}/IndicadoresGestion?CurrentPage=1&PageSize=10&buscar=${meta}`, this.headerIsfop));
     }
 
     //Petición de Personas a Intranet
@@ -124,11 +127,10 @@ export class IntranetServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, this.header))
     }
 
-    //peticion para el loguin a un sistema de intraanet
+    // peticion para el loguin a un sistema de intraanet
     //  public postUserLogin(crendenciales: any) {
     //   return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/User/post/login`, crendenciales , this.header))
-    //   }
-
+    // }
 
     postAutorizacion(auth: any): Observable<ResponseI> {
         return this.http.post<ResponseI>(`${this.baseURL}/User/post/login`, auth)

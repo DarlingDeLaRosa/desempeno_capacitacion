@@ -18,7 +18,7 @@ export class ProtocolsServices {
         private appHelpers: HerlperService,
         private systemInformation: systemInformationService,
     ) {
-        this.token = this.systemInformation.getToken;
+      this.token = JSON.parse(sessionStorage.getItem("userToken")!);
         this.baseURL = this.systemInformation.getURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
         this.header = { headers: this.headers };
@@ -48,7 +48,7 @@ export class ProtocolsServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Protocolo/tipo-protocolo/${id}`, this.header));
     }
 
-    // Medoto para obtener todos los tipos de protocolos 
+    // Medoto para obtener todos los tipos de protocolos
 
     public getTypeProtocols() {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Protocolo/getall_tipo_protocolo`, this.header));

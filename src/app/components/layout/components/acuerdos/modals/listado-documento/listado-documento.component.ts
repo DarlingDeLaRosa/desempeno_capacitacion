@@ -23,7 +23,7 @@ export class ListadoDocumentoComponent implements OnInit{
   selectedFileName: string | undefined;
   isLoading:boolean = true
   constructor(
-    private http:HttpClient,
+    private http: HttpClient,
     private SnackBar:SnackBars,
     private appHelpers: HerlperService,
     private agreementservice:agreementService,
@@ -34,6 +34,7 @@ export class ListadoDocumentoComponent implements OnInit{
   }
   ngOnInit(): void {
     this.getAcuerdoByIdCollaborator()
+    console.log(this.data);
   }
 
   getAcuerdoByIdCollaborator(){

@@ -16,7 +16,7 @@ import { SnackBars } from '../../../../services/snackBars.service';
 })
 export class CursosMiembrosComponent implements OnInit {
 
-  hijosList!: any[];
+  hijosList: any[] = [];
   isLoading: boolean = true;
 
   constructor
@@ -33,6 +33,8 @@ export class CursosMiembrosComponent implements OnInit {
   getHijosColaborador() {
     this.isLoading = true;
     this.cursosService.getHijosColaborador().subscribe((resp: any) => {
+      console.log(resp);
+      
       this.hijosList = resp.data.hijos;
       this.isLoading = false;
     })

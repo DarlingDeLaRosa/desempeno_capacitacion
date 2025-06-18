@@ -58,7 +58,6 @@ export class LayoutComponent implements OnInit{
       })
   }
 
-
   onLogout() {
     this.systemInformationService.logout();
      window.location.href = 'https://intranet.isfodosu.edu.do/#/home/home';

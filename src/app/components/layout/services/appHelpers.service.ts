@@ -13,7 +13,7 @@ export class HerlperService {
     constructor(
         public snackBar: SnackBars,
         private loaderService: LoaderService
-    ) { }
+    ) {}
 
     // Maneja todas las peticiones validando si existe un error o devolviendo el resultado de la petición.
     handleRequest<T>(request: () => Observable<T>): Observable<T> {
@@ -67,7 +67,11 @@ export class HerlperService {
     }
 
     pendingCurse(listCourse: any[]): boolean {
-        return listCourse.every((course: any) => course.cursosPendientes.length == 0);
+        if (listCourse.length) {
+            return listCourse.every((course: any) => course.cursosPendientes.length == 0);
+        }else{
+            return false
+        }
     }
 
     isTodayInRange(startDate: string | Date, endDate: string | Date): boolean {

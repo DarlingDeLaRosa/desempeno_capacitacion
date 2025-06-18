@@ -92,7 +92,6 @@ export class MetasComponent implements OnInit {
   // Metodo para obtener todas las metas del POA
   getGoalPOAFiltered() {
     const goalPOAValue = this.goalsForm.value.metaPoa;
-    
     if (goalPOAValue && goalPOAValue.length >= 3) this.getGoalPOA(goalPOAValue)
     else this.goalsPoa = [];
   }

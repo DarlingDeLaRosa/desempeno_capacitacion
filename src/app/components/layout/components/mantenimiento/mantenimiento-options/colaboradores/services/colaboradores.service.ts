@@ -19,7 +19,7 @@ export class CollaboratorServices {
         private appHelpers: HerlperService,
         private systemInformation: systemInformationService,
     ) {
-        this.token = JSON.parse(sessionStorage.getItem("userToken")!);
+        this.token = JSON.parse(sessionStorage.getItem("tokenIntranet")!);
         this.systemId = this.systemInformation.getSistema;
         this.baseURL = this.systemInformation.getIntranetURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
@@ -49,6 +49,10 @@ export class CollaboratorServices {
     // Get de personas
     public getPersonByID(id: number) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, this.header));
+    }
+
+    public putChangePersonStatus(statusObj: {idPersona: number, idEstado: number}) {
+        return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Persona/change_status`, statusObj, this.header));
     }
 
     public getPersonFilterByName(name: string) {

@@ -327,9 +327,9 @@
 
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h3 class="Stitle">Listado de Colaboradores</h3>
-        
+
         <form [formGroup]="filterForm">
-            <mat-form-field appearance="fill" >
+            <mat-form-field appearance="fill">
                 <mat-label>Buscar por nombre</mat-label>
                 <input matInput formControlName="filter" (input)="getCollaborators()">
                 <mat-icon matSuffix>search</mat-icon>
@@ -348,6 +348,7 @@
                     <th class="headerCell">Estado</th>
                     <th class="headerCell">G.Ocupacional</th>
                     <th class="headerCell" style="width: 5%;"></th>
+                    <th class="headerCell" style="width: 5%;"></th>
                     <th class="headerCell" style="width: 7%; padding-right: 15px;">
                         <div *ngIf="!collaborators" class="loader"></div>
                     </th>
@@ -361,18 +362,23 @@
                         ({{collaborator.persona.recinto.siglas}})</td>
                     <td class="dataIndiCell">{{collaborator.persona.cargo.nombre | titlecase}}</td>
                     <td class="dataIndiCell">{{collaborator.persona.estadoObj.nombre}}</td>
-                    <td class="dataIndiCell">{{collaborator.persona.grupoObj ? collaborator.persona.grupoObj.nombre :
+                    <td class="dataIndiCell">{{collaborator.persona.grupoObj ? collaborator.persona.grupoObj.nombre
+                        :
                         'No Asignado'}}</td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(collaborator)"
+                    <td class="dataIndiCell">
+                        <mat-slide-toggle color="#004b8d" [checked]="collaborator.persona.estadoObj.idEstado === 1"
+                            (change)="changeStatus(collaborator)"></mat-slide-toggle>
+                    </td>
+                    <td class="dataIndiCell"><mat-icon *ngIf="collaborator.persona.estadoObj.idEstado == 1" (click)="setValueToEdit(collaborator)"
                             class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon
+                    <td class="dataIndiCell"><mat-icon *ngIf="collaborator.persona.estadoObj.idEstado == 1"
                             (click)="deleteCollaborator(collaborator.idUsuario, collaborator.idPersona)"
                             class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot *ngIf="pagination && pagination.totalPage">
                 <tr class="paginatorRow">
-                    <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
+                    <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
                         <td class="dataIndiCell"></td>
                     </ng-container>
                     <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
@@ -391,7 +397,7 @@
         <tbody>
             <tr class="dataRow">
                 <td class="dataIndiCell">No hay elementos que mostrar.</td>
-                <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
+                <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6, 7]">
                     <td class="dataIndiCell"></td>
                 </ng-container>
             </tr>

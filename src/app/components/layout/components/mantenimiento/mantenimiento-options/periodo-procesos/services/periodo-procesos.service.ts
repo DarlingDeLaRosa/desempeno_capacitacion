@@ -18,7 +18,7 @@ export class PeriodsProcessServices {
         private appHelpers: HerlperService,
         private systemInformation: systemInformationService,
     ) {
-        this.token = this.systemInformation.getToken;
+        this.token = JSON.parse(sessionStorage.getItem("userToken")!);
         this.baseURL = this.systemInformation.getURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
         this.header = { headers: this.headers };
@@ -28,8 +28,8 @@ export class PeriodsProcessServices {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/PeriodoAcuerdo?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
     }
     
-    public getPeriodProcessesActive() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/PeriodoAcuerdo/activo`, this.header));
+    public getPeriodProcessesActive(activo: boolean = false) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/PeriodoAcuerdo/activo?acuerdo=${activo}`, this.header));
     }
 
     public postPeriodProcess(periodProcess: periodProcessI) {
@@ -47,10 +47,8 @@ export class PeriodsProcessServices {
     public getPeriodBytypeProcess(id: number) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/PeriodoAcuerdo/tipo-proceso/${id}`, this.header));
     }
-
     //endpoint tipos de procesos
     public getTypeProcess(agreement: boolean| string = ''  ) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/tipos-procesos?acuerdo=${agreement}`, this.header));
     }
-
 }

@@ -45,7 +45,7 @@
                     <td class="dataIndiCell">{{period.nombre}}</td>
                     <td class="dataIndiCell">{{period.fechaInicio | date: 'dd/MM/yyyy'}} - {{period.fechaFin | date: 'dd/MM/yyyy'}}</td>
                     <td class="dataIndiCell">
-                        <mat-slide-toggle color="#004b8d" [(ngModel)]="period.estado"
+                        <mat-slide-toggle color [(ngModel)]="period.estado"
                             (change)="activatePeriod(period.idPeriodo)"></mat-slide-toggle>
                     </td>
                     <td class="dataIndiCell"><mat-icon class="editIcon" (click)="setValueToEdit(period)">edit</mat-icon></td>
