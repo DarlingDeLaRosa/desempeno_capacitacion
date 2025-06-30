@@ -38,7 +38,7 @@ export class PlanMejoraListComponent implements OnInit{
   }
 
   getAcuerdoByRol(){
-    this.agreementService.getAgreementByRol(this.usuario.idPersona,'').subscribe((resp:any)=>{
+    this.agreementService.getAgreementByRol(this.usuario.idPersona).subscribe((resp:any)=>{
       this.agreementList = resp.data;
     })
   }

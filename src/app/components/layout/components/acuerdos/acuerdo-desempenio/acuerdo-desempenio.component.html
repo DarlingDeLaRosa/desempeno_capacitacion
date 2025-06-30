@@ -124,6 +124,12 @@
               <mat-icon>info</mat-icon>Periodo de edición de acuerdos de desempeño no disponible.
             </button>
 
+            <button
+              *ngIf="acuerdo.colaboradorObj.estadoObj.idEstado == 2 && systemInformation.activeRol().nombre == 'Supervisor' || acuerdo.colaboradorObj.estadoObj.idEstado == 2 && systemInformation.activeRol().nombre == 'Encargado' && selectGroup"
+              mat-menu-item disabled>
+              <mat-icon>info</mat-icon>Este usuario esta en estado de inactividad.
+            </button>
+
             <ng-container *ngIf="!(
                 acuerdo.flujoObj.idFlujo == 4 ||  
                 (acuerdo.detalles.length > 0 && systemInformation.activeRol().nombre == 'Supervisor' && acuerdo.tipoProceso.nombre == 'Evaluación de Acuerdo') ||

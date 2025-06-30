@@ -6,7 +6,7 @@ import { GradesTypeGetI } from '../../mantenimiento/mantenimiento-options/grados
 
 export interface EvaluationCompetencyGetI {
     colaborador: CollaboratorsGetI
-    evaluacionCompetencia: EvaluationBehaviorsI[]
+    evaluacionCompetenciasDetalles: EvaluationBehaviorsI[]
     gradoCompetencia: gradeCompetencyI
     periodo: PeriodI
     id: number

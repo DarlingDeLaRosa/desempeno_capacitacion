@@ -141,7 +141,7 @@
             <td style="text-align: center;">{{detalle.metaObj.valor}}</td>
             <td style="text-align: center;">{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
             <td style="text-align: center;">{{detalle.calificacion}}</td>
-            <td>{{detalle.observaciones}}</td>
+            <td>{{detalle.observaciones == null ? detalle.observaciones : ''}}</td>
           </tr>
           <tr>
             <td></td>

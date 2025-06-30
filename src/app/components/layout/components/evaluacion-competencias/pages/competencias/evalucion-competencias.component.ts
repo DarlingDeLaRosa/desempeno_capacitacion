@@ -37,8 +37,8 @@ export class EvalucionCompetenciasComponent implements OnInit {
     this.getSupervisorWithSubordinates()
   }
 
-  openModalviewEvaluation(colaborador: CollaboratorsGetI, evaluacionCompetenciasDetalles: EvaluationBehaviorsI[]) {
-    let dialogRef = this.dialog.open(EvaluacionModalviewComponent, { data: { colaborador, evaluacionCompetenciasDetalles } })
+  openModalviewEvaluation(colaborador: number, ) {
+    let dialogRef = this.dialog.open(EvaluacionModalviewComponent, { data: { colaborador} })
     dialogRef.afterClosed().subscribe(() => { })
   }
 
@@ -46,6 +46,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
     this.evaluationCompetencyService.getEvaluationCompetencies(this.selectGroup).subscribe((res: any) => {
       this.supervisorWithSubordinates = res.data.colaboradores;
       this.evaluationsCompetencies = res.data.evaluacionesCompetencias;
+      console.log(res.data.evaluacionesCompetencias);
     })
   }
 }

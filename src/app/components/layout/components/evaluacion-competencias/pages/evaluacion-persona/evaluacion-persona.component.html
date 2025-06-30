@@ -32,7 +32,7 @@
     <div formArrayName="evaluacionCompetenciasDetalles">
         <div *ngFor="let competency of evaluationCompetencyForm.get('evaluacionCompetenciasDetalles')?.value , let i = index"
             [formGroupName]="i">
-            <h3 style="margin: 15px 0 15px 0 ;">Competencia: {{competency.competenciaNombre}}</h3>
+            <h3 style="margin: 15px 0 15px 0 ;">Competencia: {{competency.competenciaNombre}} - ({{competency.grado}})</h3>
             <div class="competencia">
                 <p>{{competency.competenciaDescripcion}}</p>
             </div>

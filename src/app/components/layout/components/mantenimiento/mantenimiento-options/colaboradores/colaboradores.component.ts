@@ -117,7 +117,7 @@ export class ColaboradoresComponent implements OnInit {
   }
 
   readonly dateFormatString = computed(() => {
-      return 'DD/MM/YYYY';
+    return 'DD/MM/YYYY';
   });
 
 
@@ -130,7 +130,7 @@ export class ColaboradoresComponent implements OnInit {
     else if (idDepartamento && idDepartamento.idDepartamento > 0) this.vic = this.dir = this.div = false
 
     else if (idDireccion && idDireccion.idDireccion > 0) this.vic = this.dep = this.div = false
- 
+
     else if (idViceRectoria && idViceRectoria.idViceRectoria > 0) this.dir = this.dep = this.div = false
 
     else this.vic = this.dep = this.div = this.dir = true
@@ -162,16 +162,17 @@ export class ColaboradoresComponent implements OnInit {
   }
 
   async changeStatus(collaborator: PersonI) {
-    const newState = collaborator.persona.estadoObj.idEstado === 1 ? 2 : 1;
-    this.statusForm.patchValue({ idPersona: collaborator.persona.idPersona, idEstado: newState })
-
     let removeDecision: boolean = await this.snackBar.snackbarConfirmation('¿Estas seguro de cambiar el estado de este colaborador?', 'Una vez inactivo, no podrá realizar acciones en el sistema. Solo tendrá acceso de consulta.')
+    const newState = collaborator.persona.estadoObj.idEstado === 1 ? 2 : 1;
 
     if (removeDecision) {
-    
+      this.statusForm.patchValue({ idPersona: collaborator.persona.idPersona, idEstado: newState })
+
       this.collaboratorService.putChangePersonStatus(this.statusForm.value).subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => this.getCollaborators(), this.statusForm)
       });
+    }else{
+      this.getCollaborators()
     }
   }
 
@@ -249,7 +250,7 @@ export class ColaboradoresComponent implements OnInit {
   // Metodo para obtener todos los colaboradores
   getPersonaByDNI() {
     if (this.collaboratorForm.value.cedula.length < 7) return
-    
+
     this.collaboratorService.getCollaboratorByDNI(this.collaboratorForm.value.cedula)
       .subscribe((res: any) => {
         if (res.data.idUsuario > 0) {
@@ -448,17 +449,17 @@ export class ColaboradoresComponent implements OnInit {
 
   // Metodo para  asignar los valores de persona, antes de crear un usuario
 
-  async setPersonValue(persona: CollaboratorsGetI){
+  async setPersonValue(persona: CollaboratorsGetI) {
     this.collaboratorForm.patchValue({
-      nombre: persona.nombre? persona.nombre : '',
-      sexo: persona.sexo? persona.sexo : 0,
+      nombre: persona.nombre ? persona.nombre : '',
+      sexo: persona.sexo ? persona.sexo : 0,
       apellidos: persona.apellidos ? persona.apellidos : '',
-      usuario: persona.usuario? persona.usuario: 0,
+      usuario: persona.usuario ? persona.usuario : 0,
       idGrupo: persona.grupoObj ? persona.grupoObj.idGrupo : 0,
       fechaIngreso: persona.fechaIngreso ? persona.fechaIngreso : '',
       fechaNacimiento: persona.fechaNacimiento ? persona.fechaNacimiento : '',
-      idCargo:  persona.cargo && persona.cargo.nombre != "N/A" ? persona.cargo : 0,
-      idViceRectoria: persona.viceRectoria && persona.viceRectoria.nombre != "NO ASIGNADO" && persona.viceRectoria.nombre != "N/A"  ? persona.viceRectoria : 0,
+      idCargo: persona.cargo && persona.cargo.nombre != "N/A" ? persona.cargo : 0,
+      idViceRectoria: persona.viceRectoria && persona.viceRectoria.nombre != "NO ASIGNADO" && persona.viceRectoria.nombre != "N/A" ? persona.viceRectoria : 0,
       idDireccion: persona.direccion && persona.direccion.nombre != "NO ASIGNADO" && persona.direccion.nombre != "N/A" ? persona.direccion : 0,
       idDepartamento: persona.departamento && persona.departamento.nombre != "NO ASIGNADO" && persona.departamento.nombre != "N/A" ? persona.departamento : 0,
       idDivision: persona.division && persona.division.nombre != "NO ASIGNADO" && persona.division.nombre != "N/A" ? persona.division : 0,
@@ -467,10 +468,10 @@ export class ColaboradoresComponent implements OnInit {
     })
     await this.hidingUnitOrg()
   }
-  
+
   // Metodo asignar valores y habilitar la edición de un registro
   async setValueToEdit(collaborator: PersonI) {
-    
+
     this.snackBar.snackbarLouder(true)
     if (collaborator.persona.idSupervisor) {
       this.collaboratorService.getPersonByID(collaborator.persona.idSupervisor).subscribe((res: any) => {

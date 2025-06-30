@@ -6,36 +6,43 @@ import { AcuerdoI } from '../../interfaces/acuerdo.interface';
 import { agreementService } from '../../services/acuerdo.service';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { HerlperService } from '../../../../services/appHelpers.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-mi-acuerdo',
   standalone: true,
-  imports: [MaterialComponents,ClassImports],
-  providers:[agreementService,systemInformationService],
+  imports: [MaterialComponents, ClassImports],
+  providers: [agreementService, systemInformationService],
   templateUrl: './mi-acuerdo.component.html',
   styleUrl: './mi-acuerdo.component.css'
 })
 export class MiAcuerdoComponent implements OnInit {
   usuario!: loggedUserI
-  agreement!:AcuerdoI
-  totalCalificacion:number = 0
-  totalValor:number = 0
+  agreement!: AcuerdoI
+  totalCalificacion: number = 0
+  totalValor: number = 0
 
   constructor(
+    private router: Router,
     public appHelper: HerlperService,
-    private agreementService:agreementService,
-    private systemInformation:systemInformationService
-  ){}
+    private agreementService: agreementService,
+    private systemInformation: systemInformationService
+  ) { }
 
   ngOnInit(): void {
     this.usuario = this.systemInformation.localUser;
-   this.getAgreementByIdCollaborator()
+    this.getAgreementByIdCollaborator()
   }
 
-  getAgreementByIdCollaborator(){
-    this.agreementService.getAgreementByIdCollaborator(this.usuario.idPersona).subscribe((resp:any)=>{
-      this.agreement = resp.data;
-    })
+  getAgreementByIdCollaborator() {
+    this.agreementService.getAgreementByIdCollaborator(this.usuario.idPersona).subscribe({
+      next: (resp: any) => { this.agreement = resp.data },
+      error: (error) => { error.status == 404 ? this.navigate() : '' }
+    });
+  }
+
+  navigate(){
+    setTimeout(() => { this.router.navigate(['layout/acuerdos']);}, 1000);
   }
 
   calculadora() {

@@ -38,7 +38,7 @@ export class agreementService {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/get_by_idcolaborador/${idCollaborator}/${idGroup}`, this.header));
   }
 
-  public getAgreementByRol(idCollaborator: number, term:string, supervisor: boolean = false, page: number = 1, pageSize: number = 1000) {
+  public getAgreementByRol(idCollaborator: number, term: string = '', supervisor: boolean = false, page: number = 1, pageSize: number = 1000) {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador/${idCollaborator}?supervisor=${supervisor}&term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
   }
 
@@ -104,5 +104,7 @@ export class agreementService {
   public putBehaviorTest(behaviorsTest: EvaluationCompetencyTestI) {
     return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/EvaluacionesAcuerdosProbatorios`, behaviorsTest, this.header));
   }
+
+
 
 }

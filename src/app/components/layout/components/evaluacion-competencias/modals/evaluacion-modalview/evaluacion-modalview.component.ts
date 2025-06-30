@@ -1,9 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../../helpers/class.components';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 import { EvaluationCompetencyByIdI } from '../../interface/evaluacion-competencias.interface';
+import { EvaluationCompetencyServices } from '../../services/evaluacion-competencia.service';
 
 @Component({
   selector: 'app-evaluacion-modalview',
@@ -12,12 +13,27 @@ import { EvaluationCompetencyByIdI } from '../../interface/evaluacion-competenci
   templateUrl: './evaluacion-modalview.component.html',
   styleUrl: './evaluacion-modalview.component.css'
 })
-export class EvaluacionModalviewComponent {
+export class EvaluacionModalviewComponent implements OnInit {
+  
+  public evaluationData!: EvaluationCompetencyByIdI[]
 
   constructor(
     private dialogRef: MatDialogRef<EvaluacionModalviewComponent>,
-    @Inject(MAT_DIALOG_DATA) public evaluationData: { colaborador: CollaboratorsGetI, evaluacionCompetenciasDetalles: EvaluationCompetencyByIdI[]}
+    private evaluationCompetencyService: EvaluationCompetencyServices,
+
+    @Inject(MAT_DIALOG_DATA) public col: { colaborador: number }
   ) { }
+
+
+  ngOnInit(): void {
+    this.findCollaboratorEvaluation()
+  }
+
+  findCollaboratorEvaluation() {
+    this.evaluationCompetencyService.getEvaluationCompetenciesByIdPerson(this.col.colaborador).subscribe((res: any) => {
+      this.evaluationData = res.data.evaluacionCompetencia
+    })
+  }
 
   competency: number = 0
 

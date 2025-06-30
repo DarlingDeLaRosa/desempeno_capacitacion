@@ -14,7 +14,7 @@
 <div style="display: flex; justify-content: space-between; align-items: center;">
     <h3 *ngIf="this.systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado' || this.systemInformation.activeRol().nombre == 'Encargado' && selectGroup; else noSup ">{{userLogged.Unidad}}</h3>
     <ng-template #noSup>
-        <h3>Lista De Planes De Mejora Trabajados.</h3>
+        <h3>Lista De Evaluaciones de Competencias Trabajadas.</h3>
     </ng-template>
 
     <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
@@ -55,7 +55,7 @@
                 <td class="dataIndiCell">{{appHelper.getUnitOrg(subordinateEvaluation.colaborador.division, subordinateEvaluation.colaborador.departamento, subordinateEvaluation.colaborador.direccion, subordinateEvaluation.colaborador.viceRectoria)?.nombre }}</td>
                 <td class="dataIndiCell">{{subordinateEvaluation.colaborador.cargo.nombre}}</td>
                 <td class="dataIndiCell">{{subordinateEvaluation.colaborador.grupoObj.nombre}}</td>
-                <td class="dataIndiCell"><mat-icon (click)="openModalviewEvaluation(subordinateEvaluation.colaborador, subordinateEvaluation.evaluacionCompetencia)" class="listIcon">description</mat-icon></td>
+                <td class="dataIndiCell"><mat-icon (click)="openModalviewEvaluation(subordinateEvaluation.colaborador.idPersona)" class="listIcon">description</mat-icon></td>
                 <td class="dataIndiCell"><mat-icon 
                     [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']"
                     [queryParams]="{ colaboradorId: subordinateEvaluation.colaborador.idPersona }"

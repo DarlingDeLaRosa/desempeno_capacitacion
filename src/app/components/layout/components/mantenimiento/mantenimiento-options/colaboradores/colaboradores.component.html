@@ -367,7 +367,7 @@
                         'No Asignado'}}</td>
                     <td class="dataIndiCell">
                         <mat-slide-toggle color="#004b8d" [checked]="collaborator.persona.estadoObj.idEstado === 1"
-                            (change)="changeStatus(collaborator)"></mat-slide-toggle>
+                            (click)="changeStatus(collaborator)"></mat-slide-toggle>
                     </td>
                     <td class="dataIndiCell"><mat-icon *ngIf="collaborator.persona.estadoObj.idEstado == 1" (click)="setValueToEdit(collaborator)"
                             class="editIcon">edit</mat-icon></td>

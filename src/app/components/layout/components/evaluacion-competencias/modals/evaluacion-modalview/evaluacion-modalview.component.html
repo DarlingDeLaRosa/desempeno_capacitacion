@@ -1,4 +1,4 @@
-<div class="modal">
+<div class="modal" *ngIf="evaluationData; else cargando">
     <div class="fuctionContent">
         <h2>Evaluación De Competencias</h2><br>
 
@@ -8,16 +8,16 @@
         </mat-button-toggle-group>
     </div>
 
-    <h3>Competencia : {{evaluationData.evaluacionCompetenciasDetalles[competency].grado.competencia.nombre}}</h3>
+     <h3>Competencia : {{evaluationData[competency].grado.competencia.nombre}} ({{evaluationData[competency].grado.tipoGrado.nombre}})</h3>
 
     <div class="competencia" >
-        <p>{{evaluationData.evaluacionCompetenciasDetalles[competency].grado.competencia.descripcion}}</p><!--competencia.descripcion-->
+        <p>{{evaluationData[competency].grado.competencia.descripcion}}</p>
     </div>
 
     <br>
 
     <h3>Comportamientos y calificaciones</h3>
-    <div class="comportamientoCalificacion" *ngFor="let evaluation of this.evaluationData.evaluacionCompetenciasDetalles[competency].evaluacionCompetenciasDetalles">
+    <div class="comportamientoCalificacion" *ngFor="let evaluation of this.evaluationData[competency].evaluacionCompetenciasDetalles">
         <div class="comportamiento">
             <p>{{evaluation.comportamiento.nombre}}</p>
         </div>
@@ -29,7 +29,7 @@
         <div class="calificacionContainer">
             <h3>{{evaluation.calificacionComportamiento.nombre}}</h3>
         </div>
-    </div>
+    </div> 
     
     <!-- <div class="comportamientoCalificacion">
         <h3 style="padding-top: 22px; color: #004b8d;">Total</h3>
@@ -43,3 +43,11 @@
         <button class="btnCerrar" (click)="closeModal()">Cerrar</button>
     </div>
 </div>
+
+<ng-template #cargando>
+    <div class="container-loaderMother" style="padding: 30px;">
+      <div class="loaderMother"></div>
+      <div class="loading-text">Cargando...</div>
+    </div>
+</ng-template>
+  

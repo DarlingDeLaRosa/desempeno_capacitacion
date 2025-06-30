@@ -1,11 +1,12 @@
 .container-verAcuerdo {
-  margin: 25px;
+  margin-bottom: 15px;
   border: 1px solid black;
+  min-width: 1400px;
 }
 
 .header {
   display: grid;
-  grid-template-columns: 85% 15%;
+  grid-template-columns: auto 1fr;
   border-bottom: 1px solid black;
 }
 
@@ -16,7 +17,7 @@
 .logo-container {
   display: flex;
   align-items: center;
-  padding: 2px;
+  padding: 2px 10px 2px 2px;
 }
 
 .logo {
@@ -39,8 +40,7 @@
 
 .group-info {
   display: grid;
-  place-items: center;
-  margin-right: 15px;
+  grid-template-rows: 1fr 1fr;
 }
 
 .group-title {
@@ -67,10 +67,13 @@
 }
 
 .table-title {
-  text-align: center;
-  font-weight: bold;
-  font-size: 17px;
-  padding: 5px;
+  display: grid;
+  grid-template-columns: 3% 37% 10% 20% 10% 20%;
+}
+
+.table-title-GOV {
+  display: grid;
+  grid-template-columns: 3% 20% 20% 7% 20% 10% 20%;
 }
 
 .evaluation-table {
@@ -80,7 +83,6 @@
   border-collapse: collapse;
   border-radius: 0;
   background-color: white;
-
 }
 
 .evaluation-table th, 

@@ -9,19 +9,11 @@ import { SnackBars } from '../../components/layout/services/snackBars.service';
 @Injectable({ providedIn: 'root' })
 
 export class IntranetServices {
-
-    private token: string;
-    // private tokenSession: string;
+  
     private baseURL: string;
     private sigebiURL: string;
     private isfoplannerURL: string;
     private idSistema: number
-    private headers: HttpHeaders;
-    private headersIsfo: HttpHeaders;
-    private header: { headers: HttpHeaders };
-    private headerIsfop: {headers: HttpHeaders}
-    // private headersSeccion: HttpHeaders;
-    // private headerSeccion: { headers: HttpHeaders };
 
     constructor(
         private http: HttpClient,
@@ -29,102 +21,122 @@ export class IntranetServices {
         private systemInformation: systemInformationService,
         private SnackBar: SnackBars,
     ) {
-        this.token = JSON.parse(sessionStorage.getItem("tokenIntranet")!);;
-        // this.tokenSession = JSON.parse(sessionStorage.getItem("tokenIntranet")!);;
         this.baseURL = this.systemInformation.getIntranetURL;
         this.idSistema = this.systemInformation.getSistema;
         this.sigebiURL = this.systemInformation.getSigebiURL;
         this.isfoplannerURL = this.systemInformation.getIsfoplannerURL;
-        this.headers = new HttpHeaders({ 'Authorization': this.token });
-        this.headersIsfo = new HttpHeaders({ 'Authorization': 'Bearer ' + this.token });
-        this.header = { headers: this.headers };
-        this.headerIsfop = { headers: this.headersIsfo };
-        // this.headersSeccion = new HttpHeaders({ 'Authorization': this.tokenSession });
-        // this.headerSeccion = { headers: this.headersSeccion };
     }
+
+    //Metodo para para traer el token y construir el Authorization
+    getHeaders(): HttpHeaders {
+        const token = JSON.parse(sessionStorage.getItem("tokenIntranet")!);
+        if (token) {
+          return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+        } else {
+          return new HttpHeaders();
+        }
+      }
 
     // Peticion de Grupo ocupacional
     public getOcupationalGroup() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/get_grupo_ocupacional`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/get_grupo_ocupacional`, { headers }));
     }
 
     // Peticion de cargos
     public getPositions() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallcargos`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallcargos`, { headers }));
     }
 
     // Peticion de cargos
     public getPositionsByName(name: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallcargos/${name}`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallcargos/${name}`,{ headers }));
     }
 
     // Peticion de recintos
     public getLocations() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallrecintos`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallrecintos`, { headers }));
     }
 
     // Peticion de divisiones
     public getDivisions() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldivisiones`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldivisiones`, { headers }));
     }
 
     public getDivisionByName(division: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldivisionesfilter/${division}`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldivisionesfilter/${division}`,{ headers }));
     }
 
     // Peticion de departamentos
     public getDepartments() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldepartamento`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldepartamento`,{ headers }));
     }
 
     public getDepartmentByName(deparment: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldepartamentofilter/${deparment}`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldepartamentofilter/${deparment}`,{ headers }));
     }
 
     // Peticion de direcciones
     public getDirections() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldireccion`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldireccion`, { headers }));
     }
 
     public getDirectionByName(direction: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldireccionesfilter/${direction}`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getalldireccionesfilter/${direction}`, { headers }));
     }
 
     // Peticion de rectorias
     public getViceRectorates() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallvicerectorias`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallvicerectorias`,{ headers }));
     }
 
     public getViceRectoratesByName(viceRectorate: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallvicerectoriasfilter/${viceRectorate}`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/GenericService/getallvicerectoriasfilter/${viceRectorate}`, { headers }));
     }
 
     // Peticion de Roles
     public getRoles() {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Rol/getrolesbyidsistema/${this.idSistema}`, this.header));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Rol/getrolesbyidsistema/${this.idSistema}`, { headers }));
     }
 
     // Peticion al API de SIGEBI, obtener catalogo de RNC de todo proveedor en RD
     public findProveedorByRNC(rnc: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.sigebiURL}/Proveedor/consultaproveedorbyrnc/${rnc}`, this.header))
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.sigebiURL}/Proveedor/consultaproveedorbyrnc/${rnc}`, { headers }))
     }
 
     public findProveedorByRS(rs: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.sigebiURL}/Proveedor/consultaproveedorbynombre_pagination/${rs}/1/25`, this.header))
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.sigebiURL}/Proveedor/consultaproveedorbynombre_pagination/${rs}/1/25`, { headers }))
     }
 
     // Metas Plan Operativo Anual
     public getGoalPOA(meta: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.isfoplannerURL}/IndicadoresGestion?CurrentPage=1&PageSize=10&buscar=${meta}`, this.headerIsfop));
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.isfoplannerURL}/IndicadoresGestion?CurrentPage=1&PageSize=10&buscar=${meta}`,  { headers }));
     }
 
     //Petición de Personas a Intranet
     public findPeopleByUser(user: string) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/filter/${user}`, this.header))
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/filter/${user}`,{ headers }))
     }
 
     public getPeopleById(id: number) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, this.header))
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, { headers }))
     }
 
     // peticion para el loguin a un sistema de intraanet

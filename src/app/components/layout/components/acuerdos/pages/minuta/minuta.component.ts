@@ -70,7 +70,7 @@ export class MinutaComponent implements OnInit {
 
   getAcuerdoByRol() {
     this.isLoading = true;
-    this.agreementService.getAgreementByRol(this.usuario.idPersona, '').subscribe((resp: any) => {
+    this.agreementService.getAgreementByRol(this.usuario.idPersona).subscribe((resp: any) => {
       this.agreement = resp.data;
       this.colaboradoresMinuta = this.agreement.map((acuerdo) => ({
         idColaborador: acuerdo.colaboradorObj.idPersona,

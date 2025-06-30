@@ -16,9 +16,19 @@
   </div>
 </ng-container>
 
-<div class="container-verAcuerdo" *ngIf="agreement">
+<div id="AD" *ngIf="agreement">
 
-    <div class="header">
+  <div class="logo-container" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo != 5">
+    <img src="images.png" alt="ISFODOSU Logo" class="logo">
+    <div class="title-container">
+      <h1 class="title2">ISFODOSU</h1>
+      <p class="subtitle2">Instituto Superior de Formación Docente Salome Ureña</p>
+    </div>
+  </div>
+
+  <div class="container-verAcuerdo">
+
+    <div class="header" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
       <div class="logo-container">
         <img src="images.png" alt="ISFODOSU Logo" class="logo">
         <div class="title-container">
@@ -28,14 +38,27 @@
       </div>
 
       <div class="group-info">
-        <h3 class="group-title">Grupo Ocupacional</h3>
-        <p>{{agreement.colaboradorObj.grupoObj.nombre }}</p>
+        <div style=" border-bottom: 1px solid black; width: 100%; box-sizing: border-box;"></div>
+        <div></div>
       </div>
+    </div>
+
+    <div style="padding: 5px; border-bottom: 1px solid black;">
+      <p style="text-align: center;"> <strong>SUB-SISTEMA DE EVALUACIÓN DEL DESEMPEÑO LABORAL</strong></p>
+    </div>
+
+    <div style="padding: 5px; border-bottom: 1px solid black;">
+      <p style="text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo != 5"> <strong>Formulario para Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales  I, II, III y IV</strong></p>
+      <p style="text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5"> <strong>Formulario para Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales  V</strong></p>
+    </div>
+
+    <div style="padding: 5px; border-bottom: 1px solid black;">
+      <p> <strong>INSTITUCIÓN:</strong> Instituto Superior de Formación Docente Salome Ureña</p>
     </div>
 
     <div class="info-row">
       <div style="padding: 5px;">
-        <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.periodo.nombre}}</p>
+        <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.acuerdoDuracion.periodo}}</p>
       </div>
       <div style="padding: 5px;">
         <p> <strong>UNIDAD ORGANIZATIVA:</strong> {{appHelper.getUnitOrg(agreement.colaboradorObj.division,
@@ -49,76 +72,100 @@
         <p> <strong>DATOS SERVIDOR(A) EVALUADO(A)</strong></p>
       </div>
       <div style="padding: 5px;">
-        <p><strong>DATOS SUPERVISOR(A) INMEDIATO(A)</strong></p>
+        <p><strong>DATOS SUPERVISOR(A) INMEDIATO(A) Y/O EVALUADOR/A</strong></p>
       </div>
     </div>
 
     <div class="info-row">
-      <p style="padding: 5px;"><strong>NOMBRE: </strong>{{agreement.colaboradorObj.nombre}}
+      <p style="padding: 10px 5px 5px 5px;"><strong>NOMBRE: </strong>{{agreement.colaboradorObj.nombre}}
         {{agreement.colaboradorObj.apellidos}}</p>
-      <p style="padding: 5px;" *ngIf="agreement.colaboradorObj.supervisorObj"><strong>NOMBRE: </strong> {{agreement.colaboradorObj.supervisorObj.nombre}}
+      <p style="padding: 10px 5px 5px 5px;"><strong>NOMBRE: </strong>
+        {{agreement.colaboradorObj.supervisorObj.nombre}}
         {{agreement.colaboradorObj.supervisorObj.apellidos}}</p>
     </div>
 
     <div class="info-row">
-      <div style="padding: 5px;">
+      <div style="padding: 10px 5px 5px 5px;">
         <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.cargo.nombre}}</p>
       </div>
-      <div style="padding: 5px;" *ngIf="">
+      <div style="padding: 10px 5px 5px 5px;">
         <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.supervisorObj.cargoObj.nombre}} </p>
       </div>
     </div>
 
-    <div *ngIf="agreement.colaboradorObj.supervisorObj">
+    <div class="table-title" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo != 5">
+      <div style="grid-column: 1/5; display: flex; align-items: end; padding: 8px 8px 2px 8px;"><strong>Valor del
+          Componente LOGRO DE METAS: {{agreement.tipoAcuerdoObj.puntuacion}} puntos</strong></div>
+      <div style="grid-column: 5/7; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0;">
+        <strong>Evaluación de las Metas</strong></div>
     </div>
 
+    <div style="padding: 5px; border-bottom: 1px solid black;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
+      <p> <strong>Valor del Componente LOGRO DE METAS: {{agreement.tipoAcuerdoObj.puntuacion}} puntos</strong></p>
+    </div>
 
-    <!-- Main Table -->
-    <h2 class="table-title">
-      ESTABLECIMIENTO DE METAS/ RESULTADOS ESPERADOS. Valor {{agreement.puntos}} puntos <br>
-      EVALUACIÓN DEL ACUERDO
-    </h2>
+    <div class="table-title-GOV" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
+      <div style="grid-column: 1/6; display: flex; padding: 8px 8px 2px 8px; text-align: center; background-color: #C5D9F1;"><strong>Recuerde la necesaria alineación de las Metas del Acuerdo de Desempeño laboral del directivo del área con las Metas del Plan Operativo Anual (POA) de la unidad</strong></div>
+      <div style="grid-column: 6/8; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0; background-color: #C5D9F1;">
+        <strong>Evaluación de las Metas</strong></div>
+    </div>
+
     <table class="evaluation-table">
       <thead>
-        <th style="width: 5%;">No.</th>
-        <th style="width: 40%;">Metas del (de la) Servidor(a)<br>(Resultados esperados de su desempeño)</th>
-        <th style="width: 10%;">Valor de<br>cada Meta</th>
-        <th style="width: 15%;">Medios de Verificación<br>(Evidencias)</th>
-        <th style="width: 10%;">Calificación<br>otorgada</th>
-        <th style="width: 20%;">Observaciones</th>
+        <th style="width: 3%; text-align: center;">No.</th>
+        <th style="width: 20%; text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">Metas del Plan Operativo Anual -POA- de la Unidad Organizativa </th>
+        <th style="text-align: center;" [ngClass]="agreement.colaboradorObj.grupoObj.idGrupo == 5 ? 'width: 20%;' : 'width: 37%;' ">Metas del (de la) Servidor (a)</th>
+        <th style="width: 10%; text-align: center;">Ponderación o Valor en puntos de las Metas</th>
+        <th style="width: 20%; text-align: center;">Medios de Verificación o Evidencias de logro de cada Meta</th>
+        <th style="width: 10%; text-align: center;">Calificación Otorgada</th>
+        <th style="width: 20%; text-align: center;">Observaciones / Comentarios del Evaluador/a</th>
       </thead>
       <tbody>
         <tr *ngFor="let detalle of agreement.detalles; let i = index">
-          <td>{{i+1}}</td>
+          <td style="text-align: center; font-weight: 600;">{{i+1}}</td>
+          <td *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">{{detalle.metaObj.metaPoa || ''}}</td>
           <td>{{detalle.metaObj.nombre}}</td>
-          <td>{{detalle.metaObj.valor}}</td>
-          <td>{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
-          <td>{{detalle.calificacion}}</td>
-          <td></td>
+          <td style="text-align: center;">{{detalle.metaObj.valor}}</td>
+          <td style="text-align: center;">{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
+          <td style="text-align: center;">{{detalle.calificacion}}</td>
+          <td>{{detalle.observaciones}}</td>
         </tr>
-        <tr >
+        <tr>
           <td></td>
-          <td colspan="1" class="bold">Total</td>
-          <td class="bold">{{totalValor}}</td>
-          <td class="bold">Total</td>
-          <td class="bold">{{totalCalificacion}}</td>
+          <td  *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5"></td>
+          <td style="text-align: end; font-weight: 600;">Total</td>
+          <td style="text-align: center; font-weight: 600;">{{totalValor}}</td>
+          <td style="font-weight: 600; text-align: end;">Total</td>
+          <td style="text-align: center; font-weight: 600;">{{totalCalificacion}}</td>
           <td></td>
         </tr>
       </tbody>
     </table>
     <table class="evaluation-table">
       <thead>
-        <th style="width: 50%;">Firma Supervisor/a Inmediato/a:</th>
-        <th style="width: 50%;">Firma Supervisor/a Inmediato/a:</th>
+        <th style="width: 50%;">Fecha del Acuerdo:</th>
+        <th style="width: 50%;">Fecha de la Evaluación:</th>
       </thead>
       <thead>
         <th style="width: 50%;">Firma Servidor/a:</th>
         <th style="width: 50%;">Firma Servidor/a:</th>
       </thead>
       <thead>
-        <th style="width: 50%; border-bottom: none;">Fecha del Acuerdo:</th>
-        <th style="width: 50%; border-bottom: none;">Fecha de la Evaluación:</th>
+        <th style="width: 50%;">Firma Supervisor/a Inmediato/a:</th>
+        <th style="width: 50%;">Firma Supervisor/a Inmediato/a:</th>
       </thead>
     </table>
-</div>
-
+    <div style="padding: 8px;">
+      <p> <strong>Fechas de Monitoreos:</strong></p>
+    </div>
+    <table class="evaluation-table">
+      <thead>
+        <th style="width: 50%;">1)</th>
+        <th style="width: 50%;">3)</th>
+      </thead>
+      <thead>
+        <th style="width: 50%; border-bottom: none;">2)</th>
+        <th style="width: 50%; border-bottom: none;"></th>
+      </thead>
+    </table>
+  </div>

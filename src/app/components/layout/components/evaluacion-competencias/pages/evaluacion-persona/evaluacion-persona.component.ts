@@ -82,6 +82,7 @@ export class EvaluacionPersonaComponent implements OnInit {
 
         const competency = this.fb.group({
           idGrado: asignationCompetency.gradoObj.idGrado,
+          grado: asignationCompetency.gradoObj.tipoGradoObj.nombre,
           competenciaNombre: asignationCompetency.competenciaObj.nombre,
           competenciaDescripcion: asignationCompetency.competenciaObj.descripcion,
           comportamientos: behaviorGroup
@@ -122,6 +123,7 @@ export class EvaluacionPersonaComponent implements OnInit {
 
       const competency = this.fb.group({
         id: asignationCompetency.id,
+        grado: asignationCompetency.grado.tipoGrado.nombre,
         idGrado: asignationCompetency.grado.id,
         competenciaNombre: asignationCompetency.grado.competencia.nombre,
         competenciaDescripcion: asignationCompetency.grado.competencia.descripcion,
