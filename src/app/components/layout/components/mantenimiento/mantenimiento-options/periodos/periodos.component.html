@@ -25,7 +25,7 @@
 
     </form>
 
-    <h3 class="Stitle">Listado de periodos</h3>
+    <h3 class="Stitle">Listado de periodos</h3> 
 
     <div class="table-container">
         <table>
@@ -45,11 +45,11 @@
                     <td class="dataIndiCell">{{period.nombre}}</td>
                     <td class="dataIndiCell">{{period.fechaInicio | date: 'dd/MM/yyyy'}} - {{period.fechaFin | date: 'dd/MM/yyyy'}}</td>
                     <td class="dataIndiCell">
-                        <mat-slide-toggle color [(ngModel)]="period.estado"
+                        <mat-slide-toggle matTooltip="Activar periodo." color [(ngModel)]="period.estado"
                             (change)="activatePeriod(period.idPeriodo)"></mat-slide-toggle>
                     </td>
-                    <td class="dataIndiCell"><mat-icon class="editIcon" (click)="setValueToEdit(period)">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon class="removeIcon" (click)="deletePeriod(period.idPeriodo)">delete</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon matTooltip="Editar periodo." class="editIcon" (click)="setValueToEdit(period)">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon matTooltip="Eliminar periodo." class="removeIcon" (click)="deletePeriod(period.idPeriodo)">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot *ngIf="pagination && pagination.totalPage">
@@ -58,11 +58,11 @@
                         <td class="dataIndiCell"></td>
                     </ng-container>
                     <td class="paginationCell"><span style="color: #888;">{{pagination.totalItem}} Items</span></td>
-                    <td class="paginationCell">
-                        <span style="display: flex; align-items: center;">
-                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                    <td class="paginationCell" >
+                        <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+                            <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
                             <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
@@ -72,7 +72,10 @@
     <ng-template #noElements>
         <tbody>
             <tr class="dataRow">
-                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <td class="dataIndiCell" *ngIf="periods && periods.length == 0; else searching">No hay elementos que mostrar.</td>
+                <ng-template #searching>
+                    <td class="dataIndiCell">Buscando elementos.</td>
+                  </ng-template>
                 <ng-container *ngFor="let td of [1, 2, 3, 4]">
                     <td class="dataIndiCell"></td>
                 </ng-container>

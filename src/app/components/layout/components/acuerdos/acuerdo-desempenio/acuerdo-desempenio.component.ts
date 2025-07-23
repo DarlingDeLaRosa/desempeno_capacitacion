@@ -27,12 +27,12 @@ import { PaginationI } from '../../../../interfaces/generalInteerfaces';
 export class AcuerdoDesempenioComponent implements OnInit {
 
   hijosList!: any[];
-  selectGroup: boolean = false
+  selectGroup: boolean = true
   isLoading: boolean = true;
   page: number = 1
   pagination!: PaginationI
   usuario!: loggedUserI
-  agreement: Array<AcuerdoI> = []
+  agreement!: Array<AcuerdoI> 
   searchTerm: string = '';
   activeProcess!: periodProcessGetI
 
@@ -62,7 +62,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //Metodo para traer la lista de los hijos de los supervisores
   getAcuerdoByRol(term: string) {
     this.isLoading = true;
-    this.agreementService.getAgreementByRol(this.usuario.idPersona, term, this.selectGroup, this.page, 10).subscribe((resp: any) => {
+    this.agreementService.getAgreementByRol(term, this.selectGroup, this.page, 10).subscribe((resp: any) => {
       this.agreement = resp.data;
       console.log(this.agreement);
       

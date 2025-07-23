@@ -129,9 +129,7 @@ export class AsignacionCompetenciasComponent implements OnInit {
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
-    console.log(this.asignationCompetencyForm.value);
-    
-    // this.appHelpers.saveChanges(() => this.postAsignationCompetency(), () => this.putAsignationCompetency(), this.asignationCompetencyForm.value.idAsignacion, this.asignationCompetencyForm)
+    this.appHelpers.saveChanges(() => this.postAsignationCompetency(), () => this.putAsignationCompetency(), this.asignationCompetencyForm.value.idAsignacion, this.asignationCompetencyForm)
   }
 
   //Metodo para llamar a la siguiente pagina

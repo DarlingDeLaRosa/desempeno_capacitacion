@@ -1,13 +1,20 @@
 <div class="fuctionContent">
   <div class="title">
-    <h2>Minuta de reunión de acuerdos de desempeño</h2>
+    <h1>Minuta de {{typeMinuta == 1 ? 'Acuerdo De Desempeño': 'Evaluación de Competencia'}}</h1>
   </div>
   <div>
-    <div>
-      <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+    <button *ngIf="typeMinuta == 1; else MinutaEC" class="backButton" mat-stroked-button
+      [routerLink]="['/layout/acuerdos']"><mat-icon class="backIcon">arrow_back
+      </mat-icon>Acuerdos de Desempeño
+    </button>
+
+    <ng-template #MinutaEC>
+
+      <button class="backButton" mat-stroked-button [routerLink]="['/layout/evaluacion-competencias']"><mat-icon
           class="backIcon">arrow_back
-        </mat-icon>Acuerdos de Desempeño</button>
-    </div>
+        </mat-icon>Evaluaciones de Competencias
+      </button>
+    </ng-template>
   </div>
 </div>
 
@@ -30,9 +37,12 @@
   </span>
 </div>
 
-<div style="margin-top: 15px; display: flex; justify-content: space-between;" >
+<div style="margin-top: 20px; display: flex; justify-content: space-between;">
   <h2 style="display: flex; align-items: end;">Participantes</h2>
-  <a *ngIf="protocol && protocol.documentosObj.length > 0" target="_blank" class="btnInfo" [href]="protocol.documentosObj[0].enlace" style="padding: 4px 3px 0 3px; text-decoration: none; height: 30px;" ><mat-icon>question_mark</mat-icon></a>
+
+  <a [matTooltip]="docName" *ngIf="protocol && protocol.documentosObj.length > 0" target="_blank" class="btnInfo"
+    [href]="protocol.documentosObj[0].enlace"
+    style="padding: 4px 3px 0 3px; text-decoration: none; height: 30px;"><mat-icon>question_mark</mat-icon></a>
 </div>
 
 <div class="table-container">
@@ -42,13 +52,13 @@
         <th class="headerCell">Nombre</th>
         <th class="headerCell">Cargo</th>
         <th class="headerCell">Grupo ocupacional</th>
-        <th class="headerCell">Estado</th>
-        <th class="headerCell" style="width: 2%;">
-          <div *ngIf="isLoading ===  true" class="loader"></div>
+        <th class="headerCell" *ngIf="typeMinuta == 1">Estado</th>
+        <th class="headerCell" style="width: 5%;">
+          <div style="justify-self: end;" *ngIf="agreement.length == 0 && evaluationsCompetencies.length == 0" class="loader"></div>
         </th>
       </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf="typeMinuta == 1; else TypeMinutaEC">
       <tr class="dataRow" *ngFor="let acuerdo of agreement">
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre}} {{acuerdo.colaboradorObj.apellidos}}</td>
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
@@ -60,13 +70,26 @@
         </td>
       </tr>
     </tbody>
+    <ng-template #TypeMinutaEC>
+      <tbody >
+        <tr class="dataRow" *ngFor="let acuerdo of evaluationsCompetencies">
+          <td class="dataIndiCell">{{acuerdo.colaborador.nombre}} {{acuerdo.colaborador.apellidos}}</td>
+          <td class="dataIndiCell">{{acuerdo.colaborador.cargo.nombre}}</td>
+          <td class="dataIndiCell">{{acuerdo.colaborador.grupoObj.nombre}}</td>
+          <td class="dataIndiCell">
+            <button type="button" class="btnCerrar"
+              (click)="openModalMotivoAusencia(acuerdo.colaborador.idPersona)">Ausente</button>
+          </td>
+        </tr>
+      </tbody>
+    </ng-template>
   </table>
 </div>
 
 <h2 style="margin: 20px 0px 20px 0px;">Detalles de la reunión</h2>
 
 <form [formGroup]="formMinuta">
-<!--
+  <!--
   <div style="display: flex;">
     <mat-form-field appearance="fill" style="flex: 1">
       <mat-label>Proceso</mat-label>
@@ -92,6 +115,7 @@
       </mat-error>
     </mat-form-field>
   </div>
+
   <div style="display: flex;">
     <mat-form-field style="flex: 1;">
       <mat-label>Desarrollo de la reunión</mat-label>
@@ -101,6 +125,7 @@
       </mat-error>
     </mat-form-field>
   </div>
+
   <div style="display: flex;">
     <mat-form-field style="flex: 1;">
       <mat-label>Conclusiones del monitoreo de los acuerdos de desempeño</mat-label>

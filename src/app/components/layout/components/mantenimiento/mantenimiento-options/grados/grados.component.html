@@ -67,12 +67,12 @@
                 <tr class="dataRow" *ngFor="let grade of grades">
                     <td class="dataIndiCell">{{grade.competenciaObj.nombre}}</td>
                     <td class="dataIndiCell">{{grade.tipoGradoObj.nombre}}</td>
-                    <td class="dataIndiCell" style="text-align: center;"><mat-icon class="listIcon"
+                    <td class="dataIndiCell" style="text-align: center;"><mat-icon matTooltip="ver comportamientos." class="listIcon"
                             (click)="openPropertyModal(grade.comportamientosObj, 'Comportamientos', grade.tipoGradoObj.nombre)">list</mat-icon>
                     </td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(grade)" class="editIcon">edit</mat-icon>
+                    <td class="dataIndiCell"><mat-icon matTooltip="Editar grado." (click)="setValueToEdit(grade)" class="editIcon">edit</mat-icon>
                     </td>
-                    <td class="dataIndiCell"><mat-icon (click)="deleteGrade(grade.idGrado)"
+                    <td class="dataIndiCell"><mat-icon matTooltip="Eliminar grado." (click)="deleteGrade(grade.idGrado)"
                             class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
@@ -83,10 +83,10 @@
                     </ng-container>
                     <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span> </td>
                     <td class="paginationCell">
-                        <span style="display: flex; align-items: center;">
-                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                        <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+                            <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
                             <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
@@ -97,7 +97,10 @@
     <ng-template #noElements>
         <tbody>
             <tr class="dataRow">
-                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <td class="dataIndiCell" *ngIf="grades && grades.length == 0; else searching">No hay elementos que mostrar.</td>
+                <ng-template #searching>
+                    <td class="dataIndiCell">Buscando elementos.</td>
+                  </ng-template>
                 <ng-container *ngFor="let td of [1, 2, 3, 4]">
                     <td class="dataIndiCell"></td>
                 </ng-container>

@@ -28,10 +28,9 @@ export class EvaluationCompetencyServices {
         this.usuario = systemInformation.localUser;
     }
 
-
-    public getEvaluationCompetencies(isSup: boolean = false) {
+    public getEvaluationCompetencies(isSup: boolean = false, term: string = '', page: number = 1, pageSize: number = 10) {
         let collaboratorId: number = this.usuario.idPersona
-        return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/EvaluacionCompetencia/colaborador/${collaboratorId}?supervisor=${isSup}&CurrentPage=1&PageSize=10`, this.header));
+        return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/EvaluacionCompetencia/colaborador/${collaboratorId}?supervisor=${isSup}&Term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
     }
 
     public postEvaluationCompetency(evaluationCompetency: EvaluationCompetencyI) {

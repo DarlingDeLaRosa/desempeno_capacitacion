@@ -55,6 +55,7 @@ export interface CollaboratorsGetI {
     recinto: LocationI
     carreraAdministrativa: boolean
     supervisorObj: SupervisorI
+    unidad: string | undefined
 }
 
 export interface PositionI {

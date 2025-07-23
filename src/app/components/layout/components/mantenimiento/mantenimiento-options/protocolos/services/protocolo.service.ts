@@ -49,7 +49,6 @@ export class ProtocolsServices {
     }
 
     // Medoto para obtener todos los tipos de protocolos
-
     public getTypeProtocols() {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Protocolo/getall_tipo_protocolo`, this.header));
     }

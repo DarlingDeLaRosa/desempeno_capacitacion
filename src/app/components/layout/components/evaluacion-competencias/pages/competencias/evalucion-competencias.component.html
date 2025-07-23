@@ -1,30 +1,65 @@
-<div class="fuctionContent">
-    <div class="title">
-        <h1>Evaluación De Competencias</h1>
-    </div>
+<div class="fuctionContent" style="padding-bottom: 10px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
 
-    <!-- <mat-form-field appearance="fill"> -->
-        <!-- <mat-label>Buscar colaborador</mat-label> -->
-        <!-- <input matInput>  -->
-        <!-- <mat-icon matSuffix>search</mat-icon> -->
-    <!-- </mat-form-field> -->
-    <!-- [(ngModel)]="questionName" (input)="getPregunta()" -->
+        <div class="title">
+            <h1>Evaluación De Competencias</h1>
+        </div>
+
+        <a [matTooltip]="docName" *ngIf="selectGroup && protocol && protocol.documentosObj.length > 0" target="_blank"
+            class="btnInfo" [href]="protocol.documentosObj[0].enlace"
+            style="padding: 4px 3px 0 3px; text-decoration: none; height: 30px;"><mat-icon>question_mark</mat-icon></a>
+    </div>
 </div>
 
+
 <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h3 *ngIf="this.systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado' || this.systemInformation.activeRol().nombre == 'Encargado' && selectGroup; else noSup ">{{userLogged.Unidad}}</h3>
+    <h3
+        *ngIf="this.systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado' || this.systemInformation.activeRol().nombre == 'Encargado' && selectGroup; else noSup ">
+        {{userLogged.Unidad}}</h3>
     <ng-template #noSup>
         <h3>Lista De Evaluaciones de Competencias Trabajadas.</h3>
     </ng-template>
 
-    <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
-    *ngIf="this.systemInformation.activeRol().nombre == 'Encargado'" [(ngModel)]="selectGroup">
-    <mat-button-toggle [value]="false" (click)="getSupervisorWithSubordinates()">Todos los Colaboradores</mat-button-toggle>
-    <mat-button-toggle [value]="true" (click)="getSupervisorWithSubordinates()">Mis Supervisados</mat-button-toggle>
-  </mat-button-toggle-group>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" style="margin-bottom: 15px;"
+            *ngIf="this.systemInformation.activeRol().nombre == 'Encargado'" [(ngModel)]="selectGroup">
+            <mat-button-toggle [value]="true" [disabled]="charge" (click)="getSupervisorWithSubordinates()">Mis
+                Supervisados</mat-button-toggle>
+            <mat-button-toggle [value]="false" [disabled]="charge" (click)="getSupervisorWithSubordinates()">Todos los
+                Colaboradores</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <mat-form-field appearance="fill" *ngIf="!selectGroup">
+            <mat-label>Buscar colaborador</mat-label>
+            <input matInput [(ngModel)]="filter" (input)="getSupervisorWithSubordinates()">
+            <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+    </div>
 </div>
 
-<div class="table-container">
+<div>
+    <div *ngIf="newMinuta != undefined && newMinuta && selectGroup && evaluationsCompetencies.length > 0"
+        style="display: flex; justify-content: end; margin-top: 8px; align-items: end; color: green;">
+        <mat-icon>check</mat-icon>
+        <h4 style="margin-bottom: 2px;">Minuta Realizada.</h4>
+    </div>
+
+    <div style="display: flex; justify-content: end; gap: 20px;"
+        *ngIf="newMinuta != undefined && !selectGroup || newMinuta != undefined && selectGroup && !newMinuta">
+        <div class="countContainer">
+            <mat-icon style=" color: green;">check</mat-icon> &nbsp;
+            <h4 style="margin-bottom: 2px;  color: green;">{{evaluationCompetenciesCount.tienen}} Realizados.</h4>
+        </div>
+        <div class="countContainer">
+            <mat-icon style=" color: #f44336;">close</mat-icon>
+            <h4 style="margin-bottom: 2px; color: #f44336;">{{evaluationCompetenciesCount.noTienen}} Faltantes.</h4>
+        </div>
+    </div>
+</div>
+
+<div class="table-container" style="margin-top: 10px;">
     <table>
         <thead class="headerTable">
             <tr class="headerRow">
@@ -34,60 +69,72 @@
                 <th class="headerCell">Grupo ocupacional</th>
                 <th class="headerCell" style="width: 5%;"></th>
                 <th class="headerCell" style="width: 7%; padding-right: 15px;">
-                    <div class="loader" *ngIf="!supervisorWithSubordinates"></div>
+                    <div class="loader" *ngIf="!supervisorWithSubordinates || charge"></div>
                 </th>
             </tr>
         </thead>
-        <tbody *ngIf="supervisorWithSubordinates && supervisorWithSubordinates.length > 0 || evaluationsCompetencies && evaluationsCompetencies.length > 0; else noElements">
+        <tbody
+            *ngIf="supervisorWithSubordinates && supervisorWithSubordinates.length > 0 || evaluationsCompetencies && evaluationsCompetencies.length > 0; else noElements">
             <tr class="dataRow" *ngFor="let subordinate of supervisorWithSubordinates">
                 <td class="dataIndiCell">{{subordinate.nombre}} {{subordinate.apellidos}}</td>
-                <td class="dataIndiCell">{{appHelper.getUnitOrg(subordinate.division, subordinate.departamento, subordinate.direccion, subordinate.viceRectoria)?.nombre }}</td>
+                <td class="dataIndiCell">{{appHelper.getUnitOrg(subordinate.division, subordinate.departamento,
+                    subordinate.direccion, subordinate.viceRectoria)?.nombre }}</td>
                 <td class="dataIndiCell">{{subordinate.cargo.nombre}}</td>
                 <td class="dataIndiCell">{{subordinate.grupoObj.nombre}}</td>
                 <td class="dataIndiCell"></td>
-                <td class="dataIndiCell"><mat-icon 
-                    [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']" 
-                    [queryParams]="{ colaboradorId: subordinate.idPersona }"
-                    class="editIcon">add</mat-icon></td>
-                </tr>
+                <td class="dataIndiCell"><mat-icon matTooltip="Crear evaluación de competencia."
+                        [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']"
+                        [queryParams]="{ colaboradorId: subordinate.idPersona }" class="editIcon">add</mat-icon></td>
+            </tr>
             <tr class="dataRow" *ngFor="let subordinateEvaluation of evaluationsCompetencies">
-                <td class="dataIndiCell">{{subordinateEvaluation.colaborador.nombre}} {{subordinateEvaluation.colaborador.apellidos}}</td>
-                <td class="dataIndiCell">{{appHelper.getUnitOrg(subordinateEvaluation.colaborador.division, subordinateEvaluation.colaborador.departamento, subordinateEvaluation.colaborador.direccion, subordinateEvaluation.colaborador.viceRectoria)?.nombre }}</td>
+                <td class="dataIndiCell">{{subordinateEvaluation.colaborador.nombre}}
+                    {{subordinateEvaluation.colaborador.apellidos}}</td>
+                <td class="dataIndiCell">{{appHelper.getUnitOrg(subordinateEvaluation.colaborador.division,
+                    subordinateEvaluation.colaborador.departamento, subordinateEvaluation.colaborador.direccion,
+                    subordinateEvaluation.colaborador.viceRectoria)?.nombre }}</td>
                 <td class="dataIndiCell">{{subordinateEvaluation.colaborador.cargo.nombre}}</td>
                 <td class="dataIndiCell">{{subordinateEvaluation.colaborador.grupoObj.nombre}}</td>
-                <td class="dataIndiCell"><mat-icon (click)="openModalviewEvaluation(subordinateEvaluation.colaborador.idPersona)" class="listIcon">description</mat-icon></td>
-                <td class="dataIndiCell"><mat-icon 
-                    [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']"
-                    [queryParams]="{ colaboradorId: subordinateEvaluation.colaborador.idPersona }"
-                    class="editIcon" >edit</mat-icon></td>
+                <td class="dataIndiCell"><mat-icon matTooltip="Ver evaluación de competencia."
+                        (click)="openModalviewEvaluation(subordinateEvaluation.colaborador.idPersona)"
+                        class="listIcon">description</mat-icon></td>
+                <td *ngIf="!newMinuta && selectGroup ; else calificated" class="dataIndiCell"><mat-icon
+                        matTooltip="Editar evaluación de competencia."
+                        [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']"
+                        [queryParams]="{ colaboradorId: subordinateEvaluation.colaborador.idPersona }"
+                        class="editIcon">edit</mat-icon></td>
             </tr>
         </tbody>
-        <!-- <tfoot>
-            <tr class="paginatorRow">
-                <ng-container *ngFor="let td of [1, 2, 3, 4]">
-                    <td class="dataIndiCell"></td>
-                </ng-container>
-                <td class="dataIndiCell">
-                    Placeholder para paginación
-                </td>
-                <td class="dataIndiCell">
-                    <span style="display: flex; align-items: center;">
-                        <mat-icon class="">navigate_before</mat-icon>
-                        <h5 style="margin: 0;"></h5>
-                        <mat-icon class="">navigate_next</mat-icon>
-                    </span>
-                </td>
-            </tr>
-        </tfoot> -->
     </table>
+    <br>
+
+    <div *ngIf="selectGroup && supervisorWithSubordinates.length == 0 && evaluationsCompetencies.length > 0 && newMinuta && !newMinuta"
+        style="display: flex; justify-content: end;">
+        <button [routerLink]="['/layout/evaluacion-competencias/minuta']" [queryParams]="{ typeMinuta: 2 }"
+            class="saveButton">Realizar Minuta</button>
+    </div>
+
     <ng-template #noElements>
         <tbody>
             <tr class="dataRow">
-                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <td class="dataIndiCell"
+                    *ngIf="supervisorWithSubordinates && supervisorWithSubordinates.length == 0 && evaluationsCompetencies && evaluationsCompetencies.length == 0; else searching">
+                    No hay elementos que mostrar.</td>
+                <ng-template #searching>
+                    <td class="dataIndiCell">Buscando elementos.</td>
+                </ng-template>
                 <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
                     <td class="dataIndiCell"></td>
                 </ng-container>
             </tr>
         </tbody>
+    </ng-template>
+
+    <ng-template #calificated>
+        <td class="dataIndiCell">
+            <div style="display: flex; align-items: end; color: green;">
+                <mat-icon>check</mat-icon>
+                <h5 style="margin-bottom: 3px;">Calificado.</h5>
+            </div>
+        </td>
     </ng-template>
 </div>

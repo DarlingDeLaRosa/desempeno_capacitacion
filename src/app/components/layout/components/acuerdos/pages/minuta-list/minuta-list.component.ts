@@ -11,50 +11,54 @@ import { VerMinutaComponent } from '../../modals/ver-minuta/ver-minuta.component
 @Component({
   selector: 'app-minuta-list',
   standalone: true,
-  imports: [ClassImports,MaterialComponents],
-  providers:[MinutaService],
+  imports: [ClassImports, MaterialComponents],
+  providers: [MinutaService],
   templateUrl: './minuta-list.component.html',
   styleUrl: './minuta-list.component.css'
 })
-export class MinutaListComponent implements OnInit{
+export class MinutaListComponent implements OnInit {
 
-minutaList!: MinutaI []
-searchTerm: string = '';
+  minutaList!: MinutaI[]
+  searchTerm: string = '';
+  typeMinuta: string = ''
 
-constructor(
-  private minutaService:MinutaService,
-  public appHelper: HerlperService,
-  public systemInformation:systemInformationService,
-  private dialog: MatDialog,
-){}
+  constructor(
+    private minutaService: MinutaService,
+    public appHelper: HerlperService,
+    public systemInformation: systemInformationService,
+    private dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
-    this.getMinutas(null)
+    this.getMinutas('')
   }
-  getMinutas(term: string | null) {
-    this.minutaService.getMinuta(term).subscribe((resp: any) => {
+
+  getMinutas(term: string) {
+    this.minutaService.getMinuta(term, this.typeMinuta).subscribe((resp: any) => {
       this.minutaList = resp.data;
+      console.log(this.minutaList);
+      
     })
   }
-    //buscar los por departamento y nombre del colaborador
-    Buscar() {
-      if (this.searchTerm.length > 2) {
-        this.getMinutas(this.searchTerm)
-      } else {
-        if (this.searchTerm.length < 1) {
-          this.getMinutas(null);
-        }
+
+  //buscar los por departamento y nombre del colaborador
+  Buscar() {
+    if (this.searchTerm.length > 2) {
+      this.getMinutas(this.searchTerm)
+    } else {
+      if (this.searchTerm.length < 1) {
+        this.getMinutas('');
       }
     }
+  }
 
-    // openModalVer(minuta:MinutaI): void {
-    //   const dialogRef = this.dialog.open(VerMinutaComponent, {
-    //     width: '80%',
-    //     data: { minuta }
-    //   });
+  // openModalVer(minuta:MinutaI): void {
+  //   const dialogRef = this.dialog.open(VerMinutaComponent, {
+  //     width: '80%',
+  //     data: { minuta }
+  //   });
 
-    //   dialogRef.afterClosed().subscribe(result => {
-    //   });
-    // }
-
+  //   dialogRef.afterClosed().subscribe(result => {
+  //   });
+  // }
 }

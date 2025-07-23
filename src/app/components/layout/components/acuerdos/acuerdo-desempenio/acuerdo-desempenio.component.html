@@ -36,8 +36,8 @@
 
   <mat-button-toggle-group name="fontStyle" aria-label="Font Style"
     *ngIf="this.systemInformation.activeRol().nombre == 'Encargado'" [(ngModel)]="selectGroup">
-    <mat-button-toggle [value]="false" (click)="getAcuerdoByRol('')">Todos los Colaboradores</mat-button-toggle>
     <mat-button-toggle [value]="true" (click)="getAcuerdoByRol('')">Mis Supervisados</mat-button-toggle>
+    <mat-button-toggle [value]="false" (click)="getAcuerdoByRol('')">Todos los Colaboradores</mat-button-toggle>
   </mat-button-toggle-group>
 </div>
 
@@ -58,7 +58,7 @@
         </th>
       </tr>
     </thead>
-    <tbody *ngIf=" agreement.length > 0; else noElements">
+    <tbody *ngIf="agreement && agreement.length > 0; else noElements">
       <tr class="dataRow" *ngFor="let acuerdo of agreement">
         <!-- <ng-container *ngIf="acuerdo.colaboradorObj.estadoObj.idEstado == 1"></ng-container> -->
         <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre | titlecase }} {{acuerdo.colaboradorObj.apellidos |
@@ -71,7 +71,7 @@
         <td class="dataIndiCell">{{acuerdo.tipoProceso.nombre}}</td>
         <td class="dataIndiCell">Proceso de {{acuerdo.flujoObj.nombre}}</td>
         <td class="dataIndiCell">
-          <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
+          <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
           <mat-menu #menu="matMenu">
 
             <button mat-menu-item *ngIf="acuerdo.flujoObj.idFlujo == 4"
@@ -154,10 +154,10 @@
         </ng-container>
         <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
         <td class="paginationCell">
-          <span style="display: flex; align-items: center;">
-            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+          <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+            <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
             <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+            <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
           </span>
         </td>
       </tr>
@@ -165,7 +165,10 @@
     <ng-template #noElements>
       <tbody>
         <tr class="dataRow">
-          <td class="dataIndiCell">No hay elementos que mostrar.</td>
+          <td class="dataIndiCell" *ngIf="agreement && agreement.length == 0; else searching">No hay elementos que mostrar.</td>
+          <ng-template #searching>
+            <td class="dataIndiCell" >Buscando elementos.</td>
+          </ng-template>
           <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
             <td class="dataIndiCell"></td>
           </ng-container>

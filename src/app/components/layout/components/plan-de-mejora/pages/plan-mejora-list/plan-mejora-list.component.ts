@@ -38,14 +38,14 @@ export class PlanMejoraListComponent implements OnInit{
   }
 
   getAcuerdoByRol(){
-    this.agreementService.getAgreementByRol(this.usuario.idPersona).subscribe((resp:any)=>{
+    this.agreementService.getAgreementByRol().subscribe((resp:any)=>{
       this.agreementList = resp.data;
     })
   }
 
   Buscar(){
     if (this.searchTerm.length > 2) {
-      this.agreementService.getAgreementByRol(this.usuario.idPersona, this.searchTerm).subscribe((resp: any) => {
+      this.agreementService.getAgreementByRol(this.searchTerm).subscribe((resp: any) => {
         this.agreementList = resp.data;
       });
     } else{

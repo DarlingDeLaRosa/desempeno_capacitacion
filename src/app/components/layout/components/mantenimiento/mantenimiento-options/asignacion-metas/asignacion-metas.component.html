@@ -45,7 +45,7 @@
         <table>
             <thead class="headerTable">
                 <tr class="headerRow">
-                    <th class="headerCell">Grupo ocupacional</th>
+                    <th class="headerCell" style="width: 20%;">Grupo ocupacional</th>
                     <th class="headerCell">Competencia</th>
                     <th class="headerCell" style="width: 5%;"></th>
                     <th class="headerCell" style="width: 7%; padding-right: 15px;">
@@ -55,11 +55,11 @@
             </thead>
             <tbody *ngIf="asignationGoals && asignationGoals.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let asignationGoal of asignationGoals">
-                    <td class="dataIndiCell"> Grupo {{asignationGoal.grupoOcupacionalObj.nombre}}</td>
-                    <td class="dataIndiCell">{{asignationGoal.metaObj.nombre}}</td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(asignationGoal)"
+                    <td class="dataIndiCell">{{asignationGoal.grupoOcupacionalObj.nombre}}</td>
+                    <td class="dataIndiCell" [matTooltip]="asignationGoal.metaObj.nombre">{{asignationGoal.metaObj.nombre}}</td>
+                    <td class="dataIndiCell"><mat-icon matTooltip="Editar asignación de meta." (click)="setValueToEdit(asignationGoal)"
                             class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon
+                    <td class="dataIndiCell"><mat-icon matTooltip="Eliminar asignación de meta."
                             (click)="deleteAsignationGoal(asignationGoal.idAsignacion)"
                             class="removeIcon">delete</mat-icon></td>
                 </tr>
@@ -71,10 +71,10 @@
                     </ng-container>
                     <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
                     <td class="paginationCell">
-                        <span style="display: flex; align-items: center;">
-                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                        <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+                            <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
                             <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
@@ -84,7 +84,10 @@
     <ng-template #noElements>
         <tbody>
             <tr class="dataRow">
-                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <td class="dataIndiCell" *ngIf="asignationGoals && asignationGoals.length == 0; else searching">No hay elementos que mostrar.</td>
+                <ng-template #searching>
+                    <td class="dataIndiCell">Buscando elementos.</td>
+                  </ng-template>
                 <ng-container *ngFor="let td of [1, 2, 3 ]">
                     <td class="dataIndiCell"></td>
                 </ng-container>

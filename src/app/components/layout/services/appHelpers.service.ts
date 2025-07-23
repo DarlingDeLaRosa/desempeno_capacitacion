@@ -13,13 +13,16 @@ export class HerlperService {
     constructor(
         public snackBar: SnackBars,
         private loaderService: LoaderService
-    ) {}
+    ) { }
 
     // Maneja todas las peticiones validando si existe un error o devolviendo el resultado de la petición.
     handleRequest<T>(request: () => Observable<T>): Observable<T> {
         return request().pipe(
             finalize(() => this.loaderService.hide()),
             catchError((error) => {
+
+                if (error.status == 404) return throwError(error)
+                
                 this.snackBar.snackbarLouder(false);
                 setTimeout(() => {
                     error.error.message ? this.snackBar.snackbarError(error.error.message, 6000)
@@ -69,7 +72,7 @@ export class HerlperService {
     pendingCurse(listCourse: any[]): boolean {
         if (listCourse.length) {
             return listCourse.every((course: any) => course.cursosPendientes.length == 0);
-        }else{
+        } else {
             return false
         }
     }
@@ -77,13 +80,19 @@ export class HerlperService {
     isTodayInRange(startDate: string | Date, endDate: string | Date): boolean {
         const today = new Date();
         const start = new Date(startDate);
-        const end = new Date(endDate);    
-    
+        const end = new Date(endDate);
+
         // Normalizar las fechas (eliminar horas, minutos y segundos)
         today.setHours(0, 0, 0, 0);
         start.setHours(0, 0, 0, 0);
         end.setHours(0, 0, 0, 0);
-    
+
         return today >= start && today <= end;
-      }
+    }
+
+    removeDotTypeDoc(nombre: string): string {
+        const lastDot = nombre.lastIndexOf('.');
+        return lastDot !== -1 ? nombre.substring(0, lastDot) : nombre;
+    }
+
 }

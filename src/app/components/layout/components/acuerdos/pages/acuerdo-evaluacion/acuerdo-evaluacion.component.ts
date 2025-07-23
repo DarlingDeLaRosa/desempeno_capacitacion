@@ -39,6 +39,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
   collaborator!: CollaboratorsGetI;
   evaluationCompetencyForm: FormGroup
   protocol!: ProtocolI
+  docName: string = ''
 
   constructor(
     public fb: FormBuilder,
@@ -80,6 +81,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
     this.protocolService.getProtocolByTypeProtocolId(6)
       .subscribe((res: any) => {
         this.protocol = res.data;
+        this.docName = this.protocol.documentosObj[0].nombre.split('.')[0]
       })
   }
 

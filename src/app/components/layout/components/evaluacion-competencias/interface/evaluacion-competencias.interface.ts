@@ -4,6 +4,11 @@ import { CollaboratorsGetI } from '../../mantenimiento/mantenimiento-options/col
 import { CompetencyI } from '../../mantenimiento/mantenimiento-options/competencias/interfaces/competencias.interfaces';
 import { GradesTypeGetI } from '../../mantenimiento/mantenimiento-options/grados/interfaces/tiposGrados.interface';
 
+export interface CompetencyCount {
+    noTienen : number
+    tienen: number
+}
+
 export interface EvaluationCompetencyGetI {
     colaborador: CollaboratorsGetI
     evaluacionCompetenciasDetalles: EvaluationBehaviorsI[]
@@ -74,7 +79,7 @@ export interface EvaluationCompetencyTestI {
     tipoGradoObj: GradesTypeGetI
 }
 
-export interface evaluationAgreementCalificationI{
-    calificacionComportamiento: {id: number, nombre: string, puntos: number}
+export interface evaluationAgreementCalificationI {
+    calificacionComportamiento: { id: number, nombre: string, puntos: number }
     comportamiento: behaviorsI
 }

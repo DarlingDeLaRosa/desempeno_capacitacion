@@ -38,7 +38,9 @@
 
 <div style="margin-top: 15px; display: flex; justify-content: space-between;">
   <h2>Metas</h2>
-  <a *ngIf="protocol && protocol.documentosObj.length > 0" target="_blank" class="btnInfo" [href]="protocol.documentosObj[0].enlace" style="padding: 4px 3px 0 3px; text-decoration: none; height: 30px;" ><mat-icon>question_mark</mat-icon></a>
+  <a [matTooltip]="docName" *ngIf="protocol && protocol.documentosObj.length > 0" target="_blank" class="btnInfo"
+    [href]="protocol.documentosObj[0].enlace"
+    style="padding: 4px 3px 0 3px; text-decoration: none; height: 30px;"><mat-icon>question_mark</mat-icon></a>
 </div>
 
 <div class="AcuerdosForms" *ngIf="collaborator">
@@ -149,7 +151,7 @@
           </th>
         </tr>
       </thead>
-      <tbody *ngIf="goalDetails.length > 0; else noElements">
+      <tbody *ngIf="goalDetails && goalDetails.length > 0; else noElements">
         <tr class="dataRow" *ngFor="let goal of goalDetails; let i = index">
           <td class="dataIndiCell">{{goal.nombre}}</td>
           <td class="dataIndiCell">{{goal.nombreMedio}}</td>
@@ -176,7 +178,10 @@
             <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
               <td class="dataIndiCell"></td>
             </ng-container>
-            <td class="dataIndiCell">No hay elementos que mostrar.</td>
+            <td class="dataIndiCell" *ngIf="goalDetails && goalDetails.length == 0; else searching">No hay elementos que mostrar.</td>
+            <ng-template #searching>
+              <td class="dataIndiCell">Buscando elementos.</td>
+            </ng-template>
             <ng-container *ngFor="let td of [1, 2, 3, 5]">
               <td class="dataIndiCell"></td>
             </ng-container>

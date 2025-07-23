@@ -146,17 +146,17 @@
             </thead>
             <tbody *ngIf="courses && courses.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let course of courses">
-                    <td class="dataIndiCell">{{course.nombre}}</td>
-                    <td class="dataIndiCell">{{course.suplidor}}</td>
+                    <td class="dataIndiCell" [matTooltip]="course.nombre">{{course.nombre}}</td>
+                    <td class="dataIndiCell" [matTooltip]="course.suplidor">{{course.suplidor}}</td>
                     <td class="dataIndiCell">{{course.modalidadObj.nombre}}</td>
                     <!-- <td class="dataIndiCell">{{course.fechaInicioInscripcion | date: 'dd/MM/yyyy'}} - {{course.fechaFinInscripcion | date: 'dd/MM/yyyy'}}</td> -->
                     <td class="dataIndiCell">{{course.fechaInicio | date: 'dd/MM/yyyy'}} - {{course.fechaFin | date:
                         'dd/MM/yyyy'}}</td>
                     <td class="dataIndiCell">{{course.cuposDisponibles}}</td>
                     <td class="dataIndiCell">{{course.costoTotal | currency: 'DOP ': 'symbol': '1.2-2'}}</td>
-                    <td class="dataIndiCell"><mat-icon (click)="setValueToEdit(course)" class="editIcon">edit</mat-icon>
+                    <td class="dataIndiCell"><mat-icon matTooltip="Editar curso." (click)="setValueToEdit(course)" class="editIcon">edit</mat-icon>
                     </td>
-                    <td class="dataIndiCell"><mat-icon (click)="deleteCourse(course.idCurso)"
+                    <td class="dataIndiCell"><mat-icon matTooltip="Eliminar curso." (click)="deleteCourse(course.idCurso)"
                             class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
@@ -167,10 +167,10 @@
                     </ng-container>
                     <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
                     <td class="paginationCell">
-                        <span style="display: flex; align-items: center;">
-                            <mat-icon class="rowIcon" (click)="previousPage()">navigate_before</mat-icon>
+                        <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+                            <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
                             <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-                            <mat-icon class="rowIcon" (click)="nextPage()">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
@@ -180,7 +180,10 @@
     <ng-template #noElements>
         <tbody>
             <tr class="dataRow">
-                <td class="dataIndiCell">No hay elementos que mostrar.</td>
+                <td class="dataIndiCell" *ngIf="courses && courses.length == 0; else searching">No hay elementos que mostrar.</td>
+                <ng-template #searching>
+                    <td class="dataIndiCell">Buscando elementos.</td>
+                  </ng-template>
                 <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6, 7]">
                     <td class="dataIndiCell"></td>
                 </ng-container>

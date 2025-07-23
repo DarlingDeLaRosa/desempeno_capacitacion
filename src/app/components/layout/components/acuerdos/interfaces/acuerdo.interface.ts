@@ -86,9 +86,11 @@ export interface MinutaI {
   desarrollo: string;
   conclusion: string;
   agendaReunion: string;
+  periodoId: number
   periodoAcuerdoId: number;
   supervisor?: CollaboratorsGetI;
   periodoAcuerdo?: periodProcessGetI;
   supervisorId: number;
+  esUnaEvaluacionCompentencia: boolean
   minutaAsistencia: MinutaAsistenciaI[];
 }

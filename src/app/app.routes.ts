@@ -154,6 +154,10 @@ export const routes: Routes = [
             path: 'evaluacion-competencia-persona',
             component: EvaluacionPersonaComponent
           },
+          {
+            path: 'minuta',
+            component: MinutaComponent,
+          },
         ]
       },
       {

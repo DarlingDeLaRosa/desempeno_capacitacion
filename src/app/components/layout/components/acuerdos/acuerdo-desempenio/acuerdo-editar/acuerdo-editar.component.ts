@@ -34,7 +34,7 @@ export class AcuerdoEditarComponent implements OnInit {
   goalForm: FormGroup;
   idSavedGoal: number = 0;
   usuarioActual!: loggedUserI
-  goalDetails: Array<any> = [];
+  goalDetails!: Array<any>;
   totalValor: number = 0
   indexEditando: number | null = null;
   textboton: string = ''
@@ -44,6 +44,7 @@ export class AcuerdoEditarComponent implements OnInit {
   isLoading: boolean = true
   isLoading2: boolean = true
   protocol!: ProtocolI
+  docName: string = ''
 
   constructor(
     private route: ActivatedRoute,
@@ -98,7 +99,7 @@ export class AcuerdoEditarComponent implements OnInit {
         const timeMatches = value.match(timeRegex) || [];
         const timeNumbers = (timeMatches.join(' ').match(/\d+/g) || []);
 
-        const hasAdditionalNumber = numbers.some((num : any)=> !timeNumbers.includes(num));
+        const hasAdditionalNumber = numbers.some((num: any) => !timeNumbers.includes(num));
         if (!hasAdditionalNumber) {
           errors['numberOutsideTime'] =
             'La meta debe incluir un número que permita medir su cumplimiento, fuera de la referencia temporal.';
@@ -128,6 +129,9 @@ export class AcuerdoEditarComponent implements OnInit {
     this.protocolService.getProtocolByTypeProtocolId(4)
       .subscribe((res: any) => {
         this.protocol = res.data;
+        if(this.protocol.documentosObj.length == 0) return 
+
+        this.docName = this.protocol.documentosObj[0].nombre.split('.')[0]
       })
   }
 

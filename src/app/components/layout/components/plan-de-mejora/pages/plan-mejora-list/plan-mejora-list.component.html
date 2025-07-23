@@ -51,7 +51,10 @@
     <ng-template #noElements>
       <tbody>
           <tr class="dataRow">
-              <td class="dataIndiCell">No hay elementos que mostrar.</td>
+              <td class="dataIndiCell" *ngIf="agreementList && agreementList.length == 0; else searching">No hay elementos que mostrar.</td>
+              <ng-template #searching>
+                <td class="dataIndiCell">Buscando elementos.</td>
+              </ng-template>
               <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
                   <td class="dataIndiCell"></td>
               </ng-container>
