@@ -29,12 +29,11 @@ export class MinutaService {
   }
 
   //peticion para traer todos las minutas
-  public getMinuta(term: string, typeMinuta: string = 'Acuerdo', page: number = 1, totalPage: number = 10) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?tipo=${typeMinuta}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
+  public getMinuta(term: string, typeMinuta: string = 'Acuerdo', sup: boolean = true, page: number = 1, totalPage: number = 10) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?tipo=${typeMinuta}&esSupervisor=${sup}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
   }
   
-  public getMinutaExistente(period: number, isEvaluation: boolean , periodProcessId: number = 0 ) {
-    console.log(this.usuario.idPersona);
+  public getMinutaExistente(period: number,isEvaluation: boolean , periodProcessId: number = 0 ) {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/validar-existencia?periodoId=${period}&supervisorId=${Number(this.usuario.idPersona)}&esUnaEvaluacion=${isEvaluation}&periodoAcuerdoId=${periodProcessId}`, this.header));
   }
 
@@ -42,4 +41,13 @@ export class MinutaService {
   public postMinuta(Minuta: MinutaI) {
     return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Minutas`, Minuta, this.header));
   }
+
+  //peticion para hacer el post de una minuta
+  public postDocMinuta(IdMinuta: number, formData: FormData) {
+    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Minutas/${IdMinuta}/cargar-minuta`, formData , this.header));
+  }
+
+  public deleteDocMinuta(idMinuta: number) {
+    return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/Minutas/${idMinuta}/eliminar-minuta`, this.header))
+}
 }

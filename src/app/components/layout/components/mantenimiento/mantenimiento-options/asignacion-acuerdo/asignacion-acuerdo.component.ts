@@ -44,10 +44,16 @@ export class AsignacionAcuerdoComponent implements OnInit {
       acuerdosDuracionId: new FormControl('', Validators.required),
       cedula: new FormControl('', [Validators.required, Validators.maxLength(11)]),
     })
+
+    this.filterForm = fb.group({
+      filter: new FormControl('')
+    })
   }
 
   page: number = 1
   unitOrg: string = ''
+  isLoading!: boolean;
+  filterForm: FormGroup
   pagination!: PaginationI
   typeAgreements!: typeAgreementI[]
   asignationAgreementForm: FormGroup
@@ -63,9 +69,12 @@ export class AsignacionAcuerdoComponent implements OnInit {
 
   // Metodo para obtener todos los colaboradores
   getAsignationAgreement() {
-    this.asignationAgreementService.getAsignationAgreements(this.page, 10)
+
+    this.isLoading = true
+    this.asignationAgreementService.getAsignationAgreements(this.filterForm.value.filter, this.page, 10)
       .subscribe((res: any) => {
-        
+        this.isLoading = false
+
         this.asignationsAgreement = res.data;
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }
@@ -93,7 +102,7 @@ export class AsignacionAcuerdoComponent implements OnInit {
 
     this.asignationAgreementService.getAsignationAgreementsByDNI(this.asignationAgreementForm.value.cedula)
       .subscribe((res: any) => {
-        if (res.data){
+        if (res.data) {
           this.setValueToEdit(res.data)
           if (res.data.idAsignacion > 0) this.createSecondAsignation()
         }
@@ -172,3 +181,4 @@ export class AsignacionAcuerdoComponent implements OnInit {
   }
 
 }
+

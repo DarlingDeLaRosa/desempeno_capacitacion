@@ -2,17 +2,17 @@
   <div class="title">
     <h1>Lista de Minutas</h1>
   </div>
-  <div>
+  <!-- <div>
     <div>
       <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
           class="backIcon">arrow_back
         </mat-icon>Acuerdos de Desempeño</button>
     </div>
-  </div>
+  </div> -->
 </div>
 
 <div style="display: flex; justify-content: space-between;">
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" style="width: 20%;">
     <mat-label>Tipos de Minuta</mat-label>
     <mat-select [(ngModel)]="typeMinuta" (selectionChange)="getMinutas('')">
       <mat-option [value]="''">Todos</mat-option>
@@ -34,10 +34,10 @@
       <th class="headerCell">Nombre</th>
       <th class="headerCell">Unidad organizativa</th>
       <th class="headerCell">Cargo</th>
-      <th class="headerCell">Nivel</th>
-      <th class="headerCell">Proceso</th>
+      <!-- <th class="headerCell">Nivel</th> -->
+      <!-- <th class="headerCell">Proceso</th> -->
       <th class="headerCell"></th>
-      <th class="headerCell" style="width: 2%;">
+      <th class="headerCell" style="width: 5%;">
         <div *ngIf="!minutaList" class="loader"></div>
       </th>
     </tr>
@@ -50,21 +50,38 @@
         minuta.supervisor!.viceRectoria)?.nombre}}</td>
       <td class="dataIndiCell">{{minuta.supervisor!.cargo.nombre}}</td>
       <td class="dataIndiCell">{{minuta.supervisor!.grupoObj.nombre}}</td>
-      <td class="dataIndiCell">{{minuta.periodoAcuerdo!.tipoProceso.nombre}}</td>
+      <!-- <td class="dataIndiCell">{{minuta.periodoAcuerdo!.tipoProceso.nombre}}</td> -->
       <td class="dataIndiCell">
-        <mat-icon class="listIcon">description</mat-icon>
+        <mat-icon class="listIcon"
+          (click)="openModalListadoDocumentos(minuta.supervisor!.nombre, minuta.supervisor!.apellidos, minuta.supervisor!.idPersona)">description</mat-icon>
       </td>
-      <td class="dataIndiCell"></td>
+      <!-- <td class="dataIndiCell"></td> -->
     </tr>
   </tbody>
+  <tfoot *ngIf="pagination && pagination.totalPage">
+    <tr class="paginatorRow">
+      <ng-container *ngFor="let td of [1, 2, 3]">
+        <td class="dataIndiCell"></td>
+      </ng-container>
+      <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+      <td class="paginationCell">
+        <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+          <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
+          <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+          <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
+        </span>
+      </td>
+    </tr>
+  </tfoot>
   <ng-template #noElements>
     <tbody>
       <tr class="dataRow">
-        <td class="dataIndiCell" *ngIf="minutaList && minutaList.length == 0; else searching">No hay elementos que mostrar.</td>
+        <td class="dataIndiCell" *ngIf="minutaList && minutaList.length == 0; else searching">No hay elementos que
+          mostrar.</td>
         <ng-template #searching>
           <td class="dataIndiCell">Buscando elementos.</td>
         </ng-template>
-        <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
+        <ng-container *ngFor="let td of [1, 2, 3, 4]">
           <td class="dataIndiCell"></td>
         </ng-container>
       </tr>

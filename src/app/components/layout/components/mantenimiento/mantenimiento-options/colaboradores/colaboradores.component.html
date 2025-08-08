@@ -350,7 +350,7 @@
                     <th class="headerCell" style="width: 5%;"></th>
                     <th class="headerCell" style="width: 5%;"></th>
                     <th class="headerCell" style="width: 7%; padding-right: 15px;">
-                        <div *ngIf="!collaborators" class="loader"></div>
+                        <div *ngIf="!collaborators || isLoading ==  true" class="loader"></div>
                     </th>
                 </tr>
             </thead>

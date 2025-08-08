@@ -31,7 +31,7 @@ import { EvaluationCompetencyGetI } from '../../../evaluacion-competencias/inter
   styleUrl: './minuta.component.css'
 })
 export class MinutaComponent implements OnInit {
-
+  
   collaborator!: any;
   docName: string = ''
   protocol!: ProtocolI
@@ -60,10 +60,11 @@ export class MinutaComponent implements OnInit {
     private evaluationCompetencyService: EvaluationCompetencyServices,
   ) {
     this.formMinuta = this.fb.group({
-      agendaReunion: new FormControl<string>('', [Validators.required, Validators.minLength(40)]),
-      desarrollo: new FormControl<string>('', [Validators.required, Validators.minLength(40)]),
-      conclusiones: new FormControl<string>('', [Validators.required, Validators.minLength(40)]),
+      agendaReunion: new FormControl<string>('', [Validators.maxLength(200)]),
+      desarrollo: new FormControl<string>('', [Validators.required, Validators.maxLength(200)]),
+      conclusiones: new FormControl<string>('', [Validators.maxLength(100)]),
       tipoProcesoId: new FormControl<number>(0),
+      unidadOrg: new FormControl(''),
     })
   } 
 
@@ -101,7 +102,6 @@ export class MinutaComponent implements OnInit {
   // getPeriodsProcess() {
   //   this.periodProcessService.getPeriodProcesses(1, 10)
   //     .subscribe((res: any) => {
-  //       console.log(res);
 
   //       this.periodsProcess = res.data;
   //     })
@@ -111,7 +111,6 @@ export class MinutaComponent implements OnInit {
   // getPeriodsProcessActive() {
   //   this.periodProcessService.getPeriodProcessesActive()
   //     .subscribe((res: any) => {
-  //       console.log(res);
 
   //       this.idPeriodsProcessActive = res.data.idPeriodoAcuerdo;
   //     })
@@ -185,6 +184,7 @@ export class MinutaComponent implements OnInit {
       desarrollo: this.formMinuta.get('desarrollo')?.value,
       conclusion: this.formMinuta.get('conclusiones')?.value,
       agendaReunion: this.formMinuta.get('agendaReunion')?.value,
+      unidadOrg: this.usuario.Unidad,
       minutaAsistencia: this.colaboradoresMinuta.map((colaborador) => (
         {
           ausente: colaborador.ausente,
@@ -192,8 +192,6 @@ export class MinutaComponent implements OnInit {
           motivoAusencia: colaborador.motivoAusencia
         })),
     }
-    console.log(Minuta);
-    
 
     this.minutaService.postMinuta(Minuta).subscribe((resp: any) => {
       this.SnackBar.snackbarLouder(true)
@@ -205,8 +203,6 @@ export class MinutaComponent implements OnInit {
 
   //Metodo para guardar minuta
   save() {
-    console.log(this.formMinuta.value);
-    
     // if (this.formMinuta.invalid) {
     //   this.SnackBar.snackbarError('El formulario es inválido'); return
     // }

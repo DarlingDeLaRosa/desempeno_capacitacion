@@ -1,0 +1,104 @@
+<ng-container *ngIf="minuta == undefined && presentes.length == 0 && ausentes.length == 0">
+  <div class="container-loaderMother" style="padding: 25px;">
+    <div class="loaderMother"></div>
+    <div class="loading-text">Cargando...</div>
+  </div>
+</ng-container>
+
+<div class="minuta-container" *ngIf="minuta != undefined && presentes.length > 0 || minuta != undefined && ausentes.length > 0 " >
+  
+  <div style="display: flex; justify-content: end; margin-bottom: -55px;">
+    <button matTooltip="Imprimir" class="btnNavegar" printSectionId="minutaEvaluacion" [useExistingCss]="true"
+    ngxPrint><mat-icon style="font-size: 22px; margin-top: 5px; ">print</mat-icon></button>
+  </div>
+
+  <div id="minutaEvaluacion">
+
+    <div class="header">
+      <img src="images.png" alt="ISFODOSU Logo" class="logo">
+      <h2>INSTITUTO SUPERIOR DE FORMACIÓN DOCENTE SALOMÉ UREÑA</h2>
+    </div>
+
+    <table class="tabla-principal">
+      <thead>
+        <tr>
+          <th colspan="4">MINUTA DE SOCIALIZACIÓN DE EVALUACIÓN POR COMPETENCIAS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="info-row">
+          <td><strong>Área: {{minuta.unidadOrg}}</strong></td>
+          <td colspan="2"></td>
+        </tr>
+        <tr class="info-row">
+          <td><strong>Fecha de la Reunión (Día/Mes/Año): {{minuta.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></td>
+          <td colspan="2"><strong>Año de evaluación: {{minuta.periodo.fechaInicio | date:'yyyy'}}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="section-header">PARTICIPANTES</div>
+    <table class="tabla-listado">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Cargo</th>
+          <th>Firma</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let participante of presentes; index as i">
+          <td>{{i + 1}}. {{participante.nombre}} {{participante.apellido}}</td>
+          <td>{{participante.cargo}}</td>
+          <td></td>
+        </tr>
+        <!-- <tr>
+          <td class="nota-filas">(Agregar las filas necesarias)</td>
+          <td></td>
+          <td></td>
+        </tr> -->
+      </tbody>
+    </table>
+
+    <div class="section-header">AUSENTES</div>
+    <table class="tabla-listado">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Cargo</th>
+          <th>Motivo de la ausencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ausente of ausentes; index as i">
+          <td>{{i + 1}}. {{ausente.nombre}} {{ausente.apellido}}</td>
+          <td>{{ausente.cargo}}</td>
+          <td>{{ausente.motivoAusencia}}</td>
+        </tr>
+        <!-- <tr>
+          <td class="nota-filas">(Agregar las filas necesarias)</td>
+          <td></td>
+          <td></td>
+        </tr> -->
+      </tbody>
+    </table>
+
+    <div class="desarrollo-header">DESARROLLO DE LA REUNIÓN</div>
+    <div class="desarrollo">{{minuta.desarrollo}}</div>
+
+    <div class="recordatorio-header">RECORDATORIO</div>
+    <div class="recordatorio">
+      Cuando un servidor público no esté de acuerdo con los resultados de la evaluación, podrá elegir los mecanismos que
+      dispone el Capítulo IV de la Ley No 41-08 y lo que establece el Reglamento de Relaciones Laborales al respecto.
+    </div>
+
+    <div class="footer">
+      <span>Modelo de Minuta de Socialización de Evaluación por Competencias</span>
+      <span>Pág. 1/1</span>
+    </div>
+  </div>
+
+  <div style="display: flex ; justify-content: end; margin-top: 15px;">
+    <button class="btnCerrar" (click)="closeModal()">Cerrar</button>
+</div>
+</div>

@@ -41,7 +41,7 @@ import { VerComportamientosProbatoriosComponent } from './components/layout/comp
 
 export const routes: Routes = [
   {
-    path:'login/:token',
+    path: 'login/:token',
     component: LoginComponent,
     // canActivate: [LayoutClassGuard]
   },
@@ -71,11 +71,6 @@ export const routes: Routes = [
             outlet: 'acuerdos'
           },
           {
-            path: 'minutaLista',
-            component: MinutaListComponent,
-            outlet: 'acuerdos'
-          },
-          {
             path: 'ver-acuerdo/:id',
             component: VerAcuerdoComponent,
             outlet: 'acuerdos'
@@ -96,6 +91,11 @@ export const routes: Routes = [
             outlet: 'acuerdos'
           },
         ]
+      },
+      {
+        path: 'minutaLista',
+        component: MinutaListComponent,
+        // outlet: 'acuerdos'
       },
       {
         path: 'cursos',

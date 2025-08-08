@@ -11,14 +11,14 @@ export interface AcuerdoI {
   tipoAcuerdoObj: TipoAcuerdoI,
   idTracking: TrackingI,
   idFlujo: number,
-  flujoObj: { idFlujo:number, nombre: string },
+  flujoObj: { idFlujo: number, nombre: string },
   puntos: number
   comentarios: commentsI[]
   detalles: AcuerdoDetalle[];
   documentosObj: Documento[];
   periodo: PeriodoI
   tipoProceso: GeneralI
-  acuerdoDuracion: { id:  number, duracion: string, periodo: string },
+  acuerdoDuracion: { id: number, duracion: string, periodo: string },
 }
 
 export interface TipoAcuerdoI {
@@ -38,7 +38,7 @@ export interface AcuerdoDetalle {
   metaObj: Meta;
   calificacion: number;
   documentosObj: Documento
-  observaciones?:string
+  observaciones?: string
 }
 
 export interface Meta {
@@ -49,6 +49,12 @@ export interface Meta {
   valor: number;
   isTranversal: boolean;
   metaPoa: any;
+}
+
+export interface DocumentoMinuta {
+  idDocumento: number,
+  nombre: string,
+  enlace: string
 }
 
 export interface Documento {
@@ -62,6 +68,8 @@ export interface Documento {
   idMinuta: number;
   fecha: string;
 }
+
+
 
 export interface postCommentI {
   acuerdoId: number,
@@ -82,6 +90,36 @@ export interface MinutaAsistenciaI {
   motivoAusencia: string | null;
 }
 
+export interface MinutaAsistenciaGetI {
+  id: number
+  colaborador: number;
+  ausente: boolean;
+  motivoAusencia: string | null;
+}
+
+export interface MinutaAsistenciaTemplateGetI {
+  id: number
+  colaborador: CollaboratorsGetI;
+  ausente: boolean;
+  motivoAusencia: string | null;
+}
+
+
+export interface MinutaGetI {
+  agendaReunion: string
+  conclusion: string
+  desarrollo: string
+  documentos: DocumentoMinuta[]
+  esUnaEvaluacionCompentencia: boolean
+  id: number
+  minutaAsistencia: MinutaAsistenciaGetI
+  periodo: PeriodoI
+  periodoAcuerdo: periodProcessGetI
+  supervisor: CollaboratorsGetI
+  unidadOrg: string
+  fechaCreacion: Date
+}
+
 export interface MinutaI {
   desarrollo: string;
   conclusion: string;
@@ -93,4 +131,14 @@ export interface MinutaI {
   supervisorId: number;
   esUnaEvaluacionCompentencia: boolean
   minutaAsistencia: MinutaAsistenciaI[];
+  unidadOrg: string
 }
+
+export interface MinutaCollaboratorTemplateI {
+  nombre: string
+  apellido: string
+  cargo: string
+  motivoAusencia: string
+}
+
+

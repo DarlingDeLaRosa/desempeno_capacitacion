@@ -26,7 +26,7 @@ export class CollaboratorServices {
         this.header = { headers: this.headers };
     }
 
-    public getCollaborators(page: number = 1, itemPerPage: number = 1000, name: string = '') {
+    public getCollaborators(page: number = 1, itemPerPage: number = 10, name: string = '') {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/User/getusuariossistema/${this.systemId}?filter=${name}&currentPage=${page}&totalItem=${itemPerPage}`, this.header));
     }
 

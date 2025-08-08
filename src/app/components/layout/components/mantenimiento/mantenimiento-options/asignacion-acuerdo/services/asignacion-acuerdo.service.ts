@@ -24,8 +24,8 @@ export class AsignationAgreementServices {
         this.header = { headers: this.headers };
     }
 
-    public getAsignationAgreements(page: number = 1, itemPerPage: number = 1000) {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionAcuerdo?numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
+    public getAsignationAgreements(term: string = '', page: number = 1, itemPerPage: number = 1000) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionAcuerdo?Term=${term}&numeroPagina=${page}&tamanoPagina=${itemPerPage}`, this.header));
     }
 
     public postAsignationAgreement( asignationAgreement : asignationAgreementI) {

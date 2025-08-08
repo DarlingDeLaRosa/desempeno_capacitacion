@@ -17,10 +17,10 @@ export class AppComponent implements OnInit {
 
   constructor(
     private systemInformation: systemInformationService,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-   this.systemInformation.setUserToken(JSON.parse(sessionStorage.getItem("userToken")!))
+    this.systemInformation.setUserToken(JSON.parse(sessionStorage.getItem("userToken")!))
   }
 
 

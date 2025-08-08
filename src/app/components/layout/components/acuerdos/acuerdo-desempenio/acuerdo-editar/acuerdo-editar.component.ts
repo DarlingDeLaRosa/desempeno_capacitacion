@@ -129,7 +129,7 @@ export class AcuerdoEditarComponent implements OnInit {
     this.protocolService.getProtocolByTypeProtocolId(4)
       .subscribe((res: any) => {
         this.protocol = res.data;
-        if(this.protocol.documentosObj.length == 0) return 
+        if(this.protocol.documentosObj.length == 0) return
 
         this.docName = this.protocol.documentosObj[0].nombre.split('.')[0]
       })
@@ -161,10 +161,11 @@ export class AcuerdoEditarComponent implements OnInit {
   getAgreementByIdCollaborator() {
     this.agreementservice.getAgreementByCollaborator(this.collaborator.idPersona, this.collaborator.grupoObj.idGrupo).subscribe((resp: any) => {
       this.agreement = resp.data;
+
       //hace un map a los detalles del acuerdo y lo agrega al arreglo del detalle que tenemos
       this.goalDetails = this.agreement.detalles.map((detalle: any) => {
         return {
-          idMeta: detalle.idMeta,
+          idMeta: detalle.metaObj.idMeta,
           idAcuerdoDetalle: detalle.idAcuerdoDetalle,
           nombre: detalle.metaObj.nombre,
           metaPoa: detalle.metaObj.metaPoa,
@@ -194,6 +195,7 @@ export class AcuerdoEditarComponent implements OnInit {
       }
     }));
 
+
     this.SnackBar.snackbarLouder(true)
     this.agreementservice.postAgreementGoalDetails(acuerdoParaPost).subscribe((resp: any) => {
       this.appHelpers.handleResponse(resp, () => this.getAgreementByIdCollaborator())
@@ -205,10 +207,12 @@ export class AcuerdoEditarComponent implements OnInit {
   del medio de verificacion para poderlo mostrar en la tabla de detalles.*/
   addGoalDetails() {
     const detalle = this.goalForm.getRawValue();
+
+
     const medioSeleccionado = this.verificacionMethodList.find(m => m.idMedio === detalle.idMedio);
 
     this.goalDetails.push({
-      idMeta: detalle.idMeta || null,
+      idMeta: detalle.idMeta || 0,
       idMedio: detalle.idMedio,
       nombreMedio: medioSeleccionado ? medioSeleccionado.nombre : '',
       nombre: detalle.nombre,
@@ -216,6 +220,7 @@ export class AcuerdoEditarComponent implements OnInit {
       valor: detalle.valor,
       isTranversal: detalle.isTranversal ?? false
     });
+
     this.goalForm.reset();
     this.calcularTotalValor()
     this.activateSave = true;
@@ -273,6 +278,7 @@ export class AcuerdoEditarComponent implements OnInit {
   cargarDetalleEnFormularioIndex(index: number, ideditarRegistro: number) {
     if (index > -1 && index < this.goalDetails.length) {
       const detalle = this.goalDetails[index];
+
       this.goalForm.patchValue({
         idMeta: detalle.idMeta,
         idMedio: detalle.idMedio,

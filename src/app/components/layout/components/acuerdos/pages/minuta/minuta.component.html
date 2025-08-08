@@ -106,12 +106,12 @@
     </mat-form-field>
   </div> -->
 
-  <div style="display: flex;">
+  <div style="display: flex;" *ngIf="typeMinuta == 1">
     <mat-form-field style="flex: 1; ">
       <mat-label>Agenda de la reunión</mat-label>
-      <textarea matInput formControlName="agendaReunion"></textarea>
+      <textarea matInput formControlName="agendaReunion" maxlength="200"></textarea>
       <mat-error *ngIf="formMinuta.get('agendaReunion')?.hasError('Muylargo')">
-        La meta debe ser mas corta.
+        La agenda de la reunión debe ser mas corta.
       </mat-error>
     </mat-form-field>
   </div>
@@ -119,19 +119,19 @@
   <div style="display: flex;">
     <mat-form-field style="flex: 1;">
       <mat-label>Desarrollo de la reunión</mat-label>
-      <textarea matInput formControlName="desarrollo"></textarea>
+      <textarea matInput formControlName="desarrollo" maxlength="200"></textarea>
       <mat-error *ngIf="formMinuta.get('desarrollo')?.hasError('Muylargo')">
-        La meta debe ser mas corta.
+        La desarrollo de la reunión debe ser mas corta.
       </mat-error>
     </mat-form-field>
   </div>
 
-  <div style="display: flex;">
+  <div style="display: flex;" *ngIf="typeMinuta == 1">
     <mat-form-field style="flex: 1;">
       <mat-label>Conclusiones del monitoreo de los acuerdos de desempeño</mat-label>
-      <textarea matInput formControlName="conclusiones"></textarea>
+      <textarea matInput formControlName="conclusiones" maxlength="200"></textarea>
       <mat-error *ngIf="formMinuta.get('conclusiones')?.hasError('Muylargo')">
-        La meta debe ser mas corta.
+        La Conclusiones del monitoreo de los acuerdos de desempeño debe ser explicado de una marena.
       </mat-error>
     </mat-form-field>
   </div>

@@ -13,6 +13,7 @@ import { behaviorsI } from '../../../mantenimiento/mantenimiento-options/grados/
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { EvaluationBehaviorsI, EvaluationCompetencyByIdI, EvaluationCompetencyGetI, EvaluationCompetencyI, getEvaluationCompetencyByIdI } from '../../interface/evaluacion-competencias.interface';
 import { LoaderBoxComponent } from '../../../../../../helpers/components/loader-box/loader-box.component';
+import { SnackBars } from '../../../../services/snackBars.service';
 
 @Component({
   selector: 'app-evaluacion-persona',
@@ -26,6 +27,7 @@ export class EvaluacionPersonaComponent implements OnInit {
   constructor(
     private router: Router,
     public fb: FormBuilder,
+    public snackBar: SnackBars,
     private route: ActivatedRoute,
     private appHelpers: HerlperService,
     private collaboratorService: CollaboratorServices,
@@ -43,6 +45,7 @@ export class EvaluacionPersonaComponent implements OnInit {
   }
 
   collaboratorId!: number;
+  saved: boolean = false
   person!: CollaboratorsGetI
   loading: boolean = true
   evaluationCompetencyForm: FormGroup
@@ -138,21 +141,33 @@ export class EvaluacionPersonaComponent implements OnInit {
   async saveChanges() {
     let groupOfCompetency = this.evaluationCompetencyForm.value.evaluacionCompetenciasDetalles
 
-    const savePromises = groupOfCompetency.map((evaluationCompetency: any) => {
-      let evaluationGroup = {
-        id: evaluationCompetency.id,
-        gradoId: evaluationCompetency.idGrado,
-        idColaborador: this.person.idPersona,
-        periodoId: this.systemInformationSevice.activePeriod().idPeriodo,
-        evaluacionCompetenciasDetalles: evaluationCompetency.comportamientos
-      }
-      this.appHelpers.saveChanges(() => this.postEvaluationPerson(evaluationGroup), () => this.putEvaluationPerson(evaluationGroup), evaluationGroup.id, this.evaluationCompetencyForm)
-    })
+    const hasInvalidScore = groupOfCompetency.some((evaluationCompetency: any) =>
+      evaluationCompetency.comportamientos.some((comportamiento: any) => {
+        const value = comportamiento.calificacionComportamientoId;
+        return value === null || value === undefined || value === '' || isNaN(Number(value));
+      })
+    );
 
-    await Promise.all(savePromises)
+    if (hasInvalidScore) {
+      this.snackBar.snackbarError('Completa los campos requeridos para realizar la acción.');
+      return;
 
-    setTimeout(() => {
-      this.router.navigate(['layout/evaluacion-competencias']);
-    }, 1000);
+    } else {
+      groupOfCompetency.map((evaluationCompetency: any) => {
+        let evaluationGroup = {
+          id: evaluationCompetency.id,
+          gradoId: evaluationCompetency.idGrado,
+          idColaborador: this.person.idPersona,
+          periodoId: this.systemInformationSevice.activePeriod().idPeriodo,
+          evaluacionCompetenciasDetalles: evaluationCompetency.comportamientos
+        }
+
+        this.appHelpers.saveChanges(() => this.postEvaluationPerson(evaluationGroup), () => this.putEvaluationPerson(evaluationGroup), evaluationGroup.id, this.evaluationCompetencyForm)
+      })
+
+      setTimeout(() => {
+        this.router.navigate(['layout/evaluacion-competencias']);
+      }, 1000);
+    }
   }
 }

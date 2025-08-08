@@ -42,7 +42,7 @@ export class systemInformationService {
       this.makeRequests();
     });
   }
-  
+
   private checkToken(): Promise<void> {
     return new Promise((resolve) => {
       this.TokenIntranet = sessionStorage.getItem("tokenIntranet") ?? '';
@@ -58,7 +58,6 @@ export class systemInformationService {
         // Esperar a que se configure el token manualmente
         const interval = setInterval(() => {
           // attempts++;
-          // console.log(`Revisión número: ${attempts}`);
 
           this.TokenIntranet = sessionStorage.getItem("tokenIntranet") ?? '';
           if (this.TokenIntranet) {
@@ -75,7 +74,7 @@ export class systemInformationService {
   }
 
 
-  private makeRequests(): void {
+  public makeRequests(): void {
     this.http
       .get(`${this.URLDevelopment}/Periodo/get_periodo_activo`)
       .subscribe((res: any) => {
@@ -86,7 +85,6 @@ export class systemInformationService {
       .post(`${this.UrlIntranet}/User/post/login`, this.systemcredentials)
       .subscribe((res: any) => {
         if (res.data) {
-
           this.userRol.set(res.data.rol);
           this.userSystem.set(res.data);
         }
@@ -156,7 +154,6 @@ export class systemInformationService {
   // }
 
   // laPrueba(auth: {token:string, idSistema: number}){
-  //   console.log(auth);
 
   //   this.http.get(`${this.URLDevelopment}/Periodo/get_periodo_activo`).subscribe((res: any) => {
   //     this.period.set(res.data);

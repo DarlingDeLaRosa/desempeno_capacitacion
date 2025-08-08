@@ -80,6 +80,7 @@ export class ColaboradoresComponent implements OnInit {
   div: boolean = true
   periodId: number = 0
   adminCareer!: boolean
+  isLoading!: boolean;
   supervisors!: CollaboratorsGetI[]
   locations!: LocationI[]
   divisions!: DivisionI[]
@@ -171,7 +172,7 @@ export class ColaboradoresComponent implements OnInit {
       this.collaboratorService.putChangePersonStatus(this.statusForm.value).subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => this.getCollaborators(), this.statusForm)
       });
-    }else{
+    } else {
       this.getCollaborators()
     }
   }
@@ -330,8 +331,11 @@ export class ColaboradoresComponent implements OnInit {
   //Metodo para filtrar colaboradores 
   // Metodo para obtener todos los colaboradores
   getCollaborators() {
+    this.isLoading = true
     this.collaboratorService.getCollaborators(this.page, 10, this.filterForm.value.filter)
       .subscribe((res: any) => {
+        this.isLoading = false
+
         this.collaborators = res.data;
         let { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }

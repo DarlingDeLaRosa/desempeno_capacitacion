@@ -1,25 +1,27 @@
-<div class="container">
+<ng-container *ngIf="!documentosList && !documentosListMinuta">
+  <div class="container-loaderMother" style="padding: 25px;">
+    <div class="loaderMother"></div>
+    <div class="loading-text">Cargando...</div>
+  </div>
+</ng-container>
+
+<div class="container" *ngIf="documentosList || documentosListMinuta">
+
   <div class="encabezado">
-    <h2>{{data.Nombre}}</h2>
+    <h2 style="margin-right: 15px;">{{data.nombreCompleto}}</h2>
     <button mat-icon-button (click)="cerrar()" style="margin-top: -10px;">
       <mat-icon style="color: red;">close</mat-icon>
     </button>
   </div>
-  <p style="margin: 20px 0 10px 0;">Lista de documentos</p>
 
-  <ng-container *ngIf="!documentosList">
-    <div class="container-loaderMother" style="margin-top: 100px;">
-      <div class="loaderMother"></div>
-      <div class="loading-text">Cargando...</div>
-    </div>
-  </ng-container>
-
-  <ng-container *ngIf="documentosList">
-    <div class="documento-list">
+  <p style="margin: 0px 0 15px 0;">Lista de documentos</p>
+  
+  <div class="documento-list" >
+    <div *ngIf="documentosList">
       <div *ngFor="let documento of documentosList" class="documento">
         <div class="documento-info">
-          <span class="documento-nombre">{{documento.nombre}}</span>
-          <span class="documento-cargo">{{documento.fecha | date}}</span>
+          <span class="documento-nombre" >{{documento.nombre}}</span>
+          <!-- <span class="documento-cargo">{{documento.fecha | date}}</span> -->
         </div>
         <div class="documento-actions">
           <button mat-icon-button (click)="openDocumentInNewTab(documento.enlace)">
@@ -31,25 +33,47 @@
           </button>
         </div>
       </div>
-
-      <div class="empty-list" *ngIf="documentosList.length == 0">
-        <img src="nodata.jpg" alt="No courses available">
-      </div>
-
     </div>
 
-    <div style="display: flex; gap: 5px" *ngIf="data.estado == 1">
-      <div class="file-upload-container" (click)="fileInput.click()">
-        <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
-        <span class="file-upload-name">
-          {{ selectedFileName || 'Seleccione un archivo *' }}
-        </span>
-        <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
-      </div>
-      <div>
-        <mat-icon style="margin-top: 13px;" class="editIcon" (click)="enviarDatos()">send</mat-icon>
+    <div *ngIf="documentosListMinuta">
+      <div *ngFor="let documento of documentosListMinuta" class="documento">
+        <div class="documento-info">
+          <!-- <span class="documento-cargo">{{documento.fecha | date}}</span> -->
+          <span class="documento-nombre" >{{documento.nombre}}</span>
+        </div>
+        <div class="documento-actions">
+          <button mat-icon-button (click)="openDocumentInNewTab(documento.enlace)">
+            <mat-icon class="listIcon" [matTooltip]="'Ver Documento' + ' ' + documento.nombre">visibility</mat-icon>
+          </button>
+
+          <button mat-icon-button (click)="deleteDocument(documento.idDocumento)" *ngIf="appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && data.idCollaborator == idUserLogged">
+            <mat-icon style="color: red;" [matTooltip]="'Eliminar Documento' + ' ' + documento.nombre">delete</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
 
-  </ng-container>
+    <div class="empty-list" *ngIf="
+    documentosListMinuta != undefined && documentosListMinuta.length == 0 && documentosList == undefined ||
+    documentosListMinuta == undefined && documentosList != undefined && documentosList.length == 0
+    ">
+      <img src="nodata.jpg" alt="No se encontraron minutas.">
+    </div>
+  </div>
+
+  <!-- <div style="display: flex; gap: 5px" *ngIf="data.estado == 1"> -->
+  <div style="display: flex; gap: 5px; margin-top: 15px;"
+    *ngIf="documentosList != undefined || documentosListMinuta != undefined && documentosListMinuta.length == 0">
+    <div class="file-upload-container" (click)="fileInput.click()">
+      <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
+      <span class="file-upload-name">
+        {{ selectedFileName || 'Seleccione un archivo *' }}
+      </span>
+      <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
+    </div>
+    <div>
+      <mat-icon style="margin-top: 13px;" class="editIcon" (click)="enviarDatos()">send</mat-icon>
+    </div>
+  </div>
+
 </div>

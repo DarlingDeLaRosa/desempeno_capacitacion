@@ -7,6 +7,8 @@ import { HerlperService } from '../../../../services/appHelpers.service';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { MatDialog } from '@angular/material/dialog';
 import { VerMinutaComponent } from '../../modals/ver-minuta/ver-minuta.component';
+import { ListadoDocumentoComponent } from '../../modals/listado-documento/listado-documento.component';
+import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 
 @Component({
   selector: 'app-minuta-list',
@@ -21,6 +23,8 @@ export class MinutaListComponent implements OnInit {
   minutaList!: MinutaI[]
   searchTerm: string = '';
   typeMinuta: string = ''
+  pagination!: PaginationI
+  page: number = 1
 
   constructor(
     private minutaService: MinutaService,
@@ -34,10 +38,8 @@ export class MinutaListComponent implements OnInit {
   }
 
   getMinutas(term: string) {
-    this.minutaService.getMinuta(term, this.typeMinuta).subscribe((resp: any) => {
+    this.minutaService.getMinuta(term, this.typeMinuta, false).subscribe((resp: any) => {
       this.minutaList = resp.data;
-      console.log(this.minutaList);
-      
     })
   }
 
@@ -52,6 +54,22 @@ export class MinutaListComponent implements OnInit {
     }
   }
 
+  openModalListadoDocumentos(nombre: string, apellido: string, idPersona: number): void {
+    const nombreCompleto = nombre + ' ' + apellido;
+    const dialog = this.dialog.open(ListadoDocumentoComponent, {
+      // width: '750px',
+      // height: '490px',
+      data: {
+        type: 2,
+        idCollaborator: idPersona,
+        nombreCompleto,
+      }
+    })
+    dialog.afterClosed().subscribe(result => {
+      this.getMinutas('')
+    });
+  }
+
   // openModalVer(minuta:MinutaI): void {
   //   const dialogRef = this.dialog.open(VerMinutaComponent, {
   //     width: '80%',
@@ -61,4 +79,21 @@ export class MinutaListComponent implements OnInit {
   //   dialogRef.afterClosed().subscribe(result => {
   //   });
   // }
+
+
+//Metodo para llamar a la siguiente pagina
+  nextPage() {
+    if (this.page < this.pagination.totalPage) {
+      this.page += 1
+      this.getMinutas('')
+    }
+  }
+
+  //Metodo para llamar a la pagina anterior
+  previousPage() {
+    if (this.page > 1) {
+      this.page -= 1
+        ; this.getMinutas('')
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, effect } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ClassImports } from '../../../../../../helpers/class.components';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
@@ -12,6 +12,11 @@ import { HerlperService } from '../../../../services/appHelpers.service';
 import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
 import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
 import { MinutaService } from '../../../acuerdos/services/minuta.service';
+import { ListadoDocumentoComponent } from '../../../acuerdos/modals/listado-documento/listado-documento.component';
+import { MinutaEvaluacionCompetenciaComponent } from '../../../../templates/minuta-evaluacion-competencia/minuta-evaluacion-competencia.component';
+import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
+import { periodProcessGetI } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
+import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
 
 @Component({
   selector: 'app-evalucion-competencias',
@@ -30,8 +35,13 @@ export class EvalucionCompetenciasComponent implements OnInit {
   protocol!: ProtocolI
   docName: string = ''
   charge: boolean = true
-  newMinuta!: boolean
+  newMinuta!: { existe: boolean, docCargado: boolean }
   filter: string = ''
+  rolActivo: string = ''
+  periodo: any
+  pagination!: PaginationI
+  page: number = 1
+  activeProcess!: periodProcessGetI
 
   constructor(
     public dialog: MatDialog,
@@ -39,15 +49,36 @@ export class EvalucionCompetenciasComponent implements OnInit {
     private protocolService: ProtocolsServices,
     private minutaService: MinutaService,
     public systemInformation: systemInformationService,
+    private periodProcessService: PeriodsProcessServices,
     private evaluationCompetencyService: EvaluationCompetencyServices,
   ) {
     this.userLogged = systemInformation.localUser
+    // this.openModalTemplateMinuta()
+    effect(() => {
+      this.periodo = this.systemInformation.activePeriod();
+      const rolActivo = this.systemInformation.activeRol();
+
+      if (this.periodo && this.periodo.idPeriodo) {
+        this.getMinuta(this.periodo.idPeriodo);
+      }
+
+      if (rolActivo && rolActivo.nombre) {
+        this.rolActivo = rolActivo.nombre
+      }
+    });
+    this.getActiveAgreementPeriod()
+  }
+
+  getActiveAgreementPeriod() {
+    this.periodProcessService.getPeriodProcessesActive()
+      .subscribe((res: any) => {
+        if (res) this.activeProcess = res.data
+      })
   }
 
   ngOnInit(): void {
-    this.getSupervisorWithSubordinates()
+    this.getSupervisorWithSubordinates(false)
     this.getProtocol()
-    this.getMinuta()
   }
 
   openModalviewEvaluation(colaborador: number,) {
@@ -55,40 +86,80 @@ export class EvalucionCompetenciasComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => { })
   }
 
-  getSupervisorWithSubordinates() {
+  getSupervisorWithSubordinates( moveFronPagintation: boolean) {
     this.charge = true
     this.evaluationsCompetencies = this.supervisorWithSubordinates = []
-    this.evaluationCompetenciesCount = { tienen: 0, noTienen: 0 }
-
-    const hasMinLength = this.filter.length >= 3;
-    const filterValue = hasMinLength ? this.filter : '';
-    const shouldFetchAll = !hasMinLength && this.supervisorWithSubordinates.length === 0;
-    
-    if (hasMinLength || shouldFetchAll) {
-      this.evaluationCompetencyService.getEvaluationCompetencies(this.selectGroup, filterValue).subscribe((res: any) => {
-        this.supervisorWithSubordinates = res.data.colaboradores;
-        this.evaluationCompetenciesCount = res.data.evaluacionCompetenciaCount
-        this.evaluationsCompetencies = res.data.evaluacionesCompetencias;
-        this.charge = false
-      })
+    if (moveFronPagintation == false) {
+      this.evaluationCompetenciesCount = { tienen: 0, noTienen: 0 }
+      this.pagination = { currentPage: 0, totalItem: 0, totalPage: 0 }
     }
 
+    this.evaluationCompetencyService.getEvaluationCompetencies(this.selectGroup, this.filter, this.page).subscribe((res: any) => {
+
+      let { currentPage, totalItem, totalPage } = res
+      this.pagination = { currentPage, totalItem, totalPage }
+
+      this.supervisorWithSubordinates = res.data.colaboradores;
+      this.evaluationCompetenciesCount = res.data.evaluacionCompetenciaCount
+      this.evaluationsCompetencies = res.data.evaluacionesCompetencias;
+      this.charge = false
+    })
   }
 
   getProtocol() {
     this.protocolService.getProtocolByTypeProtocolId(7)
       .subscribe((res: any) => {
+        if (res.data == null) return
+
         this.protocol = res.data;
         if (this.protocol.documentosObj.length == 0) return
-
         this.docName = this.protocol.documentosObj[0].nombre.split('.')[0]
       })
   }
 
-  getMinuta() {
-    this.minutaService.getMinutaExistente(this.systemInformation.activePeriod().idPeriodo, true)
+  openModalListadoDocumentos(): void {
+    const nombreCompleto = 'Minuta de Evaluación de Competencias';
+    const dialog = this.dialog.open(ListadoDocumentoComponent, {
+      // width: '750px',
+      // height: '490px',
+      data: {
+        type: 2,
+        idCollaborator: Number(this.userLogged.idPersona),
+        nombreCompleto,
+      }
+    })
+    dialog.afterClosed().subscribe(result => {
+      this.getMinuta(this.periodo.idPeriodo)
+    });
+  }
+
+  openModalTemplateMinuta(): void {
+    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: {} })
+    dialog.afterClosed().subscribe(result => {
+      // this.getMinuta(this.periodo.idPeriodo)
+    });
+  }
+
+  getMinuta(period: number) {
+    this.minutaService.getMinutaExistente(period, true)
       .subscribe((res: any) => {
         this.newMinuta = res;
       })
+  }
+
+  //Metodo para llamar a la siguiente pagina
+  nextPage() {
+    if (this.page < this.pagination.totalPage) {
+      this.page += 1
+      this.getSupervisorWithSubordinates(true)
+    }
+  }
+
+  //Metodo para llamar a la pagina anterior
+  previousPage() {
+    if (this.page > 1) {
+      this.page -= 1
+        ; this.getSupervisorWithSubordinates(true)
+    }
   }
 }

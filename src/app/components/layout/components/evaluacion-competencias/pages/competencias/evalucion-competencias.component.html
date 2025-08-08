@@ -13,26 +13,32 @@
 
 
 <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h3
-        *ngIf="this.systemInformation.activeRol().nombre == 'Supervisor' || systemInformation.activeRol().nombre == 'supervisado' || this.systemInformation.activeRol().nombre == 'Encargado' && selectGroup; else noSup ">
-        {{userLogged.Unidad}}</h3>
-    <ng-template #noSup>
-        <h3>Lista De Evaluaciones de Competencias Trabajadas.</h3>
-    </ng-template>
+    <div>
+        <h3
+            *ngIf="rolActivo == 'Supervisor' || rolActivo == 'supervisado' || rolActivo == 'Encargado' && selectGroup; else noSup ">
+            {{userLogged.Unidad}}</h3>
+        <ng-template #noSup>
+            <h3>Lista De Evaluaciones de Competencias Trabajadas.</h3>
+        </ng-template>
+        <h5 style="color: green;" *ngIf="activeProcess">{{activeProcess.tipoProceso.nombre}}:
+            {{activeProcess.fechaInicio |
+            date: 'dd/MM/yyyy'}} -
+            {{activeProcess.fechaFin | date: 'dd/MM/yyyy'}}</h5>
+    </div>
 
     <div style="display: flex; align-items: center; gap: 15px;">
-        
+
         <mat-button-toggle-group name="fontStyle" aria-label="Font Style" style="margin-bottom: 15px;"
-            *ngIf="this.systemInformation.activeRol().nombre == 'Encargado'" [(ngModel)]="selectGroup">
-            <mat-button-toggle [value]="true" [disabled]="charge" (click)="getSupervisorWithSubordinates()">Mis
+            *ngIf="this.rolActivo == 'Encargado'" [(ngModel)]="selectGroup">
+            <mat-button-toggle [value]="true" [disabled]="charge" (click)="getSupervisorWithSubordinates(false)">Mis
                 Supervisados</mat-button-toggle>
-            <mat-button-toggle [value]="false" [disabled]="charge" (click)="getSupervisorWithSubordinates()">Todos los
+            <mat-button-toggle [value]="false" [disabled]="charge" (click)="getSupervisorWithSubordinates(false)">Todos los
                 Colaboradores</mat-button-toggle>
         </mat-button-toggle-group>
 
         <mat-form-field appearance="fill" *ngIf="!selectGroup">
             <mat-label>Buscar colaborador</mat-label>
-            <input matInput [(ngModel)]="filter" (input)="getSupervisorWithSubordinates()">
+            <input matInput [(ngModel)]="filter" (input)="getSupervisorWithSubordinates(true)">
             <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
 
@@ -40,14 +46,14 @@
 </div>
 
 <div>
-    <div *ngIf="newMinuta != undefined && newMinuta && selectGroup && evaluationsCompetencies.length > 0"
-        style="display: flex; justify-content: end; margin-top: 8px; align-items: end; color: green;">
+    <div *ngIf="newMinuta != undefined && newMinuta.existe && selectGroup && evaluationsCompetencies.length > 0"
+        style="display: flex; justify-content: end; align-items: end; color: green;">
         <mat-icon>check</mat-icon>
         <h4 style="margin-bottom: 2px;">Minuta Realizada.</h4>
     </div>
 
     <div style="display: flex; justify-content: end; gap: 20px;"
-        *ngIf="newMinuta != undefined && !selectGroup || newMinuta != undefined && selectGroup && !newMinuta">
+        *ngIf="selectGroup == false || newMinuta != undefined && selectGroup && newMinuta.existe == false">
         <div class="countContainer">
             <mat-icon style=" color: green;">check</mat-icon> &nbsp;
             <h4 style="margin-bottom: 2px;  color: green;">{{evaluationCompetenciesCount.tienen}} Realizados.</h4>
@@ -97,20 +103,50 @@
                 <td class="dataIndiCell"><mat-icon matTooltip="Ver evaluación de competencia."
                         (click)="openModalviewEvaluation(subordinateEvaluation.colaborador.idPersona)"
                         class="listIcon">description</mat-icon></td>
-                <td *ngIf="!newMinuta && selectGroup ; else calificated" class="dataIndiCell"><mat-icon
-                        matTooltip="Editar evaluación de competencia."
+                <td *ngIf="newMinuta != undefined && newMinuta.existe == false && selectGroup && rolActivo != 'Analista'; else calificated"
+                    class="dataIndiCell"><mat-icon matTooltip="Editar evaluación de competencia."
                         [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']"
                         [queryParams]="{ colaboradorId: subordinateEvaluation.colaborador.idPersona }"
-                        class="editIcon">edit</mat-icon></td>
+                        class="editIcon">edit</mat-icon>
+                </td>
             </tr>
         </tbody>
+        <tfoot *ngIf="pagination && pagination.totalPage">
+            <tr class="paginatorRow">
+                <ng-container *ngFor="let td of [1, 2, 3, 4]">
+                    <td class="dataIndiCell"></td>
+                </ng-container>
+                <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+                <td class="paginationCell">
+                    <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+                        <mat-icon class="rowIcon" matTooltip="Pagina anterior."
+                            (click)="previousPage()">navigate_before</mat-icon>
+                        <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                        <mat-icon class="rowIcon" matTooltip="Pagina siguiente."
+                            (click)="nextPage()">navigate_next</mat-icon>
+                    </span>
+                </td>
+            </tr>
+        </tfoot>
     </table>
     <br>
 
-    <div *ngIf="selectGroup && supervisorWithSubordinates.length == 0 && evaluationsCompetencies.length > 0 && newMinuta && !newMinuta"
+    <div *ngIf="newMinuta != undefined && selectGroup && supervisorWithSubordinates.length == 0 && evaluationsCompetencies.length > 0 && newMinuta.existe == false && rolActivo != 'Analista'"
         style="display: flex; justify-content: end;">
         <button [routerLink]="['/layout/evaluacion-competencias/minuta']" [queryParams]="{ typeMinuta: 2 }"
             class="saveButton">Realizar Minuta</button>
+    </div>
+
+    <div style="display: flex; justify-content: end;" *ngIf="rolActivo != 'Analista'">
+        <button *ngIf="newMinuta != undefined && selectGroup && newMinuta.existe && charge == false " class="saveButton"
+            (click)="openModalTemplateMinuta()"> <!--&& newMinuta.docCargado == false-->
+            Ver Minuta
+        </button> &nbsp;
+
+        <button *ngIf="newMinuta != undefined && selectGroup && newMinuta.existe && charge == false" class="saveButton"
+            (click)="openModalListadoDocumentos()">
+            {{newMinuta.docCargado == false ? "Subir Documento de Minuta Firmada": "Documento de Minuta"}}
+        </button>
     </div>
 
     <ng-template #noElements>

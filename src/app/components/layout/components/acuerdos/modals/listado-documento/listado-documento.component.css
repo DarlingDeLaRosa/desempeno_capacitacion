@@ -28,7 +28,7 @@
 
 /* Ajusta el tamaño específico de cada campo */
 .documento-nombre {
-  flex-basis: 50%;
+  /*  */
   /* Ocupa el 20% del ancho total */
   overflow: hidden;
   text-overflow: ellipsis;
@@ -52,7 +52,9 @@ button.cancel-button {
 }
 
 .container {
-  padding: 15px 20px;
+  padding: 20px;
+  min-width: 590px;
+  max-height: 610px;
 }
 
 .modal-footer {
@@ -73,10 +75,10 @@ button.cancel-button {
 
 .documento-list {
   flex-grow: 1;
-  height: 330px;
+  max-height: 390px;
   overflow-y: auto;
   /* Permite que solo la lista de colaboradores haga scroll */
-  max-height: 330px;
+  /* max-height: 330px; */
   /* Ajusta el alto máximo de la lista */
 }
 
@@ -103,7 +105,7 @@ button.cancel-button {
 }
 
 .empty-list img {
-  max-width: 320px;
+  max-width: 300px;
 }
 
 .empty-list p {

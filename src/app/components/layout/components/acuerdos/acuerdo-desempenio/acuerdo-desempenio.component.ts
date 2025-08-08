@@ -54,7 +54,6 @@ export class AcuerdoDesempenioComponent implements OnInit {
   getActiveAgreementPeriod() {
     this.periodProcessService.getPeriodProcessesActive(true)
       .subscribe((res: any) => {
-        console.log(res);
         if (res) this.activeProcess = res.data
       })
   }
@@ -64,8 +63,6 @@ export class AcuerdoDesempenioComponent implements OnInit {
     this.isLoading = true;
     this.agreementService.getAgreementByRol(term, this.selectGroup, this.page, 10).subscribe((resp: any) => {
       this.agreement = resp.data;
-      console.log(this.agreement);
-      
       let { currentPage, totalItem, totalPage } = resp
       this.pagination = { currentPage, totalItem, totalPage }
 
@@ -87,13 +84,14 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
   //Metodo para abrir el modal de la lista de documento
   openModalListadoDocumentos(idCollaborator: number, nombre: string, apellido: string, estado: number): void {
-    const Nombre = nombre + ' ' + apellido;
+    const nombreCompleto = nombre + ' ' + apellido;
     const dialog = this.dialog.open(ListadoDocumentoComponent, {
-      width: '750px',
-      height: '505px',
+      // width: '750px',
+      // height: '505px',
       data: {
+        type: 1,
         idCollaborator,
-        Nombre, 
+        nombreCompleto, 
         estado
       }
     })

@@ -3,9 +3,6 @@
     <h1>Acuerdo de Desempeño</h1>
   </div>
   <div>
-    <button *ngIf="this.systemInformation.activeRol().nombre !== 'supervisado'" type="submit" class="btnNavegar"
-      [routerLink]="[{ outlets: { 'acuerdos': ['minutaLista']}}]" routerLinkActive="active">Minutas</button> &nbsp;
-
     <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'" type="submit" class="btnNavegar"
       [routerLink]="[{ outlets: { 'acuerdos': ['miacuerdo']}}]" routerLinkActive="active">Mi Acuerdo de
       Desempeño</button> &nbsp;
@@ -74,8 +71,9 @@
           <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
           <mat-menu #menu="matMenu">
 
-            <button mat-menu-item *ngIf="acuerdo.flujoObj.idFlujo == 4"
-              (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.colaboradorObj.estadoObj.idEstado)">
+            <button mat-menu-item 
+              (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.colaboradorObj.estadoObj.idEstado)"
+              >
               <mat-icon>upload_file</mat-icon>Documentos
             </button>
 
