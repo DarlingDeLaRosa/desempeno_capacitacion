@@ -15,12 +15,12 @@
   </div>
 
   <p style="margin: 0px 0 15px 0;">Lista de documentos</p>
-  
-  <div class="documento-list" >
+
+  <div class="documento-list">
     <div *ngIf="documentosList">
       <div *ngFor="let documento of documentosList" class="documento">
         <div class="documento-info">
-          <span class="documento-nombre" >{{documento.nombre}}</span>
+          <span class="documento-nombre">{{documento.nombre}}</span>
           <!-- <span class="documento-cargo">{{documento.fecha | date}}</span> -->
         </div>
         <div class="documento-actions">
@@ -39,14 +39,15 @@
       <div *ngFor="let documento of documentosListMinuta" class="documento">
         <div class="documento-info">
           <!-- <span class="documento-cargo">{{documento.fecha | date}}</span> -->
-          <span class="documento-nombre" >{{documento.nombre}}</span>
+          <span class="documento-nombre">{{documento.nombre}}</span>
         </div>
         <div class="documento-actions">
           <button mat-icon-button (click)="openDocumentInNewTab(documento.enlace)">
             <mat-icon class="listIcon" [matTooltip]="'Ver Documento' + ' ' + documento.nombre">visibility</mat-icon>
           </button>
 
-          <button mat-icon-button (click)="deleteDocument(documento.idDocumento)" *ngIf="appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && data.idCollaborator == idUserLogged">
+          <button mat-icon-button (click)="deleteDocument(documento.idDocumento)"
+            *ngIf="appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && data.idCollaborator == idUserLogged">
             <mat-icon style="color: red;" [matTooltip]="'Eliminar Documento' + ' ' + documento.nombre">delete</mat-icon>
           </button>
         </div>
@@ -63,7 +64,10 @@
 
   <!-- <div style="display: flex; gap: 5px" *ngIf="data.estado == 1"> -->
   <div style="display: flex; gap: 5px; margin-top: 15px;"
-    *ngIf="documentosList != undefined || documentosListMinuta != undefined && documentosListMinuta.length == 0">
+    *ngIf="
+    documentosList != undefined &&
+    data.idCollaborator == idUserLogged && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) 
+    || documentosListMinuta != undefined && documentosListMinuta.length == 0 && data.idCollaborator == idUserLogged && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin)">
     <div class="file-upload-container" (click)="fileInput.click()">
       <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
       <span class="file-upload-name">
