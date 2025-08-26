@@ -57,6 +57,12 @@ export interface DocumentoMinuta {
   enlace: string
 }
 
+
+export interface validationMinutaI {
+  estado: boolean,
+  comentario: string,
+}
+
 export interface Documento {
   idDocumento: number;
   nombre: string;
@@ -107,6 +113,7 @@ export interface MinutaAsistenciaTemplateGetI {
 
 export interface MinutaGetI {
   agendaReunion: string
+  aprobada: boolean
   conclusion: string
   desarrollo: string
   documentos: DocumentoMinuta[]

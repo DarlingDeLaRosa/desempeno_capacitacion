@@ -87,7 +87,11 @@ export class SnackBars {
 
     snackbarConfirmation(
         confirmationTitle: string = '¿Estas seguro de eliminar el registro?',
-        confirmationSubTitle: string = 'Esta acción no se puede deshacer.'
+        confirmationSubTitle: string = 'Esta acción no se puede deshacer.',
+        buttonSuccessname: string = 'Aceptar',
+        buttonCancelname: string = 'Cancelar',
+        colorBtnYes: string = '#004b8d',
+        colorBtnNo: string = '#F44336',
         ): Promise<boolean> {
         this.createOverlay();
 
@@ -95,7 +99,7 @@ export class SnackBars {
             const snackBarRefConfirm = this.snackBar.openFromComponent(SnackBarConfirmation, {
                 horizontalPosition: 'center',
                 verticalPosition: 'top',
-                data: {confirmationTitle, confirmationSubTitle}
+                data: {confirmationTitle, confirmationSubTitle, buttonCancelname, buttonSuccessname, colorBtnYes, colorBtnNo}
             })
 
             snackBarRefConfirm.afterDismissed().subscribe(info => {

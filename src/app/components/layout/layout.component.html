@@ -7,7 +7,7 @@
 
         <div class="sideMenuOptionsContainer"> <!---*ngIf="userLogged.rol.modulos"-->
 
-            <a class="item-menu" [routerLink]="['/layout/acuerdos']" routerLinkActive="active"> <!--*ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'"-->
+            <a class="item-menu" [routerLink]="['/layout/acuerdos']" routerLinkActive="active" *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'"> <!---->
                 <mat-icon>handshake</mat-icon>Acuerdos
             </a>
             <a class="item-menu" [routerLink]="['/layout/cursos']" *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'" routerLinkActive="active">

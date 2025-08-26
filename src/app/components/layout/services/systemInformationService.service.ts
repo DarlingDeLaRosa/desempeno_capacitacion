@@ -3,6 +3,7 @@ import { PeriodI } from '../components/mantenimiento/mantenimiento-options/perio
 import { HttpClient } from '@angular/common/http';
 import { PersonSystemI, RolI } from '../components/mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 import { periodInitialState, personSystemInitialState, rolInitialState } from './initialStates';
+import {jwtDecode} from 'jwt-decode';
 
 @Injectable({ providedIn: "root" })
 
@@ -17,8 +18,8 @@ export class systemInformationService {
   private userToken: string = "";
 
   private UrlIntranet: string = 'https://intranet.isfodosu.edu.do/api'
-  // private URLDevelopment: string = 'http://172.25.0.12:4005/api'
-  private URLDevelopment: string = 'https://acuerdos.isfodosu.edu.do/api'
+  private URLDevelopment: string = 'http://172.25.0.12:4005/api'
+  // private URLDevelopment: string = 'https://acuerdos.isfodosu.edu.do/api'
   // private URLDevelopment: string = 'http://172.25.0.12:4005'
   private UrlSIGEBI: string = 'https://sigebi.isfodosu.edu.do/sigebiapi'
   private UrlIsfoplanner: string = 'https://isfoplanner.isfodosu.edu.do/api'
@@ -202,18 +203,26 @@ export class systemInformationService {
   //   });
   // }
 
+
   //Este metodo decodifica el token y lo guarda en el localStorage
+  // get localUser(): any {
+  //   const tokenUser = JSON.parse(sessionStorage.getItem("userToken")!);
+  //   try {
+  //     const payloadPart = tokenUser.split('.')[1];
+  //     const decodedPayload = JSON.parse(atob(payloadPart.replace(/-/g, '+').replace(/_/g, '/')));
+  //     if (decodedPayload) {
+  //       return decodedPayload;
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (error) { console.error('Error al decodificar el token:', error) }
+  // }
+
+
   get localUser(): any {
-    const tokenUser = JSON.parse(sessionStorage.getItem("userToken")!);
-    try {
-      const payloadPart = tokenUser.split('.')[1];
-      const decodedPayload = JSON.parse(atob(payloadPart.replace(/-/g, '+').replace(/_/g, '/')));
-      if (decodedPayload) {
-        return decodedPayload;
-      } else {
-        return null;
-      }
-    } catch (error) { console.error('Error al decodificar el token:', error) }
+    const tokenUser = sessionStorage.getItem("userToken");
+    if (!tokenUser) return null;
+    return jwtDecode(tokenUser);
   }
 
   getMonths(month: number): string {

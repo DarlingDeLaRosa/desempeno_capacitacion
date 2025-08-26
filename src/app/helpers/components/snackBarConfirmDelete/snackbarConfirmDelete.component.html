@@ -7,6 +7,15 @@
 </div>
 
 <span style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-    <button style="background-color: #004b8d; color: white;" (click)="onComfirm()" mat-stroked-button>Aceptar</button>
-    <button style="background-color: #F44336; color: white;" (click)="closeSnackbar()" mat-stroked-button>Cancelar</button>
+    <button mat-stroked-button
+        [ngStyle]="{'background-color': data.colorBtnYes, 'color': 'white'}"
+        (click)="onComfirm()">
+  {{ data.buttonSuccessname }}
+</button>
+
+<button mat-stroked-button
+        [ngStyle]="{'background-color': data.colorBtnNo, 'color': 'white'}"
+        (click)="closeSnackbar()">
+  {{ data.buttonCancelname }}
+</button>
 </span>

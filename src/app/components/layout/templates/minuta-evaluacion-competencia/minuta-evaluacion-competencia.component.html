@@ -75,11 +75,9 @@
           <td>{{ausente.cargo}}</td>
           <td>{{ausente.motivoAusencia}}</td>
         </tr>
-        <!-- <tr>
-          <td class="nota-filas">(Agregar las filas necesarias)</td>
-          <td></td>
-          <td></td>
-        </tr> -->
+        <tr *ngIf="ausentes.length == 0">
+          <td colspan="3">No hay colaboradores ausentes.</td>
+        </tr>
       </tbody>
     </table>
 

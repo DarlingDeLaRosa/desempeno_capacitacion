@@ -15,9 +15,9 @@
   <mat-form-field appearance="fill" style="width: 20%;">
     <mat-label>Tipos de Minuta</mat-label>
     <mat-select [(ngModel)]="typeMinuta" (selectionChange)="getMinutas('')">
-      <mat-option [value]="''">Todos</mat-option>
-      <mat-option [value]="'acuerdo'">Minuta de Acuerdo de Desempeño</mat-option>
-      <mat-option [value]="'evaluacion'">Minuta de Evaluación de Competencias</mat-option>
+      <mat-option value="">Todos</mat-option>
+      <mat-option value="acuerdo">Minuta de Acuerdo de Desempeño</mat-option>
+      <mat-option value="evaluacion">Minuta de Evaluación de Competencias</mat-option>
     </mat-select>
   </mat-form-field>
 
@@ -36,31 +36,126 @@
       <th class="headerCell">Cargo</th>
       <!-- <th class="headerCell">Nivel</th> -->
       <!-- <th class="headerCell">Proceso</th> -->
-      <th class="headerCell"></th>
+      <th class="headerCell">
+        <div style="display: flex; justify-content: center;">
+          G. Ocupacional
+        </div>
+      </th>
+      <th class="headerCell">
+        <div style="display: flex; justify-content: center;">
+          Estado
+        </div>
+      </th>
       <th class="headerCell" style="width: 5%;">
-        <div *ngIf="!minutaList" class="loader"></div>
+        <div *ngIf="!minutaList || charge" class="loader"></div>
       </th>
     </tr>
   </thead>
   <tbody *ngIf="minutaList && minutaList.length > 0; else noElements">
+
     <tr class="dataRow" *ngFor="let minuta of minutaList">
       <td class="dataIndiCell">{{minuta.supervisor!.nombre}} {{minuta.supervisor!.apellidos}}</td>
-      <td class="dataIndiCell">{{appHelper.getUnitOrg(minuta.supervisor!.division,
-        minuta.supervisor!.departamento, minuta.supervisor!.direccion,
-        minuta.supervisor!.viceRectoria)?.nombre}}</td>
-      <td class="dataIndiCell">{{minuta.supervisor!.cargo.nombre}}</td>
-      <td class="dataIndiCell">{{minuta.supervisor!.grupoObj.nombre}}</td>
-      <!-- <td class="dataIndiCell">{{minuta.periodoAcuerdo!.tipoProceso.nombre}}</td> -->
       <td class="dataIndiCell">
-        <mat-icon class="listIcon"
-          (click)="openModalListadoDocumentos(minuta.supervisor!.nombre, minuta.supervisor!.apellidos, minuta.supervisor!.idPersona)">description</mat-icon>
+        <ng-container *ngIf="appHelper.getUnitOrg(
+              minuta.supervisor.division,
+              minuta.supervisor.departamento,
+              minuta.supervisor.direccion,
+              minuta.supervisor.viceRectoria
+            ).nombre !== 'Unidad organizativa no asignada'; else noUnidad">
+          <span [matTooltip]="appHelper.getUnitOrg(
+            minuta.supervisor.division,
+            minuta.supervisor.departamento,
+            minuta.supervisor.direccion,
+            minuta.supervisor.viceRectoria
+            ).nombre | titlecase">
+            {{
+            appHelper.getUnitOrg(
+            minuta.supervisor.division,
+            minuta.supervisor.departamento,
+            minuta.supervisor.direccion,
+            minuta.supervisor.viceRectoria
+            ).nombre | titlecase
+            }}
+          </span>
+        </ng-container>
+
+        <ng-template #noUnidad>
+          <span class="badge-red" matTooltip="Validar que el usuario tenga unidad organizativa asignada."> <mat-icon
+              matSuffix style="margin-right: 5px;">warning</mat-icon> Unidad organizativa no encontrada.</span>
+        </ng-template>
       </td>
-      <!-- <td class="dataIndiCell"></td> -->
+      <td class="dataIndiCell" [matTooltip]="minuta.supervisor!.cargo.nombre">{{minuta.supervisor!.cargo.nombre}}</td>
+      <td class="dataIndiCell">
+        <div style="display: flex; justify-content: center;">
+          {{minuta.supervisor!.grupoObj.nombre}}
+        </div>  
+      </td>
+      <td class="dataIndiCell">
+        <div style="display: flex; justify-content: center;">
+          <div class="tag" [ngClass]="{
+            'pendiente': minuta.aprobada === null,
+            'aceptada': minuta.aprobada === true,
+            'rechazada': minuta.aprobada === false
+          }">
+            <h4>{{ minuta.aprobada === null ? 'Pendiente' : (minuta.aprobada ? 'Aceptada' : 'Rechazada') }}</h4>
+          </div>
+        </div>
+      </td>
+
+      <td class="dataIndiCell">
+        <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
+        <mat-menu #menu="matMenu">
+
+          <button mat-menu-item (click)="openModalTemplateMinuta(minuta.id)">
+            <mat-icon>description</mat-icon>
+            <h4>Ver Minuta</h4>
+          </button>
+
+          <button mat-menu-item *ngIf="minuta.documentos.length > 0"
+            (click)="openModalListadoDocumentos(minuta.supervisor!.nombre, minuta.supervisor!.apellidos, minuta.supervisor!.idPersona, minuta.documentos)">
+            <mat-icon>description</mat-icon>
+            <h4>Ver Doc. Minuta</h4>
+          </button>
+
+          <div mat-menu-item (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == null ">
+            <mat-icon style="color: green">check</mat-icon>
+            <h4 style="color: green">Aceptar Minuta</h4>
+          </div>
+
+          <button mat-menu-item (click)="postValidarMinuta(minuta.id, false)" *ngIf=" minuta.aprobada == null ">
+            <mat-icon style="color: orangered">close</mat-icon>
+            <h4 style="color: orangered">Rechazar Minuta</h4>
+          </button>
+
+          <!-- <button mat-menu-item (click)="postValidarMinuta(minuta.id, false)" *ngIf=" minuta.aprobada == true && minuta.documentos.length > 0 ">
+            <mat-icon style="color: orangered">close</mat-icon>
+            <h4 style="color: orangered">Rechazar Documento Minuta</h4>
+          </button> -->
+
+          <!-- <button mat-menu-item class=" menuOptionsItemEliminar" (click)="deleteMinuta(minuta.id)">
+            <mat-icon style="color: red;">delete</mat-icon>
+            <h4 style="color: red;">Eliminar Minuta</h4>
+          </button> -->
+
+        </mat-menu>
+
+      </td>
+      <!-- <td class="dataIndiCell">{{minuta.periodoAcuerdo!.tipoProceso.nombre}}</td> -->
+      <!-- <td class="dataIndiCell"><mat-icon matTooltip="Ver Documento de minuta." class="listIcon"
+          (click)="openModalListadoDocumentos(minuta.supervisor!.nombre, minuta.supervisor!.apellidos, minuta.supervisor!.idPersona, minuta.documentos)">description</mat-icon>
+      </td> -->
+      <!-- <td class="dataIndiCell"><mat-icon matTooltip="Eliminar minuta." class="removeIcon"
+          (click)="deletePeriod(minuta.id)">delete</mat-icon>
+      </td> -->
+
+
+
     </tr>
   </tbody>
+
   <tfoot *ngIf="pagination && pagination.totalPage">
     <tr class="paginatorRow">
-      <ng-container *ngFor="let td of [1, 2, 3]">
+      <ng-container *ngFor="let td of [1, 2, 3, 4]">
         <td class="dataIndiCell"></td>
       </ng-container>
       <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
@@ -81,7 +176,7 @@
         <ng-template #searching>
           <td class="dataIndiCell">Buscando elementos.</td>
         </ng-template>
-        <ng-container *ngFor="let td of [1, 2, 3, 4]">
+        <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
           <td class="dataIndiCell"></td>
         </ng-container>
       </tr>

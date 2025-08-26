@@ -1,9 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../../helpers/class.components';
 import { agreementService } from '../../services/acuerdo.service';
-import { AcuerdoI, Documento, DocumentoMinuta, MinutaGetI } from '../../interfaces/acuerdo.interface';
+import { AcuerdoI, Documento, DocumentoMinuta, MinutaGetI, validationMinutaI } from '../../interfaces/acuerdo.interface';
 import { HttpClient } from '@angular/common/http';
 import { SnackBars } from '../../../../services/snackBars.service';
 import { HerlperService } from '../../../../services/appHelpers.service';
@@ -11,6 +11,7 @@ import { MinutaService } from '../../services/minuta.service';
 import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
+import { CommentEmailComponent } from '../../pages/minuta-list/dialog/comment-email/comment-email.component';
 
 @Component({
   selector: 'app-listado-documento',
@@ -23,16 +24,18 @@ export class ListadoDocumentoComponent implements OnInit {
 
   documentosList!: Array<Documento>;
   idUserLogged!: number
-  documentosListMinuta!: Array<DocumentoMinuta>;
+  rolUserLogged!: string
+  // documentosListMinuta!: Array<DocumentoMinuta>;
   acuerdo!: AcuerdoI;
   minuta!: MinutaGetI[];
   selectedFile: File | null = null;
   selectedFileName: string | undefined;
   isLoading: boolean = true
-  evaluationComptency!: {fechaFin: string, fechaInicio: string }
+  evaluationComptency!: { fechaFin: string, fechaInicio: string }
 
   constructor(
     private http: HttpClient,
+    private dialog: MatDialog,
     private SnackBar: SnackBars,
     public appHelpers: HerlperService,
     private minutaservice: MinutaService,
@@ -44,14 +47,15 @@ export class ListadoDocumentoComponent implements OnInit {
       type: number,
       idCollaborator: number,
       nombreCompleto: string,
-      estado?: number
+      documentos: DocumentoMinuta[],
+      estado?: number,
     }
   ) {
     this.idUserLogged = Number(systemInformation.localUser.idPersona)
+    this.rolUserLogged = systemInformation.localUser.role
   }
 
   ngOnInit(): void {
-    
     this.getPeriodsProcesses(7)
 
     if (this.data.type == 1) {
@@ -62,20 +66,17 @@ export class ListadoDocumentoComponent implements OnInit {
   }
 
   getAcuerdoByIdCollaborator() {
-    this.agreementservice.getAgreementByIdCollaborator(this.data.idCollaborator).subscribe((resp: any) => {
-      this.acuerdo = resp.data
+    // this.agreementservice.getAgreementByIdCollaborator(this.data.idCollaborator).subscribe((resp: any) => {
+    //   this.acuerdo = resp.data
 
-      if (this.acuerdo) this.documentosList = this.acuerdo.documentosObj;
-      else this.documentosList = []
-    })
+    //   if (this.acuerdo) this.documentosList = this.acuerdo.documentosObj;
+    //   else this.documentosList = []
+    // })
   }
 
   getMinutasDoc() {
     this.minutaservice.getMinuta('', "evaluacion", true, 1, 5).subscribe((resp: any) => {
       this.minuta = resp.data
-      this.documentosListMinuta = resp.data[0].documentos
-      // if (this.minuta.length > 0) this.documentosList = this.minuta;
-      // else this.documentosList = []
     })
   }
 
@@ -86,7 +87,6 @@ export class ListadoDocumentoComponent implements OnInit {
 
       this.selectedFile = null;
       this.selectedFileName = undefined;
-
     })
   }
 
@@ -98,7 +98,7 @@ export class ListadoDocumentoComponent implements OnInit {
 
       this.selectedFile = null;
       this.selectedFileName = undefined;
-      this.cerrar()
+      this.cerrar(true)
     })
   }
 
@@ -111,25 +111,33 @@ export class ListadoDocumentoComponent implements OnInit {
   }
 
   async deleteDocument(id: number) {
+
     let removeDecision: boolean = await this.SnackBar.snackbarConfirmation()
 
     if (removeDecision) {
 
-      this.SnackBar.snackbarLouder(true)
+      let validation: validationMinutaI = { estado: removeDecision, comentario: '' }
 
-      if (this.data.type == 1) {
-        this.agreementservice.deleteDocumentAcuerdo(id)
-          .subscribe((res: any) => {
-            this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
-            this.cerrar()
-          })
-      } else {
-        this.minutaservice.deleteDocMinuta(this.minuta[0].documentos[0].idDocumento)
-          .subscribe((res: any) => {
-            this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
-            this.cerrar()
-          })
-      }
+      const dialog = this.dialog.open(CommentEmailComponent, {disableClose: true})
+
+      dialog.afterClosed().subscribe(result => {
+        validation.comentario = result
+        this.SnackBar.snackbarLouder(true)
+
+        if (this.data.type == 1) {
+          this.agreementservice.deleteDocumentAcuerdo(id)
+            .subscribe((res: any) => {
+              this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+              this.cerrar(true)
+            })
+        } else {
+          this.minutaservice.deleteDocMinuta(id, result)
+            .subscribe((res: any) => {
+              this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+              this.cerrar(true)
+            })
+        }
+      });
     }
   }
 
@@ -160,8 +168,8 @@ export class ListadoDocumentoComponent implements OnInit {
     }
   }
 
-  cerrar(): void {
-    this.dialogRef.close();
+  cerrar(should: boolean = false): void {
+    this.dialogRef.close(should);
   }
 
   getPeriodsProcesses(id: number) {

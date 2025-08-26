@@ -34,7 +34,7 @@ mat-sidenav {
     height: 9vh;
     display: grid;
     cursor: pointer;
-    margin-bottom: 1vh;
+    margin-bottom: 0.98vh;
     border-radius: 15px;
     place-items: center;
     background-color: #004b8d;

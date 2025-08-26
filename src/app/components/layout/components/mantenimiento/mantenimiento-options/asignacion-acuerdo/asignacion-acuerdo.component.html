@@ -6,7 +6,8 @@
 
             <mat-form-field appearance="fill" style="flex: 1;">
                 <mat-label>Cedula / Pasaporte</mat-label>
-                <input matInput formControlName="cedula" maxlength="11" (keydown.enter)="getAsignationAgreementsByDNI($event)">
+                <input matInput formControlName="cedula" maxlength="11"
+                    (keydown.enter)="getAsignationAgreementsByDNI($event)">
             </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1;">
@@ -29,7 +30,7 @@
 
             <mat-form-field appearance="fill" style="flex: 2;">
                 <mat-label>Unidad Org</mat-label>
-                <input matInput formControlName="idUnitOrg" readonly> 
+                <input matInput formControlName="idUnitOrg" readonly>
             </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1;">
@@ -45,7 +46,7 @@
         </div>
 
         <div style="display: flex; gap: 5px;">
- 
+
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Tipo de Acuerdo</mat-label>
                 <mat-select formControlName="idTipoAcuerdo" disableRipple>
@@ -63,7 +64,7 @@
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Periodo a evaluar</mat-label>
                 <mat-select formControlName="acuerdosDuracionId" disableRipple>
-                    <mat-option [value]="duration.id" *ngFor="let duration of agreementsDurations" >
+                    <mat-option [value]="duration.id" *ngFor="let duration of agreementsDurations">
                         {{duration.duracion}}
                     </mat-option>
                     <ng-template #noRol>
@@ -93,7 +94,7 @@
         </form>
     </div>
 
-    <div class="table-container"  style="margin-top: 0;">
+    <div class="table-container" style="margin-top: 0;">
         <table>
             <thead class="headerTable">
                 <tr class="headerRow">
@@ -111,17 +112,51 @@
             </thead>
             <tbody *ngIf="asignationsAgreement && asignationsAgreement.length > 0; else noElements">
                 <tr class="dataRow" *ngFor="let asignationAgreement of asignationsAgreement">
-                    <td class="dataIndiCell" [matTooltip]="asignationAgreement.colaborador.nombre | titlecase">{{asignationAgreement.colaborador.nombre | titlecase}}
+                    <td class="dataIndiCell" [matTooltip]="asignationAgreement.colaborador.nombre | titlecase">
+                        {{asignationAgreement.colaborador.nombre | titlecase}}
                         {{asignationAgreement.colaborador.apellidos | titlecase }}</td>
-                    <td class="dataIndiCell">{{asignationAgreement.colaborador.cedula ? asignationAgreement.colaborador.cedula : 'No Asignado'}}</td>
-                    <td class="dataIndiCell" [matTooltip]="asignationAgreement.colaborador.cargo.nombre | titlecase">{{asignationAgreement.colaborador.cargo.nombre}}</td>
+                    <td class="dataIndiCell">{{asignationAgreement.colaborador.cedula ?
+                        asignationAgreement.colaborador.cedula : 'No Asignado'}}</td>
+                    <td class="dataIndiCell" [matTooltip]="asignationAgreement.colaborador.cargo.nombre | titlecase">
+                        {{asignationAgreement.colaborador.cargo.nombre}}</td>
                     <td class="dataIndiCell">{{asignationAgreement.tipoAcuerdoObj.nombre}}</td>
-                    <td class="dataIndiCell">{{appHelpers.getUnitOrg(asignationAgreement.colaborador.division,
-                        asignationAgreement.colaborador.departamento, asignationAgreement.colaborador.direccion,
-                        asignationAgreement.colaborador.viceRectoria)?.nombre | titlecase}}</td>
+                    <td class="dataIndiCell">
+                        <ng-container *ngIf="appHelpers.getUnitOrg(
+                            asignationAgreement.colaborador.division,
+                            asignationAgreement.colaborador.departamento,
+                            asignationAgreement.colaborador.direccion,
+                            asignationAgreement.colaborador.viceRectoria
+                          ).nombre !== 'Unidad organizativa no asignada'; else noUnidad">
+                            <span [matTooltip]="                                appHelpers.getUnitOrg(
+                                asignationAgreement.colaborador.division,
+                                asignationAgreement.colaborador.departamento,
+                                asignationAgreement.colaborador.direccion,
+                                asignationAgreement.colaborador.viceRectoria
+                                ).nombre | titlecase">
+                                {{
+                                appHelpers.getUnitOrg(
+                                asignationAgreement.colaborador.division,
+                                asignationAgreement.colaborador.departamento,
+                                asignationAgreement.colaborador.direccion,
+                                asignationAgreement.colaborador.viceRectoria
+                                ).nombre | titlecase
+                                }}
+                            </span>
+                        </ng-container>
+
+                        <ng-template #noUnidad>
+                            <span class="badge-red"
+                                matTooltip="Validar que el usuario tenga unidad organizativa asignada."> <mat-icon
+                                    matSuffix style="margin-right: 5px;">warning</mat-icon> Unidad organizativa no
+                                encontrada.</span>
+                        </ng-template>
+                    </td>
                     <!-- <td class="dataIndiCell">{{asignationAgreement.colaborador.recinto.nombre}}</td> -->
-                    <td class="dataIndiCell"><mat-icon matTooltip="Editar asignación de acuerdo." (click)="setValueToEdit(asignationAgreement)" class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon matTooltip="Eliminar asignación de acuerdo." (click)="deleteAsignationAgreement(asignationAgreement.idAsignacion)" class="removeIcon">delete</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon matTooltip="Editar asignación de acuerdo."
+                            (click)="setValueToEdit(asignationAgreement)" class="editIcon">edit</mat-icon></td>
+                    <td class="dataIndiCell"><mat-icon matTooltip="Eliminar asignación de acuerdo."
+                            (click)="deleteAsignationAgreement(asignationAgreement.idAsignacion)"
+                            class="removeIcon">delete</mat-icon></td>
                 </tr>
             </tbody>
             <tfoot *ngIf="pagination && pagination.totalPage">
@@ -132,9 +167,11 @@
                     <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
                     <td class="paginationCell">
                         <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
-                            <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
+                            <mat-icon class="rowIcon" matTooltip="Pagina anterior."
+                                (click)="previousPage()">navigate_before</mat-icon>
                             <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-                            <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" matTooltip="Pagina siguiente."
+                                (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
@@ -144,10 +181,12 @@
     <ng-template #noElements>
         <tbody>
             <tr class="dataRow">
-                <td class="dataIndiCell" *ngIf="asignationsAgreement && asignationsAgreement.length == 0; else searching">No hay elementos que mostrar.</td>
+                <td class="dataIndiCell"
+                    *ngIf="asignationsAgreement && asignationsAgreement.length == 0; else searching">No hay elementos
+                    que mostrar.</td>
                 <ng-template #searching>
                     <td class="dataIndiCell">Buscando elementos.</td>
-                  </ng-template>
+                </ng-template>
                 <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
                     <td class="dataIndiCell"></td>
                 </ng-container>

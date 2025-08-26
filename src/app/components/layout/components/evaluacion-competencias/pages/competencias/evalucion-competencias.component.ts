@@ -7,7 +7,7 @@ import { EvaluationCompetencyServices } from '../../services/evaluacion-competen
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { EvaluacionModalviewComponent } from '../../modals/evaluacion-modalview/evaluacion-modalview.component';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
-import { CompetencyCount, EvaluationBehaviorsI, EvaluationCompetencyGetI } from '../../interface/evaluacion-competencias.interface';
+import { CompetencyCount, EvaluationBehaviorsI, EvaluationCompetencyGetI, EvaluationCompetencySummaryGetI } from '../../interface/evaluacion-competencias.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
 import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
@@ -17,6 +17,7 @@ import { MinutaEvaluacionCompetenciaComponent } from '../../../../templates/minu
 import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 import { periodProcessGetI } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
 import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
+import { DocumentoMinuta, MinutaGetI } from '../../../acuerdos/interfaces/acuerdo.interface';
 
 @Component({
   selector: 'app-evalucion-competencias',
@@ -31,11 +32,12 @@ export class EvalucionCompetenciasComponent implements OnInit {
   selectGroup: boolean = true
   supervisorWithSubordinates!: CollaboratorsGetI[]
   evaluationCompetenciesCount: CompetencyCount = { tienen: 0, noTienen: 0 }
-  evaluationsCompetencies!: EvaluationCompetencyGetI[]
+  evaluationsCompetencies!: EvaluationCompetencySummaryGetI[]
   protocol!: ProtocolI
   docName: string = ''
   charge: boolean = true
   newMinuta!: { existe: boolean, docCargado: boolean }
+  minuta!: MinutaGetI[]
   filter: string = ''
   rolActivo: string = ''
   periodo: any
@@ -53,7 +55,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
     private evaluationCompetencyService: EvaluationCompetencyServices,
   ) {
     this.userLogged = systemInformation.localUser
-    // this.openModalTemplateMinuta()
+    this.getMyMinuta()
     effect(() => {
       this.periodo = this.systemInformation.activePeriod();
       const rolActivo = this.systemInformation.activeRol();
@@ -69,6 +71,12 @@ export class EvalucionCompetenciasComponent implements OnInit {
     this.getActiveAgreementPeriod()
   }
 
+  getMyMinuta() {
+    this.minutaService.getMinuta('', "evaluacion", true, 1, 5).subscribe((resp: any) => {
+      this.minuta = resp.data
+    })
+  }
+
   getActiveAgreementPeriod() {
     this.periodProcessService.getPeriodProcessesActive()
       .subscribe((res: any) => {
@@ -81,12 +89,12 @@ export class EvalucionCompetenciasComponent implements OnInit {
     this.getProtocol()
   }
 
-  openModalviewEvaluation(colaborador: number,) {
+  openModalviewEvaluation(colaborador: number) {
     let dialogRef = this.dialog.open(EvaluacionModalviewComponent, { data: { colaborador } })
     dialogRef.afterClosed().subscribe(() => { })
   }
 
-  getSupervisorWithSubordinates( moveFronPagintation: boolean) {
+  getSupervisorWithSubordinates(moveFronPagintation: boolean) {
     this.charge = true
     this.evaluationsCompetencies = this.supervisorWithSubordinates = []
     if (moveFronPagintation == false) {
@@ -95,7 +103,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
     }
 
     this.evaluationCompetencyService.getEvaluationCompetencies(this.selectGroup, this.filter, this.page).subscribe((res: any) => {
-
+      
       let { currentPage, totalItem, totalPage } = res
       this.pagination = { currentPage, totalItem, totalPage }
 
@@ -119,25 +127,28 @@ export class EvalucionCompetenciasComponent implements OnInit {
 
   openModalListadoDocumentos(): void {
     const nombreCompleto = 'Minuta de Evaluación de Competencias';
+    let documentos: DocumentoMinuta[] = []
+
+    if(this.minuta[0].documentos){
+      documentos = this.minuta[0].documentos
+    }
+
     const dialog = this.dialog.open(ListadoDocumentoComponent, {
-      // width: '750px',
-      // height: '490px',
       data: {
         type: 2,
         idCollaborator: Number(this.userLogged.idPersona),
         nombreCompleto,
+        documentos
       }
     })
+
     dialog.afterClosed().subscribe(result => {
       this.getMinuta(this.periodo.idPeriodo)
     });
   }
 
   openModalTemplateMinuta(): void {
-    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: {} })
-    dialog.afterClosed().subscribe(result => {
-      // this.getMinuta(this.periodo.idPeriodo)
-    });
+    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0 } })
   }
 
   getMinuta(period: number) {
@@ -147,7 +158,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
       })
   }
 
-  //Metodo para llamar a la siguiente pagina
+  //Metodo para llamar a la siguiente pagina 
   nextPage() {
     if (this.page < this.pagination.totalPage) {
       this.page += 1

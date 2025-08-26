@@ -107,6 +107,7 @@ h6 {
     align-items: center !important;
 }
 
+
 /*/////////////////////////////
         Tables Styles
 /////////////////////////////*/
@@ -288,6 +289,61 @@ table {
 
 .modal {
     padding: 20px;
+}
+
+.badge-red {
+    display: flex;
+    align-items: center;
+    color: red;
+    border-radius: 10px;
+}
+
+.menuOptionsItem {
+    display: flex;
+    gap: 10px;
+    padding: 10px 7px;
+    cursor: pointer;
+}
+
+.menuOptionsItem:hover {
+    background-color: #eee;
+}
+
+.menuOptionsItemEliminar {
+    color: red;
+}
+
+.menuOptionsItemEliminar:hover {
+    color: white;
+    background-color: rgb(255, 71, 71);
+}
+
+.tag {
+    padding: 6px 12px;
+    border-radius: 8px;
+    display: inline-block;
+    text-align: center;
+}
+
+.tag h4 {
+    color: white;
+    margin: 0;
+    font-size: 14px;
+}
+
+.pendiente {
+    background-color: #9e9e9e;
+    /* gris */
+}
+
+.aceptada {
+    background-color: #4caf50;
+    /* verde */
+}
+
+.rechazada {
+    background-color: #ff7043;
+    /* rojo anaranjado */
 }
 
 /*/////////////////////////////

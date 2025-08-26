@@ -60,9 +60,10 @@ export class HerlperService {
 
     //Metodo para retornar de cual unidad 
     getUnitOrg(division: DivisionI, department: DepartmentI, direction: DirectionI, vicerectorate: ViceRectorate) {
-        return [division, department, direction, vicerectorate].find(
+        const unidad = [division, department, direction, vicerectorate].find(
             unit => unit.nombre !== "NO ASIGNADO" && unit.nombre !== "N/A"
         );
+        return unidad ?? {nombre: 'Unidad organizativa no asignada'}
     }
 
     ableToMakeMinuta(agreements: AcuerdoI[]): boolean {

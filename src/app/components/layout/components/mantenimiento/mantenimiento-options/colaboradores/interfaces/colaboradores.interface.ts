@@ -25,6 +25,15 @@ export interface PersonI {
     persona: CollaboratorsGetI
 }
 
+export interface CollaboratorSummaryGetI {
+    apellidos: string
+    cedula: string
+    id: number
+    nombres: string
+    personaIntranetId: number
+    usuario: string
+}
+
 export interface CollaboratorsGetI {
     idPersona: number,
     nombre: string,
@@ -124,7 +133,7 @@ export interface PersonSystemI {
     idUsuario: number
     nombre: string
     rol: RolI
-    unidad: string 
+    unidad: string
     username: string
     viceRectoria: ViceRectorate
 }

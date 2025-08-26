@@ -24,13 +24,15 @@ export class EvaluacionModalviewComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public col: { colaborador: number }
   ) { }
 
-
   ngOnInit(): void {
     this.findCollaboratorEvaluation()
   }
 
   findCollaboratorEvaluation() {
+    console.log(this.col);
     this.evaluationCompetencyService.getEvaluationCompetenciesByIdPerson(this.col.colaborador).subscribe((res: any) => {
+      console.log(res);
+      
       this.evaluationData = res.data.evaluacionCompetencia
     })
   }

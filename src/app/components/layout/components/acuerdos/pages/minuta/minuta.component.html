@@ -21,7 +21,7 @@
 <div class="staticInfoContainer" *ngIf="systeminformation.currentUserSystem()">
   <span>
     <h3>Unidad Organizativa</h3>
-    <h4>{{this.usuario.Unidad}}</h4>
+    <h4>{{this.usuario.Unidad | titlecase}}</h4>
   </span>
   <span>
     <h3>Fecha</h3>
@@ -73,12 +73,12 @@
     <ng-template #TypeMinutaEC>
       <tbody >
         <tr class="dataRow" *ngFor="let acuerdo of evaluationsCompetencies">
-          <td class="dataIndiCell">{{acuerdo.colaborador.nombre}} {{acuerdo.colaborador.apellidos}}</td>
-          <td class="dataIndiCell">{{acuerdo.colaborador.cargo.nombre}}</td>
-          <td class="dataIndiCell">{{acuerdo.colaborador.grupoObj.nombre}}</td>
+          <td class="dataIndiCell">{{acuerdo.colaborador.nombres | titlecase}} {{acuerdo.colaborador.apellidos | titlecase}}</td>
+          <td class="dataIndiCell">{{acuerdo.cargo | titlecase}}</td>
+          <td class="dataIndiCell">{{acuerdo.grupoOcupacional}}</td>
           <td class="dataIndiCell">
             <button type="button" class="btnCerrar"
-              (click)="openModalMotivoAusencia(acuerdo.colaborador.idPersona)">Ausente</button>
+              (click)="openModalMotivoAusencia(acuerdo.colaborador.personaIntranetId)">Ausente</button>
           </td>
         </tr>
       </tbody>

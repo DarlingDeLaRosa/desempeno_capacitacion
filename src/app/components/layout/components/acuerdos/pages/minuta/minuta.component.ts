@@ -20,7 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
 import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
 import { EvaluationCompetencyServices } from '../../../evaluacion-competencias/services/evaluacion-competencia.service';
-import { EvaluationCompetencyGetI } from '../../../evaluacion-competencias/interface/evaluacion-competencias.interface';
+import { EvaluationCompetencyGetI, EvaluationCompetencySummaryGetI } from '../../../evaluacion-competencias/interface/evaluacion-competencias.interface';
 
 @Component({
   selector: 'app-minuta',
@@ -43,7 +43,7 @@ export class MinutaComponent implements OnInit {
   agreement: Array<AcuerdoI> = []
   periodsProcess!: periodProcessGetI[]
   colaboradoresMinuta!: MinutaAsistenciaI[];
-  evaluationsCompetencies: EvaluationCompetencyGetI[] = []
+  evaluationsCompetencies: EvaluationCompetencySummaryGetI[] = []
 
   constructor(
     private router: Router,
@@ -82,21 +82,18 @@ export class MinutaComponent implements OnInit {
     this.getSupervisorWithSubordinates()
   }
 
-  getAcuerdoByRol() {
-    // this.isLoading = true;
+  // getAcuerdoByRol() {
 
-    this.agreementService.getAgreementByRol('', true).subscribe((resp: any) => {
-      this.agreement = resp.data;
+  //   this.agreementService.getAgreementByRol('', true).subscribe((resp: any) => {
+  //     this.agreement = resp.data;
+  //     this.colaboradoresMinuta = this.agreement.map((acuerdo) => ({
+  //       idColaborador: acuerdo.colaboradorObj.idPersona,
+  //       ausente: false,
+  //       motivoAusencia: null,
+  //     }));
 
-      this.colaboradoresMinuta = this.agreement.map((acuerdo) => ({
-        idColaborador: acuerdo.colaboradorObj.idPersona,
-        ausente: false,
-        motivoAusencia: null,
-      }));
-
-      // this.isLoading = false;
-    })
-  }
+  //   })
+  // }
 
   //metodo para obtener el proceso
   // getPeriodsProcess() {
@@ -127,7 +124,7 @@ export class MinutaComponent implements OnInit {
 
       this.colaboradoresMinuta = this.evaluationsCompetencies.map((acuerdo) => ({
         ausente: false,
-        idColaborador: acuerdo.colaborador.idPersona,
+        idColaborador: acuerdo.colaborador.personaIntranetId,
         motivoAusencia: null,
       }));
     })
@@ -137,7 +134,9 @@ export class MinutaComponent implements OnInit {
     this.protocolService.getProtocolByTypeProtocolId(5)
       .subscribe((res: any) => {
         this.protocol = res.data;
-        this.docName = this.protocol.documentosObj[0].nombre.split('.')[0]
+        if (res.data) {
+          this.docName = this.protocol.documentosObj[0].nombre.split('.')[0]
+        }
       })
   }
 

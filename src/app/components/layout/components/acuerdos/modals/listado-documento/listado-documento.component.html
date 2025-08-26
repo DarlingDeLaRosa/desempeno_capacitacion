@@ -1,11 +1,11 @@
-<ng-container *ngIf="!documentosList && !documentosListMinuta">
+<ng-container *ngIf="!documentosList && !data.documentos">
   <div class="container-loaderMother" style="padding: 25px;">
     <div class="loaderMother"></div>
     <div class="loading-text">Cargando...</div>
   </div>
 </ng-container>
 
-<div class="container" *ngIf="documentosList || documentosListMinuta">
+<div class="container" *ngIf="documentosList || data.documentos">
 
   <div class="encabezado">
     <h2 style="margin-right: 15px;">{{data.nombreCompleto}}</h2>
@@ -35,8 +35,8 @@
       </div>
     </div>
 
-    <div *ngIf="documentosListMinuta">
-      <div *ngFor="let documento of documentosListMinuta" class="documento">
+    <div *ngIf="data.documentos">
+      <div *ngFor="let documento of data.documentos" class="documento">
         <div class="documento-info">
           <!-- <span class="documento-cargo">{{documento.fecha | date}}</span> -->
           <span class="documento-nombre">{{documento.nombre}}</span>
@@ -47,7 +47,9 @@
           </button>
 
           <button mat-icon-button (click)="deleteDocument(documento.idDocumento)"
-            *ngIf="appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && data.idCollaborator == idUserLogged">
+            *ngIf="appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && data.idCollaborator == idUserLogged 
+            || appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && rolUserLogged == 'Analista'
+            ">
             <mat-icon style="color: red;" [matTooltip]="'Eliminar Documento' + ' ' + documento.nombre">delete</mat-icon>
           </button>
         </div>
@@ -55,8 +57,8 @@
     </div>
 
     <div class="empty-list" *ngIf="
-    documentosListMinuta != undefined && documentosListMinuta.length == 0 && documentosList == undefined ||
-    documentosListMinuta == undefined && documentosList != undefined && documentosList.length == 0
+    data.documentos != undefined && data.documentos.length == 0 && documentosList == undefined ||
+    data.documentos == undefined && documentosList != undefined && documentosList.length == 0
     ">
       <img src="nodata.jpg" alt="No se encontraron minutas.">
     </div>
@@ -67,7 +69,7 @@
     *ngIf="
     documentosList != undefined &&
     data.idCollaborator == idUserLogged && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) 
-    || documentosListMinuta != undefined && documentosListMinuta.length == 0 && data.idCollaborator == idUserLogged && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin)">
+    || data.documentos != undefined && data.documentos.length == 0 && data.idCollaborator == idUserLogged && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin)">
     <div class="file-upload-container" (click)="fileInput.click()">
       <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
       <span class="file-upload-name">
