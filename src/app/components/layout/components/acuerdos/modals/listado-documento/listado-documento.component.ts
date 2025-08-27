@@ -77,6 +77,7 @@ export class ListadoDocumentoComponent implements OnInit {
   getMinutasDoc() {
     this.minutaservice.getMinuta('', "evaluacion", true, 1, 5).subscribe((resp: any) => {
       this.minuta = resp.data
+      console.log(this.minuta);
     })
   }
 
@@ -116,28 +117,45 @@ export class ListadoDocumentoComponent implements OnInit {
 
     if (removeDecision) {
 
-      let validation: validationMinutaI = { estado: removeDecision, comentario: '' }
+      if (this.idUserLogged != this.minuta[0].supervisor.idPersona) {
+        let validation: validationMinutaI = { estado: removeDecision, comentario: '' }
+        const dialog = this.dialog.open(CommentEmailComponent, { disableClose: true })
 
-      const dialog = this.dialog.open(CommentEmailComponent, {disableClose: true})
+        dialog.afterClosed().subscribe(result => {
+          validation.comentario = result
+          this.SnackBar.snackbarLouder(true)
 
-      dialog.afterClosed().subscribe(result => {
-        validation.comentario = result
+          if (this.data.type == 1) {
+            this.agreementservice.deleteDocumentAcuerdo(id)
+              .subscribe((res: any) => {
+                this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+                this.cerrar(true)
+              })
+          } else {
+            this.minutaservice.deleteDocMinuta(id, result)
+              .subscribe((res: any) => {
+                this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+                this.cerrar(true)
+              })
+          }
+        });
+      }else{
         this.SnackBar.snackbarLouder(true)
 
-        if (this.data.type == 1) {
-          this.agreementservice.deleteDocumentAcuerdo(id)
-            .subscribe((res: any) => {
-              this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
-              this.cerrar(true)
-            })
-        } else {
-          this.minutaservice.deleteDocMinuta(id, result)
-            .subscribe((res: any) => {
-              this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
-              this.cerrar(true)
-            })
-        }
-      });
+          if (this.data.type == 1) {
+            this.agreementservice.deleteDocumentAcuerdo(id)
+              .subscribe((res: any) => {
+                this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+                this.cerrar(true)
+              })
+          } else {
+            this.minutaservice.deleteDocMinuta(id, '')
+              .subscribe((res: any) => {
+                this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+                this.cerrar(true)
+              })
+          }
+      }
     }
   }
 

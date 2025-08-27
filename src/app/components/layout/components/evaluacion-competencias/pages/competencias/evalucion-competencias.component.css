@@ -5,6 +5,89 @@
 }
 
 .saveButton:disabled {
-    opacity: 0.6; /* Hace que parezca gris */
+    opacity: 0.6;
+    /* Hace que parezca gris */
     cursor: not-allowed;
+}
+
+.traking{
+    height: 50px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+/**/
+
+
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* width: 100%; */
+    /* max-width: 900px; */
+    /* position: relative; */
+    /* padding: 15px 0 10px 0; */
+    /* border: 1px solid #efefef; */
+    /* background: #e9ecef; */
+    border-radius: 12px;
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
   }
+  /* Step */
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+  }
+  
+  .circle {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ccc;
+    color: white;
+    /* font-weight: bold; */
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .label {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  /* Lines */
+  .line {
+    height: 2px;
+    background-color: #ddd;
+    flex: 1;
+    margin: -20px -75px 0 -75px;
+    z-index: 0;
+  }
+  
+  /* Estados */
+  .completed .circle {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+  }
+  
+  .completed-line {
+    background: #28a745;
+  }
+  
+  .in-progress .circle {
+    background: #ffc107;
+    border-color: #ffc107;
+    color: white;
+  }
+

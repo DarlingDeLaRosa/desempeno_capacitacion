@@ -93,11 +93,19 @@
       <td class="dataIndiCell">
         <div style="display: flex; justify-content: center;">
           <div class="tag" [ngClass]="{
-            'pendiente': minuta.aprobada === null,
-            'aceptada': minuta.aprobada === true,
-            'rechazada': minuta.aprobada === false
-          }">
-            <h4>{{ minuta.aprobada === null ? 'Pendiente' : (minuta.aprobada ? 'Aceptada' : 'Rechazada') }}</h4>
+              'pendiente': minuta.aprobada === null || (minuta.aprobada === true && minuta.documentos.length === 0),
+              'aceptada': minuta.aprobada === true && minuta.documentos.length > 0,
+              'rechazada': minuta.aprobada === false
+            }">
+            <h4>
+              {{
+                minuta.aprobada === null
+                  ? 'Pendiente'
+                  : (minuta.aprobada
+                      ? (minuta.documentos.length === 0 ? 'Pendiente de documento' : 'Aceptada')
+                      : 'Rechazada')
+              }}
+            </h4>
           </div>
         </div>
       </td>

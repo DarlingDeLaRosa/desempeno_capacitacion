@@ -56,6 +56,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
   ) {
     this.userLogged = systemInformation.localUser
     this.getMyMinuta()
+
     effect(() => {
       this.periodo = this.systemInformation.activePeriod();
       const rolActivo = this.systemInformation.activeRol();
@@ -68,6 +69,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
         this.rolActivo = rolActivo.nombre
       }
     });
+    
     this.getActiveAgreementPeriod()
   }
 
@@ -87,6 +89,8 @@ export class EvalucionCompetenciasComponent implements OnInit {
   ngOnInit(): void {
     this.getSupervisorWithSubordinates(false)
     this.getProtocol()
+    console.log(this.newMinuta);
+
   }
 
   openModalviewEvaluation(colaborador: number) {
@@ -103,6 +107,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
     }
 
     this.evaluationCompetencyService.getEvaluationCompetencies(this.selectGroup, this.filter, this.page).subscribe((res: any) => {
+      this.charge = false
       
       let { currentPage, totalItem, totalPage } = res
       this.pagination = { currentPage, totalItem, totalPage }
@@ -110,7 +115,6 @@ export class EvalucionCompetenciasComponent implements OnInit {
       this.supervisorWithSubordinates = res.data.colaboradores;
       this.evaluationCompetenciesCount = res.data.evaluacionCompetenciaCount
       this.evaluationsCompetencies = res.data.evaluacionesCompetencias;
-      this.charge = false
     })
   }
 
@@ -155,6 +159,8 @@ export class EvalucionCompetenciasComponent implements OnInit {
     this.minutaService.getMinutaExistente(period, true)
       .subscribe((res: any) => {
         this.newMinuta = res;
+        console.log(this.newMinuta);
+
       })
   }
 

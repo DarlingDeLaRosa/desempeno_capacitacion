@@ -1,4 +1,4 @@
-<div class="fuctionContent" style="padding-bottom: 10px;">
+<div class="fuctionContent" style="padding-bottom: 3px;">
     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
 
         <div class="title">
@@ -12,7 +12,7 @@
 </div>
 
 
-<div style="display: flex; justify-content: space-between; align-items: center;">
+<div style="display: flex; justify-content: space-between; ">
     <div>
         <h3
             *ngIf="rolActivo == 'Supervisor' || rolActivo == 'supervisado' || rolActivo == 'Encargado' && selectGroup; else noSup ">
@@ -47,11 +47,33 @@
 </div>
 
 <div>
-    <div *ngIf="newMinuta != undefined && newMinuta.existe && selectGroup && evaluationsCompetencies.length > 0"
-        style="display: flex; justify-content: end; align-items: end; color: green;">
-        <mat-icon>check</mat-icon>
-        <h4 style="margin-bottom: 2px;">Minuta Realizada.</h4>
-    </div>
+    
+    <!-- <div class="traking" *ngIf="newMinuta != undefined && newMinuta.existe && selectGroup && evaluationsCompetencies.length > 0"> -->
+        <div class="stepper">
+            <div class="step completed">
+              <div class="circle">1</div>
+              <div class="label">Creación de minuta</div>
+            </div>
+            <div class="line completed-line"></div>
+            
+            <div class="step in-progress">
+              <div class="circle">2</div>
+              <div class="label">Pendiente de validación</div>
+            </div>
+            <div class="line"></div>
+            
+            <div class="step">
+              <div class="circle">3</div>
+              <div class="label">Pendiente de documentación</div>
+            </div>
+            <div class="line"></div>
+            
+            <div class="step">
+              <div class="circle">4</div>
+              <div class="label">Completada</div>
+            </div>
+          </div>
+    <!-- </div> -->
 
     <div style="display: flex; justify-content: end; gap: 20px;"
         *ngIf="selectGroup == false || newMinuta != undefined && selectGroup && newMinuta.existe == false">
@@ -163,6 +185,85 @@
                 </td>
             </tr>
         </tbody>
+        <tbody
+            *ngIf="supervisorWithSubordinates && supervisorWithSubordinates.length > 0 || evaluationsCompetencies && evaluationsCompetencies.length > 0; else noElements">
+            <tr class="dataRow" *ngFor="let subordinate of supervisorWithSubordinates">
+                <td class="dataIndiCell">{{subordinate.nombre}} {{subordinate.apellidos}}</td>
+                <td class="dataIndiCell">
+                    <ng-container *ngIf="appHelper.getUnitOrg(
+                            subordinate.division,
+                            subordinate.departamento,
+                            subordinate.direccion,
+                            subordinate.viceRectoria
+                          ).nombre !== 'Unidad organizativa no asignada'; else noUnidad">
+                        <span [matTooltip]="appHelper.getUnitOrg(
+                                subordinate.division,
+                                subordinate.departamento,
+                                subordinate.direccion,
+                                subordinate.viceRectoria
+                                ).nombre | titlecase">
+                            {{
+                            appHelper.getUnitOrg(
+                            subordinate.division,
+                            subordinate.departamento,
+                            subordinate.direccion,
+                            subordinate.viceRectoria
+                            ).nombre | titlecase
+                            }}
+                        </span>
+                    </ng-container>
+
+                    <ng-template #noUnidad>
+                        <span class="badge-red" matTooltip="Validar que el usuario tenga unidad organizativa asignada.">
+                            <mat-icon matSuffix style="margin-right: 5px;">warning</mat-icon> Unidad organizativa no
+                            encontrada.</span>
+                    </ng-template>
+                </td>
+                <td class="dataIndiCell">{{subordinate.cargo.nombre}}</td>
+                <td class="dataIndiCell">
+                    <div style="display: flex; justify-content: center;">
+                        {{subordinate.grupoObj.nombre}}
+                    </div>
+                </td>
+                <td class="dataIndiCell"></td>
+                <td class="dataIndiCell"><mat-icon matTooltip="Crear evaluación de competencia."
+                        [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']"
+                        [queryParams]="{ colaboradorId: subordinate.idPersona }" class="editIcon">add</mat-icon></td>
+            </tr>
+            <tr class="dataRow" *ngFor="let subordinateEvaluation of evaluationsCompetencies">
+                <td class="dataIndiCell">{{subordinateEvaluation.colaborador.nombres | titlecase}}
+                    {{subordinateEvaluation.colaborador.apellidos | titlecase}}</td>
+                <td class="dataIndiCell">
+                    <ng-container
+                        *ngIf="subordinateEvaluation.unidadOrg.length > 0 && subordinateEvaluation.unidadOrg.length != null; else noUnidad">
+                        <span [matTooltip]="subordinateEvaluation.unidadOrg | titlecase">
+                            {{subordinateEvaluation.unidadOrg| titlecase}}
+                        </span>
+                    </ng-container>
+
+                    <ng-template #noUnidad>
+                        <span class="badge-red" matTooltip="Validar que el usuario tenga unidad organizativa asignada.">
+                            <mat-icon matSuffix style="margin-right: 5px;">warning</mat-icon> Unidad organizativa no
+                            encontrada.</span>
+                    </ng-template>
+                </td>
+                <td class="dataIndiCell">{{subordinateEvaluation.cargo}}</td>
+                <td class="dataIndiCell">
+                    <div style="display: flex; justify-content: center;">
+                        {{subordinateEvaluation.grupoOcupacional}}
+                    </div>
+                </td>
+                <td class="dataIndiCell"><mat-icon matTooltip="Ver evaluación de competencia."
+                        (click)="openModalviewEvaluation(subordinateEvaluation.colaborador.personaIntranetId)"
+                        class="listIcon">description</mat-icon></td>
+                <td *ngIf="newMinuta != undefined && newMinuta.existe == false && selectGroup && rolActivo != 'Analista'; else calificated"
+                    class="dataIndiCell"><mat-icon matTooltip="Editar evaluación de competencia."
+                        [routerLink]="['/layout/evaluacion-competencias/evaluacion-competencia-persona']"
+                        [queryParams]="{ colaboradorId: subordinateEvaluation.colaborador.personaIntranetId }"
+                        class="editIcon">edit</mat-icon>
+                </td>
+            </tr>
+        </tbody>
         <tfoot *ngIf="pagination && pagination.totalPage">
             <tr class="paginatorRow">
                 <ng-container *ngFor="let td of [1, 2, 3, 4]">
@@ -191,16 +292,21 @@
 
     <div style="display: flex; justify-content: end;" *ngIf="rolActivo != 'Analista'">
         <button *ngIf="newMinuta != undefined && selectGroup && newMinuta.existe && charge == false " class="saveButton"
-            (click)="openModalTemplateMinuta()"> <!--&& newMinuta.docCargado == false-->
+            (click)="openModalTemplateMinuta()"> 
             Ver Minuta
         </button> &nbsp;
 
-        <button *ngIf="newMinuta != undefined && selectGroup && newMinuta.existe && charge == false " class="saveButton"
-            (click)="openModalListadoDocumentos()" [disabled]="!minuta[0].aprobada"
-            matTooltip="En espera de la revisión de la minuta. Debe ser aprobada antes de subir el documento."
-            [matTooltipDisabled]="minuta[0].aprobada">
-            {{newMinuta.docCargado == false ? "Subir Documento de Minuta Firmada": "Documento de Minuta"}}
-        </button>
+        <ng-container *ngIf="newMinuta != undefined && selectGroup && newMinuta.existe && charge == false">
+            <button class="saveButton" (click)="openModalListadoDocumentos()" [disabled]="!minuta[0].aprobada"
+                matTooltip="En espera de la revisión de la minuta. Debe ser aprobada antes de subir el documento."
+                [matTooltipDisabled]="minuta[0].aprobada">
+
+                <ng-container *ngIf="newMinuta != undefined">
+                    {{ newMinuta.docCargado == false ? "Subir Documento de Minuta Firmada" : "Documento de Minuta" }}
+                </ng-container>
+            </button>
+        </ng-container>
+
     </div>
 
     <ng-template #noElements>

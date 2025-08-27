@@ -71,11 +71,11 @@ export class MinutaListComponent implements OnInit {
         type: 2,
         idCollaborator: idPersona,
         nombreCompleto,
-        documentos, 
+        documentos,
       }
     })
     dialog.afterClosed().subscribe(result => {
-      if (result) { this.getMinutas('') }
+      this.getMinutas('')
     });
   }
 
@@ -86,27 +86,33 @@ export class MinutaListComponent implements OnInit {
   async postValidarMinuta(minutaId: number, state: boolean = false, comentario: string = '') {
 
     let validation: validationMinutaI = { estado: state, comentario: comentario }
-    let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
+    let removeDecision: boolean
+
+    if (state) {
+      removeDecision = await this.snackBar.snackbarConfirmation('¿Está seguro de aceptar la minuta como válida?', 'Se habilitará la opción para que el usuario pueda subir el documento.')
+    } else {
+      removeDecision = await this.snackBar.snackbarConfirmation()
+    }
 
     if (removeDecision) {
       // let commentDecision: boolean = await this.snackBar.snackbarConfirmation('¿Deseas agregar un mensaje?', 'Puedes incluir un texto adicional que será enviado en el correo.', 'Si', 'No', '#aaa', '#aaa')
 
-    if (removeDecision) {
-      const dialog = this.dialog.open(CommentEmailComponent, {disableClose: true})
-      
-      dialog.afterClosed().subscribe(result => {
-        validation.comentario = result
-        
+      if (state == false) {
+        const dialog = this.dialog.open(CommentEmailComponent, { disableClose: true })
+
+        dialog.afterClosed().subscribe(result => {
+          validation.comentario = result
+
+          this.minutaService.postValidarMinuta(minutaId, validation).subscribe((resp: any) => {
+            this.appHelper.handleResponse(resp, () => this.getMinutas(''))
+          })
+        });
+
+      } else {
         this.minutaService.postValidarMinuta(minutaId, validation).subscribe((resp: any) => {
           this.appHelper.handleResponse(resp, () => this.getMinutas(''))
         })
-      });
-      
-    }else{
-      this.minutaService.postValidarMinuta(minutaId, validation).subscribe((resp: any) => {
-        this.appHelper.handleResponse(resp, () => this.getMinutas(''))
-      })
-    }
+      }
     }
   }
 

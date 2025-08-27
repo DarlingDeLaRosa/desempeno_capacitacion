@@ -69,7 +69,7 @@ export class systemInformationService {
             };
             resolve();
           }
-        }, 100); // Revisa cada 100 ms
+        }, 100); 
       }
     });
   }
