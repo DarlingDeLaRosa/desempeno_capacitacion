@@ -75,6 +75,7 @@ export class MinutaComponent implements OnInit {
     });
 
     this.usuario = this.systeminformation.localUser;
+
     // this.getPeriodsProcess()
     // this.getPeriodsProcessActive()
     this.getProtocol()
@@ -174,7 +175,7 @@ export class MinutaComponent implements OnInit {
   // }
 
   // metodo para armar objeto de minuta y hacer el post
-  postMinuta() {
+  postMinuta() {    
     const Minuta: MinutaI = {
       supervisorId: Number(this.usuario.idPersona),
       periodoAcuerdoId: this.idPeriodsProcessActive,
@@ -191,7 +192,7 @@ export class MinutaComponent implements OnInit {
           motivoAusencia: colaborador.motivoAusencia
         })),
     }
-
+    
     this.minutaService.postMinuta(Minuta).subscribe((resp: any) => {
       this.SnackBar.snackbarLouder(true)
       this.appHelpers.handleResponse(resp, () => {}, this.formMinuta)

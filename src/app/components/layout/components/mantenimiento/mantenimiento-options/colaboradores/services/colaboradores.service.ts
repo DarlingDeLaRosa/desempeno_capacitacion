@@ -12,6 +12,7 @@ export class CollaboratorServices {
     private baseURL: string;
     private systemId: number;
     private headers: HttpHeaders;
+    private userLogged: number | null;
     private header: { headers: HttpHeaders };
 
     constructor(
@@ -24,10 +25,14 @@ export class CollaboratorServices {
         this.baseURL = this.systemInformation.getIntranetURL;
         this.headers = new HttpHeaders({ 'Authorization': this.token });
         this.header = { headers: this.headers };
+        this.userLogged = Number(systemInformation.localUser.IdRecinto)
     }
 
     public getCollaborators(page: number = 1, itemPerPage: number = 10, name: string = '') {
-        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/User/getusuariossistema/${this.systemId}?filter=${name}&currentPage=${page}&totalItem=${itemPerPage}`, this.header));
+        let recinto: any = null
+        
+        if (this.userLogged != 7) { recinto = this.userLogged }
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/User/getusuariossistema/${this.systemId}?filter=${name}&recinto=${recinto ?? ''}&currentPage=${page}&totalItem=${itemPerPage}`, this.header));
     }
 
     public postCollaborator( collaborator : CollaboratorsI) {

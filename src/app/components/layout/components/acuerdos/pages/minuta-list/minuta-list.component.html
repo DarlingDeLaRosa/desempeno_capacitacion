@@ -54,26 +54,26 @@
   <tbody *ngIf="minutaList && minutaList.length > 0; else noElements">
 
     <tr class="dataRow" *ngFor="let minuta of minutaList">
-      <td class="dataIndiCell">{{minuta.supervisor!.nombre}} {{minuta.supervisor!.apellidos}}</td>
+      <td class="dataIndiCell">{{minuta.supervisorIntranet!.nombre | titlecase }} {{minuta.supervisorIntranet!.apellidos | titlecase }}</td>
       <td class="dataIndiCell">
         <ng-container *ngIf="appHelper.getUnitOrg(
-              minuta.supervisor.division,
-              minuta.supervisor.departamento,
-              minuta.supervisor.direccion,
-              minuta.supervisor.viceRectoria
+              minuta.supervisorIntranet.division,
+              minuta.supervisorIntranet.departamento,
+              minuta.supervisorIntranet.direccion,
+              minuta.supervisorIntranet.viceRectoria
             ).nombre !== 'Unidad organizativa no asignada'; else noUnidad">
           <span [matTooltip]="appHelper.getUnitOrg(
-            minuta.supervisor.division,
-            minuta.supervisor.departamento,
-            minuta.supervisor.direccion,
-            minuta.supervisor.viceRectoria
+            minuta.supervisorIntranet.division,
+            minuta.supervisorIntranet.departamento,
+            minuta.supervisorIntranet.direccion,
+            minuta.supervisorIntranet.viceRectoria
             ).nombre | titlecase">
             {{
             appHelper.getUnitOrg(
-            minuta.supervisor.division,
-            minuta.supervisor.departamento,
-            minuta.supervisor.direccion,
-            minuta.supervisor.viceRectoria
+            minuta.supervisorIntranet.division,
+            minuta.supervisorIntranet.departamento,
+            minuta.supervisorIntranet.direccion,
+            minuta.supervisorIntranet.viceRectoria
             ).nombre | titlecase
             }}
           </span>
@@ -84,10 +84,10 @@
               matSuffix style="margin-right: 5px;">warning</mat-icon> Unidad organizativa no encontrada.</span>
         </ng-template>
       </td>
-      <td class="dataIndiCell" [matTooltip]="minuta.supervisor!.cargo.nombre">{{minuta.supervisor!.cargo.nombre}}</td>
+      <td class="dataIndiCell" [matTooltip]="minuta.supervisorIntranet!.cargo.nombre">{{minuta.supervisorIntranet!.cargo.nombre}}</td>
       <td class="dataIndiCell">
         <div style="display: flex; justify-content: center;">
-          {{minuta.supervisor!.grupoObj.nombre}}
+          {{minuta.supervisorIntranet!.grupoObj.nombre}}
         </div>  
       </td>
       <td class="dataIndiCell">
@@ -120,7 +120,7 @@
           </button>
 
           <button mat-menu-item *ngIf="minuta.documentos.length > 0"
-            (click)="openModalListadoDocumentos(minuta.supervisor!.nombre, minuta.supervisor!.apellidos, minuta.supervisor!.idPersona, minuta.documentos)">
+            (click)="openModalListadoDocumentos(minuta.supervisorIntranet!.nombre, minuta.supervisorIntranet!.apellidos, minuta.supervisorIntranet!.idPersona, minuta.documentos)">
             <mat-icon>description</mat-icon>
             <h4>Ver Doc. Minuta</h4>
           </button>
@@ -140,10 +140,10 @@
             <h4 style="color: orangered">Rechazar Documento Minuta</h4>
           </button> -->
 
-          <!-- <button mat-menu-item class=" menuOptionsItemEliminar" (click)="deleteMinuta(minuta.id)">
+          <button mat-menu-item class=" menuOptionsItemEliminar" (click)="deleteMinuta(minuta.id)">
             <mat-icon style="color: red;">delete</mat-icon>
             <h4 style="color: red;">Eliminar Minuta</h4>
-          </button> -->
+          </button>
 
         </mat-menu>
 
@@ -155,8 +155,6 @@
       <!-- <td class="dataIndiCell"><mat-icon matTooltip="Eliminar minuta." class="removeIcon"
           (click)="deletePeriod(minuta.id)">delete</mat-icon>
       </td> -->
-
-
 
     </tr>
   </tbody>

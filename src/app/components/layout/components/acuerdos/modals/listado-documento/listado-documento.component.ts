@@ -77,7 +77,6 @@ export class ListadoDocumentoComponent implements OnInit {
   getMinutasDoc() {
     this.minutaservice.getMinuta('', "evaluacion", true, 1, 5).subscribe((resp: any) => {
       this.minuta = resp.data
-      console.log(this.minuta);
     })
   }
 

@@ -27,7 +27,13 @@
       </thead>
       <tbody>
         <tr class="info-row">
-          <td><strong>Área: {{minuta.unidadOrg}}</strong></td>
+          <td><strong>Área: {{minuta.unidadOrg == '' || minuta.unidadOrg == 'N/A' ? appHelper.getUnitOrg(
+            minuta.supervisorIntranet.division,
+            minuta.supervisorIntranet.departamento,
+            minuta.supervisorIntranet.direccion,
+            minuta.supervisorIntranet.viceRectoria
+            ).nombre : minuta.unidadOrg | titlecase
+          }}</strong></td>
           <td colspan="2"></td>
         </tr>
         <tr class="info-row">

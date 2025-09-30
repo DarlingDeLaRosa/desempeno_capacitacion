@@ -23,6 +23,7 @@ import { systemInformationService } from '../../../../services/systemInformation
 export default class CursosTableroComponent implements  OnInit{
 
   cursoTableroList: Array<CourseGetI> = [];
+  cursos: Array<any> = [];
   isLoading = false;
   usuarioActual!: loggedUserI
   Rol:any
@@ -50,6 +51,7 @@ export default class CursosTableroComponent implements  OnInit{
         finalize(() => this.loaderService.hide()))
       .subscribe({ next: (resp) => {
           this.cursoTableroList = resp.data;
+          this.cursos=resp.data
         }
       });
   }
@@ -76,7 +78,6 @@ export default class CursosTableroComponent implements  OnInit{
       });
     }
   }
-
 
 }
 

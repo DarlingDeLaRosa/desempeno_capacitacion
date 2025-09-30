@@ -33,7 +33,7 @@ export class EvaluationCompetencyServices {
         return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/EvaluacionCompetencia/colaborador/${collaboratorId}?supervisor=${isSup}&Term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
     }
 
-    public postEvaluationCompetency(evaluationCompetency: EvaluationCompetencyI) {
+    public postEvaluationCompetency(evaluationCompetency: EvaluationCompetencyI[]) {
         return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/EvaluacionCompetencia`, evaluationCompetency, this.header))
     }
 
@@ -41,10 +41,13 @@ export class EvaluationCompetencyServices {
         return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/EvaluacionCompetencia/colaborador-id/${collaboratorId}`, this.header));
     }
 
-    public putEvaluationCompetency(evaluationCompetency: EvaluationCompetencyI) {
+    public putEvaluationCompetency(evaluationCompetency: EvaluationCompetencyI[]) {
         return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/EvaluacionCompetencia`, evaluationCompetency, this.header))
     }
 
+    public getMisssingColaborators(recinto: string = '') {
+        return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Colaboradores/sin-evaluar?Term=${recinto}`, this.header));
+    }
     // public deleteCourse(id: number) {
     //     return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/Curso/${id}`, this.header))
     // }

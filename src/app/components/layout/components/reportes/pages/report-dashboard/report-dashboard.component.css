@@ -1,0 +1,63 @@
+.reportCardContent {
+    gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 410px));
+    justify-content: center;
+}
+
+.reportCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    /* width: 400px; */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: #ccc 0px 1px 4px;
+}
+
+.infoContainer {
+    display: flex;
+    gap: 10px;
+}
+
+.logo {
+    padding: 10px;
+    display: grid;
+    max-height: 25px;
+    border-radius: 10px;
+    place-items: center;
+    background-color: rgb(22, 159, 201);
+}
+
+.logo mat-icon {
+    color: white;
+}
+
+.information h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.information p {
+    text-align: justify;
+    margin: 4px 0;
+    color: #999;
+    font-size: 13px;
+}
+
+.actionsContainer {
+    margin-top: 10px;
+}
+
+.detailInfo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.actionsContainer button {
+    width: 100%;
+    margin-top: 10px;
+}

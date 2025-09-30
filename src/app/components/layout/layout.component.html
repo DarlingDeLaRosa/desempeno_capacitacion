@@ -13,20 +13,23 @@
             <a class="item-menu" [routerLink]="['/layout/cursos']" *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'" routerLinkActive="active">
                 <mat-icon>collections_bookmark</mat-icon>Cursos
             </a>
-            <a *ngIf="improvePlan && appHelpers.isTodayInRange(improvePlan.fechaInicio, improvePlan.fechaFin) && this.systemInformationService.activeRol().nombre !== 'supervisado'" class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
+            <a *ngIf="improvePlan && appHelpers.isTodayInRange(improvePlan.fechaInicio, improvePlan.fechaFin) && usuario.role !== 'supervisado'" class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
                 <mat-icon>star</mat-icon>Plan de mejora
             </a>
-            <a *ngIf="evaluationComptency && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && this.systemInformationService.activeRol().nombre !== 'supervisado'" class="item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
+            <a *ngIf=" usuario.role !== 'supervisado'" class="item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
                 <mat-icon>description</mat-icon>Evaluación de competencias
             </a>
             <a class="item-menu" [routerLink]="['/layout/minutaLista']" *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'" routerLinkActive="active">
                 <mat-icon>content_paste_search</mat-icon>Minutas
             </a>
+            <a class="item-menu" [routerLink]="['/layout/reportes']" *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'" routerLinkActive="active">
+                <mat-icon>analytics</mat-icon>Reportes
+            </a>
 
         </div>
 
         <div >
-            <div class="ConfigsideMenuContainer" *ngIf="this.systemInformationService.activeRol().nombre !== 'Supervisor' && this.systemInformationService.activeRol().nombre !== 'supervisado'">
+            <div class="ConfigsideMenuContainer" *ngIf="usuario.role !== 'Supervisor' && usuario.role !== 'supervisado'">
                 <div class="item-menu" [routerLink]="['/layout/mantenimiento']" routerLinkActive="activeOut">
                     <mat-icon>settings</mat-icon>Mantenimiento
                 </div>

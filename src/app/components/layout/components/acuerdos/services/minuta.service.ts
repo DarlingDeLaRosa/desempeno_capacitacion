@@ -32,6 +32,10 @@ export class MinutaService {
   public getMinuta(term: string, typeMinuta: string = 'Acuerdo', sup: boolean = true, page: number = 1, totalPage: number = 10) {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?tipo=${typeMinuta}&esSupervisor=${sup}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
   }
+  
+  public getMinutaEvaluacion( page: number = 1, totalPage: number = 10) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/por-supervisor?tipo=evaluacion&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
+  }
 
   public getMinutaById(minutaId: number) {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/${minutaId}`, this.header));

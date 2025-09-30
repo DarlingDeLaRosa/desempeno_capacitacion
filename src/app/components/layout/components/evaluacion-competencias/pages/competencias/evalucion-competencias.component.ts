@@ -7,7 +7,7 @@ import { EvaluationCompetencyServices } from '../../services/evaluacion-competen
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { EvaluacionModalviewComponent } from '../../modals/evaluacion-modalview/evaluacion-modalview.component';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
-import { CompetencyCount, EvaluationBehaviorsI, EvaluationCompetencyGetI, EvaluationCompetencySummaryGetI } from '../../interface/evaluacion-competencias.interface';
+import { CompetencyCount, EvaluationCompetencySummaryGetI } from '../../interface/evaluacion-competencias.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
 import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
@@ -18,6 +18,7 @@ import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 import { periodProcessGetI } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
 import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
 import { DocumentoMinuta, MinutaGetI } from '../../../acuerdos/interfaces/acuerdo.interface';
+import { MissingCollaboratorModalComponent } from '../../modals/missing-collaborator-modal/missing-collaborator-modal.component';
 
 @Component({
   selector: 'app-evalucion-competencias',
@@ -36,14 +37,14 @@ export class EvalucionCompetenciasComponent implements OnInit {
   protocol!: ProtocolI
   docName: string = ''
   charge: boolean = true
-  newMinuta!: { existe: boolean, docCargado: boolean }
+  newMinuta!: { existe: Boolean, docCargado: Boolean }
   minuta!: MinutaGetI[]
   filter: string = ''
   rolActivo: string = ''
   periodo: any
   pagination!: PaginationI
   page: number = 1
-  activeProcess!: periodProcessGetI
+  activeProcess!: periodProcessGetI 
 
   constructor(
     public dialog: MatDialog,
@@ -69,7 +70,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
         this.rolActivo = rolActivo.nombre
       }
     });
-    
+
     this.getActiveAgreementPeriod()
   }
 
@@ -89,12 +90,15 @@ export class EvalucionCompetenciasComponent implements OnInit {
   ngOnInit(): void {
     this.getSupervisorWithSubordinates(false)
     this.getProtocol()
-    console.log(this.newMinuta);
-
   }
 
   openModalviewEvaluation(colaborador: number) {
     let dialogRef = this.dialog.open(EvaluacionModalviewComponent, { data: { colaborador } })
+    dialogRef.afterClosed().subscribe(() => { })
+  }
+  
+  openModalviewMissingCollaborators() {
+    let dialogRef = this.dialog.open(MissingCollaboratorModalComponent)
     dialogRef.afterClosed().subscribe(() => { })
   }
 
@@ -108,7 +112,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
 
     this.evaluationCompetencyService.getEvaluationCompetencies(this.selectGroup, this.filter, this.page).subscribe((res: any) => {
       this.charge = false
-      
+
       let { currentPage, totalItem, totalPage } = res
       this.pagination = { currentPage, totalItem, totalPage }
 
@@ -133,7 +137,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
     const nombreCompleto = 'Minuta de Evaluación de Competencias';
     let documentos: DocumentoMinuta[] = []
 
-    if(this.minuta[0].documentos){
+    if (this.minuta[0].documentos) {
       documentos = this.minuta[0].documentos
     }
 
@@ -148,6 +152,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
 
     dialog.afterClosed().subscribe(result => {
       this.getMinuta(this.periodo.idPeriodo)
+      this.getMyMinuta()
     });
   }
 
@@ -159,8 +164,6 @@ export class EvalucionCompetenciasComponent implements OnInit {
     this.minutaService.getMinutaExistente(period, true)
       .subscribe((res: any) => {
         this.newMinuta = res;
-        console.log(this.newMinuta);
-
       })
   }
 

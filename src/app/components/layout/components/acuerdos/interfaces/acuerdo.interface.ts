@@ -106,6 +106,7 @@ export interface MinutaAsistenciaGetI {
 export interface MinutaAsistenciaTemplateGetI {
   id: number
   colaborador: CollaboratorsGetI;
+  colaboradorIntranet: CollaboratorsGetI;
   ausente: boolean;
   motivoAusencia: string | null;
 }
@@ -123,6 +124,24 @@ export interface MinutaGetI {
   periodo: PeriodoI
   periodoAcuerdo: periodProcessGetI
   supervisor: CollaboratorsGetI
+  supervisorIntranet: CollaboratorsGetI
+  unidadOrg: string
+  fechaCreacion: Date
+}
+
+export interface MinutaGetI {
+  agendaReunion: string
+  aprobada: boolean
+  conclusion: string
+  desarrollo: string
+  documentos: DocumentoMinuta[]
+  esUnaEvaluacionCompentencia: boolean
+  id: number
+  minutaAsistencia: MinutaAsistenciaGetI
+  periodo: PeriodoI
+  periodoAcuerdo: periodProcessGetI
+  supervisor: CollaboratorsGetI
+  supervisorIntranet: CollaboratorsGetI
   unidadOrg: string
   fechaCreacion: Date
 }

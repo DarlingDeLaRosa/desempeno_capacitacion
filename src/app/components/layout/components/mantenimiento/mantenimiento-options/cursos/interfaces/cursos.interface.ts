@@ -40,6 +40,8 @@ export interface CourseGetI {
     trimestre: number,
     idEstado: number,
     estadoCursoObj: StateI
+    img:string
+    grupoOcupacional:string
     inscripcionesObj: InscriptionI[]
 }
 

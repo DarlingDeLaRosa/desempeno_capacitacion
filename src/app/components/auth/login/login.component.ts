@@ -61,8 +61,10 @@ export class LoginComponent implements OnInit {
         // this.systeminformation.setUserToken(this.tokenSystem)
         sessionStorage.setItem("userToken", JSON.stringify(this.tokenSystem));
         this.isLoading = false;
-        // this.router.navigate(['/layout/acuerdos']);
+
         this.router.navigate(['/layout/evaluacion-competencias']);
+        
+        // this.router.navigate(['/layout/acuerdos']);
         // this.systeminformation.Datos()
         // ('Bienvenido');
         // this.systeminformation.laPrueba(this.auth)

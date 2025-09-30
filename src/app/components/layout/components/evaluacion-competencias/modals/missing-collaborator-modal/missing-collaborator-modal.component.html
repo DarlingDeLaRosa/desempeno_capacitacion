@@ -1,0 +1,98 @@
+<div class="modal" *ngIf="missigCollaboratorData; else cargando">
+    
+    <h2>Colaboradores pendientes de evaluación.</h2>
+
+    <div style="display: flex; justify-content: end; ">
+
+        <mat-form-field appearance="fill" style="width: 20%;">
+            <mat-label>Recintos</mat-label>
+            <mat-select [(ngModel)]="recinto" (selectionChange)="missingCollaborator()">
+                <mat-option value="">Todos</mat-option>
+                <mat-option value="fem">FEM</mat-option>
+                <mat-option value="eph">EPH</mat-option>
+                <mat-option value="emh">EMH</mat-option>
+                <mat-option value="um">UM</mat-option>
+                <mat-option value="jvm">JVM</mat-option>
+                <mat-option value="lnnm">LNNM</mat-option>
+                <mat-option value="rec">REC</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <!-- <h3>Competencia : {{evaluationData[competency].grado.competencia.nombre}} ({{evaluationData[competency].grado.tipoGrado.nombre}})</h3> -->
+
+    <!-- <div class="competencia" >
+        <p>{{evaluationData[competency].grado.competencia.descripcion}}</p>
+    </div> -->
+
+
+
+    <div class="comportamientoCalificacion">
+
+        <div class="table-container" style="margin-top: 10px;">
+            <table>
+                <thead class="headerTable">
+                    <tr class="headerRow">
+                        <th class="headerCell">Nombre</th>
+                        <th class="headerCell">Correo electronico</th>
+                        <th class="headerCell">Recinto</th>
+                        <th class="headerCell">Supervisor</th>
+                        <!-- <th class="headerCell">
+                            <div style="display: flex; justify-content: center;"> G. Ocupacional </div>
+                        </th> -->
+                        <!-- <th class="headerCell" style="width: 5%;"></th> -->
+                        <!-- <th class="headerCell" style="width: 7%; padding-right: 15px;">
+                            <div class="loader" *ngIf="!supervisorWithSubordinates || charge"></div>
+                        </th> -->
+                    </tr>
+                </thead>
+                <tbody *ngIf="missigCollaboratorData && missigCollaboratorData.length > 0">
+                    <tr class="dataRow" *ngFor="let subordinate of missigCollaboratorData">
+                        <td class="dataIndiCell">{{subordinate.nombres | titlecase}} {{subordinate.apellidos |
+                            titlecase}}</td>
+                        <!-- <td class="dataIndiCell">
+                        </td> -->
+                        <td class="dataIndiCell">{{subordinate.usuario}}</td>
+                        <td class="dataIndiCell">
+                            <div style="display: flex; justify-content: center;"> {{subordinate.recinto | uppercase}}
+                            </div>
+                        </td>
+                        <td class="dataIndiCell"></td>
+                    </tr>
+
+                </tbody>
+
+                <tfoot *ngIf="pagination && pagination.totalPage">
+                    <tr class="paginatorRow">
+                        <ng-container *ngFor="let td of [1, 2 ]">
+                            <td class="dataIndiCell"></td>
+                        </ng-container>
+                        <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span>
+                        </td>
+                        <td class="paginationCell">
+                            <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+                                <mat-icon class="rowIcon" matTooltip="Pagina anterior."
+                                    (click)="previousPage()">navigate_before</mat-icon>
+                                <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                                <mat-icon class="rowIcon" matTooltip="Pagina siguiente."
+                                    (click)="nextPage()">navigate_next</mat-icon>
+                            </span>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+    </div>
+
+    <div style="display: flex ; justify-content: end; margin-top: 15px;">
+        <button class="btnCerrar" (click)="closeModal()">Cerrar</button>
+    </div>
+</div>
+
+<ng-template #cargando>
+    <div class="container-loaderMother" style="padding: 30px;">
+        <div class="loaderMother"></div>
+        <div class="loading-text">Cargando...</div>
+    </div>
+</ng-template>

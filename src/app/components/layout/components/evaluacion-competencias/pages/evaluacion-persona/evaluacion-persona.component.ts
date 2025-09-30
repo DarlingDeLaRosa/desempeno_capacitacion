@@ -97,17 +97,17 @@ export class EvaluacionPersonaComponent implements OnInit {
     });
   }
 
-  postEvaluationPerson(evaluation: EvaluationCompetencyI) {
+  postEvaluationPerson(evaluation: EvaluationCompetencyI[]) {
     this.evaluationCompetencyService.postEvaluationCompetency(evaluation)
       .subscribe((res: any) => {
-        this.appHelpers.handleResponse(res, () => { }, this.evaluationCompetencyForm)
+        this.appHelpers.handleResponse(res, () => { this.router.navigate(['layout/evaluacion-competencias']) }, this.evaluationCompetencyForm)
       })
   }
 
-  putEvaluationPerson(evaluation: EvaluationCompetencyI) {
+  putEvaluationPerson(evaluation: EvaluationCompetencyI[]) {
     this.evaluationCompetencyService.putEvaluationCompetency(evaluation)
       .subscribe((res: any) => {
-        this.appHelpers.handleResponse(res, () => { }, this.evaluationCompetencyForm)
+        this.appHelpers.handleResponse(res, () => { this.router.navigate(['layout/evaluacion-competencias']) }, this.evaluationCompetencyForm)
       })
   }
 
@@ -153,21 +153,21 @@ export class EvaluacionPersonaComponent implements OnInit {
       return;
 
     } else {
-      groupOfCompetency.map((evaluationCompetency: any) => {
-        let evaluationGroup = {
+
+      let evaluationGroup: EvaluationCompetencyI[] = []
+
+      await groupOfCompetency.map((evaluationCompetency: any) => {
+        evaluationGroup.push({
           id: evaluationCompetency.id,
           gradoId: evaluationCompetency.idGrado,
           idColaborador: this.person.idPersona,
           periodoId: this.systemInformationSevice.activePeriod().idPeriodo,
           evaluacionCompetenciasDetalles: evaluationCompetency.comportamientos
-        }
-
-        this.appHelpers.saveChanges(() => this.postEvaluationPerson(evaluationGroup), () => this.putEvaluationPerson(evaluationGroup), evaluationGroup.id, this.evaluationCompetencyForm)
+        })
       })
 
-      setTimeout(() => {
-        this.router.navigate(['layout/evaluacion-competencias']);
-      }, 1000);
+      this.appHelpers.saveChanges(() => this.postEvaluationPerson(evaluationGroup), () => this.putEvaluationPerson(evaluationGroup), evaluationGroup[1].id, this.evaluationCompetencyForm)
+
     }
   }
 }

@@ -51,6 +51,7 @@
                 <input matInput formControlName="link">
             </mat-form-field>
 
+
             <mat-form-field appearance="fill" *ngIf="coursesForm.value.interno">
                 <mat-label>Cupos Disponibles</mat-label>
                 <input matInput type="number" formControlName="cuposDisponibles">
@@ -115,15 +116,88 @@
             </mat-form-field>
 
             <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Grupo ocupacional</mat-label>
+                <mat-select formControlName="grupoOcupacional" multiple>
+                        <mat-option value="I">I</mat-option>
+                        <mat-option value="II">II</mat-option>
+                        <!-- <mat-option value="II supervisores">II Supervisores</mat-option> -->
+                        <mat-option value="III">III</mat-option>
+                        <mat-option value="IV">IV</mat-option>
+                        <mat-option value="V">V</mat-option>
+                    <ng-template #noState>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Costo Total</mat-label>
                 <input matInput type="number" formControlName="costoTotal">
             </mat-form-field>
         </div>
 
-        <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
-        <button type="button" class="cleanButton" (click)="coursesForm.reset()" *ngIf="coursesForm.value.idCurso">Limpiar edición</button>
 
     </form>
+
+    <div class="upload-container">
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="upload-form">
+
+        <!-- Área de arrastrar y soltar -->
+        <div class="drop-zone"
+             [class.dragover]="isDragOver"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave($event)"
+             (drop)="onDrop($event)"
+             (click)="fileInput.click()">
+
+          <div class="drop-content" *ngIf="!selectedFile && !imagePreview ">
+            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+
+            <p class="upload-text">Arrastra tu imagen aquí o <span class="click-text">haz clic para seleccionar</span></p>
+            <p class="upload-hint">PNG, JPG, JPEG hasta 10MB</p>
+          </div>
+
+          <!-- Preview de la imagen -->
+          <div class="image-preview" *ngIf="imagePreview">
+            <img [src]="imagePreview" alt="Preview" class="preview-img">
+            <div class="image-info" *ngIf="selectedFile">
+              <p class="file-name">{{ selectedFile.name}}</p>
+              <p class="file-size">{{ formatFileSize(selectedFile.size) }}</p>
+            </div>
+            <div class="">
+            <button type="button" class="remove-btn" (click)="removeFile($event)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+          </div>
+        </div>
+
+        <!-- Input file oculto -->
+        <input #fileInput
+               type="file"
+               accept="image/*"
+               (change)="onFileSelected($event)"
+               class="file-input">
+
+        <!-- Mensajes de error -->
+        <div class="error-message" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+      </form>
+    </div>
+
+    <div style="display: flex; justify-content: end;">
+      <button type="button" class="cleanButton" (click)="coursesForm.reset()" *ngIf="coursesForm.value.idCurso">Limpiar edición</button>&nbsp;
+      <button class="saveButton" (click)="saveChanges()">Guardar cambios</button>
+    </div>
 
     <h3 class="Stitle">Listado de cursos</h3>
 

@@ -47,9 +47,12 @@ export class MinutaListComponent implements OnInit {
     this.charge = true
     this.minutaList = []
 
-    this.minutaService.getMinuta(term, this.typeMinuta, false).subscribe((resp: any) => {
+    this.minutaService.getMinuta(term, this.typeMinuta, false, this.page, 10).subscribe((resp: any) => {
       this.charge = false
       this.minutaList = resp.data;
+      
+      let { currentPage, totalItem, totalPage } = resp
+      this.pagination = { currentPage, totalItem, totalPage }
     })
   }
 
@@ -75,7 +78,7 @@ export class MinutaListComponent implements OnInit {
       }
     })
     dialog.afterClosed().subscribe(result => {
-      this.getMinutas('')
+      if (result) { this.getMinutas('') }
     });
   }
 

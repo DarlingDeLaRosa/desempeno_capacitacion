@@ -3,27 +3,26 @@
     <h1>Publicaciones de Cursos</h1>
   </div>
   <div>
-    <ng-container *ngIf="InformationService.currentUserSystem().rol.nombre == 'Analista' || InformationService.currentUserSystem().rol.nombre == 'Encargado'">
-      <button type="submit" class="btnNavegar"
-      [routerLink]="[{ outlets: { 'cursos': ['listado']}}]"
-      >Listado de cursos</button> &nbsp;
+    <ng-container
+      *ngIf="InformationService.currentUserSystem().rol.nombre == 'Analista' || InformationService.currentUserSystem().rol.nombre == 'Encargado'">
+      <button type="submit" class="btnNavegar" [routerLink]="[{ outlets: { 'cursos': ['listado']}}]">Listado de
+        cursos</button> &nbsp;
     </ng-container>
 
-    <button type="submit" class="btnNavegar"
-    (click)="openModal()"
-    >Mis cursos</button> &nbsp;
+    <button type="submit" class="btnNavegar" (click)="openModal()">Mis cursos</button> &nbsp;
 
-   <ng-container *ngIf="usuarioActual.Supervisor == 'True'">
-    <button type="submit" class="btnNavegar"
-    [routerLink]="[{ outlets: { 'cursos': ['miembros']}}]"
-    >Supervisados</button> &nbsp;
-   </ng-container>
+    <ng-container *ngIf="usuarioActual.Supervisor == 'True'">
+      <button type="submit" class="btnNavegar"
+        [routerLink]="[{ outlets: { 'cursos': ['miembros']}}]">Supervisados</button> &nbsp;
+    </ng-container>
 
   </div>
 </div>
 <app-loader *ngIf="isLoading"></app-loader>
 
 <ng-container *ngIf="!isLoading">
+
+  <!--
 <div class="cards-container"  [ngClass]="{'small-size': cursoTableroList.length < 4}">
   <div class="card"
    *ngFor="let course of cursoTableroList" (click)="openModalCursosIncribir(course)">
@@ -42,9 +41,92 @@
       </div>
       <button class="card-button">Inscribir</button>
   </div>
+</div> -->
+
+
+<div class="cards-container">
+  <!-- <div> -->
+    <div class="course-card"  *ngFor="let curso of cursos">
+      <!-- Header con imagen -->
+      <div class="card-header">
+        <div class="image-container">
+          <img [src]="curso.img || '/assets/images/course-placeholder.jpg'" [alt]="curso.nombre" class="course-image" />
+          <div class="overlay">
+            <span class="modalidad-badge" [class]="curso.modalidadObj.nombre.toLowerCase()">
+              {{ curso.modalidadObj.nombre }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido del card -->
+      <div class="card-content">
+        <!-- Título y proveedor -->
+        <div class="course-header">
+          <h3 class="course-title">{{ curso.nombre }}</h3>
+          <p class="course-provider">{{ curso.suplidor }}</p>
+        </div>
+
+        <!-- Descripción -->
+        <p class="course-description" *ngIf="curso.descripcion">
+          {{ curso.descripcion }}
+        </p>
+
+        <!-- Información principal -->
+        <div class="course-info">
+          <!-- Fechas -->
+          <div class="info-row">
+            <div class="info-item">
+              <span class="info-label">Inicio inscripcion:</span>
+              <span class="info-value">{{ curso.fechaInicioInscripcion | date}}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Fin:</span>
+              <span class="info-value">{{ curso.fechaFinInscripcion | date}}</span>
+            </div>
+          </div>
+
+          <!-- Cupos y costo -->
+          <div class="info-row">
+            <div class="info-item">
+              <span class="info-label">Cupos:</span>
+              <span class="info-value">
+                {{ curso.cuposDisponibles }} disponibles
+              </span>
+            </div>
+          </div>
+
+          <!-- Estado y período -->
+          <div class="info-row">
+            <div class="info-item">
+              <span class="estado-badge">
+                {{ curso.estadoCursoObj.nombre }}
+              </span>
+            </div>
+            <div class="info-item">
+              <span class="periodo-text">{{ curso.periodo.nombre }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer con acciones -->
+      <div class="card-footer">
+        <button class="btn-primary" [disabled]="curso.cuposDisponibles === 0" (click)="openModalCursosIncribir(curso)">
+          <span *ngIf="curso.cuposDisponibles > 0">Inscribirse</span>
+          <span *ngIf="curso.cuposDisponibles === 0">Sin cupos</span>
+        </button>
+
+        <!-- <button class="btn-secondary">
+          Ver detalles
+        </button> -->
+      </div>
+    </div>
+
+  <!-- </div> -->
 </div>
 </ng-container>
+
 <div *ngIf="cursoTableroList.length === 0 && !isLoading" class="empty-list">
-  <img src="nodata.jpg"  alt="No courses available">
-  <!-- <p>No hay cursos disponibles en este momento.</p> -->
+  <img src="nodata.jpg" alt="No courses available">
 </div>

@@ -45,11 +45,11 @@ export class CoursesServices {
         return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Curso/get_cursos_byidcolaborador/${this.usuario.idPersona}`, this.header));
     }
 
-    public postCourse( courses : CourseI) {
+    public postCourse( courses : any) {
         return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Curso`, courses , this.header))
     }
 
-    public putCourse( courses : CourseI) {
+    public putCourse( courses : any) {
         return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Curso`, courses , this.header))
     }
 

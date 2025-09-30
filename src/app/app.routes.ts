@@ -38,6 +38,8 @@ import { LayoutClassGuard } from './guards/layout.guard';
 import { MinutaListComponent } from './components/layout/components/acuerdos/pages/minuta-list/minuta-list.component';
 import { VerAcuerdoComponent } from './components/layout/components/acuerdos/modals/ver-acuerdo/ver-acuerdo.component';
 import { VerComportamientosProbatoriosComponent } from './components/layout/components/acuerdos/pages/ver-comportamientos-probatorios/ver-comportamientos-probatorios.component';
+import { ReportesOuletComponent } from './components/layout/components/reportes/reportes-oulet.component';
+import { ReportDashboardComponent } from './components/layout/components/reportes/pages/report-dashboard/report-dashboard.component';
 
 export const routes: Routes = [
   {
@@ -117,6 +119,17 @@ export const routes: Routes = [
             component: CursosMiembrosComponent,
             canActivate: [SupervisorGuard],
             outlet: 'cursos'
+          },
+        ]
+      },
+      {
+        path: 'reportes',
+        component: ReportesOuletComponent,
+        children: [
+          {
+            path: '',
+            component: ReportDashboardComponent,
+            outlet: 'reportes'
           },
         ]
       },
