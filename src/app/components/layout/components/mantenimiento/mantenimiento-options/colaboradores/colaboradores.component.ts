@@ -13,6 +13,8 @@ import { systemInformationService } from '../../../../services/systemInformation
 import { asignationAgreementI } from '../asignacion-acuerdo/interfaces/asignacion-acuerdo.interface';
 import { AsignationAgreementServices } from '../asignacion-acuerdo/services/asignacion-acuerdo.service';
 import { DepartmentI, DirectionI, DivisionI, PositionI, LocationI, ViceRectorate, RolI, PersonI, CollaboratorsGetI, CollaboratorsI } from './interfaces/colaboradores.interface';
+import { ShowSupsComponent } from './dialogs/show-sups/show-sups.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-colaboradores',
@@ -26,6 +28,7 @@ export class ColaboradoresComponent implements OnInit {
   data: any
   constructor(
     public fb: FormBuilder,
+    public dialog: MatDialog,
     public snackBar: SnackBars,
     private appHelpers: HerlperService,
     private intranetService: IntranetServices,
@@ -169,7 +172,7 @@ export class ColaboradoresComponent implements OnInit {
     if (removeDecision) {
       this.statusForm.patchValue({ idPersona: collaborator.persona.idPersona, idEstado: newState })
 
-      this.collaboratorService.putChangePersonStatus(this.statusForm.value).subscribe((res: any) => {
+      this.asignationAgreementService.postChangePersonStatus(this.statusForm.value).subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => this.getCollaborators(), this.statusForm)
       });
     } else {
@@ -247,6 +250,11 @@ export class ColaboradoresComponent implements OnInit {
   //       this.divisions = res.data;
   //     })
   // }
+
+  openModalviewSup(colaborador: PersonI) {
+    let dialogRef = this.dialog.open(ShowSupsComponent, { data: {id: colaborador.persona.idPersona, name: `${colaborador.persona.nombre} ${colaborador.persona.apellidos}`} })
+    dialogRef.afterClosed().subscribe(() => { })
+  }
 
   // Metodo para obtener todos los colaboradores
   getPersonaByDNI() {

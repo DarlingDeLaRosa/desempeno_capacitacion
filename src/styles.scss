@@ -1,4 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+:root {
+    @include mat.menu-overrides((container-shape: 5px, // ejemplo: border-radius
+            divider-color: red,
+            container-color: white,
+        ));
+}
+
+
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 * {
@@ -350,11 +360,34 @@ table {
         Others Styles
 /////////////////////////////*/
 
+.ItemMiniMenu {
+    width: 195px;
+    padding: 5px;
+    margin: 0 5px 5px 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.ItemMiniMenu:hover {
+    background-color: #edf2fa;
+}
+
+.eliminarHover:hover {
+    background-color: rgb(255, 211, 211);
+}
+
+.editarHover:hover {
+    background-color: rgba(95, 253, 95, 0.345);
+}
+
 .fuctionContent {
     display: flex;
     justify-content: space-between;
     /* align-items: center; */
-    padding: 10px 0 15px 0;
+    // padding: 10px 0 15px 0;
 }
 
 .filters {
@@ -392,4 +425,160 @@ table {
 .no-record {
     text-align: center;
     height: 30px;
+}
+
+.staticInfoContainer {
+    width: 100%;
+    padding: 15px;
+    min-height: 50px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    background-color: #e9ecef;
+}
+
+.staticInfoContainer {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 10px;
+}
+
+.staticInfoContainer h4 {
+    font-size: 14px;
+}
+
+.staticInfoContainer h3 {
+    margin-bottom: 2px;
+    font-size: 17px;
+    // font-weight: 600;
+    -webkit-text-stroke: 0.50px black;
+}
+
+
+/////////////////// stepper 
+
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 5px 0 15px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    min-height: 120px;
+    max-height: 120px;
+}
+
+.circle {
+    width: 35px;
+    height: 35px;
+    min-height: 35px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ccc;
+    color: white;
+    font-size: 14px;
+    position: relative;
+    z-index: 1;
+    transition: background 0.5s ease, border-color 0.5s ease, transform 0.5s ease;
+}
+
+.label,
+.labelRes,
+.labelResPer {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+}
+
+.labelRes {
+    font-size: 12px;
+}
+
+.labelResPer {
+    margin-top: 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.line {
+    height: 2px;
+    background-color: #ddd;
+    flex: 1;
+    margin: -60px -75px 0 -75px;
+    z-index: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.completed .circle {
+    background: #28a745;
+    border-color: #28a745;
+    transform: scale(1.2);
+    animation: pop 0.4s ease forwards;
+}
+
+.completed-line {
+    background: #28a745;
+    animation: fillLine 1s ease forwards;
+}
+
+.in-progress .circle {
+    background: #ffc107;
+    border-color: #ffc107;
+    transform: scale(1.2);
+    animation: pulse 1.5s infinite;
+}
+
+
+
+/* --- Keyframes --- */
+@keyframes fillLine {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
+    }
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.8);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
 }

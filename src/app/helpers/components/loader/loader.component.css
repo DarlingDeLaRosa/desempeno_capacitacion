@@ -1,4 +1,4 @@
-.line, .line2, .line3 {
+.line1, .line2, .line3, .line4, .line5 {
   height: 35px;
   width: 100%;
   box-sizing: border-box;
@@ -30,15 +30,25 @@
   width: 90%;
 }
 
-.cards-container {
+.line4{
+  height: 26px;
+  width: 25%;
+}
+
+.line5{
+  height: 12px;
+  width: 70%;
+}
+
+.cards-loader-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-  padding: 16px;
+  padding: 16px 0;
 }
 
 .card {
-  height: 150px;
+  /* height: 150px; */
   border-radius: 20px;
   background: #fff;
   position: relative;

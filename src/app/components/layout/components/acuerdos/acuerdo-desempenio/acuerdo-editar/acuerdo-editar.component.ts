@@ -17,11 +17,12 @@ import { PeriodI } from '../../../mantenimiento/mantenimiento-options/periodos/i
 import { LoaderBoxComponent } from '../../../../../../helpers/components/loader-box/loader-box.component';
 import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
 import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
+import { LoaderComponent } from '../../../../../../helpers/components/loader/loader.component';
 
 @Component({
   selector: 'app-acuerdo-editar',
   standalone: true,
-  imports: [MaterialComponents, ClassImports, LoaderBoxComponent],
+  imports: [MaterialComponents, ClassImports, LoaderBoxComponent, LoaderComponent],
   templateUrl: './acuerdo-editar.component.html',
   styleUrl: './acuerdo-editar.component.css'
 })

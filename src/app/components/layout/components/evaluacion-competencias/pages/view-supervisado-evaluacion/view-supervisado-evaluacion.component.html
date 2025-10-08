@@ -1,0 +1,50 @@
+<div class="fuctionContent">
+    <div class="title">
+        <h1>Evaluación De Competencias</h1>
+    </div>
+    <br>
+    <mat-button-toggle-group *ngIf="evaluationData && evaluationData.length > 0" name="fontStyle"
+        aria-label="Font Style" [(ngModel)]="competency">
+        <mat-button-toggle [value]="0">{{evaluationData[0].grado.competencia.nombre}}</mat-button-toggle>
+        <mat-button-toggle [value]="1">{{evaluationData[1].grado.competencia.nombre}}</mat-button-toggle>
+    </mat-button-toggle-group>
+</div>
+
+<div class="modal" *ngIf="evaluationData && evaluationData.length > 0">
+    <h3>Competencia : {{evaluationData[competency].grado.competencia.nombre}}
+        ({{evaluationData[competency].grado.tipoGrado.nombre}})</h3>
+
+    <div class="competencia">
+        <p style="line-height: 26px;">{{evaluationData[competency].grado.competencia.descripcion}}</p>
+    </div>
+
+    <br>
+
+    <h3>Comportamientos y calificaciones</h3>
+    <div class="comportamientoCalificacion"
+        *ngFor="let evaluation of this.evaluationData[competency].evaluacionCompetenciasDetalles">
+        <div class="comportamiento">
+            <p style="line-height: 22px;">{{evaluation.comportamiento.nombre}}</p>
+        </div>
+
+        <div class="iconContainer">
+            <mat-icon>arrow_forward</mat-icon>
+        </div>
+
+        <div class="calificacionContainer">
+            <h3>{{evaluation.calificacionComportamiento.nombre}}</h3>
+        </div>
+    </div>
+
+</div>
+
+<div *ngIf="!evaluationData">
+    <div style="display: grid; height: 65vh; ">
+        <app-loader [type]="1"></app-loader>
+        <app-loader [supp]="1"></app-loader>
+    </div>
+</div>
+
+<div *ngIf="evaluationData && evaluationData.length === 0" class="empty-list">
+    <img src="nodata.jpg" alt="No courses available">
+</div>

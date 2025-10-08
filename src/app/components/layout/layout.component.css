@@ -124,7 +124,7 @@ mat-sidenav {
     font-weight: 400;
 }
 
-.item-menu {
+.item-menu, .item-menu-subM, .sub-item-menu {
     width: 250px;
     height: 50px;
     display: grid;
@@ -134,8 +134,19 @@ mat-sidenav {
     align-items: center;
     text-decoration: none;
     box-sizing: border-box;
-    grid-template-columns: 40px 190px;
+    grid-template-columns: 30px 200px;
     font-family: 'Montserrat', sans-serif;
+}
+
+.item-menu-subM {
+    grid-template-columns: 40px 160px 20px;
+}
+
+.sub-item-menu{
+    grid-template-columns: 30px 187px;
+    width: 250px;
+    height: 45px;
+    padding: 0px 28px;
 }
 
 .active,

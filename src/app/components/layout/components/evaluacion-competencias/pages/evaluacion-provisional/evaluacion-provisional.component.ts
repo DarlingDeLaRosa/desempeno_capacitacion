@@ -1,42 +1,44 @@
 import { Component, OnInit, effect } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ClassImports } from '../../../../../../helpers/class.components';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
-import { EvaluationCompetencyServices } from '../../services/evaluacion-competencia.service';
-import { systemInformationService } from '../../../../services/systemInformationService.service';
-import { EvaluacionModalviewComponent } from '../../modals/evaluacion-modalview/evaluacion-modalview.component';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 import { CompetencyCount, EvaluationCompetencySummaryGetI } from '../../interface/evaluacion-competencias.interface';
-import { HerlperService } from '../../../../services/appHelpers.service';
 import { ProtocolI } from '../../../mantenimiento/mantenimiento-options/protocolos/interface/protocolos.interface';
-import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
-import { MinutaService } from '../../../acuerdos/services/minuta.service';
-import { ListadoDocumentoComponent } from '../../../acuerdos/modals/listado-documento/listado-documento.component';
-import { MinutaEvaluacionCompetenciaComponent } from '../../../../templates/minuta-evaluacion-competencia/minuta-evaluacion-competencia.component';
+import { DocumentoMinuta, MinutaGetI } from '../../../acuerdos/interfaces/acuerdo.interface';
 import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 import { periodProcessGetI } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { HerlperService } from '../../../../services/appHelpers.service';
+import { ProtocolsServices } from '../../../mantenimiento/mantenimiento-options/protocolos/services/protocolo.service';
+import { MinutaService } from '../../../acuerdos/services/minuta.service';
+import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
-import { DocumentoMinuta, MinutaGetI } from '../../../acuerdos/interfaces/acuerdo.interface';
+import { EvaluationCompetencyServices } from '../../services/evaluacion-competencia.service';
+import { EvaluacionModalviewComponent } from '../../modals/evaluacion-modalview/evaluacion-modalview.component';
 import { MissingCollaboratorModalComponent } from '../../modals/missing-collaborator-modal/missing-collaborator-modal.component';
-import { SnackBars } from '../../../../services/snackBars.service';
+import { ListadoDocumentoComponent } from '../../../acuerdos/modals/listado-documento/listado-documento.component';
+import { MinutaEvaluacionCompetenciaComponent } from '../../../../templates/minuta-evaluacion-competencia/minuta-evaluacion-competencia.component';
+import { CollaboratorServices } from '../../../mantenimiento/mantenimiento-options/colaboradores/services/colaboradores.service';
+import { LoaderComponent } from '../../../../../../helpers/components/loader/loader.component';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-evalucion-competencias',
+  selector: 'app-evaluacion-provisional',
   standalone: true,
-  imports: [MaterialComponents, ClassImports],
-  templateUrl: './evalucion-competencias.component.html',
-  styleUrl: './evalucion-competencias.component.css'
+  imports: [MaterialComponents, ClassImports, LoaderComponent],
+  templateUrl: './evaluacion-provisional.component.html',
+  styleUrl: './evaluacion-provisional.component.css'
 })
-export class EvalucionCompetenciasComponent implements OnInit {
-
-  userLogged!: loggedUserI
+export class EvaluacionProvisionalComponent implements OnInit {
+  
+  userLogged!: CollaboratorsGetI // user provisional
+  userLoggedLocal!: loggedUserI // user logged
   selectGroup: boolean = true
   supervisorWithSubordinates!: CollaboratorsGetI[]
   evaluationCompetenciesCount: CompetencyCount = { tienen: 0, noTienen: 0 }
   evaluationsCompetencies!: EvaluationCompetencySummaryGetI[]
   protocol!: ProtocolI
-  recinto: string = ''
   docName: string = ''
   charge: boolean = true
   newMinuta!: { existe: Boolean, docCargado: Boolean }
@@ -49,24 +51,25 @@ export class EvalucionCompetenciasComponent implements OnInit {
   activeProcess!: periodProcessGetI 
 
   constructor(
+    private router: Router,
     public dialog: MatDialog,
-    public snackBar: SnackBars,
     public appHelper: HerlperService,
     private protocolService: ProtocolsServices,
     private minutaService: MinutaService,
     public systemInformation: systemInformationService,
     private periodProcessService: PeriodsProcessServices,
+    private colaboratorsService: CollaboratorServices,
     private evaluationCompetencyService: EvaluationCompetencyServices,
   ) {
-    this.userLogged = systemInformation.localUser
-    this.getMyMinuta()
 
+    this.userLoggedLocal = systemInformation.localUser 
+    
     effect(() => {
       this.periodo = this.systemInformation.activePeriod();
       const rolActivo = this.systemInformation.activeRol();
-
+      
       if (this.periodo && this.periodo.idPeriodo) {
-        this.getMinuta(this.periodo.idPeriodo);
+        this.getUser()
       }
 
       if (rolActivo && rolActivo.nombre) {
@@ -77,16 +80,21 @@ export class EvalucionCompetenciasComponent implements OnInit {
     this.getActiveAgreementPeriod()
   }
 
-  filterByRecinto() {
-    this.page = 1
-    this.getSupervisorWithSubordinates(false)
+  getUser(){
+    this.colaboratorsService.getPersonByID(Number(this.userLoggedLocal.idSupliendoA)).subscribe((res: any)=>{
+      this.userLogged = res.data
+      
+      this.getMyMinuta()
+      this.getMinuta(this.periodo.idPeriodo);
+    })
   }
 
-  getMyMinuta() {
-    this.minutaService.getMinuta('', "evaluacion", true, 1, 5).subscribe((resp: any) => {
+  getMyMinuta() { // necesario hacer la llamada por usuario digase por un id no por el token 
+    this.minutaService.getMinuta('', "evaluacion", true, 1, 5, true).subscribe((resp: any) => {
       this.minuta = resp.data
     })
   }
+
 
   getActiveAgreementPeriod() {
     this.periodProcessService.getPeriodProcessesActive()
@@ -112,13 +120,14 @@ export class EvalucionCompetenciasComponent implements OnInit {
 
   getSupervisorWithSubordinates(moveFronPagintation: boolean) {
     this.charge = true
+
     this.evaluationsCompetencies = this.supervisorWithSubordinates = []
     if (moveFronPagintation == false) {
       this.evaluationCompetenciesCount = { tienen: 0, noTienen: 0 }
       this.pagination = { currentPage: 0, totalItem: 0, totalPage: 0 }
     }
 
-    this.evaluationCompetencyService.getEvaluationCompetencies(this.selectGroup, this.filter, this.page, 10, this.recinto).subscribe((res: any) => {
+    this.evaluationCompetencyService.getEvaluationCompetenciesBySupInterino( this.filter, this.page).subscribe((res: any) => {
       this.charge = false
 
       let { currentPage, totalItem, totalPage } = res
@@ -143,6 +152,8 @@ export class EvalucionCompetenciasComponent implements OnInit {
 
   openModalListadoDocumentos(): void {
     const nombreCompleto = 'Minuta de Evaluación de Competencias';
+    const esSupIn = true;
+
     let documentos: DocumentoMinuta[] = []
 
     if (this.minuta[0].documentos) {
@@ -154,7 +165,8 @@ export class EvalucionCompetenciasComponent implements OnInit {
         type: 2,
         idCollaborator: Number(this.userLogged.idPersona),
         nombreCompleto,
-        documentos
+        documentos,
+        esSupIn
       }
     })
 
@@ -165,24 +177,14 @@ export class EvalucionCompetenciasComponent implements OnInit {
   }
 
   openModalTemplateMinuta(): void {
-    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0 } })
+    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0, esSupInterino: true } })
   }
 
   getMinuta(period: number) {
-    this.minutaService.getMinutaExistente(period, true)
+    this.minutaService.getMinutaExistenteByPerson(this.userLogged.idPersona, period, true)
       .subscribe((res: any) => {
         this.newMinuta = res;
       })
-  }
-  
-  async deleteCompetency(id: number) {
-    let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
-    
-    if (removeDecision) {
-      this.snackBar.snackbarLouder(true)
-      this.evaluationCompetencyService.deleteEvaluacion(id)
-        .subscribe((res: any) => { this.appHelper.handleResponse(res, () => this.getSupervisorWithSubordinates(false),) })
-    }
   }
 
   //Metodo para llamar a la siguiente pagina 

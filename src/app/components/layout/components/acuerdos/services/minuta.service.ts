@@ -11,9 +11,15 @@ import { EvaluationCompetencyTestI } from '../../evaluacion-competencias/interfa
 @Injectable({ providedIn: 'root' })
 export class MinutaService {
   private token: string;
+  private tokenIntra: string;
+
   private baseURL: string;
   private headers: HttpHeaders;
+  private headersIntra: HttpHeaders;
+  
   private header: { headers: HttpHeaders };
+  private headerIntra: { headers: HttpHeaders };
+  
   usuario: loggedUserI;
 
   constructor(
@@ -22,19 +28,30 @@ export class MinutaService {
     private systemInformation: systemInformationService,
   ) {
     this.token = JSON.parse(sessionStorage.getItem("userToken")!);
+    this.tokenIntra = JSON.parse(sessionStorage.getItem("tokenIntranet")!);
+
     this.baseURL = this.systemInformation.getURL;
+
     this.headers = new HttpHeaders({ 'Authorization': this.token });
+    this.headersIntra = new HttpHeaders({ 'Authorization': this.tokenIntra });
+    
     this.header = { headers: this.headers };
+    this.headerIntra = { headers: this.headersIntra };
+
     this.usuario = systemInformation.localUser;
   }
 
   //peticion para traer todos las minutas
-  public getMinuta(term: string, typeMinuta: string = 'Acuerdo', sup: boolean = true, page: number = 1, totalPage: number = 10) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?tipo=${typeMinuta}&esSupervisor=${sup}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
+  public getMinuta(term: string, typeMinuta: string = 'Acuerdo', sup: boolean = true, page: number = 1, totalPage: number = 10, esSupervisorInterino: boolean = false,) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?tipo=${typeMinuta}&esSupervisorInterino=${esSupervisorInterino}&esSupervisor=${sup}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
   }
   
-  public getMinutaEvaluacion( page: number = 1, totalPage: number = 10) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/por-supervisor?tipo=evaluacion&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
+  // public getMinutaProvisional(term: string, typeMinuta: string = 'Acuerdo', sup: boolean = true, page: number = 1, totalPage: number = 10) {
+  //   return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?tipo=${typeMinuta}&esSupervisor=${sup}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.headerIntra));
+  // }
+  
+  public getMinutaEvaluacion(esSupIn: boolean = false, page: number = 1, totalPage: number = 10) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/por-supervisor?tipo=evaluacion&esSupervisorInterino=${esSupIn}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
   }
 
   public getMinutaById(minutaId: number) {
@@ -43,6 +60,10 @@ export class MinutaService {
 
   public getMinutaExistente(period: number, isEvaluation: boolean, periodProcessId: number = 0) {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/validar-existencia?periodoId=${period}&supervisorId=${Number(this.usuario.idPersona)}&esUnaEvaluacion=${isEvaluation}&periodoAcuerdoId=${periodProcessId}`, this.header));
+  }
+
+  public getMinutaExistenteByPerson(userId: number, period: number, isEvaluation: boolean, periodProcessId: number = 0) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/validar-existencia?periodoId=${period}&supervisorId=${userId}&esUnaEvaluacion=${isEvaluation}&periodoAcuerdoId=${periodProcessId}`, this.header));
   }
 
   //peticion para hacer el post de una minuta

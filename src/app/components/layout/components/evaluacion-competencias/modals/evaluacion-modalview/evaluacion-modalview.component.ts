@@ -20,7 +20,6 @@ export class EvaluacionModalviewComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<EvaluacionModalviewComponent>,
     private evaluationCompetencyService: EvaluationCompetencyServices,
-
     @Inject(MAT_DIALOG_DATA) public col: { colaborador: number }
   ) { }
 

@@ -49,7 +49,7 @@ export class AsignationAgreementServices {
     public getTypeAgreement() {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/tipos-acuerdos`, this.header));
     }
-
+    
     // endpoint para obtener asignaciones por la cedula del colaborador
     public getAsignationAgreementsByDNI(dni: string) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/AsignacionAcuerdo/colaborador/${dni}`, this.header));
@@ -58,5 +58,9 @@ export class AsignationAgreementServices {
     //duracion del acuerdo
     public getAgreementDurations() {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/duracion-acuerdos`, this.header));
+    }
+
+    public postChangePersonStatus(statusObj: {idPersona: number, idEstado: number}) {
+        return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Colaboradores/${statusObj.idPersona}/cambiar-estatus`, statusObj, this.header));
     }
 }

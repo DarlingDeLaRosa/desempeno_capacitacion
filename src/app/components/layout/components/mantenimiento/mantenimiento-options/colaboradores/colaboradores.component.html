@@ -347,11 +347,10 @@
                     <th class="headerCell">Cargo</th>
                     <th class="headerCell">Estado</th>
                     <th class="headerCell">G.Ocupacional</th>
-                    <th class="headerCell" style="width: 5%;"></th>
-                    <th class="headerCell" style="width: 5%;"></th>
-                    <th class="headerCell" style="width: 7%; padding-right: 15px;">
+                    <th class="headerCell">
                         <div *ngIf="!collaborators || isLoading ==  true" class="loader"></div>
                     </th>
+                    <th class="headerCell"></th>
                 </tr>
             </thead>
             <tbody *ngIf="collaborators && collaborators.length > 0; else noElements">
@@ -360,33 +359,60 @@
                         {{collaborator.persona.apellidos | titlecase }}</td>
                     <td class="dataIndiCell">{{collaborator.persona.recinto.nombre}}
                         ({{collaborator.persona.recinto.siglas}})</td>
-                    <td class="dataIndiCell" [matTooltip]="collaborator.persona.cargo.nombre | titlecase">{{collaborator.persona.cargo.nombre | titlecase}}</td>
+                    <td class="dataIndiCell" [matTooltip]="collaborator.persona.cargo.nombre | titlecase">
+                        {{collaborator.persona.cargo.nombre | titlecase}}</td>
                     <td class="dataIndiCell">{{collaborator.persona.estadoObj.nombre}}</td>
-                    <td class="dataIndiCell">{{collaborator.persona.grupoObj ? collaborator.persona.grupoObj.nombre
-                        :
+                    <td class="dataIndiCell">{{collaborator.persona.grupoObj ? collaborator.persona.grupoObj.nombre :
                         'No Asignado'}}</td>
                     <td class="dataIndiCell">
-                        <mat-slide-toggle [matTooltip]="collaborator.persona.estadoObj.idEstado == 1 ? 'Desactivar colaborador.': 'Activar colaborador.' " color="#004b8d" [checked]="collaborator.persona.estadoObj.idEstado === 1"
+                        <mat-slide-toggle
+                            [matTooltip]="collaborator.persona.estadoObj.idEstado == 1 ? 'Desactivar colaborador.': 'Activar colaborador.' "
+                            color="#004b8d" [checked]="collaborator.persona.estadoObj.idEstado === 1"
                             (click)="changeStatus(collaborator)"></mat-slide-toggle>
                     </td>
-                    <td class="dataIndiCell"><mat-icon matTooltip="Editar colaborador." *ngIf="collaborator.persona.estadoObj.idEstado == 1" (click)="setValueToEdit(collaborator)"
-                            class="editIcon">edit</mat-icon></td>
-                    <td class="dataIndiCell"><mat-icon matTooltip="Eliminar colaborador." *ngIf="collaborator.persona.estadoObj.idEstado == 1"
-                            (click)="deleteCollaborator(collaborator.idUsuario, collaborator.idPersona)"
-                            class="removeIcon">delete</mat-icon></td>
+
+                    <td class="dataIndiCell">
+                        <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
+                        <mat-menu #menu="matMenu">
+
+                            <div class="ItemMiniMenu"  *ngIf="collaborator.persona.estadoObj.idEstado == 1 && collaborator.rol.nombre == 'Supervisor' || collaborator.persona.estadoObj.idEstado == 1 && collaborator.rol.nombre == 'Encargado' "
+                                (click)="openModalviewSup(collaborator)">
+                                <mat-icon style="color: blue;">list</mat-icon>
+                                <h4> Ver Supervisados </h4>
+                            </div>
+
+                            <div class="ItemMiniMenu editarHover" 
+                                *ngIf="collaborator.persona.estadoObj.idEstado == 1"
+                                (click)="setValueToEdit(collaborator)">
+                                <mat-icon class="editIcon">edit</mat-icon>
+                                <h4> Editar </h4>
+                            </div>
+
+                            <div class="ItemMiniMenu eliminarHover"
+                                *ngIf="collaborator.persona.estadoObj.idEstado == 1"
+                                (click)="deleteCollaborator(collaborator.idUsuario, collaborator.idPersona)">
+                                <mat-icon class="removeIcon">delete</mat-icon>
+                                <h4> Eliminar </h4>
+                            </div>
+
+                        </mat-menu>
+                    </td>
+
                 </tr>
             </tbody>
             <tfoot *ngIf="pagination && pagination.totalPage">
                 <tr class="paginatorRow">
-                    <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
+                    <ng-container *ngFor="let td of [1, 3, 4, 5, 6]">
                         <td class="dataIndiCell"></td>
                     </ng-container>
                     <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
                     <td class="paginationCell">
                         <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
-                            <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
+                            <mat-icon class="rowIcon" matTooltip="Pagina anterior."
+                                (click)="previousPage()">navigate_before</mat-icon>
                             <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-                            <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
+                            <mat-icon class="rowIcon" matTooltip="Pagina siguiente."
+                                (click)="nextPage()">navigate_next</mat-icon>
                         </span>
                     </td>
                 </tr>
@@ -396,10 +422,11 @@
     <ng-template #noElements>
         <tbody>
             <tr class="dataRow">
-                <td class="dataIndiCell" *ngIf="collaborators && collaborators.length == 0; else searching">No hay elementos que mostrar.</td>
+                <td class="dataIndiCell" *ngIf="collaborators && collaborators.length == 0; else searching">No hay
+                    elementos que mostrar.</td>
                 <ng-template #searching>
                     <td class="dataIndiCell">Buscando elementos.</td>
-                  </ng-template>
+                </ng-template>
                 <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6, 7]">
                     <td class="dataIndiCell"></td>
                 </ng-container>

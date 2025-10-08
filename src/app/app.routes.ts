@@ -40,6 +40,9 @@ import { VerAcuerdoComponent } from './components/layout/components/acuerdos/mod
 import { VerComportamientosProbatoriosComponent } from './components/layout/components/acuerdos/pages/ver-comportamientos-probatorios/ver-comportamientos-probatorios.component';
 import { ReportesOuletComponent } from './components/layout/components/reportes/reportes-oulet.component';
 import { ReportDashboardComponent } from './components/layout/components/reportes/pages/report-dashboard/report-dashboard.component';
+import { EvaluacionProvisionalComponent } from './components/layout/components/evaluacion-competencias/pages/evaluacion-provisional/evaluacion-provisional.component';
+import { EvaluacionModalviewComponent } from './components/layout/components/evaluacion-competencias/modals/evaluacion-modalview/evaluacion-modalview.component';
+import { ViewSupervisadoEvaluacionComponent } from './components/layout/components/evaluacion-competencias/pages/view-supervisado-evaluacion/view-supervisado-evaluacion.component';
 
 export const routes: Routes = [
   {
@@ -172,6 +175,14 @@ export const routes: Routes = [
             component: MinutaComponent,
           },
         ]
+      },
+      {
+        path: 'evaluacion-provisional',
+        component: EvaluacionProvisionalComponent,
+      },
+      {
+        path: 'mi-evaluacion',
+        component: ViewSupervisadoEvaluacionComponent,
       },
       {
         path: 'mantenimiento',

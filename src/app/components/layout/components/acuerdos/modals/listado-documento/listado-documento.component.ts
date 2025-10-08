@@ -48,6 +48,7 @@ export class ListadoDocumentoComponent implements OnInit {
       idCollaborator: number,
       nombreCompleto: string,
       documentos: DocumentoMinuta[],
+      esSupIn?: boolean,
       estado?: number,
     }
   ) {
@@ -75,7 +76,7 @@ export class ListadoDocumentoComponent implements OnInit {
   }
 
   getMinutasDoc() {
-    this.minutaservice.getMinuta('', "evaluacion", true, 1, 5).subscribe((resp: any) => {
+    this.minutaservice.getMinuta('', "evaluacion", true, 1, 5, this.data.esSupIn ).subscribe((resp: any) => {
       this.minuta = resp.data
     })
   }

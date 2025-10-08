@@ -11,7 +11,7 @@
      <h3>Competencia : {{evaluationData[competency].grado.competencia.nombre}} ({{evaluationData[competency].grado.tipoGrado.nombre}})</h3>
 
     <div class="competencia" >
-        <p>{{evaluationData[competency].grado.competencia.descripcion}}</p>
+        <p style="line-height: 26px;">{{evaluationData[competency].grado.competencia.descripcion}}</p>
     </div>
 
     <br>
@@ -19,7 +19,7 @@
     <h3>Comportamientos y calificaciones</h3>
     <div class="comportamientoCalificacion" *ngFor="let evaluation of this.evaluationData[competency].evaluacionCompetenciasDetalles">
         <div class="comportamiento">
-            <p>{{evaluation.comportamiento.nombre}}</p>
+            <p style="line-height: 22px;">{{evaluation.comportamiento.nombre}}</p>
         </div>
 
         <div class="iconContainer">

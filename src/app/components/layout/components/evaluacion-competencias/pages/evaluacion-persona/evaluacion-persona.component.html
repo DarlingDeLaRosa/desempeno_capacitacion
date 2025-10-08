@@ -1,19 +1,22 @@
 <div class="fuctionContent">
     <h2>Evaluación de competencias</h2>
 
-    <button class="backButton" mat-stroked-button [routerLink]="['/layout/evaluacion-competencias']"><mat-icon
+    <button class="backButton" *ngIf="type == '1'" mat-stroked-button [routerLink]="['/layout/evaluacion-competencias']"><mat-icon
+            class="backIcon">arrow_back</mat-icon>Listado de Colaboradores</button>
+
+    <button class="backButton" *ngIf="type == '2'" mat-stroked-button [routerLink]="['/layout/evaluacion-provisional']"><mat-icon
             class="backIcon">arrow_back</mat-icon>Listado de Colaboradores</button>
 </div>
 
 <div class="staticInfoContainer" *ngIf="person">
     <span>
         <h3>Nombre Servidor Evaluado</h3>
-        <h4>{{person.nombre}} {{person.apellidos}}</h4>
+        <h4>{{person.nombre | titlecase}} {{person.apellidos | titlecase}}</h4>
         <h5>{{person.cargo.nombre}}</h5>
     </span>
     <span>
         <h3>Nombre Supervisor Inmediato</h3>
-        <h4>{{person.supervisorObj.nombre}} {{person.supervisorObj.apellidos}}</h4>
+        <h4>{{person.supervisorObj.nombre | titlecase}} {{person.supervisorObj.apellidos | titlecase}}</h4>
         <h5>{{person.supervisorObj.cargoObj.nombre}}</h5>
     </span>
     <span>
@@ -28,13 +31,14 @@
 
 <app-loader-box *ngIf="!person"></app-loader-box>
 
-<form [formGroup]="evaluationCompetencyForm" (submit)="saveChanges()" *ngIf="!loading" >
+<form [formGroup]="evaluationCompetencyForm" (submit)="saveChanges()" *ngIf="!loading">
     <div formArrayName="evaluacionCompetenciasDetalles">
         <div *ngFor="let competency of evaluationCompetencyForm.get('evaluacionCompetenciasDetalles')?.value , let i = index"
             [formGroupName]="i">
-            <h3 style="margin: 15px 0 15px 0 ;">Competencia: {{competency.competenciaNombre}} - ({{competency.grado}})</h3>
+            <h3 style="margin: 15px 0 15px 0 ;">Competencia: {{competency.competenciaNombre}} - ({{competency.grado}})
+            </h3>
             <div class="competencia">
-                <p>{{competency.competenciaDescripcion}}</p>
+                <p style="line-height: 26px;">{{competency.competenciaDescripcion}}</p>
             </div>
 
             <h3 style="margin: 15px 0 15px 0 ;">Evalúe la frecuencia de los diferentes comportamientos. </h3>
@@ -46,13 +50,14 @@
                     <h4>Poca veces</h4>
                     <h4>Frecuentemente</h4>
                     <h4>Casi siempre</h4>
+                    
                     <h4>Siempre</h4>
                 </div>
                 <div formArrayName="comportamientos">
                     <div class="evaluacionComportamiento"
                         *ngFor="let behavior of competency.comportamientos ; let c = index" [formGroupName]="c">
                         <div class="comportamiento">
-                            <p>{{behavior.nombre}}</p>
+                            <p style="line-height: 22px;">{{behavior.nombre}}</p>
                         </div>
                         <label class="radioGroupComportamiento"><input type="radio" [value]="2"
                                 formControlName="calificacionComportamientoId" /></label>
@@ -76,5 +81,5 @@
 
 <div *ngIf="loading">
     <h3 style="margin: 15px 0 15px 0 ;">Competencias</h3>
-    <app-loader-box></app-loader-box>
+    <app-loader [supp]="1"></app-loader>
 </div>

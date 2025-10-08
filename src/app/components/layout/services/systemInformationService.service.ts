@@ -50,7 +50,6 @@ export class systemInformationService {
         resolve();
       } else {
         const interval = setInterval(() => {
-          // attempts++;
 
           this.TokenIntranet = sessionStorage.getItem("tokenIntranet") ?? '';
           if (this.TokenIntranet) {
@@ -101,9 +100,15 @@ export class systemInformationService {
   get localUser(): any {
     const tokenUser = sessionStorage.getItem("userToken");
     if (!tokenUser) return null;
-    console.log(jwtDecode(tokenUser));
-    
+    // console.log(jwtDecode(tokenUser));
     return jwtDecode(tokenUser);
+  }
+
+  get LocalUserIntranet(): any {
+    const tokenUser2 = sessionStorage.getItem("tokenIntranet");
+    if (!tokenUser2) return null;
+
+    return jwtDecode(tokenUser2);
   }
 
   getMonths(month: number): string {

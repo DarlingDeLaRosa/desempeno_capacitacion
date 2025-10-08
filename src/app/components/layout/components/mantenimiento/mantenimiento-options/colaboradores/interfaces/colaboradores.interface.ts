@@ -29,7 +29,8 @@ export interface CollaboratorSummaryGetI {
     apellidos: string
     cedula: string
     id: number
-    nombres: string
+    nombres: string    
+    recinto: string
     personaIntranetId: number
     usuario: string
 }

@@ -23,7 +23,7 @@ export class MinutaEvaluacionCompetenciaComponent implements OnInit {
     private minutaservice: MinutaService,    
     public appHelper: HerlperService,
     private dialogRef: MatDialogRef<MinutaEvaluacionCompetenciaComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {idMinuta: number}
+    @Inject(MAT_DIALOG_DATA) public data: {idMinuta: number, esSupInterino: boolean }
   ) {
 
   }
@@ -37,7 +37,9 @@ export class MinutaEvaluacionCompetenciaComponent implements OnInit {
   }
 
   getMinuta() {
-    this.minutaservice.getMinutaEvaluacion(1, 500).subscribe((resp: any) => {
+    let esi: boolean = false
+    if (this.data.esSupInterino) { esi = true }
+    this.minutaservice.getMinutaEvaluacion(esi, 1, 500).subscribe((resp: any) => {
       this.minuta = resp.data[0]
       
       this.presentes.push({

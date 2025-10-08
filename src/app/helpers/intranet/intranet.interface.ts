@@ -14,9 +14,11 @@ export interface loggedUserI{
   Firstname: string;
   Id: string;
   idPersona: number;
+  SupervisorInterino: string
   IdRecinto: string;
   Lastname: string;
   Position: string;
+  idSupliendoA: string;
   RecintoSigla: string;
   IdDepartamento:string;
   Unidad: string;

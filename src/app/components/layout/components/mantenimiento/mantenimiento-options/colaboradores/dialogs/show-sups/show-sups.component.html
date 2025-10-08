@@ -1,0 +1,57 @@
+<div class="modal" *ngIf="collaboratorData; else cargando">
+    
+    <h2 style="margin: 0 0 10px 0;">Supervisados.</h2>
+    
+    <h4 style="margin: 5px 0;">Listado de supervisados de: <strong>{{data.name | titlecase}}</strong></h4>
+    <div class="comportamientoCalificacion">
+
+        <div class="table-container" style="margin-top: 10px;">
+            <table>
+                <thead class="headerTable">
+                    <tr class="headerRow">
+                        <th class="headerCell">Nombre</th>
+                        <th class="headerCell">Sexo</th>
+                        <th class="headerCell">Correo electronico</th>
+                        <th class="headerCell">Cargo</th>
+                        <th class="headerCell">G. Ocupacional</th>
+                        <th class="headerCell">Recinto</th>
+                        
+                    </tr>
+                </thead>
+                <tbody *ngIf="collaboratorData && collaboratorData.length > 0">
+                    <tr class="dataRow" *ngFor="let subordinate of collaboratorData">
+
+                        <td class="dataIndiCell" [matTooltip]="subordinate.nombre + ' ' + subordinate.apellidos | titlecase">{{subordinate.nombre | titlecase }} {{subordinate.apellidos | titlecase}}</td>
+                        <td class="dataIndiCell">
+                            <div style="display: flex; justify-content: center;"> {{subordinate.sexo}}</div>
+                        </td>
+                        <td class="dataIndiCell">{{subordinate.usuario | titlecase }}</td>
+                        <td class="dataIndiCell" [matTooltip]="subordinate.cargo.nombre" >{{subordinate.cargo.nombre | titlecase }}</td>
+                        <td class="dataIndiCell">
+                            <div style="display: flex; justify-content: center;"> {{subordinate.grupoObj.nombre | uppercase}} </div>
+                        </td>
+                        <td class="dataIndiCell">
+                            <div style="display: flex; justify-content: center;">
+                                {{subordinate.recinto.siglas | uppercase }}
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+    <div style="display: flex ; justify-content: end; margin-top: 15px;">
+        <button class="btnCerrar" (click)="closeModal()">Cerrar</button>
+    </div>
+</div>
+
+<ng-template #cargando>
+    <div class="container-loaderMother" style="padding: 30px;">
+        <div class="loaderMother"></div>
+        <div class="loading-text">Cargando...</div>
+    </div>
+</ng-template>

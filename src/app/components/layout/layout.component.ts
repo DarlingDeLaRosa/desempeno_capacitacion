@@ -17,6 +17,7 @@ import { HerlperService } from './services/appHelpers.service';
 export class LayoutComponent implements OnInit{
 
   usuario!: loggedUserI
+  provitionalEvaluator: boolean = true
   improvePlan!: {fechaFin: string, fechaInicio: string }
   evaluationComptency!: {fechaFin: string, fechaInicio: string }
 

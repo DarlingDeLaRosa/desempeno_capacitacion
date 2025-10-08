@@ -1,12 +1,39 @@
-<div class="cards-container" *ngFor="let course of [0, 1, 2, ]">
-  <div class="card" *ngFor="let course of [0, 1, 2, 3,]">
-    <div class="card-details">
-      <div class="line" style="display: flex; align-items: center; padding-left: 10px;">
+<div class="cards-loader-container" *ngFor="let course of quatityRow" >
+
+  <div class="card" *ngFor="let course of quatityColunm">
+
+    <div class="card-details" style="height: auto;">
+      
+      <div class="line1" style="display: flex; align-items: center; padding-left: 10px;">
         <h3 class="loading-text">Cargando...</h3>
-      </div><br>
+      </div>
+      
+      <br>
+      
       <div class="line2"></div><br>
-      <div class="line3"></div><br>
-      <div class="line3"></div><br>
+      <div class="line3"></div>
+
+      <br *ngIf="type() == undefined">
+
+      <div class="line3" *ngIf="supp() != undefined"></div>
+      <br *ngIf="supp() != undefined">
+      <br *ngIf="supp() != undefined">
+
+      <div class="line2" *ngIf="supp() != undefined"></div>
+      <br *ngIf="supp() != undefined">
+      <br *ngIf="supp() != undefined">
+
+      <div class="line1" *ngIf="supp() != undefined"></div>
+      <br *ngIf="supp() != undefined">
+
+      <div class="line5" *ngIf="supp() != undefined"></div>
+      <br *ngIf="supp() != undefined">
+
+      <div class="line2" *ngIf="supp() != undefined"></div>
+      <br *ngIf="supp() != undefined">
     </div>
+
   </div>
 </div>
+
+

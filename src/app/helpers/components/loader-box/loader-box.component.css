@@ -12,17 +12,6 @@
     margin-top: 10px;
 }
 
-.staticInfoContainer {
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    gap: 10px;
-}
-
-.staticInfoContainer h3 {
-    margin-bottom: 5px;
-    -webkit-text-stroke: 0.75px black;
-}
-
 .spanSeparation {
     display: flex;
     gap: 2px;

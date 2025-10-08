@@ -1,12 +1,12 @@
 <div class="modal" *ngIf="missigCollaboratorData; else cargando">
     
-    <h2>Colaboradores pendientes de evaluación.</h2>
+    <h2 style="margin-bottom: 15px;">Colaboradores pendientes de evaluación.</h2>
 
-    <div style="display: flex; justify-content: end; ">
+    <div style="display: flex; justify-content: end; margin-bottom: -20px; " *ngIf="userLogged.RecintoSigla == 'REC'">
 
-        <mat-form-field appearance="fill" style="width: 20%;">
+        <mat-form-field appearance="fill" >
             <mat-label>Recintos</mat-label>
-            <mat-select [(ngModel)]="recinto" (selectionChange)="missingCollaborator()">
+            <mat-select [(ngModel)]="recinto" (selectionChange)="filterByRecinto()">
                 <mat-option value="">Todos</mat-option>
                 <mat-option value="fem">FEM</mat-option>
                 <mat-option value="eph">EPH</mat-option>
@@ -29,7 +29,7 @@
 
     <div class="comportamientoCalificacion">
 
-        <div class="table-container" style="margin-top: 10px;">
+        <div class="table-container">
             <table>
                 <thead class="headerTable">
                     <tr class="headerRow">
@@ -48,35 +48,34 @@
                 </thead>
                 <tbody *ngIf="missigCollaboratorData && missigCollaboratorData.length > 0">
                     <tr class="dataRow" *ngFor="let subordinate of missigCollaboratorData">
-                        <td class="dataIndiCell">{{subordinate.nombres | titlecase}} {{subordinate.apellidos |
+                        <td class="dataIndiCell" [matTooltip]="subordinate.nombres + ' ' + subordinate.apellidos | titlecase">{{subordinate.nombres | titlecase}} {{subordinate.apellidos |
                             titlecase}}</td>
-                        <!-- <td class="dataIndiCell">
-                        </td> -->
                         <td class="dataIndiCell">{{subordinate.usuario}}</td>
                         <td class="dataIndiCell">
                             <div style="display: flex; justify-content: center;"> {{subordinate.recinto | uppercase}}
                             </div>
                         </td>
-                        <td class="dataIndiCell"></td>
+                        <td class="dataIndiCell" [matTooltip]="subordinate.supervisor.nombres + ' ' + subordinate.supervisor.apellidos | titlecase">{{subordinate.supervisor.nombres | titlecase}} {{subordinate.supervisor.apellidos | titlecase}}</td>
                     </tr>
 
                 </tbody>
 
                 <tfoot *ngIf="pagination && pagination.totalPage">
                     <tr class="paginatorRow">
-                        <ng-container *ngFor="let td of [1, 2 ]">
+                        <ng-container *ngFor="let td of [1, 2, 3]">
                             <td class="dataIndiCell"></td>
                         </ng-container>
-                        <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span>
-                        </td>
-                        <td class="paginationCell">
-                            <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
-                                <mat-icon class="rowIcon" matTooltip="Pagina anterior."
-                                    (click)="previousPage()">navigate_before</mat-icon>
-                                <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-                                <mat-icon class="rowIcon" matTooltip="Pagina siguiente."
-                                    (click)="nextPage()">navigate_next</mat-icon>
-                            </span>
+                        
+                        <td class="paginationCell" >
+                            <div style="display: flex; justify-content: space-between;">
+                                <span style="color: #888;">{{pagination.totalItem}} Items</span>
+                                
+                                <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
+                                    <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
+                                    <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
+                                    <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
+                                </span>
+                            </div>
                         </td>
                     </tr>
                 </tfoot>

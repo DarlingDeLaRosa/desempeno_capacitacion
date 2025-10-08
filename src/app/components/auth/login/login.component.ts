@@ -5,6 +5,8 @@ import { systemInformationService } from '../../layout/services/systemInformatio
 import { IntranetServices } from '../../../helpers/intranet/intranet.service';
 import { ClassImports } from '../../../helpers/class.components';
 import { SnackBars } from '../../layout/services/snackBars.service';
+import { jwtDecode } from 'jwt-decode';
+import { loggedUserI } from '../../../helpers/intranet/intranet.interface';
 
 @Component({
   selector: 'app-login',
@@ -55,14 +57,28 @@ export class LoginComponent implements OnInit {
 
     this.intranService.postAutorizacion(this.auth).subscribe((resp: any) => {
       if (resp.success === true) {
+        
         this.systeminformation.userRol.set(resp.data.rol)
         this.systeminformation.userSystem.set(resp.data)
         this.tokenSystem = resp.token;
-        // this.systeminformation.setUserToken(this.tokenSystem)
+        
         sessionStorage.setItem("userToken", JSON.stringify(this.tokenSystem));
+        const user: loggedUserI = jwtDecode(this.tokenSystem)
+        
+        // this.systeminformation.setUserToken(this.tokenSystem)
         this.isLoading = false;
-
-        this.router.navigate(['/layout/evaluacion-competencias']);
+        
+        if (user.role != 'supervisado') {
+          this.router.navigate(['/layout/evaluacion-competencias']);
+        } 
+        
+        if(user.role == 'supervisado' && user.SupervisorInterino == 'True'){
+          this.router.navigate(['/layout/mi-evaluacion']);
+        }
+        
+        if(user.role == 'supervisado' && user.SupervisorInterino == 'False'){
+          this.router.navigate(['/layout/evaluacion-provisional']);
+        }
         
         // this.router.navigate(['/layout/acuerdos']);
         // this.systeminformation.Datos()

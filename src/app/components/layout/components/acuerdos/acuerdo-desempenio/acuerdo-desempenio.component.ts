@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MaterialComponents } from '../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../helpers/class.components';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,14 +25,18 @@ import { PaginationI } from '../../../../interfaces/generalInteerfaces';
   styleUrl: './acuerdo-desempenio.component.css'
 })
 export class AcuerdoDesempenioComponent implements OnInit {
+  
+  @ViewChild('carousel') carousel!: ElementRef<HTMLDivElement>;
 
   hijosList!: any[];
+  userLogged!: loggedUserI
   selectGroup: boolean = true
   isLoading: boolean = true;
   page: number = 1
   pagination!: PaginationI
   usuario!: loggedUserI
-  agreement!: Array<AcuerdoI> 
+  agreement!: Array<AcuerdoI>
+  charge: boolean = true
   searchTerm: string = '';
   activeProcess!: periodProcessGetI
 
@@ -42,13 +46,35 @@ export class AcuerdoDesempenioComponent implements OnInit {
     private agreementService: agreementService,
     public systemInformation: systemInformationService,
     private periodProcessService: PeriodsProcessServices,
-  ) { }
+  ) {
+
+    this.userLogged = systemInformation.localUser
+  }
 
   ngOnInit(): void {
     this.usuario = this.systemInformation.localUser;
     this.systemInformation.activeRol();
     this.getActiveAgreementPeriod()
     this.getAcuerdoByRol('');
+  }
+ 
+  steps = [
+    { title: 'Creación de acuerdos de colaboradores', status: 'in-progress', responsable: 'Darling De la Rosa' },
+    { title: 'Validación de acuerdos', status: '', responsable: 'Analista de evaluación del desempeño' },
+    { title: 'Validación de acuerdos de grupo ocupacional ( V )', status: '', responsable: 'Analista de planificación' },
+    { title: 'Documentación de acuerdos de desempeño', status: '', responsable: 'Darling De la Rosa' },
+    { title: 'Creación de minuta', status: '', responsable: 'Darling De la Rosa' },
+    { title: 'Validación de minuta', status: '', responsable: 'Analista de evaluación del desempeño' },
+    { title: 'Documentación de minuta', status: '', responsable: 'Darling De la Rosa' },
+    { title: 'Completada', status: '', responsable: '' },
+  ];
+
+  scrollLeft() {
+    this.carousel.nativeElement.scrollBy({ left: -250, behavior: 'smooth' });
+  }
+
+  scrollRight() {
+    this.carousel.nativeElement.scrollBy({ left: 250, behavior: 'smooth' });
   }
 
   getActiveAgreementPeriod() {
@@ -61,13 +87,15 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //Metodo para traer la lista de los hijos de los supervisores
   getAcuerdoByRol(term: string) {
     this.isLoading = true;
+
     this.agreementService.getAgreementByRol(term, this.selectGroup, this.page, 10).subscribe((resp: any) => {
+      this.isLoading = false;
+
       this.agreement = resp.data;
       let { currentPage, totalItem, totalPage } = resp
       this.pagination = { currentPage, totalItem, totalPage }
 
       // if (currentPage > totalPage) { this.page = 1 }
-      this.isLoading = false;
     })
   }
 
@@ -91,7 +119,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
       data: {
         type: 1,
         idCollaborator,
-        nombreCompleto, 
+        nombreCompleto,
         estado
       }
     })

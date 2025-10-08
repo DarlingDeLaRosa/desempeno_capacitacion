@@ -23,7 +23,7 @@ export class CollaboratorServices {
         this.token = JSON.parse(sessionStorage.getItem("tokenIntranet")!);
         this.systemId = this.systemInformation.getSistema;
         this.baseURL = this.systemInformation.getIntranetURL;
-        this.headers = new HttpHeaders({ 'Authorization': this.token });
+        this.headers = new HttpHeaders({ 'Authorization': `Bearer ${this.token}`});
         this.header = { headers: this.headers };
         this.userLogged = Number(systemInformation.localUser.IdRecinto)
     }
@@ -59,8 +59,12 @@ export class CollaboratorServices {
     public putChangePersonStatus(statusObj: {idPersona: number, idEstado: number}) {
         return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Persona/change_status`, statusObj, this.header));
     }
-
+    
     public getPersonFilterByName(name: string) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/filter/${name}`, this.header));
+    }
+
+    public getCollaboratorByIdSup(id: number) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/get_by_idsupervisor?idSupervidor=${id}`, this.header));
     }
 }

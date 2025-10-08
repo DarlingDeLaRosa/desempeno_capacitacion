@@ -14,15 +14,18 @@ import { HerlperService } from '../../../../services/appHelpers.service';
 import { EvaluationBehaviorsI, EvaluationCompetencyByIdI, EvaluationCompetencyGetI, EvaluationCompetencyI, getEvaluationCompetencyByIdI } from '../../interface/evaluacion-competencias.interface';
 import { LoaderBoxComponent } from '../../../../../../helpers/components/loader-box/loader-box.component';
 import { SnackBars } from '../../../../services/snackBars.service';
+import { LoaderComponent } from '../../../../../../helpers/components/loader/loader.component';
 
 @Component({
   selector: 'app-evaluacion-persona',
   standalone: true,
-  imports: [MaterialComponents, ClassImports, LoaderBoxComponent],
+  imports: [MaterialComponents, ClassImports, LoaderBoxComponent, LoaderComponent],
   templateUrl: './evaluacion-persona.component.html',
   styleUrl: './evaluacion-persona.component.css'
 })
 export class EvaluacionPersonaComponent implements OnInit {
+
+  type: string = ''
 
   constructor(
     private router: Router,
@@ -42,6 +45,14 @@ export class EvaluacionPersonaComponent implements OnInit {
       periodoId: new FormControl(0, Validators.required),
       idColaborador: new FormControl(0, Validators.required),
     })
+
+    this.route.queryParams.subscribe(params => {
+      this.collaboratorId = params['colaboradorId'];
+      this.type = params['type'];
+      
+      this.findCollaboratorEvaluation()
+    });
+
   }
 
   collaboratorId!: number;
@@ -52,10 +63,6 @@ export class EvaluacionPersonaComponent implements OnInit {
   evaluationCompetency: EvaluationCompetencyGetI[] = []
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.collaboratorId = params['colaboradorId'];
-      this.findCollaboratorEvaluation()
-    });
   }
 
   findCollaboratorEvaluation() {
