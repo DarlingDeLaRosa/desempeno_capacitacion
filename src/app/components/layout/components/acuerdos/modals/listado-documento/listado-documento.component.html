@@ -1,11 +1,11 @@
-<ng-container *ngIf="!documentosList && !data.documentos">
+<ng-container *ngIf="!data.documentosList && !data.documentos">
   <div class="container-loaderMother" style="padding: 25px;">
     <div class="loaderMother"></div>
     <div class="loading-text">Cargando...</div>
   </div>
 </ng-container>
 
-<div class="container" *ngIf="documentosList || data.documentos">
+<div class="container" *ngIf="data.documentosList || data.documentos">
 
   <div class="encabezado">
     <h2 style="margin-right: 15px;">{{data.nombreCompleto}}</h2>
@@ -17,8 +17,8 @@
   <p style="margin: 0px 0 15px 0;">Lista de documentos</p>
 
   <div class="documento-list">
-    <div *ngIf="documentosList">
-      <div *ngFor="let documento of documentosList" class="documento">
+    <div *ngIf="data.documentosList">
+      <div *ngFor="let documento of data.documentosList" class="documento">
         <div class="documento-info">
           <span class="documento-nombre">{{documento.nombre}}</span>
           <!-- <span class="documento-cargo">{{documento.fecha | date}}</span> -->
@@ -28,7 +28,7 @@
             <mat-icon class="listIcon">visibility</mat-icon>
           </button>
 
-          <button mat-icon-button (click)="deleteDocument(documento.idDocumento)">
+          <button *ngIf="data.flujoId == 4" mat-icon-button (click)="deleteDocument(documento.idDocumento)">
             <mat-icon style="color: red;">delete</mat-icon>
           </button>
         </div>
@@ -48,8 +48,7 @@
 
           <button mat-icon-button (click)="deleteDocument(documento.idDocumento)"
             *ngIf="appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && data.idCollaborator == idUserLogged 
-            || appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && rolUserLogged == 'Analista'
-            ">
+            || appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && rolUserLogged == 'Analista'">
             <mat-icon style="color: red;" [matTooltip]="'Eliminar Documento' + ' ' + documento.nombre">delete</mat-icon>
           </button>
         </div>
@@ -57,19 +56,19 @@
     </div>
 
     <div class="empty-list" *ngIf="
-    data.documentos != undefined && data.documentos.length == 0 && documentosList == undefined ||
-    data.documentos == undefined && documentosList != undefined && documentosList.length == 0
-    ">
-      <img src="nodata.jpg" alt="No se encontraron minutas.">
+    data.documentos != undefined && data.documentos.length == 0 && data.documentosList == undefined ||
+    data.documentosList != undefined && data.documentosList != undefined && data.documentosList.length == 0 ">
+      <img src="nodata.jpg" alt="No se encontraron documentos.">
     </div>
   </div>
 
   <!-- <div style="display: flex; gap: 5px" *ngIf="data.estado == 1"> -->
   <div style="display: flex; gap: 5px; margin-top: 15px;"
-    *ngIf="
-    documentosList != undefined &&
-    data.idCollaborator == idUserLogged && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) 
-    || data.documentos != undefined && data.documentos.length == 0 && data.idCollaborator == idUserLogged && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin)">
+    *ngIf="data.documentosList != undefined && data.documentosList.length < 10 && activeProcess != null && data.flujoId == 4 ||
+    data.documentos != undefined 
+     && data.documentos.length == 0 && data.idCollaborator == idUserLogged && evaluationComptency != undefined 
+     && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin)">
+
     <div class="file-upload-container" (click)="fileInput.click()">
       <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
       <span class="file-upload-name">
@@ -77,9 +76,23 @@
       </span>
       <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
     </div>
-    <div>
-      <mat-icon style="margin-top: 13px;" class="editIcon" (click)="enviarDatos()">send</mat-icon>
-    </div>
+
+    <button (click)="enviarDatos()"
+      style="border: none; cursor: pointer; display: grid; place-items: center; background-color: #4caf4f36; border-radius: 10px; padding: 0 10px;">
+      <mat-icon class="editIcon">send</mat-icon>
+    </button>
+
+  </div>
+
+  <div style="display: flex; justify-content: center; align-items: center;" *ngIf="data.flujoId != 4 && data.type == 1">
+    <mat-icon style="color: #aaa;">warning</mat-icon> &nbsp;
+    <h4 style="color: #aaa; margin: 0;"> Proceso de subir documentos no esta disponible.</h4>
+  </div>
+
+  <div style="display: flex; justify-content: center; align-items: center;"
+    *ngIf="data.documentosList != undefined && data.documentosList.length > 10 && data.type == 1 ">
+    <mat-icon style="color: #aaa;">warning</mat-icon> &nbsp;
+    <h4 style="color: #aaa; margin: 0;"> No puede cargar más documentos a este usuario.</h4>
   </div>
 
 </div>

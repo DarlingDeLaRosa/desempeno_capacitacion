@@ -80,7 +80,7 @@
     animation: pulse 1.5s infinite;
 }
 
-.line {
+.line, .completed-line {
     height: 2px;
     background-color: #aaa;
     flex: 1;
@@ -111,7 +111,7 @@
     }
 
     to {
-        width: 100%;
+        width: 82%;
     }
 }
 

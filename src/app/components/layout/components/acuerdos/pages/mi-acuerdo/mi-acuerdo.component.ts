@@ -7,6 +7,7 @@ import { agreementService } from '../../services/acuerdo.service';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { Router } from '@angular/router';
+import { SnackBars } from '../../../../services/snackBars.service';
 
 @Component({
   selector: 'app-mi-acuerdo',
@@ -24,6 +25,7 @@ export class MiAcuerdoComponent implements OnInit {
 
   constructor(
     private router: Router,
+    public snackBar: SnackBars,
     public appHelper: HerlperService,
     private agreementService: agreementService,
     private systemInformation: systemInformationService
@@ -37,7 +39,10 @@ export class MiAcuerdoComponent implements OnInit {
   getAgreementByIdCollaborator() {
     this.agreementService.getAgreementByIdCollaborator(this.usuario.idPersona).subscribe({
       next: (resp: any) => { this.agreement = resp.data },
-      error: (error) => { error.status == 404 ? this.navigate() : '' }
+      error: (error) => { 
+        this.snackBar.snackbarError('El acuerdo de desempeño no fue encontrado', 4000)
+        error.status == 404 ? this.navigate() : ''
+      }
     });
   }
 

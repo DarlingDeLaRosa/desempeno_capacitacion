@@ -26,14 +26,16 @@
 
   <mat-button-toggle-group name="fontStyle" aria-label="Font Style" *ngIf="this.userLogged.role == 'Encargado'"
     [(ngModel)]="selectGroup">
-    <mat-button-toggle [disabled]="isLoading" [value]="true" (click)="getAcuerdoByRol('')">Mis
+    <mat-button-toggle [disabled]="isLoading || selectGroup" [value]="true" (click)="getAcuerdoByRol('')">Mis
       Supervisados</mat-button-toggle>
-    <mat-button-toggle [disabled]="isLoading" [value]="false" (click)="getAcuerdoByRol('')">Todos los
+    <mat-button-toggle [disabled]="isLoading || selectGroup == false" [value]="false"
+      (click)="getAcuerdoByRol('')">Todos los
       Colaboradores</mat-button-toggle>
   </mat-button-toggle-group>
 </div>
 
-<div *ngIf="userLogged.role != 'supervisado' && selectGroup == false">
+<div *ngIf="userLogged.role != 'supervisado' && selectGroup == false || this.userLogged.role == 'Analista' "
+  style="margin: 5px 0 0;">
   <mat-form-field appearance="fill" style="width: 300px;">
     <mat-label>Buscar</mat-label>
     <input matInput [(ngModel)]="searchTerm" (input)="Buscar()">
@@ -130,42 +132,43 @@
   </div>
 </div> -->
 
-
 <div *ngIf="(userLogged.role == 'Encargado' && selectGroup) || userLogged.role == 'Supervisor'">
-  
+
   <div style="display: flex; justify-content: space-between; margin-top: 15px;">
     <h4 style="margin: 0 0 5px 0;">Procesos de Evaluación de Competencias</h4>
-    <div style="display: flex; justify-content: end; padding-right: 55px; gap: 5px;">
+    <!-- <div style="display: flex; justify-content: end; padding-right: 55px; gap: 5px;">
       <div class="btnStage" style="border-bottom: 1px solid white; margin-bottom: -1px; z-index: 1; background-color: green; color: white;"> Creación</div>
       <div class="btnStage"> 1 era revisión</div>
       <div class="btnStage"> 2 da revisión</div>
       <div class="btnStage"> 3 era revisión</div>
       <div class="btnStage"> Evaluación</div>
-    </div>
+    </div> -->
   </div>
-    
+
   <div class="carousel-container">
     <button class="carousel-btn left" (click)="scrollLeft()">
       <mat-icon>chevron_left</mat-icon>
     </button>
 
     <div class="stepper-carousel" #carousel>
-      <div *ngFor="let step of steps; let i = index" class="step-container">
-        <div class="step" [ngClass]="{
+      <ng-container *ngFor="let step of steps; let i = index">
+        <div *ngIf="step.show" class="step-container">
+          <div class="step" [ngClass]="{
             'in-progress': step.status === 'in-progress',
             'completed': step.status === 'completed'
           }">
-          <div class="circle">{{ i + 1 }}</div>
-          <div class="label">{{ step.title }}</div>
-          <div class="labelRes" *ngIf="step.responsable">Responsable</div>
-          <div class="labelResPer" *ngIf="step.responsable">{{ step.responsable }}</div>
-        </div>
+            <div class="circle">{{ step.number }}</div>
+            <div class="label">{{ step.title }}</div>
+            <div class="labelRes" *ngIf="step.responsable">Responsable</div>
+            <div class="labelResPer" *ngIf="step.responsable">{{ step.responsable }}</div>
+          </div>
 
-        <!-- Línea dentro del mismo contenedor -->
-        <div *ngIf="i < steps.length - 1" class="line" [ngClass]="{
+          <div *ngIf="i < steps.length - 1" class="line" [ngClass]="{
             'completed-line': step.status === 'completed'
-          }"></div>
-      </div>
+          }">
+          </div>
+        </div>
+      </ng-container>
     </div>
 
     <button class="carousel-btn right" (click)="scrollRight()">
@@ -174,7 +177,7 @@
   </div>
 </div>
 
-<table >
+<table>
   <thead class="headerTable">
     <tr class="headerRow">
       <th class="headerCell">Nombre</th>
@@ -236,7 +239,7 @@
 
           <!-- *ngIf="acuerdo.flujoObj.idFlujo == 4" -->
           <div class="ItemMiniMenu"
-            (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.colaboradorObj.estadoObj.idEstado)">
+            (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.documentosObj, acuerdo.flujoObj.idFlujo ,acuerdo.colaboradorObj.estadoObj.idEstado)">
             <mat-icon style="color: maroon;">upload_file</mat-icon>
             <h4> Documentos </h4>
           </div>

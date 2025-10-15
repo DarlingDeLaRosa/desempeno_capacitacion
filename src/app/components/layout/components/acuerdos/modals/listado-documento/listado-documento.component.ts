@@ -12,6 +12,7 @@ import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-opt
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { CommentEmailComponent } from '../../pages/minuta-list/dialog/comment-email/comment-email.component';
+import { periodProcessGetI } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
 
 @Component({
   selector: 'app-listado-documento',
@@ -22,7 +23,7 @@ import { CommentEmailComponent } from '../../pages/minuta-list/dialog/comment-em
 })
 export class ListadoDocumentoComponent implements OnInit {
 
-  documentosList!: Array<Documento>;
+  // documentosList!: Documento[] | DocumentoMinuta[];
   idUserLogged!: number
   rolUserLogged!: string
   // documentosListMinuta!: Array<DocumentoMinuta>;
@@ -31,6 +32,7 @@ export class ListadoDocumentoComponent implements OnInit {
   selectedFile: File | null = null;
   selectedFileName: string | undefined;
   isLoading: boolean = true
+  activeProcess!: periodProcessGetI
   evaluationComptency!: { fechaFin: string, fechaInicio: string }
 
   constructor(
@@ -48,6 +50,8 @@ export class ListadoDocumentoComponent implements OnInit {
       idCollaborator: number,
       nombreCompleto: string,
       documentos: DocumentoMinuta[],
+      documentosList: Documento[],
+      flujoId?: number,
       esSupIn?: boolean,
       estado?: number,
     }
@@ -57,26 +61,33 @@ export class ListadoDocumentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getPeriodsProcesses(7)
-
     if (this.data.type == 1) {
+      this.getActiveAgreementPeriod()
       this.getAcuerdoByIdCollaborator()
+
     } else {
+      this.getPeriodsProcesses(7)
       this.getMinutasDoc()
     }
   }
 
-  getAcuerdoByIdCollaborator() {
-    // this.agreementservice.getAgreementByIdCollaborator(this.data.idCollaborator).subscribe((resp: any) => {
-    //   this.acuerdo = resp.data
+  getActiveAgreementPeriod() {
+    this.periodProcessService.getPeriodProcessesActive(true)
+      .subscribe((res: any) => { if (res) this.activeProcess = res.data })
+  }
 
-    //   if (this.acuerdo) this.documentosList = this.acuerdo.documentosObj;
-    //   else this.documentosList = []
-    // })
+  getAcuerdoByIdCollaborator() {
+    // this.documentosList = this.data.documentos
+    this.agreementservice.getAgreementByIdCollaborator(this.data.idCollaborator).subscribe((resp: any) => {
+      this.acuerdo = resp.data
+
+      // if (this.acuerdo.documentosObj.length > 0) this.documentosList = this.acuerdo.documentosObj;
+      // else this.documentosList = []
+    })
   }
 
   getMinutasDoc() {
-    this.minutaservice.getMinuta('', "evaluacion", true, 1, 5, this.data.esSupIn ).subscribe((resp: any) => {
+    this.minutaservice.getMinuta('', "evaluacion", true, 1, 5, this.data.esSupIn).subscribe((resp: any) => {
       this.minuta = resp.data
     })
   }
@@ -88,6 +99,7 @@ export class ListadoDocumentoComponent implements OnInit {
 
       this.selectedFile = null;
       this.selectedFileName = undefined;
+      this.cerrar(true)
     })
   }
 
@@ -111,13 +123,20 @@ export class ListadoDocumentoComponent implements OnInit {
     }
   }
 
-  async deleteDocument(id: number) {
+  // async deleteDocumentAgreement(){
+  //   let removeDecision: boolean = await this.SnackBar.snackbarConfirmation()
+  //   if (removeDecision) {
 
+  //   }
+  // }
+
+  async deleteDocument(id: number) {
     let removeDecision: boolean = await this.SnackBar.snackbarConfirmation()
 
     if (removeDecision) {
+      
+      if (this.idUserLogged != this.minuta[0].supervisorIntranet.idPersona) {
 
-      if (this.idUserLogged != this.minuta[0].supervisor.idPersona) {
         let validation: validationMinutaI = { estado: removeDecision, comentario: '' }
         const dialog = this.dialog.open(CommentEmailComponent, { disableClose: true })
 
@@ -125,13 +144,7 @@ export class ListadoDocumentoComponent implements OnInit {
           validation.comentario = result
           this.SnackBar.snackbarLouder(true)
 
-          if (this.data.type == 1) {
-            this.agreementservice.deleteDocumentAcuerdo(id)
-              .subscribe((res: any) => {
-                this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
-                this.cerrar(true)
-              })
-          } else {
+          if (this.data.type == 2) {
             this.minutaservice.deleteDocMinuta(id, result)
               .subscribe((res: any) => {
                 this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
@@ -139,24 +152,37 @@ export class ListadoDocumentoComponent implements OnInit {
               })
           }
         });
-      }else{
+
+        if (this.data.type == 1) {
+          this.agreementservice.deleteDocumentAcuerdo(id)
+            .subscribe((res: any) => {
+              this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+              this.cerrar(true)
+            })
+        }
+
+
+      } else {
         this.SnackBar.snackbarLouder(true)
 
-          if (this.data.type == 1) {
-            this.agreementservice.deleteDocumentAcuerdo(id)
-              .subscribe((res: any) => {
-                this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
-                this.cerrar(true)
-              })
-          } else {
-            this.minutaservice.deleteDocMinuta(id, '')
-              .subscribe((res: any) => {
-                this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
-                this.cerrar(true)
-              })
-          }
+        if (this.data.type == 2) {
+          this.minutaservice.deleteDocMinuta(id, '')
+            .subscribe((res: any) => {
+              this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+              this.cerrar(true)
+            })
+        }
+
+        if (this.data.type == 1) {
+          this.agreementservice.deleteDocumentAcuerdo(id)
+            .subscribe((res: any) => {
+              this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+              this.cerrar(true)
+            })
+        } 
       }
     }
+
   }
 
   openDocumentInNewTab(urldocument: any): void {

@@ -1,8 +1,7 @@
 <div class="comments-modal" [ngClass]="{ 'expand-width': comments.length > 0 }">
 
-    <h3>Comentarios de acuerdo de desempeño.</h3>
-    <br>
-    <h4>{{data.fullName}}</h4>
+    <h2>Comentarios de acuerdo de desempeño.</h2>
+    <h5>{{data.fullName}}</h5>
     <div class="comments-container" *ngIf="comments.length > 0">
         <div class="comments" *ngFor="let comment of comments" [ngClass]="{
                 'align-right': comment.creadoPorUsuario === systemInformation.currentUserSystem().username
@@ -24,7 +23,14 @@
     <div class="empty-list" *ngIf="comments && comments.length == 0">
         <img src="nodata.jpg" alt="No courses available">
     </div>
-
+    
+    <ng-container *ngIf="!comments">
+        <div class="container-loaderMother" style="margin-top: 100px;">
+            <div class="loaderMother"></div>
+            <div class="loading-text">Cargando...</div>
+        </div>
+    </ng-container>
+    
     <form [formGroup]="commentsForm" (submit)="postComment()" *ngIf="comments.length > 0 && data.estado == 1">
         <mat-form-field appearance="fill" style="flex: 3;">
             <mat-label>Escribe un mensaje</mat-label>
@@ -36,10 +42,5 @@
         </button>
     </form>
 
-    <ng-container *ngIf="!comments">
-        <div class="container-loaderMother" style="margin-top: 100px;">
-            <div class="loaderMother"></div>
-            <div class="loading-text">Cargando...</div>
-        </div>
-    </ng-container>
+    
 </div>
