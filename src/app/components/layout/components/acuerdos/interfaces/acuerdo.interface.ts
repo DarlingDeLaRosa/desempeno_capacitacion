@@ -150,11 +150,11 @@ export interface MinutaI {
   desarrollo: string;
   conclusion: string;
   agendaReunion: string;
-  periodoId: number
+  // periodoId: number
   periodoAcuerdoId: number;
-  supervisor?: CollaboratorsGetI;
+  // supervisor?: CollaboratorsGetI;
   periodoAcuerdo?: periodProcessGetI;
-  supervisorId: number;
+  // supervisorId: number;
   esUnaEvaluacionCompentencia: boolean
   minutaAsistencia: MinutaAsistenciaI[];
   unidadOrg: string

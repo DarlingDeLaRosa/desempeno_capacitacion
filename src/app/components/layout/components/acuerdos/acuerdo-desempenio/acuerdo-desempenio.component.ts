@@ -15,6 +15,8 @@ import { HerlperService } from '../../../services/appHelpers.service';
 import { PeriodsProcessServices } from '../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
 import { periodProcessGetI } from '../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
 import { PaginationI } from '../../../../interfaces/generalInteerfaces';
+import { MinutaService } from '../services/minuta.service';
+import { MinutaEvaluacionCompetenciaComponent } from '../../../templates/minuta-evaluacion-competencia/minuta-evaluacion-competencia.component';
 
 @Component({
   selector: 'app-acuerdo-desempenio',
@@ -38,15 +40,18 @@ export class AcuerdoDesempenioComponent implements OnInit {
   isLoading: boolean = true;
   agreement!: Array<AcuerdoI>
   selectGroup: boolean = true
+  minutaVerified!: { existe: Boolean, docCargado: Boolean }
   activeProcess!: periodProcessGetI
   validationCreation!: boolean
   validationGv: boolean = false
+  validationDocAgreement!: boolean
   steps: any[] = []
 
 
   constructor(
     private dialog: MatDialog,
     public appHelpers: HerlperService,
+    private minutaService: MinutaService,
     private agreementService: agreementService,
     public systemInformation: systemInformationService,
     private periodProcessService: PeriodsProcessServices,
@@ -64,16 +69,16 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
   updateSteps() {
     this.steps = [
-      { number: 1, show: true, title: 'Creación de acuerdos de colaboradores', status: this.validationCreation ? 'completed' : 'in-progress', responsable: 'Darling De la Rosa' },
+      { number: 1, show: true, title: 'Creación de acuerdos de colaboradores', status: this.validationCreation ? 'completed' : 'in-progress', responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname },
       {
         number: 2,
         show: true,
         title: 'Validación de acuerdos',
         status:
           this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(2)
-            ? '' 
+            ? ''
             : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(2)
-              ? 'in-progress' 
+              ? 'in-progress'
               : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(2)
                 ? 'completed'
                 : '',
@@ -84,28 +89,67 @@ export class AcuerdoDesempenioComponent implements OnInit {
         show: this.validationGv,
         title: 'Validación de acuerdos de grupo ocupacional ( V )',
         status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(2)
-          ? '' 
+          ? ''
           : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(2) && !this.validateEvaluationAd(3)
-            ? 'in-progress' // creation true y flow false
+            ? 'in-progress'
             : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3)
-              ? 'completed' // ambos true
+              ? 'completed'
               : '',
         responsable: 'Analista de planificación'
       },
-      { number: this.validationGv ? 4 : 3, show: true, title: 'Documentación de acuerdos de desempeño', status: '', responsable: 'Darling De la Rosa' },
-      { number: this.validationGv ? 5 : 4, show: true, title: 'Creación de minuta', status: '', responsable: 'Darling De la Rosa' },
+      {
+        number: this.validationGv ? 4 : 3,
+        show: true,
+        title: 'Documentación de acuerdos de desempeño',
+        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(3)
+          ? ''
+          : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3) && this.validationDocAgreement == false
+            ? 'in-progress'
+            : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3) && this.validationDocAgreement 
+              ? 'completed'
+              : '',
+        responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
+      },
+      {
+        number: this.validationGv ? 5 : 4,
+        show: true,
+        title: 'Creación de minuta',
+        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4)
+          ? ''
+          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(3) && this.validationDocAgreement 
+            ? 'in-progress'
+            : this.agreement != undefined && this.validationCreation && this.minutaVerified.existe && this.validationDocAgreement 
+              ? 'completed'
+              : '',
+        responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
+      },
       { number: this.validationGv ? 6 : 5, show: true, title: 'Validación de minuta', status: '', responsable: 'Analista de evaluación del desempeño' },
-      { number: this.validationGv ? 7 : 6, show: true, title: 'Documentación de minuta', status: '', responsable: 'Darling De la Rosa' },
+      { number: this.validationGv ? 7 : 6, show: true, title: 'Documentación de minuta', status: '', responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname },
       { number: this.validationGv ? 8 : 7, show: true, title: 'Completada', status: '', responsable: '' },
     ];
   }
 
   scrollLeft() { this.carousel.nativeElement.scrollBy({ left: -250, behavior: 'smooth' }); }
   scrollRight() { this.carousel.nativeElement.scrollBy({ left: 250, behavior: 'smooth' }); }
+  
+  openModalTemplateMinuta(): void {
+    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0, esSupInterino: false, typeEvaluation : 1 } })
+  }
 
   getActiveAgreementPeriod() {
     this.periodProcessService.getPeriodProcessesActive(true)
-      .subscribe((res: any) => { if (res) this.activeProcess = res.data })
+      .subscribe((res: any) => { 
+        if (res) {
+          this.activeProcess = res.data
+          this.verifiedMinuta(res.data.periodo.idPeriodo)
+        } })
+  }
+
+  verifiedMinuta(period: number) {
+    this.minutaService.getMinutaExistente(period, false, this.activeProcess.idPeriodoAcuerdo)
+      .subscribe((res: any) => {
+        this.minutaVerified = res;
+      })
   }
 
   //Metodo para traer la lista de los hijos de los supervisores
@@ -121,6 +165,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
       this.validateCreationAd()
       this.validateOcupationalGroup()
+      this.validateDocumentationAgreement()
       // if (currentPage > totalPage) { this.page = 1 }
     })
   }
@@ -155,6 +200,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
       }
     })
     dialog.afterClosed().subscribe(result => {
+      this.getAcuerdoByRol('')
     });
   }
 
@@ -194,7 +240,14 @@ export class AcuerdoDesempenioComponent implements OnInit {
     this.validationGv = this.agreement.some(
       (item: AcuerdoI) => item.colaboradorObj.grupoObj.idGrupo != 5
     );
-    // console.log(this.validationGv);
+    this.updateSteps()
+  }
+
+  validateDocumentationAgreement() {
+    this.validationDocAgreement = this.agreement.some(
+      (item: AcuerdoI) => item.documentosObj.length == 0
+    );
+    this.validationDocAgreement = !this.validationDocAgreement
     this.updateSteps()
   }
 

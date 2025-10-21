@@ -60,9 +60,9 @@ export class MinutaComponent implements OnInit {
     private evaluationCompetencyService: EvaluationCompetencyServices,
   ) {
     this.formMinuta = this.fb.group({
-      agendaReunion: new FormControl<string>('', [Validators.maxLength(200)]),
-      desarrollo: new FormControl<string>('', [Validators.required, Validators.maxLength(200)]),
-      conclusiones: new FormControl<string>('', [Validators.maxLength(100)]),
+      agendaReunion: new FormControl<string>('', [Validators.maxLength(3000)]),
+      desarrollo: new FormControl<string>('', [Validators.required, Validators.maxLength(3000)]),
+      conclusiones: new FormControl<string>('', [Validators.maxLength(3000)]),
       tipoProcesoId: new FormControl<number>(0),
       unidadOrg: new FormControl(''),
     })
@@ -75,26 +75,30 @@ export class MinutaComponent implements OnInit {
     });
 
     this.usuario = this.systeminformation.localUser;
-
-    // this.getPeriodsProcess()
-    // this.getPeriodsProcessActive()
     this.getProtocol()
-    // this.getAcuerdoByRol()
-    this.getSupervisorWithSubordinates()
+    
+    if (Number(this.typeMinuta) == 1) {
+      this.getPeriodsProcessActive()
+      this.getAcuerdoByRol()
+    }else{
+      this.getSupervisorWithSubordinates()
+    }
+    
+    // this.getPeriodsProcess()
+
   }
 
-  // getAcuerdoByRol() {
+  getAcuerdoByRol() {
 
-  //   this.agreementService.getAgreementByRol('', true).subscribe((resp: any) => {
-  //     this.agreement = resp.data;
-  //     this.colaboradoresMinuta = this.agreement.map((acuerdo) => ({
-  //       idColaborador: acuerdo.colaboradorObj.idPersona,
-  //       ausente: false,
-  //       motivoAusencia: null,
-  //     }));
-
-  //   })
-  // }
+    this.agreementService.getAgreementByRol('', true).subscribe((resp: any) => {
+      this.agreement = resp.data;
+      this.colaboradoresMinuta = this.agreement.map((acuerdo) => ({
+        idColaborador: acuerdo.colaboradorObj.idPersona,
+        ausente: false,
+        motivoAusencia: null,
+      }));
+    })
+  }
 
   //metodo para obtener el proceso
   // getPeriodsProcess() {
@@ -105,14 +109,13 @@ export class MinutaComponent implements OnInit {
   //     })
   // }
 
-  //metodo para obtener el proceso del acuerdo activo
-  // getPeriodsProcessActive() {
-  //   this.periodProcessService.getPeriodProcessesActive()
-  //     .subscribe((res: any) => {
-
-  //       this.idPeriodsProcessActive = res.data.idPeriodoAcuerdo;
-  //     })
-  // }
+  // metodo para obtener el proceso del acuerdo activo
+  getPeriodsProcessActive() {
+    this.periodProcessService.getPeriodProcessesActive(true)
+      .subscribe((res: any) => {
+        this.idPeriodsProcessActive = res.data.idPeriodoAcuerdo;
+      })
+  }
 
   getSupervisorWithSubordinates() {
     this.evaluationCompetencyService.getEvaluationCompetencies(true).subscribe((res: any) => {
@@ -177,10 +180,10 @@ export class MinutaComponent implements OnInit {
   // metodo para armar objeto de minuta y hacer el post
   postMinuta() {    
     const Minuta: MinutaI = {
-      supervisorId: Number(this.usuario.idPersona),
+      // supervisorId: Number(this.usuario.idPersona),
       periodoAcuerdoId: this.idPeriodsProcessActive,
-      esUnaEvaluacionCompentencia: this.typeMinuta == 1 ? false : true,
-      periodoId: this.systeminformation.activePeriod().idPeriodo,
+      esUnaEvaluacionCompentencia: Number(this.typeMinuta) == 1 ? false : true,
+      // periodoId: this.systeminformation.activePeriod().idPeriodo,
       desarrollo: this.formMinuta.get('desarrollo')?.value,
       conclusion: this.formMinuta.get('conclusiones')?.value,
       agendaReunion: this.formMinuta.get('agendaReunion')?.value,
@@ -196,7 +199,8 @@ export class MinutaComponent implements OnInit {
     this.minutaService.postMinuta(Minuta).subscribe((resp: any) => {
       this.SnackBar.snackbarLouder(true)
       this.appHelpers.handleResponse(resp, () => {}, this.formMinuta)
-      if (this.typeMinuta == 1) this.router.navigate(['/layout/acuerdos'])
+      
+      if (Number(this.typeMinuta) == 1) this.router.navigate(['/layout/acuerdos'])
       else this.router.navigate(['/layout/evaluacion-competencias'])
     })
   }

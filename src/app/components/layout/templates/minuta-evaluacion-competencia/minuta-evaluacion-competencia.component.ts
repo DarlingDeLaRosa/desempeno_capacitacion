@@ -23,17 +23,13 @@ export class MinutaEvaluacionCompetenciaComponent implements OnInit {
     private minutaservice: MinutaService,    
     public appHelper: HerlperService,
     private dialogRef: MatDialogRef<MinutaEvaluacionCompetenciaComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {idMinuta: number, esSupInterino: boolean }
+    @Inject(MAT_DIALOG_DATA) public data: {idMinuta: number, esSupInterino: boolean, typeEvaluation: number }
   ) {
-
   }
 
   ngOnInit(): void {
-    if (this.data.idMinuta == 0) {
-      this.getMinuta()
-    }else{
-      this.getMinutaId()
-    }
+    if (this.data.idMinuta == 0) this.getMinuta()
+    else this.getMinutaId()
   }
 
   getMinuta() {

@@ -177,7 +177,7 @@ export class EvaluacionProvisionalComponent implements OnInit {
   }
 
   openModalTemplateMinuta(): void {
-    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0, esSupInterino: true } })
+    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0, esSupInterino: true, typeEvaluation : 2 } })
   }
 
   getMinuta(period: number) {

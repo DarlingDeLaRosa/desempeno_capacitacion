@@ -354,9 +354,15 @@
   </ng-template>
 </table>
 
-<div style="display: flex; justify-content: end;">
+<div style="display: flex; justify-content: end; margin: 10px 0">
   <button
-    *ngIf="agreement && agreement.length > 0 && userLogged.role == 'Supervisor' && appHelpers.ableToMakeMinuta(agreement)"
-    [routerLink]="[{ outlets: { 'acuerdos': ['minuta']}}]" routerLinkActive="active" class="saveButton">Realizar
+    *ngIf="agreement != undefined && agreement.length > 0 && userLogged.role == 'Supervisor' && validationDocAgreement && minutaVerified.existe == false 
+    || agreement != undefined && agreement.length > 0 && userLogged.role == 'Encargado' && selectGroup && validationDocAgreement && minutaVerified.existe == false"
+    [routerLink]="['/layout/evaluacion-competencias/minuta']" [queryParams]="{ typeMinuta: 1 }" class="saveButton">Crear
     Minuta</button>
+
+  <button
+    *ngIf="userLogged.role != 'Analista' && minutaVerified != undefined && selectGroup && minutaVerified.existe "
+    class="saveButton" (click)="openModalTemplateMinuta()"> Ver Minuta
+  </button>
 </div>
