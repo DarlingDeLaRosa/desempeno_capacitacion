@@ -63,17 +63,20 @@ export class ListadoDocumentoComponent implements OnInit {
   ngOnInit(): void {
     if (this.data.type == 1) {
       this.getActiveAgreementPeriod()
-      this.getAcuerdoByIdCollaborator()
+      
+      if (this.data.idCollaborator == 0) this.getMinutasDoc("acuerdo")
+      else this.getAcuerdoByIdCollaborator()
 
     } else {
       this.getPeriodsProcesses(7)
-      this.getMinutasDoc()
+      this.getMinutasDoc("evaluacion")
     }
   }
 
   getActiveAgreementPeriod() {
     this.periodProcessService.getPeriodProcessesActive(true)
-      .subscribe((res: any) => { if (res) this.activeProcess = res.data })
+      .subscribe((res: any) => { if (res) this.activeProcess = res.data ; console.log(this.activeProcess);
+      })
   }
 
   getAcuerdoByIdCollaborator() {
@@ -86,16 +89,20 @@ export class ListadoDocumentoComponent implements OnInit {
     })
   }
 
-  getMinutasDoc() {
-    this.minutaservice.getMinuta('', "evaluacion", true, 1, 5, this.data.esSupIn).subscribe((resp: any) => {
-      this.minuta = resp.data
+  getMinutasDoc(type: string) {
+    this.minutaservice.getMinuta('', type, true, 1, 10, this.data.esSupIn).subscribe((resp: any) => {
+      if (type == 'evaluacion') {
+        this.minuta = resp.data
+      }else{
+        this.minuta = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == 1)
+      }
     })
   }
 
   postFileAcuerdo(formdata: any) {
     this.agreementservice.postFileAcuerdo(formdata).subscribe((resp) => {
       this.SnackBar.snackbarLouder(true)
-      this.appHelpers.handleResponse(resp, () => this.getAcuerdoByIdCollaborator());
+      this.appHelpers.handleResponse(resp, () => {});
 
       this.selectedFile = null;
       this.selectedFileName = undefined;
@@ -107,7 +114,7 @@ export class ListadoDocumentoComponent implements OnInit {
     this.minutaservice.postDocMinuta(this.minuta[0].id, formdata).subscribe((resp) => {
 
       this.SnackBar.snackbarLouder(true)
-      this.appHelpers.handleResponse(resp, () => this.getAcuerdoByIdCollaborator());
+      this.appHelpers.handleResponse(resp, () => {});
 
       this.selectedFile = null;
       this.selectedFileName = undefined;
@@ -200,7 +207,7 @@ export class ListadoDocumentoComponent implements OnInit {
       return;
     } else {
 
-      if (this.data.type == 1) {
+      if (this.data.type == 1 && this.data.idCollaborator > 0) {
         formData.append('Documentos', this.selectedFile);
         formData.append('IdAcuerdo', this.acuerdo.idAcuerdo.toString());
 

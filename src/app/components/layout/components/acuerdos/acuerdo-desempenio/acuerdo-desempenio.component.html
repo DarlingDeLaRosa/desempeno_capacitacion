@@ -185,7 +185,11 @@
       <th class="headerCell">Cargo</th>
       <th class="headerCell">G.O</th>
       <th class="headerCell">Etapa</th>
-      <th class="headerCell">Estado</th>
+      <th class="headerCell">
+        <div style="display: flex; justify-content: center;">
+          Estado
+        </div>
+      </th>
       <th class="headerCell" style="width: 6%;">
         <!-- <th class="headerCell" style="width: 2%;"> -->
         <!-- <th class="headerCell" style="width: 2%;"> -->
@@ -230,7 +234,15 @@
       <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
       <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
       <td class="dataIndiCell">{{acuerdo.tipoProceso.nombre}}</td>
-      <td class="dataIndiCell">Proceso de {{acuerdo.flujoObj.nombre}}</td>
+      <td class="dataIndiCell">
+        <div style="display: flex; justify-content: center; color: white;">
+          <div class="tag pendiente" [ngClass]="{
+          'aceptada': agreement != undefined && validationCreation && minutaVerified.existe && validationDocAgreement == false && minutaVerified.existe && minuta.aprobada != null && minuta.aprobada == true && minutaVerified.docCargado,
+        }">
+            Proceso de {{acuerdo.flujoObj.nombre}}
+          </div>
+        </div>
+      </td>
 
 
       <td class="dataIndiCell">
@@ -354,15 +366,29 @@
   </ng-template>
 </table>
 
-<div style="display: flex; justify-content: end; margin: 10px 0">
+<div style="display: flex; justify-content: end; margin: 10px 0 ; gap: 5px">
   <button
-    *ngIf="agreement != undefined && agreement.length > 0 && userLogged.role == 'Supervisor' && validationDocAgreement && minutaVerified.existe == false 
-    || agreement != undefined && agreement.length > 0 && userLogged.role == 'Encargado' && selectGroup && validationDocAgreement && minutaVerified.existe == false"
+    *ngIf="agreement != undefined && agreement.length > 0 && userLogged.role == 'Supervisor' && validationDocAgreement == false && minutaVerified.existe == false 
+    || agreement != undefined && agreement.length > 0 && userLogged.role == 'Encargado' && selectGroup && validationDocAgreement == false && minutaVerified.existe == false"
     [routerLink]="['/layout/evaluacion-competencias/minuta']" [queryParams]="{ typeMinuta: 1 }" class="saveButton">Crear
-    Minuta</button>
+    Minuta
+  </button>
 
-  <button
-    *ngIf="userLogged.role != 'Analista' && minutaVerified != undefined && selectGroup && minutaVerified.existe "
+  <button *ngIf="userLogged.role != 'Analista' && minutaVerified != undefined && selectGroup && minutaVerified.existe "
     class="saveButton" (click)="openModalTemplateMinuta()"> Ver Minuta
   </button>
+
+  <ng-container
+    *ngIf="userLogged.role != 'Analista' && minutaVerified != undefined && selectGroup && minutaVerified.existe ">
+    <button class="saveButton"
+      (click)="openModalListadoDocumentos(0, userLogged.Firstname, userLogged.Lastname, minutaList, 4 )"
+      [disabled]="!minuta.aprobada"
+      matTooltip="En espera de la revisión de la minuta. Debe ser aprobada antes de subir el documento."
+      [matTooltipDisabled]="minuta.aprobada">
+
+      <ng-container *ngIf="minutaVerified != undefined">
+        {{ minutaVerified.docCargado == false ? "Subir Documento de Minuta Firmada" : "Documento de Minuta" }}
+      </ng-container>
+    </button>
+  </ng-container>
 </div>

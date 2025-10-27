@@ -50,8 +50,8 @@ export class MinutaService {
   //   return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?tipo=${typeMinuta}&esSupervisor=${sup}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.headerIntra));
   // }
   
-  public getMinutaEvaluacion(esSupIn: boolean = false, page: number = 1, totalPage: number = 10) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/por-supervisor?tipo=evaluacion&esSupervisorInterino=${esSupIn}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
+  public getMinutaEvaluacion(esSupIn: boolean = false, type: string, page: number = 1, totalPage: number = 10) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/por-supervisor?tipo=${type}&esSupervisorInterino=${esSupIn}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
   }
 
   public getMinutaById(minutaId: number) {

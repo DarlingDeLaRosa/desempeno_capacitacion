@@ -20,10 +20,10 @@ export class MinutaEvaluacionCompetenciaComponent implements OnInit {
   ausentes: MinutaCollaboratorTemplateI[] = [];
 
   constructor(
-    private minutaservice: MinutaService,    
+    private minutaservice: MinutaService,
     public appHelper: HerlperService,
     private dialogRef: MatDialogRef<MinutaEvaluacionCompetenciaComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {idMinuta: number, esSupInterino: boolean, typeEvaluation: number }
+    @Inject(MAT_DIALOG_DATA) public data: { idMinuta: number, esSupInterino: boolean, typeEvaluation: number }
   ) {
   }
 
@@ -32,12 +32,32 @@ export class MinutaEvaluacionCompetenciaComponent implements OnInit {
     else this.getMinutaId()
   }
 
+  getTrimestre(fechaFin: Date): string {
+    const fecha = new Date(fechaFin);
+
+    // Verifica si es una fecha válida
+    if (isNaN(fecha.getTime())) { return 'Fecha inválida' }
+
+    const mes = fecha.getMonth() + 1;
+
+    if (mes >= 1 && mes <= 3) return 'Enero - Marzo';
+    if (mes >= 4 && mes <= 6) return 'Abril - Junio';
+    if (mes >= 7 && mes <= 9) return 'Julio - Septiembre';
+    if (mes >= 10 && mes <= 12) return 'Octubre - Diciembre';
+
+    return 'Mes inválido';
+  }
+
   getMinuta() {
     let esi: boolean = false
     if (this.data.esSupInterino) { esi = true }
-    this.minutaservice.getMinutaEvaluacion(esi, 1, 500).subscribe((resp: any) => {
+
+    let type = this.data.typeEvaluation == 1 ? 'acuerdo' : 'evaluacion'
+
+    this.minutaservice.getMinutaEvaluacion(esi, type, 1, 500).subscribe((resp: any) => {
       this.minuta = resp.data[0]
-      
+      console.log(this.minuta);
+
       this.presentes.push({
         nombre: this.minuta.supervisorIntranet.nombre,
         apellido: this.minuta.supervisorIntranet.apellidos,
@@ -53,22 +73,22 @@ export class MinutaEvaluacionCompetenciaComponent implements OnInit {
             cargo: participantes.colaboradorIntranet.cargo.nombre,
             motivoAusencia: participantes.motivoAusencia != null ? participantes.motivoAusencia : ''
           })
-        }else{
+        } else {
           this.presentes.push({
             nombre: participantes.colaboradorIntranet.nombre,
             apellido: participantes.colaboradorIntranet.apellidos,
             cargo: participantes.colaboradorIntranet.cargo.nombre,
             motivoAusencia: ''
-          }) 
+          })
         }
       })
     })
   }
 
-  getMinutaId(){
+  getMinutaId() {
     this.minutaservice.getMinutaById(this.data.idMinuta).subscribe((resp: any) => {
       this.minuta = resp.data
-      
+
       this.presentes.push({
         nombre: this.minuta.supervisorIntranet.nombre,
         apellido: this.minuta.supervisorIntranet.apellidos,
@@ -84,19 +104,19 @@ export class MinutaEvaluacionCompetenciaComponent implements OnInit {
             cargo: participantes.colaboradorIntranet.cargo.nombre,
             motivoAusencia: participantes.motivoAusencia != null ? participantes.motivoAusencia : ''
           })
-        }else{
+        } else {
           this.presentes.push({
             nombre: participantes.colaboradorIntranet.nombre,
             apellido: participantes.colaboradorIntranet.apellidos,
             cargo: participantes.colaboradorIntranet.cargo.nombre,
             motivoAusencia: ''
-          }) 
+          })
         }
       })
     })
   }
 
-  closeModal(){
+  closeModal() {
     this.dialogRef.close()
   }
 }

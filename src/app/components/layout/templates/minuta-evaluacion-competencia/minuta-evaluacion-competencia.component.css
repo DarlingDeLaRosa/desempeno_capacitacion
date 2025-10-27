@@ -33,7 +33,6 @@
 }
 
 .tabla-principal th {
-  background-color: #375623;
   color: white;
   text-align: center;
   padding: 8px;
@@ -50,13 +49,11 @@
 }
 
 .info-row td {
-  background-color: #375623;
   color: white;
   font-weight: bold;
 }
 
 .section-header {
-  background-color: #375623;
   color: white;
   text-align: center;
   padding: 6px;
@@ -76,7 +73,6 @@
 }
 
 .tabla-listado th {
-  background-color: #375623;
   color: white;
   text-align: center;
   padding: 6px;
@@ -94,7 +90,6 @@
 }
 
 .desarrollo-header {
-  background-color: #375623;
   color: white;
   text-align: center;
   padding: 6px;
@@ -114,7 +109,6 @@
 }
 
 .recordatorio-header {
-  background-color: #375623;
   color: white;
   text-align: center;
   padding: 6px;
@@ -126,7 +120,6 @@
 }
 
 .recordatorio {
-  background-color: #375623;
   color: white;
   padding: 10px;
   font-size: 10px;

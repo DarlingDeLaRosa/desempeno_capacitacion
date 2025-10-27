@@ -22,34 +22,36 @@
     <table class="tabla-principal">
       <thead>
         <tr>
-          <th colspan="4">MINUTA DE SOCIALIZACIÓN DE EVALUACIÓN POR COMPETENCIAS</th>
+          <th [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" *ngIf="minuta.esUnaEvaluacionCompentencia" colspan="4">MINUTA DE SOCIALIZACIÓN DE EVALUACIÓN POR COMPETENCIAS</th>
+          <th [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" *ngIf="minuta.esUnaEvaluacionCompentencia == false" colspan="4">MINUTA DE REUNION DE MONITOREO DE ACUERDOS DE DESEMPEÑO LABORAL</th>
         </tr>
       </thead>
       <tbody>
         <tr class="info-row">
-          <td><strong>Área: {{minuta.unidadOrg == '' || minuta.unidadOrg == 'N/A' ? appHelper.getUnitOrg(
+          <td [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }"><strong>Área: {{minuta.unidadOrg == '' || minuta.unidadOrg == 'N/A' ? appHelper.getUnitOrg(
             minuta.supervisorIntranet.division,
             minuta.supervisorIntranet.departamento,
             minuta.supervisorIntranet.direccion,
             minuta.supervisorIntranet.viceRectoria
             ).nombre : minuta.unidadOrg | titlecase
           }}</strong></td>
-          <td colspan="2"></td>
+          <td [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" colspan="2"></td>
         </tr>
         <tr class="info-row">
-          <td><strong>Fecha de la Reunión (Día/Mes/Año): {{minuta.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></td>
-          <td colspan="2"><strong>Año de evaluación: {{minuta.periodo.fechaInicio | date:'yyyy'}}</strong></td>
+          <td [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" ><strong>Fecha de la Reunión (Día/Mes/Año): {{minuta.fechaCreacion | date: 'dd/MM/yyyy'}}</strong></td>
+          <td [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" *ngIf="minuta.esUnaEvaluacionCompentencia" colspan="2"><strong>Año de evaluación: {{minuta.periodo.fechaInicio | date:'yyyy'}}</strong></td>
+          <td [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" *ngIf="minuta.esUnaEvaluacionCompentencia == false" colspan="2"><strong>Trimestre: {{ getTrimestre(minuta.periodoAcuerdo.fechaFin)}}</strong></td>
         </tr>
       </tbody>
     </table>
 
-    <div class="section-header">PARTICIPANTES</div>
+    <div [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" class="section-header">PARTICIPANTES</div>
     <table class="tabla-listado">
       <thead>
         <tr>
-          <th>Nombre</th>
-          <th>Cargo</th>
-          <th>Firma</th>
+          <th [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" >Nombre</th>
+          <th [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" >Cargo</th>
+          <th [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" >Firma</th>
         </tr>
       </thead>
       <tbody>
@@ -66,13 +68,13 @@
       </tbody>
     </table>
 
-    <div class="section-header">AUSENTES</div>
+    <div [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" class="section-header">AUSENTES</div>
     <table class="tabla-listado">
       <thead>
         <tr>
-          <th>Nombre</th>
-          <th>Cargo</th>
-          <th>Motivo de la ausencia</th>
+          <th [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }">Nombre</th>
+          <th [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }">Cargo</th>
+          <th [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }">Motivo de la ausencia</th>
         </tr>
       </thead>
       <tbody>
@@ -87,11 +89,17 @@
       </tbody>
     </table>
 
-    <div class="desarrollo-header">DESARROLLO DE LA REUNIÓN</div>
-    <div class="desarrollo">{{minuta.desarrollo}}</div>
+    <div [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" *ngIf="minuta.esUnaEvaluacionCompentencia == false" class="desarrollo-header">AGENDA DE LA REUNIÓN</div>
+    <div *ngIf="minuta.esUnaEvaluacionCompentencia == false" class="desarrollo">{{minuta.agendaReunion}}</div>
 
-    <div class="recordatorio-header">RECORDATORIO</div>
-    <div class="recordatorio">
+    <div [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" class="desarrollo-header">DESARROLLO DE LA REUNIÓN</div>
+    <div class="desarrollo">{{minuta.desarrollo}}</div>
+    
+    <div [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }" class="desarrollo-header">CONCLUSIONES DEL MONITOREO DE LOS ACUERDOS DE DESEMPEÑO</div>
+    <div class="desarrollo">{{minuta.conclusion}}</div>
+
+    <div class="recordatorio-header" [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }">RECORDATORIO</div>
+    <div class="recordatorio" [ngStyle]="{ 'background-color': minuta.esUnaEvaluacionCompentencia ? '#375623' : '#2E75B5' }">
       Cuando un servidor público no esté de acuerdo con los resultados de la evaluación, podrá elegir los mecanismos que
       dispone el Capítulo IV de la Ley No 41-08 y lo que establece el Reglamento de Relaciones Laborales al respecto.
     </div>
