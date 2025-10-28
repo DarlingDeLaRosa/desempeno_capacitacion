@@ -1,9 +1,9 @@
-<div class="fuctionContent" >
+<div class="fuctionContent">
 
   <div class="title">
     <h1>Gestionar Acuerdo</h1>
   </div>
-  
+
   <div>
     <div>
       <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
@@ -106,6 +106,7 @@
       </div>
 
       <div style="display: flex; gap: 5px;">
+
         <mat-form-field style="flex:1">
           <mat-label>Medio de verificación</mat-label>
           <mat-select formControlName="idMedio">
@@ -113,8 +114,13 @@
               {{medio.nombre}}
             </mat-option>
           </mat-select>
-
         </mat-form-field>
+        
+        <mat-form-field style="flex:2">
+          <mat-label>Descripción</mat-label>
+          <input matInput formControlName="descripcionMedioVerificacion">
+        </mat-form-field>
+
         <mat-form-field style="flex:1">
           <mat-label>Valor</mat-label>
           <input matInput type="number" formControlName="valor">
@@ -138,7 +144,7 @@
 </div>
 
 <!-- <app-loader-box  ></app-loader-box> -->
-<app-loader [type]="1" *ngIf="!collaborator && !agreement" ></app-loader>
+<app-loader [type]="1" *ngIf="!collaborator && !agreement"></app-loader>
 
 <ng-container *ngIf="this.collaborator">
   <div class="table-container">
@@ -146,13 +152,22 @@
       <thead class="headerTable">
         <tr class="headerRow">
           <th class="headerCell">Metas</th>
-          <th class="headerCell">Medio de verificación</th>
+          <th class="headerCell" style="width: 20%;">
+            <div style="display: flex; justify-content: center;">
+              Medio de verificación
+            </div>
+          </th>
+          <th class="headerCell">Descripción</th>
           <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
             <th class="headerCell">Meta poa</th>
           </ng-container>
-          <th class="headerCell">Valor</th>
-          <th class="headerCell" style="width: 5%;"></th>
-          <th class="headerCell" style="width: 5%;">
+          <th class="headerCell" style="width: 10%;">
+            <div style="display: flex; justify-content: center;">
+              Valor
+            </div>
+          </th>
+          <th class="headerCell" style="width: 4%;"></th>
+          <th class="headerCell" style="width: 4%;">
             <div *ngIf="isLoading ===  true" class="loader"></div>
           </th>
         </tr>
@@ -161,11 +176,20 @@
         <tr class="dataRow" *ngFor="let goal of goalDetails; let i = index">
 
           <td class="dataIndiCell">{{goal.nombre}}</td>
-          <td class="dataIndiCell">{{goal.nombreMedio}}</td>
+          <td class="dataIndiCell">
+            <div style="display: flex; justify-content: center;">
+              {{goal.nombreMedio}}
+            </div>
+          </td>
+          <td class="dataIndiCell">{{goal.descripcionMedioVerificacion != null ? goal.descripcionMedioVerificacion : 'No Asignada'}}</td>
           <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
             <td class="dataIndiCell">{{goal.metaPoa}}</td>
           </ng-container>
-          <td class="dataIndiCell">{{goal.valor}} Puntos</td>
+          <td class="dataIndiCell">
+            <div style="display: flex; justify-content: center;">
+              {{goal.valor}} Puntos
+            </div>
+          </td>
           <td class="dataIndiCell">
             <ng-container *ngIf="goal.isTranversal != true">
               <mat-icon class="editIcon" (click)="cargarDetalleEnFormularioIndex(i, goal.idMeta)">edit</mat-icon>
@@ -185,19 +209,21 @@
             <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
               <td class="dataIndiCell"></td>
             </ng-container>
-            <td class="dataIndiCell" *ngIf="goalDetails && goalDetails.length == 0; else searching">No hay elementos que mostrar.</td>
+            <td class="dataIndiCell" *ngIf="goalDetails && goalDetails.length == 0; else searching">No hay elementos que
+              mostrar.</td>
             <ng-template #searching>
               <td class="dataIndiCell">Buscando elementos.</td>
             </ng-template>
-            <ng-container *ngFor="let td of [1, 2, 3, 5]">
-              <td class="dataIndiCell"></td>
-            </ng-container>
+            <!-- <ng-container *ngFor="let td of [1, 2, 3, 5]"> -->
+              <td colspan="5" class="dataIndiCell"></td>
+            <!-- </ng-container> -->
           </tr>
         </tbody>
       </ng-template>
       <tfoot>
         <tr class="paginatorRow" *ngIf="goalDetails && goalDetails.length !== 0">
           <td class="dataIndiCell"><strong>Total</strong>:</td>
+          <td class="dataIndiCell"></td>
           <td class="dataIndiCell"></td>
           <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
             <td class="dataIndiCell"></td>

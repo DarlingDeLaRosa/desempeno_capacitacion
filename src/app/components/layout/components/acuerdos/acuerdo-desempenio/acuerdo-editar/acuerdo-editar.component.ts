@@ -62,6 +62,7 @@ export class AcuerdoEditarComponent implements OnInit {
     this.goalForm = fb.group({
       idMeta: new FormControl<number>(0),
       idMedio: new FormControl<number>(0, Validators.required),
+      descripcionMedioVerificacion: new FormControl<string>('', Validators.required),
       metaPoa: new FormControl<string>(''),
       nombre: new FormControl<string>('', [Validators.required, this.smartValidator()]),
       valor: new FormControl<number>(0, [Validators.required, Validators.min(1)]),
@@ -172,6 +173,7 @@ export class AcuerdoEditarComponent implements OnInit {
           metaPoa: detalle.metaObj.metaPoa,
           idMedio: detalle.metaObj.medioVerificacionObj.idMedio,
           nombreMedio: detalle.metaObj.medioVerificacionObj.nombre,
+          descripcionMedioVerificacion: detalle.metaObj.descripcionMedioVerificacion,
           valor: detalle.metaObj.valor,
           calificacion: detalle.calificacion,
           isTranversal: detalle.metaObj.isTranversal,
@@ -190,12 +192,12 @@ export class AcuerdoEditarComponent implements OnInit {
         idMeta: detalle.idMeta || 0,
         idMedio: detalle.idMedio,
         nombre: detalle.nombre,
+        descripcionMedioVerificacion: detalle.descripcionMedioVerificacion,
         valor: detalle.valor,
         metaPoa: detalle.metaPoa,
         isTranversal: detalle.isTranversal
       }
     }));
-
 
     this.SnackBar.snackbarLouder(true)
     this.agreementservice.postAgreementGoalDetails(acuerdoParaPost).subscribe((resp: any) => {
@@ -208,13 +210,12 @@ export class AcuerdoEditarComponent implements OnInit {
   del medio de verificacion para poderlo mostrar en la tabla de detalles.*/
   addGoalDetails() {
     const detalle = this.goalForm.getRawValue();
-
-
     const medioSeleccionado = this.verificacionMethodList.find(m => m.idMedio === detalle.idMedio);
 
     this.goalDetails.push({
       idMeta: detalle.idMeta || 0,
       idMedio: detalle.idMedio,
+      descripcionMedioVerificacion: detalle.descripcionMedioVerificacion,
       nombreMedio: medioSeleccionado ? medioSeleccionado.nombre : '',
       nombre: detalle.nombre,
       metaPoa: detalle.metaPoa,
@@ -229,19 +230,18 @@ export class AcuerdoEditarComponent implements OnInit {
 
   //Metodo para editar los detalles de la tabla por index
   EditarMetas() {
-    //para refrescar el nombre del medio de verificacion en la de detalles
     const detalle = this.goalForm.getRawValue();
     const medioSeleccionado = this.verificacionMethodList.find(m => m.idMedio === detalle.idMedio);
 
-    //si el indexEditando es diferente a nulo entonces sobre escribe los datos del registro de ese index
     if (this.indexEditando !== null) {
       this.goalDetails[this.indexEditando] = {
         ...this.goalDetails[this.indexEditando],
-        // Sobreescribimos del nombre del medio de erificacion editados
         nombreMedio: medioSeleccionado ? medioSeleccionado.nombre : '',
-        ...this.goalForm.value // Sobreescribimos los demas valores editados
+        ...this.goalForm.value 
       };
+      
       this.indexEditando = null;
+
       this.goalForm.reset();
       this.calcularTotalValor()
       this.activateSave = true;
@@ -284,6 +284,7 @@ export class AcuerdoEditarComponent implements OnInit {
         idMeta: detalle.idMeta,
         idMedio: detalle.idMedio,
         nombre: detalle.nombre,
+        descripcionMedioVerificacion: detalle.descripcionMedioVerificacion,
         metaPoa: detalle.metaPoa,
         valor: detalle.valor,
       });

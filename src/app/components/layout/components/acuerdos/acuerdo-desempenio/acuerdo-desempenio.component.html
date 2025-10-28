@@ -136,13 +136,13 @@
 
   <div style="display: flex; justify-content: space-between; margin-top: 15px;">
     <h4 style="margin: 0 0 5px 0;">Procesos de Evaluación de Competencias</h4>
-    <!-- <div style="display: flex; justify-content: end; padding-right: 55px; gap: 5px;">
-      <div class="btnStage" style="border-bottom: 1px solid white; margin-bottom: -1px; z-index: 1; background-color: green; color: white;"> Creación</div>
+    <div style="display: flex; justify-content: end; padding-right: 55px; gap: 5px;">
+      <div class="btnStage" style="border-bottom: 1px solid white; margin-bottom: -1px; z-index: 1; background-color: #004b8d; color: white;"> Creación</div>
       <div class="btnStage"> 1 era revisión</div>
       <div class="btnStage"> 2 da revisión</div>
       <div class="btnStage"> 3 era revisión</div>
       <div class="btnStage"> Evaluación</div>
-    </div> -->
+    </div>
   </div>
 
   <div class="carousel-container">
@@ -183,8 +183,16 @@
       <th class="headerCell">Nombre</th>
       <th class="headerCell">Unidad organizativa</th>
       <th class="headerCell">Cargo</th>
-      <th class="headerCell">G.O</th>
-      <th class="headerCell">Etapa</th>
+      <th class="headerCell">
+        <div style="display: flex; justify-content: center;">
+          G.O
+        </div>
+      </th>
+      <th class="headerCell">
+        <div style="display: flex; justify-content: center;">
+          Etapa
+        </div>
+      </th>
       <th class="headerCell">
         <div style="display: flex; justify-content: center;">
           Estado
@@ -232,14 +240,24 @@
         </ng-template>
       </td>
       <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
-      <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
-      <td class="dataIndiCell">{{acuerdo.tipoProceso.nombre}}</td>
+      <td class="dataIndiCell">
+        <div style="display: flex; justify-content: center;">
+          {{acuerdo.colaboradorObj.grupoObj.nombre}}
+        </div>
+      </td>
+      <td class="dataIndiCell">
+        <div style="display: flex; justify-content: center;">
+          {{acuerdo.tipoProceso.nombre}}
+        </div>
+      </td>
       <td class="dataIndiCell">
         <div style="display: flex; justify-content: center; color: white;">
           <div class="tag pendiente" [ngClass]="{
-          'aceptada': agreement != undefined && validationCreation && minutaVerified.existe && validationDocAgreement == false && minutaVerified.existe && minuta.aprobada != null && minuta.aprobada == true && minutaVerified.docCargado,
+          'aceptada': agreement != undefined && validationCreation && minutaVerified.existe && validationDocAgreement == false && minutaVerified.existe && acuerdo.tipoProceso.id == 1 && minuta.aprobada != null && minuta.aprobada == true && minutaVerified.docCargado
         }">
-            Proceso de {{acuerdo.flujoObj.nombre}}
+            Proceso de {{agreement != undefined && validationCreation && minutaVerified.existe && validationDocAgreement
+            == false && minutaVerified.existe && minuta.aprobada != null && minuta.aprobada == true && acuerdo.tipoProceso.id == 1 && 
+            minutaVerified.docCargado ? 'creación completo' : acuerdo.flujoObj.nombre}}
           </div>
         </div>
       </td>
@@ -337,10 +355,10 @@
   </tbody>
   <tfoot *ngIf="pagination && pagination.totalPage">
     <tr class="paginatorRow">
-      <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
-        <td class="dataIndiCell"></td>
-      </ng-container>
-      <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
+      <!-- <ng-container *ngFor="let td of [1, 2, 3, 4, 5]"> -->
+        <td colspan="5" class="dataIndiCell"></td>
+      <!-- </ng-container> -->
+      <td class="paginationCell"> <span style="color: #888; display: flex; justify-content: end; margin-right: 15px;">{{pagination.totalItem}} Items</span></td>
       <td class="paginationCell">
         <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
           <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
@@ -358,9 +376,9 @@
         <ng-template #searching>
           <td class="dataIndiCell">Buscando elementos.</td>
         </ng-template>
-        <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
-          <td class="dataIndiCell"></td>
-        </ng-container>
+        <!-- <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]"> -->
+          <td colspan="6" class="dataIndiCell"></td>
+        <!-- </ng-container> -->
       </tr>
     </tbody>
   </ng-template>

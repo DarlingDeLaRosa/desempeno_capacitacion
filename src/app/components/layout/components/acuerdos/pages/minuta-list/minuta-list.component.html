@@ -126,6 +126,11 @@
             <mat-icon>description</mat-icon>
             <h4>Ver Doc. Minuta</h4>
           </button>
+          
+          <div mat-menu-item (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == true && minuta.documentos.length > 0">
+            <mat-icon style="color: green">check</mat-icon>
+            <h4 style="color: green">Aceptar Documento Minuta</h4>
+          </div>
 
           <div mat-menu-item (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == null ">
             <mat-icon style="color: green">check</mat-icon>
