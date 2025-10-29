@@ -17,7 +17,7 @@ import { periodProcessGetI } from '../../mantenimiento/mantenimiento-options/per
 import { PaginationI } from '../../../../interfaces/generalInteerfaces';
 import { MinutaService } from '../services/minuta.service';
 import { MinutaEvaluacionCompetenciaComponent } from '../../../templates/minuta-evaluacion-competencia/minuta-evaluacion-competencia.component';
-import { filter } from 'rxjs';
+import { Observable, filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-acuerdo-desempenio',
@@ -60,6 +60,8 @@ export class AcuerdoDesempenioComponent implements OnInit {
     private periodProcessService: PeriodsProcessServices,
   ) {
     this.userLogged = systemInformation.localUser
+    console.log(this.userLogged);
+    
   }
 
   ngOnInit(): void {
@@ -85,11 +87,11 @@ export class AcuerdoDesempenioComponent implements OnInit {
         show: true,
         title: 'Validación de acuerdos',
         status:
-          this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(2) && this.validateStageSameAd(1)
+          this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(2, 1)
             ? ''
-            : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(2) && this.validateStageSameAd(1)
+            : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(2, 1)
               ? 'in-progress'
-              : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(2) && this.validateStageMayorAd(1)
+              : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(2, 1) 
                 ? 'completed'
                 : '',
         responsable: 'Analista de evaluación del desempeño'
@@ -98,11 +100,11 @@ export class AcuerdoDesempenioComponent implements OnInit {
         number: 3,
         show: this.validationGv,
         title: 'Validación de acuerdos de grupo ocupacional ( V )',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(2)
+        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(2, 1)
           ? ''
-          : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(2) && !this.validateEvaluationAd(3)
+          : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(2, 1) && !this.validateEvaluationAd(3, 1)
             ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3)
+            : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3, 1)
               ? 'completed'
               : '',
         responsable: 'Analista de planificación'
@@ -111,11 +113,11 @@ export class AcuerdoDesempenioComponent implements OnInit {
         number: this.validationGv ? 4 : 3,
         show: true,
         title: 'Documentación de acuerdos de desempeño',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(3)
+        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(3, 1)
           ? ''
-          : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3) && this.validationDocAgreement
+          : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3, 1) && this.validationDocAgreement
             ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3) && this.validationDocAgreement == false
+            : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3, 1) && this.validationDocAgreement == false
               ? 'completed'
               : '',
         responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
@@ -124,11 +126,11 @@ export class AcuerdoDesempenioComponent implements OnInit {
         number: this.validationGv ? 5 : 4,
         show: true,
         title: 'Creación de minuta',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4)
+        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4, 1)
           ? ''
-          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4) && this.validationDocAgreement == false && this.minutaVerified.existe == false
+          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4, 1) && this.validationDocAgreement == false && this.minuta == undefined
             ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.minutaVerified.existe && this.validationDocAgreement == false
+            : this.agreement != undefined && this.validationCreation && this.validationDocAgreement == false && this.activeProcess.tipoProceso.id == 1 || this.minuta != undefined
               ? 'completed'
               : '',
         responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
@@ -137,11 +139,11 @@ export class AcuerdoDesempenioComponent implements OnInit {
         number: this.validationGv ? 6 : 5,
         show: true,
         title: 'Validación de minuta',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4) && this.minutaVerified.existe && this.validationDocAgreement == false
+        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4, 1) && this.minutaVerified.existe && this.validationDocAgreement == false
           ? ''
-          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4) && this.validationDocAgreement == false && this.minutaVerified.existe && (this.minuta.aprobada == null || this.minuta.aprobada == false)
+          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4, 1) && this.validationDocAgreement == false && this.minuta != undefined && (this.minuta.aprobada == null || this.minuta.aprobada == false) && this.activeProcess.tipoProceso.id == 1
             ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.minutaVerified.existe && this.validationDocAgreement == false && this.minuta.aprobada != null && this.minuta.aprobada == true
+            : this.agreement != undefined && this.validationCreation && this.validationDocAgreement == false && this.minuta != undefined && this.minuta.aprobada != null && this.minuta.aprobada == true
               ? 'completed'
               : '',
         responsable: 'Analista de evaluación del desempeño'
@@ -150,11 +152,11 @@ export class AcuerdoDesempenioComponent implements OnInit {
         number: this.validationGv ? 7 : 6,
         show: true,
         title: 'Documentación de minuta',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4) && this.minutaVerified.existe && this.validationDocAgreement == false
+        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4, 1) && this.minutaVerified.existe && this.validationDocAgreement == false
           ? ''
-          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4) && this.validationDocAgreement == false && this.minutaVerified.existe && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minutaVerified.docCargado == false
+          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4, 1) && this.validationDocAgreement == false && this.minuta != undefined && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minuta.documentos.length == 0 && this.activeProcess.tipoProceso.id == 1
             ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.minutaVerified.existe && this.validationDocAgreement == false && this.minutaVerified.existe && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minutaVerified.docCargado
+            : this.agreement != undefined && this.validationCreation && this.validationDocAgreement == false && this.minuta != undefined && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minuta.documentos.length > 0
               ? 'completed'
               : '',
         responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
@@ -163,7 +165,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
         number: this.validationGv ? 8 : 7,
         show: true,
         title: 'Completada',
-        status: this.agreement != undefined && this.validationCreation && this.minutaVerified.existe && this.validationDocAgreement == false && this.minutaVerified.existe && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minutaVerified.docCargado ? 'completed' : '',
+        status: this.agreement != undefined && this.validationCreation && this.validationDocAgreement == false && this.minuta != undefined && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minuta.documentos.length > 0 ? 'completed' : '',
         responsable: ''
       },
     ];
@@ -178,8 +180,10 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
   getMyMinuta() {
     this.minutaService.getMinuta('', "acuerdo", true, 1, 5).subscribe((resp: any) => {
-      [this.minuta] = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == 1)
-      this.minutaList = resp.data.flatMap((minuta: MinutaGetI) => minuta.documentos || []);
+      if (resp.data.length > 0) {
+        [this.minuta] = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == 1)
+        this.minutaList = resp.data.flatMap((minuta: MinutaGetI) => minuta.documentos || []);
+      }
     })
   }
 
@@ -188,7 +192,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
       .subscribe((res: any) => {
         if (res) {
           this.activeProcess = res.data
-          this.verifiedMinuta(res.data.periodo.idPeriodo)
+          this.verifiedMinuta(this.activeProcess.periodo.idPeriodo)
         }
       })
   }
@@ -258,13 +262,15 @@ export class AcuerdoDesempenioComponent implements OnInit {
   // }
 
   validateCreationAd() {
-    for (const item of this.agreement) {
-      if (item.puntos !== this.calculateGoalValue(item.detalles)) {
-        this.validationCreation = false;
-        return;
+    if (this.agreement.length > 0) {
+      for (const item of this.agreement) {
+        if (item.puntos !== this.calculateGoalValue(item.detalles)) {
+          this.validationCreation = false;
+          return;
+        }
       }
+      this.validationCreation = true;
     }
-    this.validationCreation = true;
     this.updateSteps()
   }
 
@@ -274,9 +280,9 @@ export class AcuerdoDesempenioComponent implements OnInit {
     return valor
   }
 
-  validateEvaluationAd(flujoId: number): boolean {
+  validateEvaluationAd(flujoId: number, typeProcessId: number,): boolean {
     const hayFlujoMayor = this.agreement.some(
-      (item: AcuerdoI) => item.flujoObj.idFlujo <= flujoId
+      (item: AcuerdoI) => item.tipoProceso.id == typeProcessId && item.flujoObj.idFlujo <= flujoId
     );
     return !hayFlujoMayor
   }
@@ -287,13 +293,13 @@ export class AcuerdoDesempenioComponent implements OnInit {
     );
     return stage
   }
-  
-  validateStageSameAd(typeProcessId: number): boolean {
-    const stage = this.agreement.some(
-      (item: AcuerdoI) => item.tipoProceso.id == typeProcessId
-    );
-    return stage
-  }
+
+  // validateStageSameAd(typeProcessId: number, flujoId: number): boolean {
+  //   const stage = this.agreement.some(
+  //     (item: AcuerdoI) => item.tipoProceso.id == typeProcessId && item.flujoObj.idFlujo <= flujoId
+  //   );
+  //   return stage
+  // }
 
   validateOcupationalGroup() {
     this.validationGv = this.agreement.some(

@@ -152,7 +152,7 @@
       <thead class="headerTable">
         <tr class="headerRow">
           <th class="headerCell">Metas</th>
-          <th class="headerCell" style="width: 20%;">
+          <th class="headerCell" >
             <div style="display: flex; justify-content: center;">
               Medio de verificación
             </div>
@@ -161,13 +161,13 @@
           <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
             <th class="headerCell">Meta poa</th>
           </ng-container>
-          <th class="headerCell" style="width: 10%;">
+          <th class="headerCell" >
             <div style="display: flex; justify-content: center;">
               Valor
             </div>
           </th>
-          <th class="headerCell" style="width: 4%;"></th>
-          <th class="headerCell" style="width: 4%;">
+          <th class="headerCell" ></th>
+          <th class="headerCell" >
             <div *ngIf="isLoading ===  true" class="loader"></div>
           </th>
         </tr>
@@ -175,7 +175,7 @@
       <tbody *ngIf="goalDetails && goalDetails.length > 0; else noElements">
         <tr class="dataRow" *ngFor="let goal of goalDetails; let i = index">
 
-          <td class="dataIndiCell">{{goal.nombre}}</td>
+          <td class="dataIndiCell" style="max-width: 350px;" [matTooltip]="goal.nombre">{{goal.nombre}}</td>
           <td class="dataIndiCell">
             <div style="display: flex; justify-content: center;">
               {{goal.nombreMedio}}
@@ -183,7 +183,7 @@
           </td>
           <td class="dataIndiCell">{{goal.descripcionMedioVerificacion != null ? goal.descripcionMedioVerificacion : 'No Asignada'}}</td>
           <ng-container *ngIf="this.collaborator.grupoObj.idGrupo == 5">
-            <td class="dataIndiCell">{{goal.metaPoa}}</td>
+            <td class="dataIndiCell" [matTooltip]="goal.metaPoa">{{goal.metaPoa != null ? goal.metaPoa : 'No Asignada'}}</td>
           </ng-container>
           <td class="dataIndiCell">
             <div style="display: flex; justify-content: center;">

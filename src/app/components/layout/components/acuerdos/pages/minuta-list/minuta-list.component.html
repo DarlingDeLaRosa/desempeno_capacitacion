@@ -116,41 +116,41 @@
         <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
         <mat-menu #menu="matMenu">
 
-          <button mat-menu-item (click)="openModalTemplateMinuta(minuta.id)">
+          <div class="ItemMiniMenu" (click)="openModalTemplateMinuta(minuta.id)">
             <mat-icon>description</mat-icon>
             <h4>Ver Minuta</h4>
-          </button>
+          </div>
 
-          <button mat-menu-item *ngIf="minuta.documentos.length > 0"
+          <div class="ItemMiniMenu" *ngIf="minuta.documentos.length > 0"
             (click)="openModalListadoDocumentos(minuta.supervisorIntranet!.nombre, minuta.supervisorIntranet!.apellidos, minuta.supervisorIntranet!.idPersona, minuta.documentos)">
             <mat-icon>description</mat-icon>
             <h4>Ver Doc. Minuta</h4>
-          </button>
+          </div>
           
-          <div mat-menu-item (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == true && minuta.documentos.length > 0">
+          <div class="ItemMiniMenu" (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == true && minuta.documentos.length > 0">
             <mat-icon style="color: green">check</mat-icon>
-            <h4 style="color: green">Aceptar Documento Minuta</h4>
+            <h4 style="color: green">Completar P. Creación</h4>
           </div>
 
-          <div mat-menu-item (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == null ">
+          <div class="ItemMiniMenu" (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == null ">
             <mat-icon style="color: green">check</mat-icon>
             <h4 style="color: green">Aceptar Minuta</h4>
           </div>
 
-          <button mat-menu-item (click)="postValidarMinuta(minuta.id, false)" *ngIf=" minuta.aprobada == null ">
+          <div class="ItemMiniMenu" (click)="postValidarMinuta(minuta.id, false)" *ngIf=" minuta.aprobada == null ">
             <mat-icon style="color: orangered">close</mat-icon>
             <h4 style="color: orangered">Rechazar Minuta</h4>
-          </button>
+          </div>
 
           <!-- <button mat-menu-item (click)="postValidarMinuta(minuta.id, false)" *ngIf=" minuta.aprobada == true && minuta.documentos.length > 0 ">
             <mat-icon style="color: orangered">close</mat-icon>
             <h4 style="color: orangered">Rechazar Documento Minuta</h4>
           </button> -->
 
-          <button mat-menu-item class=" menuOptionsItemEliminar" (click)="deleteMinuta(minuta.id)">
+          <div class="ItemMiniMenu eliminarHover" (click)="deleteMinuta(minuta.id)">
             <mat-icon style="color: red;">delete</mat-icon>
             <h4 style="color: red;">Eliminar Minuta</h4>
-          </button>
+          </div>
 
         </mat-menu>
 

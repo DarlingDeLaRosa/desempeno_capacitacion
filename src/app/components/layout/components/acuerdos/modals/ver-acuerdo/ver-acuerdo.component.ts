@@ -5,10 +5,11 @@ import { ClassImports } from '../../../../../../helpers/class.components';
 import { agreementService } from '../../services/acuerdo.service';
 import { AcuerdoI } from '../../interfaces/acuerdo.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { SnackBars } from '../../../../services/snackBars.service';
 import { ActivatedRoute } from '@angular/router';
+import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class VerAcuerdoComponent implements OnInit {
   totalCalificacion: number = 0
   totalValor: number = 0
   commentsForm: FormGroup
-  idAgreement:number = 0
+  idAgreement: number = 0
+  userLogged!: loggedUserI
 
   constructor(
     public fb: FormBuilder,
@@ -40,8 +42,9 @@ export class VerAcuerdoComponent implements OnInit {
   ) {
     this.commentsForm = fb.group({
       acuerdoId: 0,
-      descripcion: new FormControl(''),
+      descripcion: new FormControl('', [Validators.maxLength(400)]),
     })
+    this.userLogged = systemInformation.localUser
   }
 
   ngOnInit(): void {
@@ -61,22 +64,28 @@ export class VerAcuerdoComponent implements OnInit {
     this.commentsForm.patchValue({ acuerdoId: this.agreement.idAcuerdo })
     this.agreementservice.postComment(this.commentsForm.value).subscribe((res: any) => {
       if (res.status) {
-        this.appHelper.handleResponse(res, () => {}, this.commentsForm)
+        this.appHelper.handleResponse(res, () => this.getAgreementByIdCollaborator(), this.commentsForm)
       }
     })
   }
 
   async agreementDesicion(decision: boolean) {
     let flowData
-    let removeDecision: boolean = await this.snackBar.snackbarConfirmation(`Esta seguro de evaluar el acuerdo como ${decision ? 'CORRECTO' : 'INCORRECTO'}`, '')
+    let agreementDecision: boolean = await this.snackBar.snackbarConfirmation(`Esta seguro de evaluar el acuerdo como ${decision ? 'CORRECTO' : 'INCORRECTO'}`, '')
 
-    if (removeDecision) {
-      decision ? flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 1 }
-        : flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: 2 }
+
+    if (agreementDecision) {
+      if (this.agreement.colaboradorObj.grupoObj.idGrupo == 5) {
+        decision ? flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 1 }
+          : flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo }
+      } else {
+        decision ? flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 2 }
+          : flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: 2 }
+      }
 
       this.agreementservice.updateFlow(flowData).subscribe((res: any) => {
         if (res.status) {
-          this.appHelper.handleResponse(res, () => {}, this.commentsForm)
+          this.appHelper.handleResponse(res, () => { }, this.commentsForm)
         }
       })
     }

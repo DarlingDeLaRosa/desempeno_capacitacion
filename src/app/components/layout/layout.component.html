@@ -20,7 +20,7 @@
                 <mat-icon>star</mat-icon>Plan de mejora
             </a>
 
-            <a class="item-menu" *ngIf="usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'False'"
+            <a class="item-menu" *ngIf="usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'False' && usuario.Position != 'Analista de Planificación'" 
                 [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
                 <mat-icon>description</mat-icon>Evaluación de competencias
             </a>
@@ -58,7 +58,7 @@
             </div>
 
             <a class="item-menu" [routerLink]="['/layout/minutaLista']"
-                *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'" routerLinkActive="active">
+                *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista' && usuario.Position != 'Analista de Planificación'" routerLinkActive="active">
                 <mat-icon>content_paste_search</mat-icon>Minutas
             </a>
             <a class="item-menu" [routerLink]="['/layout/reportes']"  routerLinkActive="active"> <!---->
@@ -69,7 +69,7 @@
 
         <div>
             <div class="ConfigsideMenuContainer"
-                *ngIf="usuario.role !== 'Supervisor' && usuario.role !== 'supervisado'">
+                *ngIf="usuario.role !== 'Supervisor' && usuario.role !== 'supervisado' && usuario.Position != 'Analista de Planificación' ">
                 <div class="item-menu" [routerLink]="['/layout/mantenimiento']" routerLinkActive="activeOut">
                     <mat-icon>settings</mat-icon>Mantenimiento
                 </div>

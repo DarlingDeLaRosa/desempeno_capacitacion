@@ -23,16 +23,17 @@
 }
 
 .comments {
-    display: flex;
+    display: grid;
+    grid-template-columns: 40px auto;
+    /* align-items: flex-start; */
+    width: fit-content;
+    padding: 10px;
+    max-width: 80%;
+    border-radius: 5px;
     min-height: 70px;
     background-color: white;
-    border-radius: 5px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.15);
-    align-items: flex-start;
-    width: fit-content;
-    max-width: 75%;
     word-wrap: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 .comments.align-right {
@@ -44,14 +45,9 @@
     margin: auto;
 }
 
-.initialLetter.dif-Background {
-    background-color: lightseagreen;
-    /* Opcional: Cambiar el fondo para diferenciar */
-}
-
 .initialLetter {
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
     display: grid;
     border-radius: 50px;
     font-size: 20px;
@@ -59,6 +55,10 @@
     background-color: lightblue;
     font-weight: 600;
     color: white;
+}
+
+.initialLetter.dif-Background {
+    background-color: lightseagreen;
 }
 
 .messageContainer {
@@ -74,10 +74,11 @@
 .message {
     display: flex;
     min-height: 25px;
+    /* max-width: 85%; */
     font-size: 14px;
     align-items: flex-end;
     padding: 8px 5px 0 5px;
-    text-align: left;
+    text-align: justify;
     white-space: pre-wrap;
 }
 

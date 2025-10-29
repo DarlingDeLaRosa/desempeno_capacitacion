@@ -18,15 +18,23 @@
   </ng-container>
 
 
-  <div style="display: flex; justify-content: space-between; margin-bottom: 15px;" *ngIf="agreement && agreement.colaboradorObj.estadoObj.idEstado == 1">
-    <div style="display: flex; gap: 5px;">
-      <button *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3" type="button" class="cleanButton" (click)="agreementDesicion(false)">Rechazar AD.</button>
-      <button *ngIf="systemInformation.activeRol().nombre == 'Analista' && agreement.flujoObj.idFlujo == 2 || systemInformation.activeRol().nombre == 'Encargado' && agreement.flujoObj.idFlujo == 3" type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar AD.</button>
-    </div>
+  <div style="display: flex; justify-content: end; margin-bottom: 15px;"
+    *ngIf="agreement && agreement.colaboradorObj.estadoObj.idEstado == 1">
 
-    <button *ngIf="systemInformation.activeRol().nombre !== 'supervisado'"
-      matTooltip="Imprimir" class="btnNavegar" printSectionId="AD" [useExistingCss]="true" ngxPrint><mat-icon
-        style="font-size: 22px; margin-top: 5px;">print</mat-icon></button>
+    <button *ngIf="userLogged.role !== 'supervisado'" matTooltip="Imprimir" class="btnNavegar" printSectionId="AD"
+      [useExistingCss]="true" ngxPrint><mat-icon style="font-size: 22px; margin: 5px;">print</mat-icon>
+    </button> &nbsp;
+
+    <div style="display: flex; gap: 5px;">
+      <button
+        *ngIf="userLogged.role == 'Analista' && agreement.flujoObj.idFlujo == 2 || userLogged.role == 'Analista' && userLogged.Position == 'Analista de Planificación' && agreement.flujoObj.idFlujo == 3"
+        type="button" class="cleanButton" (click)="agreementDesicion(false)">
+        Rechazar A.D.
+      </button>
+      <button
+        *ngIf="userLogged.role == 'Analista' && agreement.flujoObj.idFlujo == 2 || userLogged.role == 'Analista' && userLogged.Position == 'Analista de Planificación'&& agreement.flujoObj.idFlujo == 3"
+        type="submit" class="saveButton" (click)="agreementDesicion(true)">Aceptar A.D.</button>
+    </div>
   </div>
 
   <div id="AD" *ngIf="agreement">
@@ -61,8 +69,10 @@
       </div>
 
       <div style="padding: 5px; border-bottom: 1px solid black;">
-        <p style="text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo != 5"> <strong>Formulario para Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales  I, II, III y IV</strong></p>
-        <p style="text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5"> <strong>Formulario para Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales  V</strong></p>
+        <p style="text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo != 5"> <strong>Formulario para
+            Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales I, II, III y IV</strong></p>
+        <p style="text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5"> <strong>Formulario para
+            Acuerdo de Desempeño Laboral de servidores de los Grupos Ocupacionales V</strong></p>
       </div>
 
       <div style="padding: 5px; border-bottom: 1px solid black;">
@@ -110,7 +120,8 @@
         <div style="grid-column: 1/5; display: flex; align-items: end; padding: 8px 8px 2px 8px;"><strong>Valor del
             Componente LOGRO DE METAS: {{agreement.tipoAcuerdoObj.puntuacion}} puntos</strong></div>
         <div style="grid-column: 5/7; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0;">
-          <strong>Evaluación de las Metas</strong></div>
+          <strong>Evaluación de las Metas</strong>
+        </div>
       </div>
 
       <div style="padding: 5px; border-bottom: 1px solid black;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
@@ -118,16 +129,25 @@
       </div>
 
       <div class="table-title-GOV" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">
-        <div style="grid-column: 1/6; display: flex; padding: 8px 8px 2px 8px; text-align: center; background-color: #C5D9F1;"><strong>Recuerde la necesaria alineación de las Metas del Acuerdo de Desempeño laboral del directivo del área con las Metas del Plan Operativo Anual (POA) de la unidad</strong></div>
-        <div style="grid-column: 6/8; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0; background-color: #C5D9F1;">
-          <strong>Evaluación de las Metas</strong></div>
+        <div
+          style="grid-column: 1/6; display: flex; padding: 8px 8px 2px 8px; text-align: center; background-color: #C5D9F1;">
+          <strong>Recuerde la necesaria alineación de las Metas del Acuerdo de Desempeño laboral del directivo del área
+            con las Metas del Plan Operativo Anual (POA) de la unidad</strong>
+        </div>
+        <div
+          style="grid-column: 6/8; display: grid; place-items: center;border-left: 1px solid black; padding: 8px 0; background-color: #C5D9F1;">
+          <strong>Evaluación de las Metas</strong>
+        </div>
       </div>
 
       <table class="evaluation-table">
         <thead>
           <th style="width: 3%; text-align: center;">No.</th>
-          <th style="width: 20%; text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">Metas del Plan Operativo Anual -POA- de la Unidad Organizativa </th>
-          <th style="text-align: center;" [ngClass]="agreement.colaboradorObj.grupoObj.idGrupo == 5 ? 'width: 20%;' : 'width: 37%;' ">Metas del (de la) Servidor (a)</th>
+          <th style="width: 20%; text-align: center;" *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">Metas del
+            Plan Operativo Anual -POA- de la Unidad Organizativa </th>
+          <th style="text-align: center;"
+            [ngClass]="agreement.colaboradorObj.grupoObj.idGrupo == 5 ? 'width: 20%;' : 'width: 37%;' ">Metas del (de
+            la) Servidor (a)</th>
           <th style="width: 10%; text-align: center;">Ponderación o Valor en puntos de las Metas</th>
           <th style="width: 20%; text-align: center;">Medios de Verificación o Evidencias de logro de cada Meta</th>
           <th style="width: 10%; text-align: center;">Calificación Otorgada</th>
@@ -145,7 +165,7 @@
           </tr>
           <tr>
             <td></td>
-            <td  *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5"></td>
+            <td *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5"></td>
             <td style="text-align: end; font-weight: 600;">Total</td>
             <td style="text-align: center; font-weight: 600;">{{totalValor}}</td>
             <td style="font-weight: 600; text-align: end;">Total</td>
@@ -184,19 +204,18 @@
     </div>
   </div>
 
-  <div style="display: flex; margin: 0;"
-    *ngIf="agreement && systemInformation.activeRol().nombre == 'Analista' && agreement.colaboradorObj.estadoObj.idEstado == 1 || agreement && systemInformation.activeRol().nombre == 'Encargado' && agreement.colaboradorObj.estadoObj.idEstado == 1 ">
-    <form style="width: 100%;" [formGroup]="commentsForm" (submit)="postComment()">
-      <div style="display: flex; align-items: end;">
+  <div style="display: flex; margin: 0; justify-content: space-between; "
+    *ngIf="agreement && userLogged.role == 'Analista' && agreement.colaboradorObj.estadoObj.idEstado == 1 || agreement && userLogged.role == 'Encargado' && agreement.colaboradorObj.estadoObj.idEstado == 1 ">
+    
+    <form style="width: 100%; display: flex; " [formGroup]="commentsForm" (submit)="postComment()">
         <mat-form-field style="flex: 1;">
           <mat-label>¿Algun comentario o correcion necesaria?</mat-label>
-          <textarea matInput formControlName="descripcion"></textarea>
+          <textarea matInput maxlength="400" formControlName="descripcion"></textarea>
         </mat-form-field>
 
-        <button type="submit" style="border: none; background-color: white; height: 95px;">
-          <mat-icon style="margin: 0 0 0 5px; cursor: pointer; color: #4CAF50;">send</mat-icon>
+        <button type="submit" style="height: 56px; margin: 0 0 0 5px; border: none; cursor: pointer; background-color: #4caf4f36; border-radius: 10px; padding: 0 10px;">
+          <mat-icon class="editIcon">send</mat-icon>
         </button>
-      </div>
 
       <!-- <div style="display: flex; justify-content: end; gap: 5px;">
         <button type="button" class="cleanButton" (click)="closeModal()">Cerrar</button>
