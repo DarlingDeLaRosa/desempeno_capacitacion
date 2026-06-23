@@ -29,6 +29,7 @@ export class MetasComponent implements OnInit {
       idMeta: 0,
       metaPoa: new FormControl(''),
       isTranversal: new FormControl(true),
+      descripcionMedioVerificacion: new FormControl<string>('', Validators.required),
       valor: new FormControl('', Validators.required),
       nombre: new FormControl('', [Validators.required,  this.smartValidator()]),
       idMedio: new FormControl('', Validators.required),
@@ -44,7 +45,7 @@ export class MetasComponent implements OnInit {
 
   ngOnInit(): void {
     this.getGoals()
-    this.getGoalPOA()
+    // this.getGoalPOA()
     this.getVerificationMethod()
   }
 
@@ -90,18 +91,18 @@ export class MetasComponent implements OnInit {
   
 
   // Metodo para obtener todas las metas del POA
-  getGoalPOAFiltered() {
-    const goalPOAValue = this.goalsForm.value.metaPoa;
-    if (goalPOAValue && goalPOAValue.length >= 3) this.getGoalPOA(goalPOAValue)
-    else this.goalsPoa = [];
-  }
+  // getGoalPOAFiltered() {
+  //   const goalPOAValue = this.goalsForm.value.metaPoa;
+  //   if (goalPOAValue && goalPOAValue.length >= 3) this.getGoalPOA(goalPOAValue)
+  //   else this.goalsPoa = [];
+  // }
 
-  getGoalPOA(nombre: string = ''){
-    this.intranetService.getGoalPOA(nombre)
-    .subscribe((res: any) => {
-      this.goalsPoa = res.data;
-    });
-  }
+  // getGoalPOA(nombre: string = ''){
+  //   this.intranetService.getGoalPOA(nombre)
+  //   .subscribe((res: any) => {
+  //     this.goalsPoa = res.data;
+  //   });
+  // }
 
   // Metodo para obtener todos los grupos ocupacionales
   getVerificationMethod() {

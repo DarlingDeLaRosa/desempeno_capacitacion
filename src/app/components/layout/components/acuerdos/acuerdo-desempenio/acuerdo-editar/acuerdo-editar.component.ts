@@ -29,7 +29,8 @@ import { LoaderComponent } from '../../../../../../helpers/components/loader/loa
 export class AcuerdoEditarComponent implements OnInit {
 
   idRegistro!: number
-  collaborator!: CollaboratorsGetI;
+  type: string = '1'
+  // collaborator!: CollaboratorsGetI;
   agreement!: AcuerdoI;
   verificacionMethodList: Array<VerificationMethodI> = [];
   goalForm: FormGroup;
@@ -71,11 +72,18 @@ export class AcuerdoEditarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['type'] != undefined) {
+        this.type = params['type'];
+      }
+    });
+    
     this.idRegistro = Number(this.route.snapshot.paramMap.get('id'));
-    this.getPeopleById();
+    // this.getPeopleById();
     this.getVerificationMethod();
     this.getGoalPOA()
     this.getProtocol()
+    this.getAgreementByIdCollaborator();
   }
 
   smartValidator() {
@@ -85,7 +93,8 @@ export class AcuerdoEditarComponent implements OnInit {
 
       // Validación de referencia temporal (día, mes, año)
       const timeRegex =
-        /(\b\d{1,2}\b\sde\s(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\sdel?\s\d{4})|((enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\sdel?\s\d{4})|(\ben\s?el?\s?\d{4})/i;
+      /(a\s+m[aá]s\s+tardar\s+el\s+\d{1,2}\s+de\s+[a-z]+(?:\s+de\s+\d{4})?)|(al\s+\d{1,2}\s+de\s+[a-z]+(?:\s+de\s+\d{4})?)|(antes\s+del?\s+\d{1,2}\s+de\s+[a-z]+(?:\s+de\s+\d{4})?)|(durante\s+el\s+año\s+\d{4})|(durante\s+\d{4})|(durante\s+el\s+mes\s+de\s+[a-z]+\s+de\s+\d{4})|(para\s+el\s+año\s+\d{4})|(durante\s+el\s+periodo\s+[a-z]+\s*-\s*[a-z]+\s+de\s+\d{4})|(\b\d{1,2}\b\s+de\s+[a-z]+\s+del?\s+\d{4})|([a-z]+\s+del?\s+\d{4})|(\ben\s+el?\s+\d{4})/i;
+      
       if (!timeRegex.test(value)) {
         errors['missingTime'] =
           'La meta debe incluir una referencia temporal válida (día, mes y año; mes y año; o solo el año).';
@@ -119,20 +128,19 @@ export class AcuerdoEditarComponent implements OnInit {
   }
 
   //metodo para obtener los datos del colaborador segun el id para y podermos mostrar los datos del colaborador
-  getPeopleById() {
-    this.intranetService.getPeopleById(this.idRegistro).subscribe((resp: any) => {
-      this.collaborator = resp.data;
-      this.isLoading2 = false;
-      this.getAgreementByIdCollaborator();
-    })
-  }
+  // getPeopleById() {
+  //   this.intranetService.getPeopleById(this.idRegistro).subscribe((resp: any) => {
+  //     this.collaborator = resp.data;
+  //     this.isLoading2 = false;
+  //     this.getAgreementByIdCollaborator();
+  //   })
+  // }
 
   getProtocol() {
     this.protocolService.getProtocolByTypeProtocolId(4)
       .subscribe((res: any) => {
         this.protocol = res.data;
         if(this.protocol.documentosObj.length == 0) return
-
         this.docName = this.protocol.documentosObj[0].nombre.split('.')[0]
       })
   }
@@ -161,9 +169,9 @@ export class AcuerdoEditarComponent implements OnInit {
 
   //metodo para buscar el acuerdo por el id del colaborador y asignarle el detalle del acuerdo al arreglo de detalle
   getAgreementByIdCollaborator() {
-    this.agreementservice.getAgreementByCollaborator(this.collaborator.idPersona, this.collaborator.grupoObj.idGrupo).subscribe((resp: any) => {
+    this.agreementservice.getAgreementByCollaborator(this.idRegistro).subscribe((resp: any) => {
       this.agreement = resp.data;
-
+      
       //hace un map a los detalles del acuerdo y lo agrega al arreglo del detalle que tenemos
       this.goalDetails = this.agreement.detalles.map((detalle: any) => {
         return {
@@ -273,7 +281,6 @@ export class AcuerdoEditarComponent implements OnInit {
       }
     }
   }
-
 
   //Carga los datos al formulario
   cargarDetalleEnFormularioIndex(index: number, ideditarRegistro: number) {

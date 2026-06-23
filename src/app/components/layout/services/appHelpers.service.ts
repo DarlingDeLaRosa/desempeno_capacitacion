@@ -34,11 +34,11 @@ export class HerlperService {
     }
 
     //Maneja las respuestas de las peticiones lanzando un mensaje, reiniciando un formulario o llamando la funcion get para obtener los datos actualizados.
-    handleResponse(response: any, onSuccess: () => void, formToReset?: FormGroup, onSecondSuccess?: () => void) {
+    handleResponse(response: any, onSuccess: () => void, formToReset?: FormGroup, onSecondSuccess?: () => void, message?: string) {
         if (response.status) {
             this.snackBar.snackbarLouder(false);
             setTimeout(() => {
-                this.snackBar.snackbarSuccess();
+                this.snackBar.snackbarSuccess(message);
                 onSuccess();
                 formToReset?.reset();
                 if (onSecondSuccess != undefined) onSecondSuccess();
@@ -83,7 +83,6 @@ export class HerlperService {
         const start = new Date(startDate);
         const end = new Date(endDate);
 
-        // Normalizar las fechas (eliminar horas, minutos y segundos)
         today.setHours(0, 0, 0, 0);
         start.setHours(0, 0, 0, 0);
         end.setHours(0, 0, 0, 0);

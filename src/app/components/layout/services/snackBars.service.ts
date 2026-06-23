@@ -42,11 +42,12 @@ export class SnackBars {
         }
     }
 
-    snackbarSuccess() {
+    snackbarSuccess(Message: string = 'Operación realizada correctamente.') {
         this.snackBarRef = this.snackBar.openFromComponent(SnackBarSuccess, {
             horizontalPosition: 'center',
             verticalPosition: 'top',
-            duration: 2500
+            duration: 2500,
+            data: Message
         })
     }
 

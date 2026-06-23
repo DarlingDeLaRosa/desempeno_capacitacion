@@ -38,7 +38,10 @@ export class MiAcuerdoComponent implements OnInit {
 
   getAgreementByIdCollaborator() {
     this.agreementService.getAgreementByIdCollaborator(this.usuario.idPersona).subscribe({
-      next: (resp: any) => { this.agreement = resp.data },
+      next: (resp: any) => { 
+        this.agreement = resp.data
+        this.calculadora()
+      },
       error: (error) => { 
         this.snackBar.snackbarError('El acuerdo de desempeño no fue encontrado', 4000)
         error.status == 404 ? this.navigate() : ''

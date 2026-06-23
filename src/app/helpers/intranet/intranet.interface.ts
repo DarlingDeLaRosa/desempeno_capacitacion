@@ -1,16 +1,36 @@
 export interface OcupationalGroupI {
-    idGrupo: number
-    nombre: string
+  idGrupo: number
+  nombre: string
 }
 
 export interface SuppliersI {
-    rnc: string
-    razonSocial: string
-    nombreComercial: string
-    estado: string
+  rnc: string
+  razonSocial: string
+  nombreComercial: string
+  estado: string
 }
 
-export interface loggedUserI{
+export interface UserResumeTypeTwoI {
+  idPersona: number,
+  nombres: string,
+  apellidos: string,
+  usuario: string,
+  cedula: string,
+  unidadOrganizativa: string,
+  supervisorInterino: boolean
+}
+
+export interface UserResumeI {
+  idPersona: number,
+  nombre: string,
+  apellidos: string,
+  usuario: string,
+  cedula: string,
+  unidadOrganizativa: string,
+  supervisorInterino: boolean
+}
+
+export interface loggedUserI {
   Firstname: string;
   Id: string;
   idPersona: number;
@@ -20,10 +40,10 @@ export interface loggedUserI{
   Position: string;
   idSupliendoA: string;
   RecintoSigla: string;
-  IdDepartamento:string;
+  IdDepartamento: string;
   Unidad: string;
   Username: string;
-  Supervisor:string;
+  Supervisor: string;
   aud: string;
   exp: number;
   idSistema: string;
@@ -33,7 +53,7 @@ export interface loggedUserI{
   sub: string;
 }
 
-export interface GeneralI{
+export interface GeneralI {
   id: number,
   nombre: string
 }

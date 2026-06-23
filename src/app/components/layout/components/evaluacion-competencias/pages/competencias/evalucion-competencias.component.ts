@@ -113,6 +113,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
   getSupervisorWithSubordinates(moveFronPagintation: boolean) {
     this.charge = true
     this.evaluationsCompetencies = this.supervisorWithSubordinates = []
+    
     if (moveFronPagintation == false) {
       this.evaluationCompetenciesCount = { tienen: 0, noTienen: 0 }
       this.pagination = { currentPage: 0, totalItem: 0, totalPage: 0 }

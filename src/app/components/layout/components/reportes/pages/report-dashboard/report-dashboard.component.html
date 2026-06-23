@@ -4,99 +4,42 @@
     </div>
 </div>
 
-<div style="display: flex; justify-content: space-between;">
+<!-- <div style="display: flex; justify-content: space-between;">
     <mat-form-field appearance="fill" style="width: 300px;">
         <mat-label>Buscar</mat-label>
         <input matInput>
         <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
-</div>
+</div> -->
+<h2 style="margin-bottom: 10px;">Listado de Reportes</h2>
 
 <app-loader *ngIf="false" ></app-loader>
 
-<div class="reportCardContent">
+<div class="reportCardContent" >
 
-    <div class="reportCard">
+    <div class="reportCard" *ngFor="let i of reports" [ngClass]="{'cursor-pointer': i.type === 1, 'contruction': i.type === 2 }  ">
         <div class="infoContainer">
             <div class="logo">
-                <mat-icon>settings</mat-icon>
+                <mat-icon>{{i.logo}}</mat-icon>
             </div>
             <div class="information">
-                <h2>Reporte de Evaluación de Competencias</h2>
-                <p>Este reporte muestra como los recintos manejaron sus competencias y cual es la media de calificación.
-                </p>
+                <h2>{{i.name}}</h2>
             </div>
         </div>
+        <p   class="line-clamp" [ngClass]="{'black': i.type === 2}">{{i.descripcion}} </p>
+        <div class="actionsContainer" *ngIf="i.type == 1">
 
-        <div class="actionsContainer">
             <div class="detailInfo">
-                <h4></h4>
                 <h5>Ver detalles</h5>
             </div>
-            <button mat-stroked-button>Generar PDF</button>
-        </div>
-    </div>
-
-    <div class="reportCard">
-        <div class="infoContainer">
-            <div class="logo">
-                <mat-icon>group</mat-icon>
-            </div>
-            <div class="information">
-                <h2>Reporte de Evaluación de Competencias</h2>
-                <p>Este reporte muestra como los recintos manejaron sus competencias y cual es la media de calificación.
-                </p>
-            </div>
+            <!-- <div style="display: flex; gap: 5px;"> -->
+                <!-- <button mat-stroked-button><mat-icon style="color: red;" >article</mat-icon> Generar PDF</button> -->
+                <button mat-stroked-button (click)="exportExcel(i.name, 1, i.diff)"><mat-icon style="color: green;" >grid_on</mat-icon> Generar Excel</button>
+            <!-- </div> -->
         </div>
 
-        <div class="actionsContainer">
-            <div class="detailInfo">
-                <h4></h4>
-                <h5>Ver detalles</h5>
-            </div>
-            <button mat-stroked-button>Generar PDF</button>
-        </div>
-    </div>
-
-    <div class="reportCard">
-        <div class="infoContainer">
-            <div class="logo">
-                <mat-icon>settings</mat-icon>
-            </div>
-            <div class="information">
-                <h2>Reporte de Evaluación de Competencias</h2>
-                <p>Este reporte muestra como los recintos manejaron sus competencias y cual es la media de calificación.
-                </p>
-            </div>
-        </div>
-
-        <div class="actionsContainer">
-            <div class="detailInfo">
-                <h4></h4>
-                <h5>Ver detalles</h5>
-            </div>
-            <button mat-stroked-button>Generar PDF</button>
-        </div>
-    </div>
-
-    <div class="reportCard">
-        <div class="infoContainer">
-            <div class="logo">
-                <mat-icon>settings</mat-icon>
-            </div>
-            <div class="information">
-                <h2>Reporte de Evaluación de Competencias</h2>
-                <p>Este reporte muestra como los recintos manejaron sus competencias y cual es la media de calificación.
-                </p>
-            </div>
-        </div>
-
-        <div class="actionsContainer">
-            <div class="detailInfo">
-                <h4></h4>
-                <h5>Ver detalles</h5>
-            </div>
-            <button mat-stroked-button>Generar PDF</button>
+        <div class="actionsContainer" *ngIf="i.type == 2">
+                <button mat-stroked-button disabled style="color: white; background-color: #004b8d;"><mat-icon style="color: white;" >construction</mat-icon>Proximamente</button>
         </div>
     </div>
 </div>

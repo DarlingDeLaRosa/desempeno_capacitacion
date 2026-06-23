@@ -1,8 +1,8 @@
-<div class="comments-modal" [ngClass]="{ 'expand-width': comments.length > 0 }">
+<div class="comments-modal" [ngClass]="{ 'expand-width': comments != undefined && comments.length > 0 }">
 
     <h2>Comentarios de acuerdo de desempeño.</h2>
     <h5>{{data.fullName}}</h5>
-    <div class="comments-container" *ngIf="comments.length > 0">
+    <div #commentsContainer class="comments-container" *ngIf="comments!= undefined && comments.length > 0">
         <div class="comments" *ngFor="let comment of comments" [ngClass]="{
                 'align-right': comment.creadoPorUsuario === systemInformation.currentUserSystem().username
             }">
@@ -32,7 +32,7 @@
         </div>
     </ng-container>
 
-    <form [formGroup]="commentsForm" (submit)="postComment()" *ngIf="comments.length > 0 && data.estado == 1">
+    <form [formGroup]="commentsForm" (submit)="postComment()" *ngIf="comments != undefined && comments.length > 0 && data.estado == 1">
         <mat-form-field appearance="fill" style="flex: 3;">
             <mat-label>Escribe un mensaje</mat-label>
             <input matInput formControlName="descripcion">

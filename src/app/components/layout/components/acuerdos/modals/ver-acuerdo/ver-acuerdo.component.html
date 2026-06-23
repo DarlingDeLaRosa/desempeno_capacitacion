@@ -3,7 +3,11 @@
     <h1>Acuerdo de Desempeño</h1>
   </div>
   <div>
-    <button class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+    <button *ngIf="type == '1'" class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+        class="backIcon">arrow_back
+      </mat-icon>Acuerdos de Desempeño</button>
+    
+      <button *ngIf="type == '2'" class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos-provisional']"><mat-icon
         class="backIcon">arrow_back
       </mat-icon>Acuerdos de Desempeño</button>
   </div>
@@ -25,7 +29,7 @@
       [useExistingCss]="true" ngxPrint><mat-icon style="font-size: 22px; margin: 5px;">print</mat-icon>
     </button> &nbsp;
 
-    <div style="display: flex; gap: 5px;">
+    <div style="display: flex; gap: 5px;" *ngIf=" type != '2'">
       <button
         *ngIf="userLogged.role == 'Analista' && agreement.flujoObj.idFlujo == 2 || userLogged.role == 'Analista' && userLogged.Position == 'Analista de Planificación' && agreement.flujoObj.idFlujo == 3"
         type="button" class="cleanButton" (click)="agreementDesicion(false)">
@@ -81,7 +85,7 @@
 
       <div class="info-row">
         <div style="padding: 5px;">
-          <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.acuerdoDuracion.periodo | titlecase}}</p>
+          <p> <strong>PERIODO A EVALUAR:</strong> {{agreement.acuerdoDuracion.periodo | titlecase}} {{agreement.periodo.fechaFin.substring(0, 4)}}</p>
         </div>
         <div style="padding: 5px;">
           <p> <strong>UNIDAD ORGANIZATIVA:</strong> {{appHelper.getUnitOrg(agreement.colaboradorObj.division,
@@ -159,9 +163,9 @@
             <td *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">{{detalle.metaObj.metaPoa || ''}}</td>
             <td>{{detalle.metaObj.nombre}}</td>
             <td style="text-align: center;">{{detalle.metaObj.valor}}</td>
-            <td style="text-align: center;">{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
-            <td style="text-align: center;">{{detalle.calificacion}}</td>
-            <td>{{detalle.observaciones == null ? detalle.observaciones : ''}}</td>
+            <td style="text-align: center;">{{detalle.metaObj.descripcionMedioVerificacion }}</td>
+            <td style="text-align: center;">{{detalle.calificacion == 0 && agreement.tipoProceso.id != 5 && agreement.flujoObj.idFlujo > 2 ? '' : detalle.calificacion}}</td>
+            <td style="text-align: justify;">{{detalle.observaciones != null && detalle.observaciones != 'null' ? detalle.observaciones : ''}}</td>
           </tr>
           <tr>
             <td></td>
@@ -169,7 +173,7 @@
             <td style="text-align: end; font-weight: 600;">Total</td>
             <td style="text-align: center; font-weight: 600;">{{totalValor}}</td>
             <td style="font-weight: 600; text-align: end;">Total</td>
-            <td style="text-align: center; font-weight: 600;">{{totalCalificacion}}</td>
+            <td style="text-align: center; font-weight: 600;">{{totalCalificacion == 0 && agreement.tipoProceso.id != 5 &&  agreement.flujoObj.idFlujo < 2 ? '' : totalCalificacion}}</td>
             <td></td>
           </tr>
         </tbody>
@@ -205,7 +209,7 @@
   </div>
 
   <div style="display: flex; margin: 0; justify-content: space-between; "
-    *ngIf="agreement && userLogged.role == 'Analista' && agreement.colaboradorObj.estadoObj.idEstado == 1 || agreement && userLogged.role == 'Encargado' && agreement.colaboradorObj.estadoObj.idEstado == 1 ">
+    *ngIf="type != '2' && agreement && (userLogged.role == 'Analista' && agreement.colaboradorObj.estadoObj.idEstado == 1 || agreement && userLogged.role == 'Encargado' && agreement.colaboradorObj.estadoObj.idEstado == 1) ">
     
     <form style="width: 100%; display: flex; " [formGroup]="commentsForm" (submit)="postComment()">
         <mat-form-field style="flex: 1;">

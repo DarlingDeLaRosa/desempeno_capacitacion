@@ -10,6 +10,7 @@
     display: flex;
     overflow-x: auto;
     width: 100%;
+    height: 155px;
     scroll-behavior: smooth;
     padding: 15px;
     gap: 40px;
@@ -61,7 +62,6 @@
 
 .labelResPer {
     margin-top: 2px;
-
     font-size: 13px;
     font-weight: 600;
 }
@@ -78,6 +78,24 @@
     border-color: #ffc107;
     transform: scale(1.2);
     animation: pulse 1.5s infinite;
+}
+
+/* .unable .circle {
+    background: #dd5a5a;
+    border-color: #dd5a5a;
+    transform: scale(1.2);
+    animation: pulse 1.5s infinite;
+} */
+
+.pendiente{
+  border-radius: 10px;
+}
+
+.pulse{
+    cursor: pointer;
+    margin-top: 5px;
+    transform: scale(1.1);
+    animation: pulse2 1.2s infinite;
 }
 
 .line, .completed-line {
@@ -115,9 +133,7 @@
     }
 }
 
-
 @keyframes pulse {
-
     0%,
     100% {
         transform: scale(1.1);
@@ -125,6 +141,17 @@
 
     50% {
         transform: scale(1.3);
+    }
+}
+
+@keyframes pulse2 {
+    0%,
+    100% {
+        transform: scale(0.9);
+    }
+
+    50% {
+        transform: scale(1.06);
     }
 }
 
@@ -150,3 +177,19 @@
 .carousel-btn.right {
     margin-left: 8px;
 }
+
+
+
+.btnStage {
+    padding: 6px 12px;
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+  }
+  
+  .btnStage.active {
+    border-bottom: 1px solid white;
+    background-color: #004b8d;
+    color: white;
+    margin-bottom: -1px;
+    z-index: 1;
+  }

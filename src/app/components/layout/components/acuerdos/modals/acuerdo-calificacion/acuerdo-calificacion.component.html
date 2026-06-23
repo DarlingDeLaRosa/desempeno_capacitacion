@@ -56,7 +56,7 @@
         <mat-label>Observación</mat-label>
         <input matInput formControlName="observacion">
         <mat-error *ngIf="califiacionForm.get('observacion')?.hasError('muyCorta')">
-          La meta debe ser mas corta.
+          La observación debe ser mas corta.
         </mat-error>
       </mat-form-field>
     </div>

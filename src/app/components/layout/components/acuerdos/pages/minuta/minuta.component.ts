@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, input } from '@angular/core';
 import { ClassImports } from '../../../../../../helpers/class.components';
-import { materialize } from 'rxjs';
+import { materialize, filter } from 'rxjs';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { IntranetServices } from '../../../../../../helpers/intranet/intranet.service';
 import { CollaboratorsGetI } from '../../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
@@ -31,18 +31,20 @@ import { EvaluationCompetencyGetI, EvaluationCompetencySummaryGetI } from '../..
   styleUrl: './minuta.component.css'
 })
 export class MinutaComponent implements OnInit {
-  
+
   collaborator!: any;
   docName: string = ''
   protocol!: ProtocolI
   usuario!: loggedUserI
   typeMinuta: number = 0
+  interino: boolean = false
   formMinuta!: FormGroup;
   isLoading: boolean = true;
-  idPeriodsProcessActive!: number
+  idPeriodsProcessActive!: periodProcessGetI
   agreement: Array<AcuerdoI> = []
   periodsProcess!: periodProcessGetI[]
-  colaboradoresMinuta!: MinutaAsistenciaI[];
+  colaboradoresMinuta: MinutaAsistenciaI[] = [];
+  colaboradoresMinutaToSend: MinutaAsistenciaI[] = [];
   evaluationsCompetencies: EvaluationCompetencySummaryGetI[] = []
 
   constructor(
@@ -61,43 +63,64 @@ export class MinutaComponent implements OnInit {
   ) {
     this.formMinuta = this.fb.group({
       agendaReunion: new FormControl<string>('', [Validators.maxLength(3000)]),
-      desarrollo: new FormControl<string>('', [Validators.required, Validators.maxLength(3000)]),
-      conclusiones: new FormControl<string>('', [Validators.maxLength(3000)]),
+      desarrollo: new FormControl<string>('', [Validators.required, Validators.maxLength(5000)]),
+      conclusiones: new FormControl<string>('', [Validators.maxLength(12000)]),
       tipoProcesoId: new FormControl<number>(0),
       unidadOrg: new FormControl(''),
     })
-  } 
+  }
 
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.typeMinuta = params['typeMinuta'];
+      this.typeMinuta = Number(this.route.snapshot.queryParamMap.get('typeMinuta'));
+      this.interino = this.route.snapshot.queryParamMap.get('interino') === 'true';
     });
 
     this.usuario = this.systeminformation.localUser;
     this.getProtocol()
-    
+
     if (Number(this.typeMinuta) == 1) {
       this.getPeriodsProcessActive()
-      this.getAcuerdoByRol()
-    }else{
+    } else {
       this.getSupervisorWithSubordinates()
     }
     
     // this.getPeriodsProcess()
-
   }
 
   getAcuerdoByRol() {
+    const request = this.interino
+      ? this.agreementService.getAgreementProbative('', '', '', '', 1, 100)
+      : this.agreementService.getAgreementByRol('', '', '', '', true);
 
-    this.agreementService.getAgreementByRol('', true).subscribe((resp: any) => {
-      this.agreement = resp.data;
+    request.subscribe((resp: any) => {
+      
+      this.agreement = resp.data.filter((item:AcuerdoI)=> {
+        const fechaIngreso = new Date(item.colaboradorObj.fechaIngreso);
+        const fechaActual = new Date();
+      
+        // Diferencia en milisegundos
+        const diferenciaMs = fechaActual.getTime() - fechaIngreso.getTime();
+      
+        // Convertir la diferencia a días
+        const diferenciaDias = diferenciaMs / (1000 * 60 * 60 * 24);
+      
+        return (
+          item.tipoProceso.id === this.idPeriodsProcessActive.tipoProceso.id ||
+          diferenciaDias >= 30
+        );
+      });
+
       this.colaboradoresMinuta = this.agreement.map((acuerdo) => ({
         idColaborador: acuerdo.colaboradorObj.idPersona,
+        colaborador: acuerdo,
         ausente: false,
         motivoAusencia: null,
       }));
-    })
+
+      this.colaboradoresMinutaToSend = this.colaboradoresMinuta
+    });
   }
 
   //metodo para obtener el proceso
@@ -113,7 +136,9 @@ export class MinutaComponent implements OnInit {
   getPeriodsProcessActive() {
     this.periodProcessService.getPeriodProcessesActive(true)
       .subscribe((res: any) => {
-        this.idPeriodsProcessActive = res.data.idPeriodoAcuerdo;
+
+        this.idPeriodsProcessActive = res.data;
+        this.getAcuerdoByRol()
       })
   }
 
@@ -128,9 +153,11 @@ export class MinutaComponent implements OnInit {
 
       this.colaboradoresMinuta = this.evaluationsCompetencies.map((acuerdo) => ({
         ausente: false,
+        colaborador: null,
         idColaborador: acuerdo.colaborador.personaIntranetId,
         motivoAusencia: null,
       }));
+
     })
   }
 
@@ -145,19 +172,22 @@ export class MinutaComponent implements OnInit {
   }
 
   openModalMotivoAusencia(id: number): void {
-    const colaborador = this.colaboradoresMinuta.find((c) => c.idColaborador === id);
-
-    const dialog = this.dialog.open(MotivoAusenciaMinutaComponent, {
-      width: '700px',
-      data: colaborador,
-    });
+    const colaborador = this.colaboradoresMinutaToSend.find((c) => c.idColaborador === id);
+    const dialog = this.dialog.open(MotivoAusenciaMinutaComponent, { width: '700px', data: colaborador,});
 
     dialog.afterClosed().subscribe((result) => {
+      if(result.ausente){
+        this.colaboradoresMinuta = this.colaboradoresMinuta.map(colab =>
+          colab.idColaborador === id
+            ? { ...colab, ausente: true }
+            : colab
+        );
+      }
+      
       if (result) {
-        // Actualizar el arreglo con los datos del modal
-        const index = this.colaboradoresMinuta.findIndex((c) => c.idColaborador === result.idColaborador);
+        const index = this.colaboradoresMinutaToSend.findIndex((c) => c.idColaborador === result.idColaborador);
         if (index !== -1) {
-          this.colaboradoresMinuta[index] = result;
+          this.colaboradoresMinutaToSend[index] = result;
         }
       }
     });
@@ -178,29 +208,33 @@ export class MinutaComponent implements OnInit {
   // }
 
   // metodo para armar objeto de minuta y hacer el post
-  postMinuta() {    
+  postMinuta() {
     const Minuta: MinutaI = {
       // supervisorId: Number(this.usuario.idPersona),
-      periodoAcuerdoId: this.idPeriodsProcessActive,
+      periodoAcuerdoId: this.idPeriodsProcessActive.idPeriodoAcuerdo,
       esUnaEvaluacionCompentencia: Number(this.typeMinuta) == 1 ? false : true,
       // periodoId: this.systeminformation.activePeriod().idPeriodo,
       desarrollo: this.formMinuta.get('desarrollo')?.value,
       conclusion: this.formMinuta.get('conclusiones')?.value,
       agendaReunion: this.formMinuta.get('agendaReunion')?.value,
       unidadOrg: this.usuario.Unidad,
-      minutaAsistencia: this.colaboradoresMinuta.map((colaborador) => (
+      minutaAsistencia: this.colaboradoresMinutaToSend.map((colaborador) => (
         {
           ausente: colaborador.ausente,
+          colaborador: null,
           idColaborador: colaborador.idColaborador,
           motivoAusencia: colaborador.motivoAusencia
         })),
     }
-    
+
     this.minutaService.postMinuta(Minuta).subscribe((resp: any) => {
       this.SnackBar.snackbarLouder(true)
-      this.appHelpers.handleResponse(resp, () => {}, this.formMinuta)
-      
-      if (Number(this.typeMinuta) == 1) this.router.navigate(['/layout/acuerdos'])
+      this.appHelpers.handleResponse(resp, () => { }, this.formMinuta)
+
+      if (Number(this.typeMinuta) == 1) {
+        if (this.interino == false) this.router.navigate(['/layout/acuerdos'])
+        else this.router.navigate(['/layout/acuerdos-provisional'])
+      }
       else this.router.navigate(['/layout/evaluacion-competencias'])
     })
   }

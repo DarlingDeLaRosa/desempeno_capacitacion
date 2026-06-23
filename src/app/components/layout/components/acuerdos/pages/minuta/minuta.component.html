@@ -3,10 +3,15 @@
     <h1>Minuta de {{typeMinuta == 1 ? 'Acuerdo De Desempeño': 'Evaluación de Competencia'}}</h1>
   </div>
   <div>
-    <button *ngIf="typeMinuta == 1; else MinutaEC" class="backButton" mat-stroked-button
-      [routerLink]="['/layout/acuerdos']"><mat-icon class="backIcon">arrow_back
-      </mat-icon>Acuerdos de Desempeño
-    </button>
+    <div *ngIf="typeMinuta == 1; else MinutaEC">
+      <button *ngIf="interino == false" class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos']"><mat-icon
+          class="backIcon">arrow_back
+        </mat-icon>Acuerdos de Desempeño</button>
+  
+        <button *ngIf="interino" class="backButton" mat-stroked-button [routerLink]="['/layout/acuerdos-provisional']"><mat-icon
+          class="backIcon">arrow_back
+        </mat-icon>Acuerdos de Desempeño</button>
+    </div>
 
     <ng-template #MinutaEC>
 
@@ -53,20 +58,33 @@
         <th class="headerCell">Cargo</th>
         <th class="headerCell">Grupo ocupacional</th>
         <th class="headerCell" *ngIf="typeMinuta == 1">Etapa</th>
+        <th class="headerCell" *ngIf="typeMinuta == 1">Estado</th>
         <th class="headerCell" style="width: 5%;">
-          <div style="justify-self: end;" *ngIf="agreement.length == 0 && evaluationsCompetencies.length == 0" class="loader"></div>
+          <div style="justify-self: end;" *ngIf="colaboradoresMinuta != undefined && colaboradoresMinuta.length == 0 && evaluationsCompetencies.length == 0" class="loader"></div>
         </th>
       </tr>
     </thead>
     <tbody *ngIf="typeMinuta == 1; else TypeMinutaEC">
-      <tr class="dataRow" *ngFor="let acuerdo of agreement">
-        <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre}} {{acuerdo.colaboradorObj.apellidos}}</td>
-        <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
-        <td class="dataIndiCell">{{acuerdo.colaboradorObj.grupoObj.nombre}}</td>
-        <td class="dataIndiCell">{{acuerdo.tipoProceso.nombre}}</td>
+      <tr class="dataRow" *ngFor="let acuerdo of colaboradoresMinuta">
+        <td class="dataIndiCell">{{acuerdo.colaborador != null ? acuerdo.colaborador.colaboradorObj.nombre : '' | titlecase }} {{acuerdo.colaborador != null ? acuerdo.colaborador.colaboradorObj.apellidos: '' | titlecase }}</td>
+        <td class="dataIndiCell">{{acuerdo.colaborador != null ? acuerdo.colaborador.colaboradorObj.cargo.nombre : '' }}</td>
+        <td class="dataIndiCell">{{acuerdo.colaborador != null ? acuerdo.colaborador.colaboradorObj.grupoObj.nombre: '' }}</td>
+        <td class="dataIndiCell">{{acuerdo.colaborador != null ? acuerdo.colaborador.tipoProceso.nombre : ''}}</td>
+        <td class="dataIndiCell" [ngClass]="{
+          'text-success': acuerdo.colaborador && !acuerdo.ausente,
+          'text-danger': acuerdo.colaborador && acuerdo.ausente
+        }">{{acuerdo.colaborador != null ? acuerdo.ausente ? 'Ausente': 'Presente' : ''}}</td>
         <td class="dataIndiCell">
-          <button type="button" class="btnCerrar"
-            (click)="openModalMotivoAusencia(acuerdo.colaboradorObj.idPersona)">Ausente</button>
+        <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
+        <mat-menu #menu="matMenu">
+          <div class="ItemMiniMenu" (click)="openModalMotivoAusencia( acuerdo.colaborador != null ? acuerdo.colaborador.colaboradorObj.idPersona : 0 )">
+            <mat-icon style="color: rgb(175, 0, 0);">person_off</mat-icon>
+            <h4>Registrar ausencia.</h4>
+          </div>
+        </mat-menu>
+
+          <!-- <button type="button" class="btnCerrar"
+            >Ausente</button> -->
         </td>
       </tr>
     </tbody>
@@ -109,7 +127,7 @@
   <div style="display: flex;" *ngIf="typeMinuta == 1">
     <mat-form-field style="flex: 1; ">
       <mat-label>Agenda de la reunión</mat-label>
-      <textarea matInput formControlName="agendaReunion" maxlength="200"></textarea>
+      <textarea matInput formControlName="agendaReunion" maxlength="3000"></textarea>
       <mat-error *ngIf="formMinuta.get('agendaReunion')?.hasError('Muylargo')">
         La agenda de la reunión debe ser mas corta.
       </mat-error>
@@ -119,7 +137,7 @@
   <div style="display: flex;">
     <mat-form-field style="flex: 1;">
       <mat-label>Desarrollo de la reunión</mat-label>
-      <textarea matInput formControlName="desarrollo" maxlength="200"></textarea>
+      <textarea matInput formControlName="desarrollo" maxlength="5000"></textarea>
       <mat-error *ngIf="formMinuta.get('desarrollo')?.hasError('Muylargo')">
         La desarrollo de la reunión debe ser mas corta.
       </mat-error>
@@ -129,7 +147,7 @@
   <div style="display: flex;" *ngIf="typeMinuta == 1">
     <mat-form-field style="flex: 1;">
       <mat-label>Conclusiones del monitoreo de los acuerdos de desempeño</mat-label>
-      <textarea matInput formControlName="conclusiones" maxlength="200"></textarea>
+      <textarea matInput formControlName="conclusiones" maxlength="12000"></textarea>
       <mat-error *ngIf="formMinuta.get('conclusiones')?.hasError('Muylargo')">
         La Conclusiones del monitoreo de los acuerdos de desempeño debe ser explicado de una marena.
       </mat-error>

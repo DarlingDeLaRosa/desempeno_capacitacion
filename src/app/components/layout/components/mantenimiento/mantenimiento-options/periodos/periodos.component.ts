@@ -7,6 +7,7 @@ import { ClassImports } from '../../../../../../helpers/class.components';
 import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
+import { systemInformationService } from '../../../../services/systemInformationService.service';
 
 @Component({
   selector: 'app-periodos',
@@ -22,6 +23,7 @@ export class PeriodosComponent implements OnInit {
     public snackBar: SnackBars,
     private appHelpers: HerlperService,
     private periodService: PeriodsServices,
+    private systemService: systemInformationService,
   ) {
     this.periodsForm = fb.group({
       idPeriodo: 0,
@@ -42,10 +44,10 @@ export class PeriodosComponent implements OnInit {
   }
 
   // Metodo para activar un periodo
-  activatePeriod(idPeriodo: number){
-    this.periodService.putActivatePeriod(idPeriodo)
+  activatePeriod(period: PeriodI){
+    this.periodService.putActivatePeriod(period.idPeriodo)
       .subscribe((res: any) => {
-        this.appHelpers.handleResponse(res, () => this.getPeriods(), this.periodsForm)
+        this.appHelpers.handleResponse(res, () => this.getPeriods(), this.periodsForm, ()=> this.systemService.setPeriod(period))
       })
   }
 

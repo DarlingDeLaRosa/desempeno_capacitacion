@@ -17,12 +17,16 @@ import { periodProcessGetI } from '../../mantenimiento/mantenimiento-options/per
 import { PaginationI } from '../../../../interfaces/generalInteerfaces';
 import { MinutaService } from '../services/minuta.service';
 import { MinutaEvaluacionCompetenciaComponent } from '../../../templates/minuta-evaluacion-competencia/minuta-evaluacion-competencia.component';
-import { Observable, filter, map } from 'rxjs';
+import { Observable, filter, forkJoin, map } from 'rxjs';
+import { stepperService } from '../services/stepper.service';
+import { PeriodProcessStepsI, ProcessStepsI } from '../interfaces/steps.interface';
+import { SnackBars } from '../../../services/snackBars.service';
+import { LoaderStepperBoxComponent } from '../../../../../helpers/components/loader-stepper-box/loader-stepper-box.component';
 
 @Component({
   selector: 'app-acuerdo-desempenio',
   standalone: true,
-  imports: [MaterialComponents, ClassImports],
+  imports: [MaterialComponents, ClassImports, LoaderStepperBoxComponent],
   providers: [agreementService],
   templateUrl: './acuerdo-desempenio.component.html',
   styleUrl: './acuerdo-desempenio.component.css'
@@ -36,199 +40,240 @@ export class AcuerdoDesempenioComponent implements OnInit {
   usuario!: loggedUserI
   charge: boolean = true
   minuta!: MinutaGetI
+  totalMinutaList!: MinutaGetI[]
   minutaList!: Documento[]
   searchTerm: string = '';
   userLogged!: loggedUserI
   pagination!: PaginationI
   isLoading: boolean = true;
   agreement!: Array<AcuerdoI>
+  agreementProbatorios!: boolean
+  activeStep!: ProcessStepsI | undefined
   selectGroup: boolean = true
+  loadingSteps: boolean = true
+  typeAD!: boolean
   minutaVerified!: { existe: Boolean, docCargado: Boolean }
   activeProcess!: periodProcessGetI
   validationCreation!: boolean
+  recinto: string = ''
+  process: string = ''
+  flujo: string = ''
   validationGv: boolean = false
   validationDocAgreement!: boolean
-  steps: any[] = []
-
+  steps!: PeriodProcessStepsI
+  selectedStage!: number
 
   constructor(
     private dialog: MatDialog,
+    public snackBar: SnackBars,
     public appHelpers: HerlperService,
     private minutaService: MinutaService,
     private agreementService: agreementService,
+    private stepperService: stepperService,
     public systemInformation: systemInformationService,
     private periodProcessService: PeriodsProcessServices,
   ) {
+    const localTypeAd = localStorage.getItem("typeAd")
+    const selectedStage = localStorage.getItem("stage")
+
+    this.typeAD = localTypeAd != null ? localTypeAd === "true" : false
+    this.selectedStage = selectedStage != null ? Number(selectedStage) : 2
+
     this.userLogged = systemInformation.localUser
-    console.log(this.userLogged);
-    
   }
 
   ngOnInit(): void {
     this.usuario = this.systemInformation.localUser;
+    
+
     this.systemInformation.activeRol();
     this.getActiveAgreementPeriod()
-    this.getAcuerdoByRol('');
-    this.updateSteps()
-    this.getMyMinuta()
+    this.validateAgreement();
+    this.validateCreationFT()
   }
 
-  updateSteps() {
-    this.steps = [
-      {
-        number: 1,
-        show: true,
-        title: 'Creación de acuerdos de colaboradores',
-        status: this.validationCreation && this.validateStageMayorAd(1) ? 'completed' : 'in-progress',
-        responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
-      },
-      {
-        number: 2,
-        show: true,
-        title: 'Validación de acuerdos',
-        status:
-          this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(2, 1)
-            ? ''
-            : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(2, 1)
-              ? 'in-progress'
-              : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(2, 1) 
-                ? 'completed'
-                : '',
-        responsable: 'Analista de evaluación del desempeño'
-      },
-      {
-        number: 3,
-        show: this.validationGv,
-        title: 'Validación de acuerdos de grupo ocupacional ( V )',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(2, 1)
-          ? ''
-          : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(2, 1) && !this.validateEvaluationAd(3, 1)
-            ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3, 1)
-              ? 'completed'
-              : '',
-        responsable: 'Analista de planificación'
-      },
-      {
-        number: this.validationGv ? 4 : 3,
-        show: true,
-        title: 'Documentación de acuerdos de desempeño',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(3, 1)
-          ? ''
-          : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3, 1) && this.validationDocAgreement
-            ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.validateEvaluationAd(3, 1) && this.validationDocAgreement == false
-              ? 'completed'
-              : '',
-        responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
-      },
-      {
-        number: this.validationGv ? 5 : 4,
-        show: true,
-        title: 'Creación de minuta',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4, 1)
-          ? ''
-          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4, 1) && this.validationDocAgreement == false && this.minuta == undefined
-            ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.validationDocAgreement == false && this.activeProcess.tipoProceso.id == 1 || this.minuta != undefined
-              ? 'completed'
-              : '',
-        responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
-      },
-      {
-        number: this.validationGv ? 6 : 5,
-        show: true,
-        title: 'Validación de minuta',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4, 1) && this.minutaVerified.existe && this.validationDocAgreement == false
-          ? ''
-          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4, 1) && this.validationDocAgreement == false && this.minuta != undefined && (this.minuta.aprobada == null || this.minuta.aprobada == false) && this.activeProcess.tipoProceso.id == 1
-            ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.validationDocAgreement == false && this.minuta != undefined && this.minuta.aprobada != null && this.minuta.aprobada == true
-              ? 'completed'
-              : '',
-        responsable: 'Analista de evaluación del desempeño'
-      },
-      {
-        number: this.validationGv ? 7 : 6,
-        show: true,
-        title: 'Documentación de minuta',
-        status: this.agreement != undefined && !this.validationCreation && !this.validateEvaluationAd(4, 1) && this.minutaVerified.existe && this.validationDocAgreement == false
-          ? ''
-          : this.agreement != undefined && this.validationCreation && !this.validateEvaluationAd(4, 1) && this.validationDocAgreement == false && this.minuta != undefined && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minuta.documentos.length == 0 && this.activeProcess.tipoProceso.id == 1
-            ? 'in-progress'
-            : this.agreement != undefined && this.validationCreation && this.validationDocAgreement == false && this.minuta != undefined && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minuta.documentos.length > 0
-              ? 'completed'
-              : '',
-        responsable: this.userLogged.Firstname + " " + this.userLogged.Lastname
-      },
-      {
-        number: this.validationGv ? 8 : 7,
-        show: true,
-        title: 'Completada',
-        status: this.agreement != undefined && this.validationCreation && this.validationDocAgreement == false && this.minuta != undefined && this.minuta.aprobada != null && this.minuta.aprobada == true && this.minuta.documentos.length > 0 ? 'completed' : '',
-        responsable: ''
-      },
-    ];
+  validateCreationFT() {
+    localStorage.setItem("typeAd", this.typeAD.toString());
+
+    Promise.all([
+      new Promise(resolve => this.getAcuerdoByRol(false, resolve)),
+    ]).then(() => {
+      Promise.all([
+        new Promise(resolve => this.stepperPeriod(resolve))
+      ]).then(() => {
+        this.validateAgrementCreation();  // SOLO SE EJECUTA UNA VEZ
+      });
+    });
+  }
+
+  selectStage(stage: number) {
+    // this.steps = { acuerdosStepsStatus: [], id: 0, tipoProceso: {id: 0, nombre: ''}}
+    this.loadingSteps == true
+    localStorage.setItem("stage", stage.toString());
+    this.selectedStage = stage;
+    this.stepperPeriod()
+    this.getExactMinuta()
+  }
+
+  stepperPeriod(resolve?: Function) {
+    if (this.userLogged.role == 'Analista') return
+
+    this.stepperService.getStepByIdProcess(this.selectedStage)
+      .subscribe((res: any) => {
+        this.loadingSteps = false
+        this.steps = res.data
+        this.activeStep = this.steps.acuerdosStepsStatus.find(step => step.fechaCompletado === null);
+        this.activeStep?.procesoSecuencia.orden == 2 ? this.validateSecStep() : ''
+        this.activeStep?.procesoSecuencia.orden == 3 ? this.validateAllDocs() : ''
+        if (resolve) resolve();
+      })
+  }
+
+  validateAgrementCreation() {
+    if (this.agreement != undefined && this.agreement.length == 0 && this.steps.acuerdosStepsStatus != undefined) return;
+    
+    let allValid = true;
+    
+    this.agreement.forEach(ag => {
+      let totalDetalles = 0;
+      
+      ag.detalles.forEach(det => { totalDetalles += det.metaObj?.valor ?? 0; });
+      if (totalDetalles !== ag.puntos) { allValid = false; }
+    });
+    
+    if (
+      allValid &&
+      this.steps.acuerdosStepsStatus[0].fechaCompletado == null &&
+      this.agreement.filter(item => item.tipoProceso.id === this.selectedStage) && this.agreement.every(item => item.flujoObj.idFlujo >= 2 ) &&
+      (this.steps.tipoProceso.id == 1 || this.steps.tipoProceso.id == 2 || this.steps.tipoProceso.id == 3 || this.steps.tipoProceso.id == 9 && this.typeAD)
+    ) {
+      let typeProcess = this.typeAD ? 9 : this.activeProcess.tipoProceso.id
+
+      this.stepperService.postCompleteStep(typeProcess).subscribe((res: any) => {
+        this.snackBar.snackbarSuccess('Paso gestión de acuerdo completado correctamente')
+        this.stepperPeriod()
+      })
+    }
+  }
+
+  async validateSecStep() {
+    if (this.steps.acuerdosStepsStatus[0].fechaCompletado != null &&
+      this.steps.acuerdosStepsStatus[1].fechaCompletado == null && this.agreement.length > 0 &&
+      this.agreement.filter(item => item.tipoProceso.id === this.selectedStage) && this.agreement.every(item => item.flujoObj.idFlujo > 3)) {
+      
+      let typeProcess = this.typeAD ? 9 : this.activeProcess.tipoProceso.id
+
+      this.stepperService.postCompleteStep(typeProcess).subscribe((res: any) => {
+        this.snackBar.snackbarSuccess('La revisión fue completada correctamente')
+        this.stepperPeriod()
+      })
+    }
+  }
+
+  validateAgreement() {
+    this.agreementService.validateProbativeAgreement().subscribe((resp: any) => {
+      this.agreementProbatorios = resp
+    })
   }
 
   scrollLeft() { this.carousel.nativeElement.scrollBy({ left: -250, behavior: 'smooth' }); }
   scrollRight() { this.carousel.nativeElement.scrollBy({ left: 250, behavior: 'smooth' }); }
 
   openModalTemplateMinuta(): void {
-    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0, esSupInterino: false, typeEvaluation: 1 } })
+    const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0, esSupInterino: false, typeEvaluation: 1, selectedStage: this.selectedStage } })
   }
 
   getMyMinuta() {
     this.minutaService.getMinuta('', "acuerdo", true, 1, 5).subscribe((resp: any) => {
       if (resp.data.length > 0) {
-        [this.minuta] = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == 1)
-        this.minutaList = resp.data.flatMap((minuta: MinutaGetI) => minuta.documentos || []);
+        this.totalMinutaList = resp.data
+        this.getExactMinuta()
       }
     })
+  }
+
+  getExactMinuta(){
+    [this.minuta] = this.totalMinutaList.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == this.selectedStage )
+    let docs : any
+    docs = this.totalMinutaList.flatMap((minuta: MinutaGetI) => minuta.documentos || []);
+    this.minutaList = docs
   }
 
   getActiveAgreementPeriod() {
     this.periodProcessService.getPeriodProcessesActive(true)
       .subscribe((res: any) => {
-        if (res) {
+        if (res.data != null) {
           this.activeProcess = res.data
-          this.verifiedMinuta(this.activeProcess.periodo.idPeriodo)
+          this.getMyMinuta()
         }
       })
   }
 
-  verifiedMinuta(period: number) {
-    this.minutaService.getMinutaExistente(period, false, this.activeProcess.idPeriodoAcuerdo)
-      .subscribe((res: any) => {
-        this.minutaVerified = res;
+  async completeCheckOut(typeProcess: string, agreementId: number) {
+    let removeDecision = await this.snackBar.snackbarConfirmation(`¿Está seguro de completar la "${typeProcess.toUpperCase()}" sin cambios en el acuerdo de desempeño?`)
+
+    if (removeDecision) {
+      let flowData
+      flowData = { acuerdoId: agreementId, flujoId: 4 }
+
+      this.agreementService.updateFlow(flowData).subscribe((res: any) => {
+        if (res.status) {
+          this.appHelpers.handleResponse(res, () => this.getAcuerdoByRol())
+        }
       })
+    }
+  }
+  
+  async completeAgreement(agreementId: number) {
+    let removeDecision = await this.snackBar.snackbarConfirmation(`¿Está seguro de completar y cerrar el acuerdo de desempeño?`, 'Esta acción no se puede deshacer')
+
+    if (removeDecision) {
+      this.agreementService.updateProcessForOne(agreementId).subscribe((res: any) => {
+        if (res.status) {
+          this.appHelpers.handleResponse(res, () => this.getAcuerdoByRol())
+        }
+      })
+    }
   }
 
+  // verifiedMinuta(period: number) {
+  //   this.minutaService.getMinutaExistente(period, false, this.activeProcess.idPeriodoAcuerdo)
+  //     .subscribe((res: any) => {
+  //       this.minutaVerified = res;
+  //     })
+  // }
+
   //Metodo para traer la lista de los hijos de los supervisores
-  getAcuerdoByRol(term: string) {
+  getAcuerdoByRol(moveFronPagintation: boolean = false, resolve?: Function) {
     this.isLoading = true;
+    this.agreement = []
 
-    this.agreementService.getAgreementByRol(term, this.selectGroup, this.page, 10).subscribe((resp: any) => {
+    if (moveFronPagintation == false) {
+      this.pagination = { currentPage: 0, totalItem: 0, totalPage: 0 }
+    }
+
+    this.agreementService.getAgreementByRol(this.searchTerm, this.process, this.recinto, this.flujo, this.selectGroup, this.page, 10, this.typeAD).subscribe((resp: any) => {
       this.isLoading = false;
-
       this.agreement = resp.data;
+
       let { currentPage, totalItem, totalPage } = resp
       this.pagination = { currentPage, totalItem, totalPage }
 
-      this.validateCreationAd()
-      this.validateOcupationalGroup()
-      this.validateDocumentationAgreement()
-      // if (currentPage > totalPage) { this.page = 1 }
+      // this.validateCreationAd()
+      // this.validateOcupationalGroup()
+      if (resolve) resolve();
+      // this.validateAgrementCreation()
+      // this.validateDocumentationAgreement()
     })
   }
 
   //buscar por departamento y nombre del colaborador
   Buscar() {
     if (this.searchTerm.length > 2) {
-      this.getAcuerdoByRol(this.searchTerm)
+      this.getAcuerdoByRol(false, () => { })
     } else {
       if (this.searchTerm.length < 1) {
-        this.getAcuerdoByRol('');
+        this.getAcuerdoByRol();
       }
     }
   }
@@ -236,63 +281,85 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //Metodo para abrir el modal de la lista de documento
   openModalListadoDocumentos(idCollaborator: number, nombre: string, apellido: string, documentosList: Documento[], flujoId: number, estado?: number): void {
     const nombreCompleto = nombre + ' ' + apellido;
-    let documentos: DocumentoMinuta[] = []
-
+    let selectedStage = this.selectedStage
     const dialog = this.dialog.open(ListadoDocumentoComponent, {
       data: {
         type: 1,
         idCollaborator,
         nombreCompleto,
-        documentos,
         documentosList,
         flujoId,
-        estado
+        estado,
+        selectedStage
       }
     })
 
     dialog.afterClosed().subscribe(result => {
-      this.getAcuerdoByRol('')
+      if (result) {
+        this.validateAllDocs()
+        this.stepperPeriod()
+        
+        this.getAcuerdoByRol()
+        this.getMyMinuta()
+      }
     });
   }
 
+  validateAllDocs() {
+    if (this.steps.acuerdosStepsStatus[1].fechaCompletado != null &&
+      this.steps.acuerdosStepsStatus[2].fechaCompletado == null && this.agreement.length > 0 &&
+      this.agreement.filter(item => item.tipoProceso.id === this.selectedStage) && this.agreement.every(item => item.flujoObj.idFlujo > 4)) {
+
+      let typeProcess = this.typeAD ? 9 : this.activeProcess.tipoProceso.id
+
+      this.stepperService.postCompleteStep(typeProcess).subscribe((res: any) => {
+        this.snackBar.snackbarSuccess('La carga de documentos fue completada correctamente')
+        this.stepperPeriod()
+      })
+    }
+  }
   //Metodo para abrir el modal del acuerdo estructurado
   // openModalVerAcuerdo(idAgreement: number): void {
   //   const dialog = this.dialog.open(VerAcuerdoComponent, { data: { idAgreement } })
   //   dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
   // }
 
-  validateCreationAd() {
-    if (this.agreement.length > 0) {
-      for (const item of this.agreement) {
-        if (item.puntos !== this.calculateGoalValue(item.detalles)) {
-          this.validationCreation = false;
-          return;
-        }
-      }
-      this.validationCreation = true;
-    }
-    this.updateSteps()
-  }
+  // validateCreationAd() {
+  //   if (this.agreement.length > 0) {
+  //     for (const item of this.agreement) {
+  //       if (item.puntos !== this.calculateGoalValue(item.detalles)) {
+  //         this.validationCreation = false;
+  //         return;
+  //       }
+  //     }
+  //     this.validationCreation = true;
+  //   }
+  //   this.updateSteps()
+  // }
 
-  calculateGoalValue(detalles: AcuerdoDetalle[]): number {
-    let valor: number = 0
-    detalles.map((item) => { valor += item.metaObj.valor })
-    return valor
-  }
 
-  validateEvaluationAd(flujoId: number, typeProcessId: number,): boolean {
-    const hayFlujoMayor = this.agreement.some(
-      (item: AcuerdoI) => item.tipoProceso.id == typeProcessId && item.flujoObj.idFlujo <= flujoId
-    );
-    return !hayFlujoMayor
-  }
 
-  validateStageMayorAd(typeProcessId: number): boolean {
-    const stage = this.agreement.every(
-      (item: AcuerdoI) => item.tipoProceso.id >= typeProcessId
-    );
-    return stage
-  }
+  // valida si hay alguna persona que este fuera del proceso Id y fuera del flujo Id, si existe enviara como falso, sino existe entonces enviara como verdadero 
+  // validateEvaluationAd(flujoId: number, typeProcessId: number,): boolean {
+  //   const hayFlujoMayor = this.agreement.some(
+  //     (item: AcuerdoI) => item.tipoProceso.id == typeProcessId && item.flujoObj.idFlujo <= flujoId
+  //   );
+  //   return !hayFlujoMayor
+  // }
+
+  // validateStageMayorAd(typeProcessId: number): boolean {
+  //   const stage = this.agreement.every(
+  //     (item: AcuerdoI) => item.tipoProceso.id >= typeProcessId
+  //   );
+  //   return stage
+  // }
+
+  // validateStageSameAd(typeProcessId: number): boolean {
+  //   const stage = this.agreement.every(
+  //     (item: AcuerdoI) => item.tipoProceso.id == typeProcessId
+  //   );
+  //   return stage
+  // }
 
   // validateStageSameAd(typeProcessId: number, flujoId: number): boolean {
   //   const stage = this.agreement.some(
@@ -301,35 +368,54 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //   return stage
   // }
 
-  validateOcupationalGroup() {
-    this.validationGv = this.agreement.some(
-      (item: AcuerdoI) => item.colaboradorObj.grupoObj.idGrupo == 5
-    );
-    this.updateSteps()
-  }
+  // validateOcupationalGroup() {
+  //   this.validationGv = this.agreement.some(
+  //     (item: AcuerdoI) => item.colaboradorObj.grupoObj.idGrupo == 5
+  //   );
+  // }
 
   validateDocumentationAgreement() {
     this.validationDocAgreement = this.agreement.some(
       (item: AcuerdoI) => item.documentosObj.length == 0
     );
-    this.updateSteps()
+  }
+
+  pendingComments(acuerdo: AcuerdoI): boolean {
+    return acuerdo.comentarios.some(comment => comment.leido == false && comment.creadoPorUsuario != this.userLogged.Username)
   }
 
   openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
     const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo } })
-    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(); this.searchTerm = '' });
   }
+ 
+  // async openAuthorizationAction(idTipoAcuerdo: number, nombre: string, apellido: string, idAcuerdo: number) {
 
-  commentsAgreement(idAcuerdo: number, fullName: string, estado: number): void {
-    const dialog = this.dialog.open(ComentariosComponent, { data: { idAcuerdo, fullName, estado } })
-    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(''); this.searchTerm = '' });
+  //   let removeDecision = await this.snackBar.snackbarConfirmation(`¿Está seguro de autorizar la evaluación de acuerdo de ${nombre.toUpperCase()} ${apellido.toUpperCase()} ?`, 'Esta acción no se puede deshacer.')
+
+  //   if (removeDecision) {
+
+  //     let processData = idTipoAcuerdo == 1 ? { acuerdoId: idAcuerdo, procesoId: 5 } : { acuerdoId: idAcuerdo, procesoId: 11 }  
+
+  //     this.agreementService.updateProcess(processData).subscribe((res: any) => {
+  //       if (res.status) {
+  //         this.searchTerm = ''
+  //         this.appHelpers.handleResponse(res, () => this.getAcuerdoByRol())
+  //       }
+  //     })
+  //   }
+  // }
+
+  commentsAgreement(idAcuerdo: number, fullName: string, estado: number, user: string): void {
+    const dialog = this.dialog.open(ComentariosComponent, { data: { idAcuerdo, fullName, estado, user } })
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(); this.searchTerm = '' });
   }
 
   //Metodo para llamar a la siguiente pagina
   nextPage() {
     if (this.page < this.pagination.totalPage) {
       this.page += 1
-      this.getAcuerdoByRol(this.searchTerm)
+      this.getAcuerdoByRol(true)
     }
   }
 
@@ -337,7 +423,8 @@ export class AcuerdoDesempenioComponent implements OnInit {
   previousPage() {
     if (this.page > 1) {
       this.page -= 1
-        ; this.getAcuerdoByRol(this.searchTerm)
+        ; this.getAcuerdoByRol(true)
     }
   }
+
 }

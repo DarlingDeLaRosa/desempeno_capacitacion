@@ -126,9 +126,9 @@
           <td *ngIf="agreement.colaboradorObj.grupoObj.idGrupo == 5">{{detalle.metaObj.metaPoa || ''}}</td>
           <td>{{detalle.metaObj.nombre}}</td>
           <td style="text-align: center;">{{detalle.metaObj.valor}}</td>
-          <td style="text-align: center;">{{detalle.metaObj.medioVerificacionObj.nombre}}</td>
-          <td style="text-align: center;">{{detalle.calificacion}}</td>
-          <td>{{detalle.observaciones}}</td>
+          <td style="text-align: center;">{{detalle.metaObj.descripcionMedioVerificacion}}</td>
+          <td style="text-align: center;">{{detalle.calificacion == 0 && agreement.tipoProceso.id != 5 && agreement.flujoObj.idFlujo > 2 ? '' : detalle.calificacion}}</td>
+          <td style="text-align: justify;">{{detalle.observaciones != null && detalle.observaciones != 'null' ? detalle.observaciones : ''}}</td>
         </tr>
         <tr>
           <td></td>
@@ -136,7 +136,7 @@
           <td style="text-align: end; font-weight: 600;">Total</td>
           <td style="text-align: center; font-weight: 600;">{{totalValor}}</td>
           <td style="font-weight: 600; text-align: end;">Total</td>
-          <td style="text-align: center; font-weight: 600;">{{totalCalificacion}}</td>
+          <td style="text-align: center; font-weight: 600;">{{totalCalificacion == 0 && agreement.tipoProceso.id != 5 &&  agreement.flujoObj.idFlujo < 2  ? '' : totalCalificacion}}</td>
           <td></td>
         </tr>
       </tbody>

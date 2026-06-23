@@ -10,6 +10,7 @@ export class CollaboratorServices {
 
     private token: string;
     private baseURL: string;
+    private baseURLHS: string;
     private systemId: number;
     private headers: HttpHeaders;
     private userLogged: number | null;
@@ -23,6 +24,7 @@ export class CollaboratorServices {
         this.token = JSON.parse(sessionStorage.getItem("tokenIntranet")!);
         this.systemId = this.systemInformation.getSistema;
         this.baseURL = this.systemInformation.getIntranetURL;
+        this.baseURLHS = this.systemInformation.getURL;
         this.headers = new HttpHeaders({ 'Authorization': `Bearer ${this.token}`});
         this.header = { headers: this.headers };
         this.userLogged = Number(systemInformation.localUser.IdRecinto)
@@ -41,6 +43,10 @@ export class CollaboratorServices {
 
     public putCollaborator( collaborator : CollaboratorsI) {
         return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/User`, collaborator , this.header))
+    }
+    
+    public putColaboratorUser( collaborator : CollaboratorsI) {
+        return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURLHS}/Colaboradores/usuario`, collaborator , this.header))
     }
 
     public deleteCollaborator(id: number) {

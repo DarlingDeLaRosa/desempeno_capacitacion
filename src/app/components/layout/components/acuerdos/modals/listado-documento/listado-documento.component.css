@@ -147,3 +147,8 @@ button.cancel-button {
   text-overflow: ellipsis;
   flex-grow: 1;
 }
+
+.loaderMother{
+  width: 20px;
+  height: 20px;
+}

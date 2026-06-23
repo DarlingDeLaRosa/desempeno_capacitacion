@@ -1,4 +1,8 @@
-<h2 class="Stitle">Asignación de acuerdos</h2>
+<div style="display: flex; justify-content: space-between;">
+    <h2 class="Stitle">Asignación de acuerdos</h2>
+    <button type="submit" *ngIf="userLogged.role == 'Encargado'" (click)="asignAgrementsAllCollaborators()" class="btnAsign"><mat-icon style="margin-right: 5px;">note_add</mat-icon> Asignar acuerdo a colaboradores faltantes</button>
+</div>
+
 <div>
     <form style=" margin: 15px 0 35px 0" [formGroup]="asignationAgreementForm" (ngSubmit)="saveChanges()">
 
@@ -102,6 +106,7 @@
                     <th class="headerCell">DNI</th>
                     <th class="headerCell">Cargo</th>
                     <th class="headerCell">Tipo de acuerdo</th>
+                    <th class="headerCell">Supervisor</th>
                     <th class="headerCell">Unidad Org.</th>
                     <!-- <th class="headerCell">Recinto</th> -->
                     <th class="headerCell" style="width: 7%"></th>
@@ -120,6 +125,7 @@
                     <td class="dataIndiCell" [matTooltip]="asignationAgreement.colaborador.cargo.nombre | titlecase">
                         {{asignationAgreement.colaborador.cargo.nombre}}</td>
                     <td class="dataIndiCell">{{asignationAgreement.tipoAcuerdoObj.nombre}}</td>
+                    <td class="dataIndiCell"  [matTooltip]="asignationAgreement.supervisor.nombres + ' ' + asignationAgreement.supervisor.apellidos | titlecase">{{asignationAgreement.supervisor.nombres | titlecase}} {{asignationAgreement.supervisor.apellidos | titlecase}}</td>
                     <td class="dataIndiCell">
                         <ng-container *ngIf="appHelpers.getUnitOrg(
                             asignationAgreement.colaborador.division,
@@ -161,7 +167,7 @@
             </tbody>
             <tfoot *ngIf="pagination && pagination.totalPage">
                 <tr class="paginatorRow">
-                    <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
+                    <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
                         <td class="dataIndiCell"></td>
                     </ng-container>
                     <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
@@ -187,7 +193,7 @@
                 <ng-template #searching>
                     <td class="dataIndiCell">Buscando elementos.</td>
                 </ng-template>
-                <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
+                <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6, 7]">
                     <td class="dataIndiCell"></td>
                 </ng-container>
             </tr>

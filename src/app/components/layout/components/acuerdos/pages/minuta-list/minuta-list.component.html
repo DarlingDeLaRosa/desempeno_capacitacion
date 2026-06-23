@@ -12,20 +12,46 @@
 </div>
 
 <div style="display: flex; justify-content: space-between;">
-  <mat-form-field appearance="fill" style="width: 20%;">
+  <div style="display: flex; gap: 5px; align-items: center;">
+    <mat-form-field
+    *ngIf="systemInformation.activeRol().nombre != 'supervisado'"
+    appearance="fill"
+    style="flex: 1"
+  >
+    <mat-label>Buscar</mat-label>
+    <input matInput [(ngModel)]="searchTerm" (input)="Buscar()" />
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="flex: 1">
     <mat-label>Tipos de Minuta</mat-label>
     <mat-select [(ngModel)]="typeMinuta" (selectionChange)="getMinutas('')">
       <mat-option value="">Todos</mat-option>
       <mat-option value="acuerdo">Minuta de Acuerdo de Desempeño</mat-option>
-      <mat-option value="evaluacion">Minuta de Evaluación de Competencias</mat-option>
+      <mat-option value="evaluacion"
+        >Minuta de Evaluación de Competencias</mat-option
+      >
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field *ngIf="systemInformation.activeRol().nombre != 'supervisado'" appearance="fill" style="width: 300px;">
-    <mat-label>Buscar</mat-label>
-    <input matInput [(ngModel)]="searchTerm" (input)="Buscar()">
-    <mat-icon matSuffix>search</mat-icon>
+  <mat-form-field appearance="fill" style="flex: 1">
+    <mat-label>Recinto</mat-label>
+    <mat-select [(ngModel)]="typeMinuta" (selectionChange)="getMinutas('')">
+    </mat-select>
   </mat-form-field>
+
+  <mat-form-field appearance="fill" style="flex: 1">
+    <mat-label>Proceso</mat-label>
+    <mat-select [(ngModel)]="typeMinuta" (selectionChange)="getMinutas('')">
+    </mat-select>
+  </mat-form-field>
+
+  <button type="button" class="btnSave">
+    <mat-icon style="margin-right: 3px">search</mat-icon> Buscar
+  </button>
+  </div>
+
+  <span></span>
 </div>
 
 <table>
@@ -38,74 +64,123 @@
       <!-- <th class="headerCell">Nivel</th> -->
       <!-- <th class="headerCell">Proceso</th> -->
       <th class="headerCell">
-        <div style="display: flex; justify-content: center;">
-          G. Ocupacional
-        </div>
+        <div style="display: flex; justify-content: center">G. Ocupacional</div>
       </th>
       <th class="headerCell">
-        <div style="display: flex; justify-content: center;">
-          Estado
-        </div>
+        <div style="display: flex; justify-content: center">Estado</div>
       </th>
-      <th class="headerCell" style="width: 5%;">
+      <th class="headerCell" style="width: 5%">
         <div *ngIf="!minutaList || charge" class="loader"></div>
       </th>
     </tr>
   </thead>
   <tbody *ngIf="minutaList && minutaList.length > 0; else noElements">
-
     <tr class="dataRow" *ngFor="let minuta of minutaList">
-      <td class="dataIndiCell">{{minuta.supervisorIntranet!.nombre | titlecase }} {{minuta.supervisorIntranet!.apellidos | titlecase }}</td>
       <td class="dataIndiCell">
-        <ng-container *ngIf="appHelper.getUnitOrg(
+        {{ minuta.supervisorIntranet!.nombre | titlecase }}
+        {{ minuta.supervisorIntranet!.apellidos | titlecase }}
+      </td>
+      <td class="dataIndiCell">
+        <ng-container
+          *ngIf="
+            appHelper.getUnitOrg(
               minuta.supervisorIntranet.division,
               minuta.supervisorIntranet.departamento,
               minuta.supervisorIntranet.direccion,
               minuta.supervisorIntranet.viceRectoria
-            ).nombre !== 'Unidad organizativa no asignada'; else noUnidad">
-          <span [matTooltip]="appHelper.getUnitOrg(
-            minuta.supervisorIntranet.division,
-            minuta.supervisorIntranet.departamento,
-            minuta.supervisorIntranet.direccion,
-            minuta.supervisorIntranet.viceRectoria
-            ).nombre | titlecase">
+            ).nombre !== 'Unidad organizativa no asignada';
+            else noUnidad
+          "
+        >
+          <span
+            [matTooltip]="
+              appHelper.getUnitOrg(
+                minuta.supervisorIntranet.division,
+                minuta.supervisorIntranet.departamento,
+                minuta.supervisorIntranet.direccion,
+                minuta.supervisorIntranet.viceRectoria
+              ).nombre | titlecase
+            "
+          >
             {{
-            appHelper.getUnitOrg(
-            minuta.supervisorIntranet.division,
-            minuta.supervisorIntranet.departamento,
-            minuta.supervisorIntranet.direccion,
-            minuta.supervisorIntranet.viceRectoria
-            ).nombre | titlecase
+              appHelper.getUnitOrg(
+                minuta.supervisorIntranet.division,
+                minuta.supervisorIntranet.departamento,
+                minuta.supervisorIntranet.direccion,
+                minuta.supervisorIntranet.viceRectoria
+              ).nombre | titlecase
             }}
           </span>
         </ng-container>
 
         <ng-template #noUnidad>
-          <span class="badge-red" matTooltip="Validar que el usuario tenga unidad organizativa asignada."> <mat-icon
-              matSuffix style="margin-right: 5px;">warning</mat-icon> Unidad organizativa no encontrada.</span>
+          <span
+            class="badge-red"
+            matTooltip="Validar que el usuario tenga unidad organizativa asignada."
+          >
+            <mat-icon matSuffix style="margin-right: 5px">warning</mat-icon>
+            Unidad organizativa no encontrada.</span
+          >
         </ng-template>
       </td>
-      <td class="dataIndiCell" [matTooltip]="minuta.supervisorIntranet!.cargo.nombre">{{minuta.supervisorIntranet!.cargo.nombre}}</td>
-      <td class="dataIndiCell" [matTooltip]="minuta.esUnaEvaluacionCompentencia ? 'Evaluación de competencia' : 'A.D. -' + minuta.periodoAcuerdo.tipoProceso.nombre ">{{minuta.esUnaEvaluacionCompentencia ? 'Evaluación de competencia' : 'A.D. -' + minuta.periodoAcuerdo.tipoProceso.nombre }}</td>
+      <td
+        class="dataIndiCell"
+        [matTooltip]="minuta.supervisorIntranet!.cargo.nombre"
+      >
+        {{ minuta.supervisorIntranet!.cargo.nombre }}
+      </td>
+      <td
+        class="dataIndiCell"
+        *ngIf="minuta.periodoAcuerdo != null; else noPeriod"
+        [matTooltip]="
+          minuta.esUnaEvaluacionCompentencia
+            ? 'Evaluación de competencia'
+            : 'A.D. -' + minuta.periodoAcuerdo.tipoProceso.nombre
+        "
+      >
+        {{
+          minuta.esUnaEvaluacionCompentencia
+            ? "Evaluación de competencia"
+            : "A.D. -" + minuta.periodoAcuerdo.tipoProceso.nombre
+        }}
+      </td>
+      <ng-template #noPeriod>
+        <td class="dataIndiCell" style="color: red">
+          No se encontro el tipo de minuta
+        </td>
+      </ng-template>
       <td class="dataIndiCell">
-        <div style="display: flex; justify-content: center;">
-          {{minuta.supervisorIntranet!.grupoObj.nombre}}
-        </div>  
+        <div style="display: flex; justify-content: center">
+          {{ minuta.supervisorIntranet!.grupoObj.nombre }}
+        </div>
       </td>
       <td class="dataIndiCell">
-        <div style="display: flex; justify-content: center;">
-          <div class="tag" [ngClass]="{
-              'pendiente': minuta.aprobada === null || (minuta.aprobada === true && minuta.documentos.length === 0),
-              'aceptada': minuta.aprobada === true && minuta.documentos.length > 0,
-              'rechazada': minuta.aprobada === false
-            }">
+        <div style="display: flex; justify-content: center">
+          <div
+            class="tag"
+            [ngClass]="{
+              pendiente:
+                minuta.aprobada === null ||
+                (minuta.aprobada === true && minuta.documentos.length === 0),
+              aceptada:
+                minuta.aprobada === true &&
+                minuta.documentos.length > 0 &&
+                minuta.estaFinalizado == false,
+              finalizada: minuta.estaFinalizado,
+              rechazada: minuta.aprobada === false,
+            }"
+          >
             <h4>
               {{
                 minuta.aprobada === null
-                  ? 'Pendiente'
-                  : (minuta.aprobada
-                      ? (minuta.documentos.length === 0 ? 'Pendiente de documento' : 'Aceptada')
-                      : 'Rechazada')
+                  ? "Pendiente"
+                  : minuta.aprobada
+                    ? minuta.documentos.length === 0
+                      ? "Pendiente de documento"
+                      : minuta.estaFinalizado
+                        ? "Finalizada"
+                        : "Aceptada"
+                    : "Rechazada"
               }}
             </h4>
           </div>
@@ -113,31 +188,65 @@
       </td>
 
       <td class="dataIndiCell">
-        <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
+        <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones."
+          >more_vert</mat-icon
+        >
         <mat-menu #menu="matMenu">
-
-          <div class="ItemMiniMenu" (click)="openModalTemplateMinuta(minuta.id)">
+          <div
+            class="ItemMiniMenu"
+            (click)="openModalTemplateMinuta(minuta.id)"
+          >
             <mat-icon>description</mat-icon>
             <h4>Ver Minuta</h4>
           </div>
 
-          <div class="ItemMiniMenu" *ngIf="minuta.documentos.length > 0"
-            (click)="openModalListadoDocumentos(minuta.supervisorIntranet!.nombre, minuta.supervisorIntranet!.apellidos, minuta.supervisorIntranet!.idPersona, minuta.documentos)">
+          <div
+            class="ItemMiniMenu"
+            *ngIf="minuta.documentos.length > 0"
+            (click)="
+              openModalListadoDocumentos(
+                minuta.supervisorIntranet!.nombre,
+                minuta.supervisorIntranet!.apellidos,
+                minuta.supervisorIntranet!.idPersona,
+                minuta.documentos,
+                minuta.esUnaEvaluacionCompentencia ? 2 : 1,
+                minuta.estaFinalizado,
+                minuta.periodoAcuerdo.tipoProceso.id
+              )
+            "
+          >
             <mat-icon>description</mat-icon>
             <h4>Ver Doc. Minuta</h4>
           </div>
-          
-          <div class="ItemMiniMenu" (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == true && minuta.documentos.length > 0">
+
+          <div
+            class="ItemMiniMenu"
+            (click)="completeMinuta(minuta.id)"
+            *ngIf="
+              minuta.estaFinalizado == false &&
+              minuta.esUnaEvaluacionCompentencia == false &&
+              minuta.aprobada == true &&
+              minuta.documentos.length > 0
+            "
+          >
             <mat-icon style="color: green">check</mat-icon>
-            <h4 style="color: green">Completar P. Creación</h4>
+            <h4 style="color: green">Completar proceso</h4>
           </div>
 
-          <div class="ItemMiniMenu" (click)="postValidarMinuta(minuta.id, true)" *ngIf="minuta.aprobada == null ">
+          <div
+            class="ItemMiniMenu"
+            (click)="postValidarMinuta(minuta.id, true)"
+            *ngIf="minuta.aprobada == null"
+          >
             <mat-icon style="color: green">check</mat-icon>
             <h4 style="color: green">Aceptar Minuta</h4>
           </div>
 
-          <div class="ItemMiniMenu" (click)="postValidarMinuta(minuta.id, false)" *ngIf=" minuta.aprobada == null ">
+          <div
+            class="ItemMiniMenu"
+            (click)="postValidarMinuta(minuta.id, false)"
+            *ngIf="minuta.aprobada == null"
+          >
             <mat-icon style="color: orangered">close</mat-icon>
             <h4 style="color: orangered">Rechazar Minuta</h4>
           </div>
@@ -147,13 +256,11 @@
             <h4 style="color: orangered">Rechazar Documento Minuta</h4>
           </button> -->
 
-          <div class="ItemMiniMenu eliminarHover" (click)="deleteMinuta(minuta.id)">
+          <!-- <div class="ItemMiniMenu eliminarHover" *ngIf="minuta.estaFinalizado ==  false" (click)="deleteMinuta(minuta.id)">
             <mat-icon style="color: red;">delete</mat-icon>
             <h4 style="color: red;">Eliminar Minuta</h4>
-          </div>
-
+          </div> -->
         </mat-menu>
-
       </td>
       <!-- <td class="dataIndiCell">{{minuta.periodoAcuerdo!.tipoProceso.nombre}}</td> -->
       <!-- <td class="dataIndiCell"><mat-icon matTooltip="Ver Documento de minuta." class="listIcon"
@@ -162,7 +269,6 @@
       <!-- <td class="dataIndiCell"><mat-icon matTooltip="Eliminar minuta." class="removeIcon"
           (click)="deletePeriod(minuta.id)">delete</mat-icon>
       </td> -->
-
     </tr>
   </tbody>
 
@@ -171,12 +277,27 @@
       <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
         <td class="dataIndiCell"></td>
       </ng-container>
-      <td class="paginationCell"> <span style="color: #888;">{{pagination.totalItem}} Items</span></td>
       <td class="paginationCell">
-        <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
-          <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
-          <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-          <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
+        <span style="color: #888">{{ pagination.totalItem }} Items</span>
+      </td>
+      <td class="paginationCell">
+        <span
+          style="display: flex; align-items: center"
+          *ngIf="pagination.totalPage > 1"
+        >
+          <mat-icon
+            class="rowIcon"
+            matTooltip="Pagina anterior."
+            (click)="previousPage()"
+            >navigate_before</mat-icon
+          >
+          <h5 style="margin: 0">{{ page }} / {{ pagination.totalPage }}</h5>
+          <mat-icon
+            class="rowIcon"
+            matTooltip="Pagina siguiente."
+            (click)="nextPage()"
+            >navigate_next</mat-icon
+          >
         </span>
       </td>
     </tr>
@@ -184,8 +305,12 @@
   <ng-template #noElements>
     <tbody>
       <tr class="dataRow">
-        <td class="dataIndiCell" *ngIf="minutaList && minutaList.length == 0; else searching">No hay elementos que
-          mostrar.</td>
+        <td
+          class="dataIndiCell"
+          *ngIf="minutaList && minutaList.length == 0; else searching"
+        >
+          No hay elementos que mostrar.
+        </td>
         <ng-template #searching>
           <td class="dataIndiCell">Buscando elementos.</td>
         </ng-template>

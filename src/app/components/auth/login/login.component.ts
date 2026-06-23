@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit {
         this.isLoading = false;
         
         if (user.role != 'supervisado') {
-          this.router.navigate(['/layout/evaluacion-competencias']);
+          this.router.navigate(['/layout/acuerdos']);
         } 
         
         if(user.role == 'supervisado' && user.SupervisorInterino == 'True'){

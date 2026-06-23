@@ -43,6 +43,8 @@ import { ReportDashboardComponent } from './components/layout/components/reporte
 import { EvaluacionProvisionalComponent } from './components/layout/components/evaluacion-competencias/pages/evaluacion-provisional/evaluacion-provisional.component';
 import { EvaluacionModalviewComponent } from './components/layout/components/evaluacion-competencias/modals/evaluacion-modalview/evaluacion-modalview.component';
 import { ViewSupervisadoEvaluacionComponent } from './components/layout/components/evaluacion-competencias/pages/view-supervisado-evaluacion/view-supervisado-evaluacion.component';
+import { AcuerdoEvaluacionProvisionalComponent } from './components/layout/components/acuerdos/pages/acuerdo-evaluacion-provisional/acuerdo-evaluacion-provisional.component';
+import { ProvisionalComponent } from './components/layout/components/evaluacion-competencias/pages/provisional-oulet/provisional-oulet.component';
 
 export const routes: Routes = [
   {
@@ -179,6 +181,47 @@ export const routes: Routes = [
       {
         path: 'evaluacion-provisional',
         component: EvaluacionProvisionalComponent,
+      },
+      {
+        path: 'acuerdos-provisional',
+        component: ProvisionalComponent,
+        children: [
+          {
+            path: '',
+            component: AcuerdoEvaluacionProvisionalComponent,
+            outlet: 'acuerdos-provisional'
+          },
+          {
+            path: 'miacuerdo',
+            component: MiAcuerdoComponent,
+            outlet: 'acuerdos-provisional'
+          },
+          {
+            path: 'minuta',
+            component: MinutaComponent,
+            outlet: 'acuerdos-provisional'
+          },
+          {
+            path: 'ver-acuerdo/:id',
+            component: VerAcuerdoComponent,
+            outlet: 'acuerdos-provisional'
+          },
+          {
+            path: 'comportamientos/:id',
+            component: VerComportamientosProbatoriosComponent,
+            outlet: 'acuerdos-provisional'
+          },
+          {
+            path: 'editar/:id',
+            component: AcuerdoEditarComponent,
+            outlet: 'acuerdos-provisional'
+          },
+          {
+            path: 'evaluacion/:id',
+            component: AcuerdoEvaluacionComponent,
+            outlet: 'acuerdos-provisional'
+          },
+        ]
       },
       {
         path: 'mi-evaluacion',

@@ -138,6 +138,11 @@ export class IntranetServices {
         const headers = this.getHeaders();
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/${id}`, { headers }))
     }
+    
+    public getPeopleByIdResume(id: number) {
+        const headers = this.getHeaders();
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/get_by_id_resumen/${id}`, { headers }))
+    }
 
     // peticion para el loguin a un sistema de intraanet
     //  public postUserLogin(crendenciales: any) {

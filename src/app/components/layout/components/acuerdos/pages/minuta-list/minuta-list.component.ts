@@ -14,6 +14,7 @@ import { MinutaEvaluacionCompetenciaComponent } from '../../../../templates/minu
 import { FormGroup } from '@angular/forms';
 import { CommentEmailComponent } from './dialog/comment-email/comment-email.component';
 import { AutorizacionAccionComponent } from '../../modals/autorizacion-accion/autorizacion-accion.component';
+import { agreementService } from '../../services/acuerdo.service';
 
 @Component({
   selector: 'app-minuta-list',
@@ -37,6 +38,7 @@ export class MinutaListComponent implements OnInit {
     public snackBar: SnackBars,
     public appHelper: HerlperService,
     private minutaService: MinutaService,
+    private agreementservice: agreementService,
     public systemInformation: systemInformationService,
   ) { }
 
@@ -73,14 +75,16 @@ export class MinutaListComponent implements OnInit {
     }
   }
 
-  openModalListadoDocumentos(nombre: string, apellido: string, idPersona: number, documentos: DocumentoMinuta[] = []): void {
+  openModalListadoDocumentos(nombre: string, apellido: string, idPersona: number, documentos: DocumentoMinuta[] = [], type: number, done: boolean, tipoProceso: number): void {    
     const nombreCompleto = nombre + ' ' + apellido;
     const dialog = this.dialog.open(ListadoDocumentoComponent, {
       data: {
-        type: 2,
-        idCollaborator: idPersona,
+        type: type,
+        idCollaborator: 0,
         nombreCompleto,
         documentos,
+        done,
+        tipoProceso
       }
     })
     dialog.afterClosed().subscribe(result => {
@@ -125,9 +129,15 @@ export class MinutaListComponent implements OnInit {
     }
   }
 
+  completeMinuta(idMin: number){
+    this.agreementservice.completeMinuta(idMin).subscribe((res: any)=>{
+      this.appHelper.handleResponse(res, () => this.getMinutas(''))
+    })
+  }
+
   async deleteMinuta(id: number) {
     let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
-
+    
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
       this.minutaService.deleteMinuta(id).subscribe((res: any) => {
@@ -135,7 +145,6 @@ export class MinutaListComponent implements OnInit {
       })
     }
   }
-
 
   //Metodo para llamar a la siguiente pagina
   nextPage() {

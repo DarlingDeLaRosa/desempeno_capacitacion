@@ -11,6 +11,7 @@ import { AsignationGoalsServices } from './services/asignacion-meta.service';
 import { GoalGetI } from '../metas/interface/metas.interface';
 import { GoalsServices } from '../metas/services/meta.service';
 import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
+import { PositionI } from '../colaboradores/interfaces/colaboradores.interface';
 
 @Component({
   selector: 'app-asignacion-metas',
@@ -20,6 +21,7 @@ import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
   styleUrl: './asignacion-metas.component.css'
 })
 export class AsignacionMetasComponent implements OnInit {
+  
 
   constructor(
     public fb: FormBuilder,
@@ -33,14 +35,17 @@ export class AsignacionMetasComponent implements OnInit {
     this.asignationGoalForm = fb.group({
       idAsignacion: 0,
       isSup: new FormControl(false),
-      idGrupo: new FormControl('', Validators.required),
+      idGrupo: new FormControl('', ),
+      idCargo: new FormControl('', ),
       idMeta: new FormControl('', Validators.required),
     })
   }
 
   page: number = 1
   goals!: GoalGetI[]
+  positions!: PositionI[]
   pagination!: PaginationI
+  typeGoal: boolean =  false
   showSupGOII: boolean = false
   asignationGoalForm: FormGroup
   ocupationalGroup!: OcupationalGroupI[]
@@ -50,6 +55,10 @@ export class AsignacionMetasComponent implements OnInit {
     this.getGoals()
     this.getAsignationGoals()
     this.getOcupationalGroup()
+  }
+  
+  displayName(name: any): string {
+    return name ? `${name.nombre}` : '';
   }
 
   // Metodo para obtener todos los grupos ocupacionales
@@ -84,6 +93,18 @@ export class AsignacionMetasComponent implements OnInit {
         const { currentPage, totalItem, totalPage } = res
         this.pagination = { currentPage, totalItem, totalPage }
       })
+  }
+
+  //Obtener cargos por nomber
+  getCargoByName() {
+    if (this.asignationGoalForm.value.idCargo.length < 3) {
+      this.positions = []
+    } else {
+      this.intranetService.getPositionsByName(this.asignationGoalForm.value.idCargo)
+        .subscribe((res: any) => {
+          this.positions = res.data
+        })
+    }
   }
 
   // Metodo para crear las asignaciones de metas

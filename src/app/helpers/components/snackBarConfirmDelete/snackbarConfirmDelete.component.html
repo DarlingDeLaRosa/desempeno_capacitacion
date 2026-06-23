@@ -1,21 +1,22 @@
-<div style="display: flex; justify-content: space-between; align-items: center; width: 600px;">
-    <span>
-        <h3 style="color: white;">{{data.confirmationTitle}}</h3>
-        <h4 style="color: white;">{{data.confirmationSubTitle}}</h4>
+<div style="padding: 20px;">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 600px;">
+        <span>
+            <h3 style="color: white;">{{data.confirmationTitle}}</h3>
+            <h4 style="color: white;">{{data.confirmationSubTitle}}</h4>
+        </span>
+        <mat-icon style="color: white;">contact_support</mat-icon>
+    </div>
+
+    <span style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
+        <button mat-stroked-button [ngStyle]="{'background-color': data.colorBtnYes, 'color': 'white'}"
+            (click)="onComfirm()">
+            {{ data.buttonSuccessname }}
+        </button>
+
+        <button mat-stroked-button [ngStyle]="{'background-color': data.colorBtnNo, 'color': 'white'}"
+            (click)="closeSnackbar()">
+            {{ data.buttonCancelname }}
+        </button>
     </span>
-    <mat-icon style="color: white;">contact_support</mat-icon>
 </div>
-
-<span style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-    <button mat-stroked-button
-        [ngStyle]="{'background-color': data.colorBtnYes, 'color': 'white'}"
-        (click)="onComfirm()">
-  {{ data.buttonSuccessname }}
-</button>
-
-<button mat-stroked-button
-        [ngStyle]="{'background-color': data.colorBtnNo, 'color': 'white'}"
-        (click)="closeSnackbar()">
-  {{ data.buttonCancelname }}
-</button>
-</span>

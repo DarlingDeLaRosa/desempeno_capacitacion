@@ -34,12 +34,20 @@ export class agreementService {
   }
 
   //peticion para traer el acuerdo segun el id del colaborador
-  public getAgreementByCollaborator(idCollaborator: number, idGroup: number) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/get_by_idcolaborador/${idCollaborator}/${idGroup}`, this.header));
+  public getAgreementByCollaborator(idCollaborator: number) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/get_by_idcolaborador/${idCollaborator}`, this.header));
   }
 
-  public getAgreementByRol(term: string = '', supervisor: boolean = false, page: number = 1, pageSize: number = 1000) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador?supervisor=${supervisor}&term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
+  public getAgreementByRol(term: string = '', process: string = '', recinto: string = '', flujo: string = '', supervisor: boolean = false, page: number = 1, pageSize: number = 1000, probative: boolean = false) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador?flujo=${flujo}&proceso=${process}&recinto=${recinto}&probatorios=${probative}&supervisor=${supervisor}&term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
+  }
+ 
+  public getAgreementProbative(term: string = '', process: string = '', recinto: string = '', flujo: string = '', page: number = 1, pageSize: number = 1000, probative: boolean = false) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/para-supervisor-interino?flujo=${flujo}&proceso=${process}&recinto=${recinto}&probatorios=${probative}&term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
+  }
+
+  public validateProbativeAgreement(idSup: number = 0) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/validar-acuerdos-probatorios?supervisorId=${idSup}`, this.header));
   }
 
   public getAgreementByIdCollaborator(idCollaborator: number) {
@@ -74,6 +82,10 @@ export class agreementService {
   public getComments(idAcuerdo: number) {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/${idAcuerdo}/comentarios`, this.header));
   }
+  
+  public putCommentsReaded(idAcuerdo: number) {
+    return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Acuerdo/${idAcuerdo}/comentarios-leidos`, '',this.header));
+  }
 
   public postComment(comment: postCommentI) {
     return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Acuerdo/agregar-comentario`, comment, this.header));
@@ -90,6 +102,14 @@ export class agreementService {
   public updateProcess(process: {acuerdoId: number, procesoId: number}) {
     return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Acuerdo/actualizar-proceso`, process, this.header));
   }
+  
+  public updateProcessForOne(acuerdoId: number) {
+    return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Acuerdo/${acuerdoId}/actualizar-proceso`, '', this.header));
+  }
+ 
+  public completeMinuta(idMinuta: number) {
+    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Minutas/${idMinuta}/completar`, this.header));
+  }
 
   // Comportamientos Probatorios 
 
@@ -104,7 +124,5 @@ export class agreementService {
   public putBehaviorTest(behaviorsTest: EvaluationCompetencyTestI) {
     return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/EvaluacionesAcuerdosProbatorios`, behaviorsTest, this.header));
   }
-
-
 
 }

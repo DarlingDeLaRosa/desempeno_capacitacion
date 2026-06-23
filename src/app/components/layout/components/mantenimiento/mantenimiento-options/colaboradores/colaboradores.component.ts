@@ -62,7 +62,8 @@ export class ColaboradoresComponent implements OnInit {
       idEstado: new FormControl(1),
       idSupervisor: new FormControl('', Validators.required),
       idSistema: new FormControl('', Validators.required),
-      diferentPosition: new FormControl(false)
+      diferentPosition: new FormControl(false),
+      Cargo: new FormControl('', Validators.required)
     })
 
     this.filterForm = fb.group({
@@ -88,6 +89,7 @@ export class ColaboradoresComponent implements OnInit {
   locations!: LocationI[]
   divisions!: DivisionI[]
   positions!: PositionI[]
+  positionsDesempena!: PositionI[]
   pagination!: PaginationI
   collaborators!: PersonI[]
   directions!: DirectionI[]
@@ -252,7 +254,7 @@ export class ColaboradoresComponent implements OnInit {
   // }
 
   openModalviewSup(colaborador: PersonI) {
-    let dialogRef = this.dialog.open(ShowSupsComponent, { data: {id: colaborador.persona.idPersona, name: `${colaborador.persona.nombre} ${colaborador.persona.apellidos}`} })
+    let dialogRef = this.dialog.open(ShowSupsComponent, { data: { id: colaborador.persona.idPersona, name: `${colaborador.persona.nombre} ${colaborador.persona.apellidos}` } })
     dialogRef.afterClosed().subscribe(() => { })
   }
 
@@ -288,6 +290,17 @@ export class ColaboradoresComponent implements OnInit {
       this.intranetService.getPositionsByName(this.collaboratorForm.value.idCargo)
         .subscribe((res: any) => {
           this.positions = res.data
+        })
+    }
+  }
+  
+  getCargoDesempenaByName() {
+    if (this.collaboratorForm.value.idCargoDesempenia.length < 3) {
+      this.positionsDesempena = []
+    } else {
+      this.intranetService.getPositionsByName(this.collaboratorForm.value.idCargoDesempenia)
+        .subscribe((res: any) => {
+          this.positionsDesempena = res.data
         })
     }
   }
@@ -410,10 +423,10 @@ export class ColaboradoresComponent implements OnInit {
 
   // Metodo para editar un colaborador
   putCollaborator() {
-    this.collaboratorService.putCollaborator(this.collaboratorForm.value)
+    this.collaboratorService.putColaboratorUser(this.collaboratorForm.value)
       .subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => this.getCollaborators(), this.collaboratorForm)
-      })
+    })
   }
 
   // Metodo para eliminar un colaborador
@@ -423,33 +436,37 @@ export class ColaboradoresComponent implements OnInit {
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
 
-      this.collaboratorService.deleteCollaborator(idUsuario)
-        .pipe(
-          switchMap((res: any) => {
-            this.appHelpers.handleResponse(res, () => this.getCollaborators(), this.collaboratorForm)
+      // this.collaboratorService.deleteCollaborator(idUsuario)
+      //   .pipe(
+      //     switchMap((res: any) => {
+      //       this.appHelpers.handleResponse(res, () => this.getCollaborators(), this.collaboratorForm)
 
-            return of(res)
-          }),
-          switchMap((res: any) => {
-            if (res.status) {
-              return this.asignationAgreementService.deleteAsignationAgreementByIdCollaborador(idPersona)
-            }
-            return EMPTY
-          })
-        )
-        .subscribe(
-          (res: any) => {
-            if (res.status) {
-              setTimeout(() => {
-                this.snackBar.snackbarStaySuccess(
-                  'La asignación de acuerdo fue removida automaticamente.', ''
-                );
-              }, 2000);
-            }
-          }, (error) => {
-            this.snackBar.snackbarError('Ocurrió un error al momento de eliminar la asignación de acuerdo del usuario eliminado. Por favor proceda a eliminarlo manualmente.');
-          }
-        )
+      //       return of(res)
+      //     }),
+      //     switchMap((res: any) => {
+      //       if (res.status) {
+      //         return this.asignationAgreementService.deleteAsignationAgreementByIdCollaborador(idPersona)
+      //       }
+      //       return EMPTY
+      //     })
+      //   )
+      //   .subscribe(
+      //     (res: any) => {
+      //       if (res.status) {
+      //         setTimeout(() => {
+      //           this.snackBar.snackbarStaySuccess(
+      //             'La asignación de acuerdo fue removida automaticamente.', ''
+      //           );
+      //         }, 2000);
+      //       }
+      //     }, (error) => {
+      //       this.snackBar.snackbarError('Ocurrió un error al momento de eliminar la asignación de acuerdo del usuario eliminado. Por favor proceda a eliminarlo manualmente.');
+      //     }
+      //   )
+
+      this.asignationAgreementService.deletePerson(idPersona).subscribe((res: any)=>{
+        this.appHelpers.handleResponse(res, () => this.getCollaborators()) 
+      })
     }
   }
 
@@ -517,6 +534,8 @@ export class ColaboradoresComponent implements OnInit {
   saveChanges() {
     let idSup = this.collaboratorForm.value.idSupervisor
     let idPos = this.collaboratorForm.value.idCargo
+    // let idCargoName = this.collaboratorForm.value.nombre
+    let idcargoDes = this.collaboratorForm.value.idCargoDesempenia
     let idVic = this.collaboratorForm.value.idViceRectoria
     let idDir = this.collaboratorForm.value.idDireccion
     let idDep = this.collaboratorForm.value.idDepartamento
@@ -536,6 +555,8 @@ export class ColaboradoresComponent implements OnInit {
 
       this.collaboratorForm.patchValue({
         idCargo: idPos.idCargo,
+        Cargo: idPos != undefined ? idPos.nombre : idcargoDes.nombre,
+        idCargoDesempenia: idcargoDes != undefined ? idcargoDes.idCargo : undefined,
         idViceRectoria: idVic ? idVic.idViceRectoria : null,
         idDireccion: idDir ? idDir.idDireccion : null,
         idDepartamento: idDep ? idDep.idDepartamento : null,

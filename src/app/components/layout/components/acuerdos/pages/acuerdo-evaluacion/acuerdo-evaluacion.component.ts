@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../../helpers/class.components';
 import { IntranetServices } from '../../../../../../helpers/intranet/intranet.service';
@@ -43,6 +43,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder,
+    private router: Router,
     private dialog: MatDialog,
     private SnackBar: SnackBars,
     private route: ActivatedRoute,
@@ -193,4 +194,14 @@ export class AcuerdoEvaluacionComponent implements OnInit {
 
     this.appHelpers.saveChanges(() => this.postEvaluationBehaviorTest(), () => this.putEvaluationBehaviorTest(), this.evaluationCompetencyForm.value.id, this.evaluationCompetencyForm)
   }
+
+  changeFlow(){
+    let flowData :{acuerdoId : number, flujoId: number}
+    flowData = {acuerdoId : this.agreement.idAcuerdo, flujoId: 2 } 
+    this.agreementservice.updateFlow(flowData).subscribe((res: any) => {
+      if (res.status) {
+        this.appHelpers.handleResponse(res, () => {this.router.navigate(['/layout/acuerdos']) })
+      }
+    })
+  } 
 }

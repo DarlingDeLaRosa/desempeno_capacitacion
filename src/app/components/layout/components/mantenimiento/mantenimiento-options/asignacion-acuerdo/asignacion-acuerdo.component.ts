@@ -12,6 +12,9 @@ import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 import { AsignationAgreementServices } from './services/asignacion-acuerdo.service';
 import { Subscription, debounceTime } from 'rxjs';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
+import { periodProcessGetI } from '../periodo-procesos/interface/periodo-procesos.interface';
+import { PeriodsProcessServices } from '../periodo-procesos/services/periodo-procesos.service';
+import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 
 @Component({
   selector: 'app-asignacion-acuerdo',
@@ -44,6 +47,7 @@ export class AsignacionAcuerdoComponent implements OnInit {
       acuerdosDuracionId: new FormControl('', Validators.required),
       cedula: new FormControl('', [Validators.required, Validators.maxLength(11)]),
     })
+    this.userLogged = systemInformationSevice.localUser
 
     this.filterForm = fb.group({
       filter: new FormControl('')
@@ -55,6 +59,7 @@ export class AsignacionAcuerdoComponent implements OnInit {
   isLoading!: boolean;
   filterForm: FormGroup
   pagination!: PaginationI
+  userLogged!: loggedUserI
   typeAgreements!: typeAgreementI[]
   asignationAgreementForm: FormGroup
   asignationsAgreement!: asignationAgreementGetI[]
@@ -65,11 +70,11 @@ export class AsignacionAcuerdoComponent implements OnInit {
     this.getTypeAgreement()
     this.getAsignationAgreement()
     this.getDurationAgreements()
+    // this.getActiveAgreementPeriod()
   }
 
   // Metodo para obtener todos los colaboradores
   getAsignationAgreement() {
-
     this.isLoading = true
     this.asignationAgreementService.getAsignationAgreements(this.filterForm.value.filter, this.page, 10)
       .subscribe((res: any) => {
@@ -80,6 +85,12 @@ export class AsignacionAcuerdoComponent implements OnInit {
         this.pagination = { currentPage, totalItem, totalPage }
       })
   }
+  // getActiveAgreementPeriod() {
+  //   this.periodProcessService.getPeriodProcessesActive(true)
+  //     .subscribe((res: any) => {
+  //       if (res) this.activeProcess = res.data;
+  //     })
+  // }
 
   // Metodo para obtener las duraciones de los acuerdos
   getDurationAgreements() {
@@ -123,7 +134,6 @@ export class AsignacionAcuerdoComponent implements OnInit {
   postAsignationAgreement() {
     this.asignationAgreementService.postAsignationAgreement(this.asignationAgreementForm.value)
       .subscribe((res: any) => {
-
         this.appHelpers.handleResponse(res, () => this.getAsignationAgreement(), this.asignationAgreementForm)
       })
   }
@@ -133,6 +143,20 @@ export class AsignacionAcuerdoComponent implements OnInit {
       .subscribe((res: any) => {
         this.appHelpers.handleResponse(res, () => this.getAsignationAgreement(), this.asignationAgreementForm)
       })
+  }
+
+  async asignAgrementsAllCollaborators() {
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation('¿Estas seguro de asignar acuerdo de desempeño a todos los colaboradores faltantes en este periodo?')
+    // let sureDecision: boolean = await this.snackBar.snackbarConfirmation('¿?')
+
+    if (removeDecision) {
+      this.snackBar.snackbarLouder(true)
+
+      this.asignationAgreementService.postMasiveAsignation(this.systemInformationSevice.activePeriod().idPeriodo)
+        .subscribe((res: any) => {
+          this.appHelpers.handleResponse(res, () => this.getAsignationAgreement(), this.asignationAgreementForm, ()=> { }, res.message)
+        })
+    }
   }
 
   async deleteAsignationAgreement(idAsignation: number) {
@@ -179,6 +203,5 @@ export class AsignacionAcuerdoComponent implements OnInit {
         ; this.getAsignationAgreement()
     }
   }
-
 }
 

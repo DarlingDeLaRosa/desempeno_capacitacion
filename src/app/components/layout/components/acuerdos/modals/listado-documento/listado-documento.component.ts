@@ -26,8 +26,10 @@ export class ListadoDocumentoComponent implements OnInit {
   // documentosList!: Documento[] | DocumentoMinuta[];
   idUserLogged!: number
   rolUserLogged!: string
+  recUserLogged!: string
   // documentosListMinuta!: Array<DocumentoMinuta>;
   acuerdo!: AcuerdoI;
+  removeBoton: boolean = false;
   minuta!: MinutaGetI[];
   selectedFile: File | null = null;
   selectedFileName: string | undefined;
@@ -54,16 +56,20 @@ export class ListadoDocumentoComponent implements OnInit {
       flujoId?: number,
       esSupIn?: boolean,
       estado?: number,
+      done: boolean,
+      selectedStage?: number,
+      tipoProceso: number
     }
   ) {
     this.idUserLogged = Number(systemInformation.localUser.idPersona)
     this.rolUserLogged = systemInformation.localUser.role
+    this.recUserLogged = systemInformation.localUser.RecintoSigla
   }
 
   ngOnInit(): void {
     if (this.data.type == 1) {
       this.getActiveAgreementPeriod()
-      
+
       if (this.data.idCollaborator == 0) this.getMinutasDoc("acuerdo")
       else this.getAcuerdoByIdCollaborator()
 
@@ -75,37 +81,52 @@ export class ListadoDocumentoComponent implements OnInit {
 
   getActiveAgreementPeriod() {
     this.periodProcessService.getPeriodProcessesActive(true)
-      .subscribe((res: any) => { if (res) this.activeProcess = res.data ; console.log(this.activeProcess);
+      .subscribe((res: any) => {
+        if (res) this.activeProcess = res.data;
       })
   }
 
   getAcuerdoByIdCollaborator() {
+
     // this.documentosList = this.data.documentos
     this.agreementservice.getAgreementByIdCollaborator(this.data.idCollaborator).subscribe((resp: any) => {
       this.acuerdo = resp.data
-
       // if (this.acuerdo.documentosObj.length > 0) this.documentosList = this.acuerdo.documentosObj;
       // else this.documentosList = []
     })
   }
 
   getMinutasDoc(type: string) {
+    this.removeBoton = true
+    
     this.minutaservice.getMinuta('', type, true, 1, 10, this.data.esSupIn).subscribe((resp: any) => {
+      
       if (type == 'evaluacion') {
         this.minuta = resp.data
-      }else{
-        this.minuta = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == 1)
+      } else {
+        if (this.data.selectedStage == undefined) {
+          this.minuta = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == this.activeProcess.tipoProceso.id)
+        } else {
+          this.minuta = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == this.data.selectedStage)
+        }
       }
+
+      this.removeBoton = false
     })
   }
+
+  // done(idDoc: number){
+  //    this.minuta.some((minuta: MinutaGetI)=> minuta.documentos.find((doc)=> idDoc == doc.idDocumento && minuta.estaFinalizado))
+  // }
 
   postFileAcuerdo(formdata: any) {
     this.agreementservice.postFileAcuerdo(formdata).subscribe((resp) => {
       this.SnackBar.snackbarLouder(true)
-      this.appHelpers.handleResponse(resp, () => {});
+      this.appHelpers.handleResponse(resp, () => { });
 
       this.selectedFile = null;
       this.selectedFileName = undefined;
+
       this.cerrar(true)
     })
   }
@@ -114,7 +135,7 @@ export class ListadoDocumentoComponent implements OnInit {
     this.minutaservice.postDocMinuta(this.minuta[0].id, formdata).subscribe((resp) => {
 
       this.SnackBar.snackbarLouder(true)
-      this.appHelpers.handleResponse(resp, () => {});
+      this.appHelpers.handleResponse(resp, () => { });
 
       this.selectedFile = null;
       this.selectedFileName = undefined;
@@ -138,27 +159,28 @@ export class ListadoDocumentoComponent implements OnInit {
   // }
 
   async deleteDocument(id: number) {
+    
     let removeDecision: boolean = await this.SnackBar.snackbarConfirmation()
 
     if (removeDecision) {
-      
-      if (this.idUserLogged != this.minuta[0].supervisorIntranet.idPersona) {
 
-        let validation: validationMinutaI = { estado: removeDecision, comentario: '' }
-        const dialog = this.dialog.open(CommentEmailComponent, { disableClose: true })
+      if (this.minuta != undefined && this.idUserLogged != this.minuta[0].supervisorIntranet.idPersona) {
 
-        dialog.afterClosed().subscribe(result => {
-          validation.comentario = result
-          this.SnackBar.snackbarLouder(true)
+        if (this.data.type == 2) {
+          let validation: validationMinutaI = { estado: removeDecision, comentario: '' }
+          const dialog = this.dialog.open(CommentEmailComponent, { disableClose: true })
 
-          if (this.data.type == 2) {
+          dialog.afterClosed().subscribe(result => {
+            validation.comentario = result
+            this.SnackBar.snackbarLouder(true)
+
             this.minutaservice.deleteDocMinuta(id, result)
               .subscribe((res: any) => {
                 this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
                 this.cerrar(true)
               })
-          }
-        });
+          });
+        }
 
         if (this.data.type == 1) {
           this.agreementservice.deleteDocumentAcuerdo(id)
@@ -167,7 +189,6 @@ export class ListadoDocumentoComponent implements OnInit {
               this.cerrar(true)
             })
         }
-
 
       } else {
         this.SnackBar.snackbarLouder(true)
@@ -181,12 +202,13 @@ export class ListadoDocumentoComponent implements OnInit {
         }
 
         if (this.data.type == 1) {
+          
           this.agreementservice.deleteDocumentAcuerdo(id)
             .subscribe((res: any) => {
               this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
               this.cerrar(true)
             })
-        } 
+        }
       }
     }
 

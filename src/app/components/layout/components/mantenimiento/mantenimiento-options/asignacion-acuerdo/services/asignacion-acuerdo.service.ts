@@ -63,4 +63,12 @@ export class AsignationAgreementServices {
     public postChangePersonStatus(statusObj: {idPersona: number, idEstado: number}) {
         return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Colaboradores/${statusObj.idPersona}/cambiar-estatus`, statusObj, this.header));
     }
+    
+    public postMasiveAsignation(idPeriod: number) {
+        return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/AsignacionAcuerdo/${idPeriod}`, null, this.header));
+    }
+
+    public deletePerson(idPersona: number) {
+        return this.appHelpers.handleRequest(() => this.http.delete(`${this.baseURL}/Colaboradores/${idPersona}`, this.header));
+    }
 }

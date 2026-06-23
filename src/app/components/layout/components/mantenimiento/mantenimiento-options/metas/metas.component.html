@@ -4,7 +4,7 @@
 
         <div style="display: flex; gap: 5px;">
 
-            <mat-form-field style="flex:1">
+            <mat-form-field style="flex:2">
                 <mat-label>Meta</mat-label>
                 <input matInput formControlName="nombre">
 
@@ -53,13 +53,29 @@
 
         <div style="display: flex; gap: 5px;">
 
+            <mat-form-field style="flex:2.5">
+                <mat-label>Descripción de medio de verificación</mat-label>
+                <input matInput formControlName="descripcionMedioVerificacion">
+            </mat-form-field>
+
             <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Valor</mat-label>
                 <input matInput type="number" formControlName="valor">
             </mat-form-field>
+        </div>
 
+        <div style="display: flex; gap: 5px;">
 
-            <mat-form-field appearance="fill" style="flex: 2">
+            <ng-container >
+
+                <mat-form-field appearance="fill" style="flex: 1">
+                  <mat-label>Meta del plan operativo anual</mat-label>
+                  <input matInput  appearance="fill" formControlName="metaPoa" >
+                  
+                </mat-form-field>
+              </ng-container>
+
+            <!-- <mat-form-field appearance="fill" style="flex: 1">
                 <mat-label>Meta del plan operativo anual</mat-label>
                 <input matInput [matAutocomplete]="auto" appearance="fill" formControlName="metaPoa"
                     (input)="getGoalPOA()">
@@ -76,7 +92,7 @@
                 </mat-autocomplete>
 
                 <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
-            </mat-form-field>
+            </mat-form-field> -->
         </div>
 
         <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
@@ -135,7 +151,8 @@
     <ng-template #noElements>
         <tbody>
             <tr class="dataRow">
-                <td class="dataIndiCell" *ngIf="goals && goals.length == 0; else searching">No hay elementos que mostrar.</td>
+                <td class="dataIndiCell" *ngIf="goals && goals.length == 0; else searching">No hay elementos que
+                    mostrar.</td>
                 <ng-template #searching>
                     <td class="dataIndiCell">Buscando elementos.</td>
                 </ng-template>

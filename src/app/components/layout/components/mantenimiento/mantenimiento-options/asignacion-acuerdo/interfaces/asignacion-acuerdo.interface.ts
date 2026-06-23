@@ -1,3 +1,4 @@
+import { UserResumeI, UserResumeTypeTwoI } from "../../../../../../../helpers/intranet/intranet.interface";
 import { CollaboratorsGetI } from "../../colaboradores/interfaces/colaboradores.interface";
 import { PeriodI } from "../../periodos/interfaces/periodo.interface";
 
@@ -5,6 +6,7 @@ export interface asignationAgreementGetI {
     idAsignacion: number,
     colaborador: CollaboratorsGetI
     periodo: PeriodI
+    supervisor: UserResumeTypeTwoI
     tipoAcuerdoObj: typeAgreementI
     acuerdoDuracion: durationAgreementI
 }

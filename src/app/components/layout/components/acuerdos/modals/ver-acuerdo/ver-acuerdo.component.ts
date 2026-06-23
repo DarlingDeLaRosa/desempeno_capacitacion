@@ -22,6 +22,7 @@ import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interfa
 })
 export class VerAcuerdoComponent implements OnInit {
 
+  type: string = '1'
   agreement!: AcuerdoI;
   goalDetails!: Array<any>;
   totalCalificacion: number = 0
@@ -48,6 +49,12 @@ export class VerAcuerdoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params['type'] != undefined) {
+        this.type = params['type'];
+      }
+    });
+
     this.idAgreement = Number(this.route.snapshot.paramMap.get('id'));
     this.getAgreementByIdCollaborator()
   }
@@ -73,11 +80,10 @@ export class VerAcuerdoComponent implements OnInit {
     let flowData
     let agreementDecision: boolean = await this.snackBar.snackbarConfirmation(`Esta seguro de evaluar el acuerdo como ${decision ? 'CORRECTO' : 'INCORRECTO'}`, '')
 
-
     if (agreementDecision) {
       if (this.agreement.colaboradorObj.grupoObj.idGrupo == 5) {
-        decision ? flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 1 }
-          : flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo }
+         flowData = decision ? { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 1 }
+          : { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo }
       } else {
         decision ? flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 2 }
           : flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: 2 }

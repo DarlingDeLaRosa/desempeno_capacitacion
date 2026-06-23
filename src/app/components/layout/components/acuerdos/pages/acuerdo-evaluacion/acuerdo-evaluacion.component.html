@@ -39,9 +39,10 @@
   </span>
 </div>
 
+
 <app-loader-box *ngIf="!agreement"></app-loader-box>
 
-<h2 style="margin: 15px 0px 15px 0px; font-size: 20px;">Lista de Metas</h2>
+<h2 style="margin: 15px 0px 5px 0px; font-size: 20px;">Lista de Metas</h2>
 
 <div class="table-container">
   <table>
@@ -89,6 +90,10 @@
       </tr>
     </tfoot>
   </table>
+
+  <div *ngIf="agreement && agreement.flujoObj.idFlujo == 1" style="display: flex; justify-content: flex-end; margin-top: 10px;">
+    <button type="button" (click)="changeFlow()" class="saveButton">Guardar cambios</button> &nbsp;
+  </div>
 </div>
 
 <div style="margin: 15px 0px 15px 0px;" *ngIf="agreement && agreement.tipoAcuerdoObj.idTipoAcuerdo == 2 ">

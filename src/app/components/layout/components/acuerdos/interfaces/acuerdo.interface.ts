@@ -1,6 +1,6 @@
 import { GeneralI } from '../../../../../helpers/intranet/intranet.interface';
 import { PeriodoI } from '../../../../interfaces/generalInteerfaces';
-import { CollaboratorsGetI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
+import { CollaboratorSummaryGetI, CollaboratorsGetI } from '../../mantenimiento/mantenimiento-options/colaboradores/interfaces/colaboradores.interface';
 import { periodProcessGetI, periodProcessI } from '../../mantenimiento/mantenimiento-options/periodo-procesos/interface/periodo-procesos.interface';
 
 export interface AcuerdoI {
@@ -11,6 +11,11 @@ export interface AcuerdoI {
   tipoAcuerdoObj: TipoAcuerdoI,
   idTracking: TrackingI,
   idFlujo: number,
+  estaCompletado: boolean
+  esInconsistenteTipoProceso:  boolean
+  estaPrimeraRevisionCompleta: boolean
+  estaSegundaRevisionCompleta: boolean
+  estaTerceraRevisionCompleta: boolean
   flujoObj: { idFlujo: number, nombre: string },
   puntos: number
   comentarios: commentsI[]
@@ -45,6 +50,7 @@ export interface Meta {
   idMeta: number;
   idMedio: number;
   medioVerificacionObj: any;
+  descripcionMedioVerificacion:string
   nombre: string;
   valor: number;
   isTranversal: boolean;
@@ -55,6 +61,7 @@ export interface DocumentoMinuta {
   idDocumento: number,
   nombre: string,
   enlace: string
+  creadoEn: Date
 }
 
 
@@ -73,6 +80,7 @@ export interface Documento {
   idProtocolo: number;
   idMinuta: number;
   fecha: string;
+  creadoEn: Date
 }
 
 
@@ -88,11 +96,13 @@ export interface commentsI {
   descripcion: string
   creadoPorPersona: string
   creadoPorUsuario: string
+  leido: boolean
 }
 
 export interface MinutaAsistenciaI {
   idColaborador: number;
   ausente: boolean;
+  colaborador: AcuerdoI | null;
   motivoAusencia: string | null;
 }
 
@@ -118,33 +128,34 @@ export interface MinutaGetI {
   conclusion: string
   desarrollo: string
   documentos: DocumentoMinuta[]
+  estaFinalizado: boolean
   esUnaEvaluacionCompentencia: boolean
   id: number
   minutaAsistencia: MinutaAsistenciaGetI
   periodo: PeriodoI
   periodoAcuerdo: periodProcessGetI
-  supervisor: CollaboratorsGetI
+  supervisor: CollaboratorSummaryGetI
   supervisorIntranet: CollaboratorsGetI
   unidadOrg: string
   fechaCreacion: Date
 }
 
-export interface MinutaGetI {
-  agendaReunion: string
-  aprobada: boolean
-  conclusion: string
-  desarrollo: string
-  documentos: DocumentoMinuta[]
-  esUnaEvaluacionCompentencia: boolean
-  id: number
-  minutaAsistencia: MinutaAsistenciaGetI
-  periodo: PeriodoI
-  periodoAcuerdo: periodProcessGetI
-  supervisor: CollaboratorsGetI
-  supervisorIntranet: CollaboratorsGetI
-  unidadOrg: string
-  fechaCreacion: Date
-}
+// export interface MinutaGetI {
+//   agendaReunion: string
+//   aprobada: boolean
+//   conclusion: string
+//   desarrollo: string
+//   documentos: DocumentoMinuta[]
+//   esUnaEvaluacionCompentencia: boolean
+//   id: number
+//   minutaAsistencia: MinutaAsistenciaGetI
+//   periodo: PeriodoI
+//   periodoAcuerdo: periodProcessGetI
+//   supervisor: CollaboratorsGetI
+//   supervisorIntranet: CollaboratorsGetI
+//   unidadOrg: string
+//   fechaCreacion: Date
+// }
 
 export interface MinutaI {
   desarrollo: string;

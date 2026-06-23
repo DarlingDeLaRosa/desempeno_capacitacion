@@ -1,0 +1,9 @@
+.text-success {
+    color: #28a745; /* Verde */
+    font-weight: 600;
+  }
+  
+  .text-danger {
+    color: #dc3545; /* Rojo */
+    font-weight: 600;
+  }

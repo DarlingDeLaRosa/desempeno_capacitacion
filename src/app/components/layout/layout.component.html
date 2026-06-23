@@ -7,10 +7,43 @@
 
         <div class="sideMenuOptionsContainer"> <!---*ngIf="userLogged.rol.modulos"-->
 
-            <a class="item-menu" [routerLink]="['/layout/acuerdos']" routerLinkActive="active" > <!--*ngIf="false"-->
-                <!--*ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'"-->
+            <a class="item-menu" [routerLink]="['/layout/acuerdos']" routerLinkActive="active"
+                *ngIf="usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'False'"> <!---->
                 <mat-icon>handshake</mat-icon>Acuerdos
             </a>
+
+            <a class="item-menu" *ngIf="usuario.role == 'supervisado' && usuario.SupervisorInterino == 'True'"
+                [routerLink]="['/layout/acuerdo-provisional']" routerLinkActive="active">
+                <mat-icon>handshake</mat-icon>Supervisión provisional AD
+            </a>
+
+            <a class="item-menu-subM" 
+                *ngIf="usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'True'">
+                <!---->
+                <mat-icon>handshake</mat-icon>Acuerdos
+
+                <mat-icon (click)="provitionalAgreementEvaluator = !provitionalAgreementEvaluator"
+                    *ngIf="provitionalAgreementEvaluator; else close">keyboard_arrow_up</mat-icon>
+
+                <ng-template #close>
+                    <mat-icon
+                        (click)="provitionalAgreementEvaluator = !provitionalAgreementEvaluator">keyboard_arrow_down</mat-icon>
+                </ng-template>
+            </a>
+
+            <div *ngIf="provitionalAgreementEvaluator && usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'True'">
+                <!--usuario.SupervisorInterino == 'True'-->
+
+                <a class="sub-item-menu" [routerLink]="['/layout/acuerdos']" routerLinkActive="active">
+                    <mat-icon>person</mat-icon>Evaluación Personal
+                </a>
+
+                <a class="sub-item-menu" [routerLink]="['/layout/acuerdos-provisional']"
+                    routerLinkActive="active">
+                    <mat-icon style="font-size: 22px;">supervisor_account</mat-icon>Evaluación Provisional
+                </a>
+            </div>
+
             <a class="item-menu" [routerLink]="['/layout/cursos']"
                 *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'" routerLinkActive="active"> <!---->
                 <mat-icon>collections_bookmark</mat-icon>Cursos
@@ -20,22 +53,22 @@
                 <mat-icon>star</mat-icon>Plan de mejora
             </a>
 
-            <a class="item-menu" *ngIf="usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'False' && usuario.Position != 'Analista de Planificación'" 
+            <a class="item-menu"
+                *ngIf="usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'False' && usuario.Position != 'Analista de Planificación'"
                 [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
                 <mat-icon>description</mat-icon>Evaluación de competencias
             </a>
-            
+
             <a class="item-menu" *ngIf="usuario.role == 'supervisado' && usuario.SupervisorInterino == 'True'"
                 [routerLink]="['/layout/evaluacion-provisional']" routerLinkActive="active">
-                <mat-icon>description</mat-icon>Supervisión provisional 
+                <mat-icon>description</mat-icon>Supervisión provisional
             </a>
 
-            <a class="item-menu" 
-                [routerLink]="['/layout/mi-evaluacion']" routerLinkActive="active">
+            <a class="item-menu" [routerLink]="['/layout/mi-evaluacion']" routerLinkActive="active">
                 <mat-icon>assignment_turned_in</mat-icon>Mi evaluación
             </a>
 
-            <a class="item-menu-subM"  *ngIf="usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'True'" >
+            <a class="item-menu-subM" *ngIf="usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'True'">
                 <mat-icon>description</mat-icon>Evaluación de competencias
 
                 <mat-icon (click)="provitionalEvaluator = !provitionalEvaluator"
@@ -46,7 +79,7 @@
                 </ng-template>
             </a>
 
-            <div *ngIf="provitionalEvaluator && usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'True'" >
+            <div *ngIf="provitionalEvaluator && usuario.role !== 'supervisado' && usuario.SupervisorInterino == 'True'">
 
                 <a class="sub-item-menu" [routerLink]="['/layout/evaluacion-competencias']" routerLinkActive="active">
                     <mat-icon>person</mat-icon>Evaluación Personal
@@ -58,10 +91,12 @@
             </div>
 
             <a class="item-menu" [routerLink]="['/layout/minutaLista']"
-                *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista' && usuario.Position != 'Analista de Planificación'" routerLinkActive="active">
+                *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista' && usuario.Position != 'Analista de Planificación'"
+                routerLinkActive="active">
                 <mat-icon>content_paste_search</mat-icon>Minutas
             </a>
-            <a class="item-menu" [routerLink]="['/layout/reportes']"  routerLinkActive="active"> <!---->
+            
+            <a class="item-menu" [routerLink]="['/layout/reportes']" routerLinkActive="active" *ngIf="usuario.role == 'Analista' || usuario.role == 'Encargado'"> <!---->
                 <mat-icon>analytics</mat-icon>Reportes
             </a>
 

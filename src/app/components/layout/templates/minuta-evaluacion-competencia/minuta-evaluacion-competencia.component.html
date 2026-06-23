@@ -79,9 +79,9 @@
       </thead>
       <tbody>
         <tr *ngFor="let ausente of ausentes; index as i">
-          <td>{{i + 1}}. {{ausente.nombre}} {{ausente.apellido}}</td>
-          <td>{{ausente.cargo}}</td>
-          <td>{{ausente.motivoAusencia}}</td>
+          <td>{{i + 1}}. {{ausente.nombre | titlecase }} {{ausente.apellido | titlecase}}</td>
+          <td>{{ausente.cargo | titlecase}}</td>
+          <td>{{ausente.motivoAusencia }}</td>
         </tr>
         <tr *ngIf="ausentes.length == 0">
           <td colspan="3">No hay colaboradores ausentes.</td>

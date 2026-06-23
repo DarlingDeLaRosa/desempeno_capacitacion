@@ -18,39 +18,60 @@
 
   <div class="documento-list">
     <div *ngIf="data.documentosList">
+
       <div *ngFor="let documento of data.documentosList" class="documento">
         <div class="documento-info">
-          <span class="documento-nombre">{{documento.nombre}}</span>
-          <!-- <span class="documento-cargo">{{documento.fecha | date}}</span> -->
+          <span class="documento-nombre">
+            {{documento.nombre}}
+            <!-- <h5 style="margin: 0; font-weight: 800;">
+              {{documento.creadoEn | date}}
+            </h5> -->
+          </span>
+          <!-- <span class="documento-cargo"></span> -->
         </div>
         <div class="documento-actions">
           <button mat-icon-button (click)="openDocumentInNewTab(documento.enlace)">
             <mat-icon class="listIcon">visibility</mat-icon>
           </button>
 
-          <button *ngIf="data.flujoId == 4" mat-icon-button (click)="deleteDocument(documento.idDocumento)">
+          <button *ngIf="data.flujoId == 4 || rolUserLogged == 'Analista' || rolUserLogged == 'Encargado'" mat-icon-button
+            (click)="deleteDocument(documento.idDocumento)">
             <mat-icon style="color: red;">delete</mat-icon>
           </button>
         </div>
       </div>
     </div>
 
+
+    <!--Documentos de los colaboradores -->
     <div *ngIf="data.documentos">
+
       <div *ngFor="let documento of data.documentos" class="documento">
         <div class="documento-info">
-          <!-- <span class="documento-cargo">{{documento.fecha | date}}</span> -->
-          <span class="documento-nombre">{{documento.nombre}}</span>
+          <span class="documento-nombre">{{documento.nombre}}
+            <h5 style="margin: 0; font-weight: 800;">
+              {{documento.creadoEn | date}}
+            </h5>
+          </span>
         </div>
         <div class="documento-actions">
           <button mat-icon-button (click)="openDocumentInNewTab(documento.enlace)">
             <mat-icon class="listIcon" [matTooltip]="'Ver Documento' + ' ' + documento.nombre">visibility</mat-icon>
           </button>
 
-          <button mat-icon-button (click)="deleteDocument(documento.idDocumento)"
-            *ngIf="appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && data.idCollaborator == idUserLogged 
-            || appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) && rolUserLogged == 'Analista'">
+          <button mat-icon-button (click)="deleteDocument(documento.idDocumento)" *ngIf="
+            
+            data.done == false && evaluationComptency != undefined && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) 
+            && data.idCollaborator == idUserLogged 
+            || data.done == false &&  evaluationComptency != undefined && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin) 
+            && rolUserLogged == 'Analista' ||
+            data.done == false && activeProcess != undefined && minuta != undefined && minuta[0].periodoAcuerdo != null && minuta[0].periodoAcuerdo.tipoProceso.id == activeProcess.tipoProceso.id
+            ||
+            data.done == false && activeProcess != undefined && data.tipoProceso == activeProcess.tipoProceso.id && recUserLogged == 'REC' && (rolUserLogged == 'Analista' || rolUserLogged == 'Encargado') ">
             <mat-icon style="color: red;" [matTooltip]="'Eliminar Documento' + ' ' + documento.nombre">delete</mat-icon>
           </button>
+          <!-- <div *ngIf="removeBoton" class="container-loaderMother"> <div class="loaderMother"></div></div> -->
+
         </div>
       </div>
     </div>
@@ -64,10 +85,10 @@
 
   <!-- <div style="display: flex; gap: 5px" *ngIf="data.estado == 1"> -->
   <div style="display: flex; gap: 5px; margin-top: 15px;"
-    *ngIf="data.documentosList != undefined && data.documentosList.length < 10 && activeProcess != null && data.flujoId == 4 ||
+    *ngIf="(data.documentosList != undefined && data.documentosList.length < 10 && activeProcess != null && data.flujoId == 4 ||
     data.documentos != undefined 
      && data.documentos.length == 0 && data.idCollaborator == idUserLogged && evaluationComptency != undefined 
-     && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin)">
+     && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin)) || acuerdo != undefined && acuerdo.esInconsistenteTipoProceso && acuerdo.tipoProceso.id == 1 && data.documentosList.length == 0 ||  acuerdo != undefined && data.flujoId == 4 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2">
 
     <div class="file-upload-container" (click)="fileInput.click()">
       <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
@@ -84,7 +105,8 @@
 
   </div>
 
-  <div style="display: flex; justify-content: center; align-items: center;" *ngIf="data.flujoId != 4 && data.type == 1">
+  <div style="display: flex; justify-content: center; align-items: center;"
+    *ngIf="data.flujoId != 4 && data.type == 1 && data.idCollaborator > 0">
     <mat-icon style="color: #aaa;">warning</mat-icon> &nbsp;
     <h4 style="color: #aaa; margin: 0;"> Proceso de subir documentos no esta disponible.</h4>
   </div>

@@ -2,12 +2,18 @@
 @use '@angular/material' as mat;
 
 :root {
+    @include mat.button-toggle-overrides((background-color: white,
+            height: 35px,
+            disabled-selected-state-background-color: #dfdfdf,
+        ));
+}
+
+:root {
     @include mat.menu-overrides((container-shape: 5px, // ejemplo: border-radius
             divider-color: red,
             container-color: white,
         ));
 }
-
 
 @import '@angular/material/prebuilt-themes/indigo-pink.css';
 
@@ -50,7 +56,6 @@ h6 {
     color: #004b8d;
 }
 
-
 /*/////////////////////////////
         Button Styles
 /////////////////////////////*/
@@ -69,7 +74,7 @@ h6 {
     font-family: 'Montserrat', sans-serif;
 }
 
-.btnNavegar {
+.btnNavegar, .btnSave {
     color: #4CAF50;
     border: #4CAF50 solid 1px;
     background-color: white;
@@ -79,6 +84,29 @@ h6 {
     cursor: pointer;
     -webkit-text-stroke: 0.5px #4CAF50;
     font-family: 'Montserrat', sans-serif;
+}
+
+.btnAsign{
+    color: white;
+    border: #004b8d solid 1px;
+    background-color: #004b8d;
+    border-radius: 5px;
+    height: 35px;
+    padding: 0 20px;
+    cursor: pointer;
+    display: flex;
+    // -webkit-text-stroke: 0.5px white;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.btnSave{
+    background-color: #4CAF50;
+    color: white;
+    -webkit-text-stroke: 0.5px white;
+    display: flex;
+    padding: 0 10px;
+    align-items: center;
 }
 
 .btnInfo {
@@ -110,6 +138,10 @@ h6 {
 .btnNavegar:hover,
 .backButton:hover {
     background-color: #efefef;
+}
+
+.btnAsign:hover{
+    background-color: #003c70;
 }
 
 .btnImprimir {
@@ -343,24 +375,29 @@ table {
 
 .pendiente {
     background-color: #9e9e9e;
-    /* gris */
+}
+
+.colabDone {
+    background-color: #8BC34A;
 }
 
 .aceptada {
     background-color: #4caf50;
-    /* verde */
+}
+
+.finalizada {
+    background-color: #39853b;
 }
 
 .rechazada {
     background-color: #ff7043;
-    /* rojo anaranjado */
 }
 
 /*/////////////////////////////
         Others Styles
 /////////////////////////////*/
 
-.ItemMiniMenu {
+.ItemMiniMenu, .ItemMiniMenuDisable {
     width: 195px;
     padding: 5px;
     margin: 0 5px 5px 5px;
@@ -373,6 +410,10 @@ table {
 
 .ItemMiniMenu:hover {
     background-color: #edf2fa;
+}
+
+.ItemMiniMenuDisable {
+    cursor: auto;
 }
 
 .eliminarHover:hover {
@@ -434,7 +475,7 @@ table {
     border-radius: 10px;
     box-sizing: border-box;
     border: 1px solid #ddd;
-    background-color: #e9ecef;
+    background-color: #fff;
     margin-top: 10px;
 }
 
@@ -454,6 +495,8 @@ table {
     // font-weight: 600;
     -webkit-text-stroke: 0.50px black;
 }
+
+
 
 
 /////////////////// stepper 
@@ -583,3 +626,10 @@ table {
         transform: scale(1);
     }
 }
+
+@media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }

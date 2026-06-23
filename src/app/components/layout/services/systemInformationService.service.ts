@@ -17,15 +17,18 @@ export class systemInformationService {
   public TokenIntranet: string = "";
   private userToken: string = "";
 
-  private UrlIntranet: string = 'https://intranet.isfodosu.edu.do/api'
-
-  private URLDevelopment: string = 'http://172.25.0.12:4005/api'
+  // private UrlIntranet: string = 'https://intranet.isfodosu.edu.do/api'
   // private URLDevelopment: string = 'https://acuerdos.isfodosu.edu.do/api'
+  
+  // private UrlIntranet: string = 'https://preintranet.isfodosu.edu.do/api'
   // private URLDevelopment: string = 'https://preacuerdos.isfodosu.edu.do/api'
-
+  
+  private UrlIntranet: string = 'http://172.25.0.12:3003'
+  private URLDevelopment: string = 'http://172.25.0.12:4005/api'
 
   private UrlSIGEBI: string = 'https://sigebi.isfodosu.edu.do/sigebiapi'
   private UrlIsfoplanner: string = 'https://isfoplanner.isfodosu.edu.do/api'
+
 
   private systemcredentials: any
   public activeRol = computed(() => this.userRol())
@@ -96,11 +99,14 @@ export class systemInformationService {
   setUserToken(token: string) {
     this.userToken = token;
   }
+  
+  setPeriod(data: PeriodI): void {
+    this.period.set(data);
+  }
 
   get localUser(): any {
     const tokenUser = sessionStorage.getItem("userToken");
     if (!tokenUser) return null;
-    // console.log(jwtDecode(tokenUser));
     return jwtDecode(tokenUser);
   }
 
