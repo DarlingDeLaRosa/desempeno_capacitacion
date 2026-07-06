@@ -21,8 +21,8 @@ export class AcuerdoCalificacionComponent implements OnInit {
 
   goal!: any;
   nameCollaborator: string = '';
-  selectedFile: File | null = null;
-  selectedFileName: string | undefined;
+  selectedFiles: File[] = [];
+  selectedFileNames: string[] = [];
   califiacionForm!: FormGroup;
   safeUrl: SafeResourceUrl | null = null;
   valorMeta: number = 0;
@@ -33,7 +33,9 @@ export class AcuerdoCalificacionComponent implements OnInit {
     private SnackBar: SnackBars,
     private appHelpers: HerlperService,
     public dialogRef: MatDialogRef<AcuerdoCalificacionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { meta: GoalGetI, nombre: string }) {
+    @Inject(MAT_DIALOG_DATA) public data: { meta: GoalGetI, nombre: string, type: number, idDetalle?: number },
+  ) {
+
     this.goal = data.meta;
     this.valorMeta = this.goal.valor;
     this.nameCollaborator = data.nombre;
@@ -41,6 +43,7 @@ export class AcuerdoCalificacionComponent implements OnInit {
       calificacion: new FormControl<number>(0, Validators.required),
       observacion: new FormControl<string>(''),
     })
+
   }
   ngOnInit(): void {
     this.setCalificacionForm()
@@ -48,15 +51,16 @@ export class AcuerdoCalificacionComponent implements OnInit {
 
   //metodo para seleccionar el documento
   onFileSelected(event: Event) {
-    const fileInput = event.target as HTMLInputElement;
-    if (fileInput.files && fileInput.files.length > 0) {
-      this.selectedFile = fileInput.files[0];
-      this.selectedFileName = this.selectedFile.name;
-    }
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files?.length) return;
+
+    this.selectedFiles = Array.from(input.files);
+    this.selectedFileNames = this.selectedFiles.map(f => f.name);
   }
   //cargar la
   setCalificacionForm() {
-    this.selectedFileName = this.goal.nombreDoc
+    this.selectedFileNames = this.goal.nombreDoc
     this.safeUrl = this.goal.enlaceDoc
     this.califiacionForm.patchValue({
       calificacion: this.goal.calificacion,
@@ -101,31 +105,40 @@ export class AcuerdoCalificacionComponent implements OnInit {
   enviarDatos() {
     //la calificacion no puede ser mas alta que el valor de la meta
 
-    if (this.califiacionForm.invalid) {
+    if (this.califiacionForm.invalid && this.data.type == 1) {
       this.SnackBar.snackbarError('La calificación es requerida')
       return;
     }
 
-    if (this.califiacionForm.get('calificacion')!.value > this.valorMeta) {
+    if (this.califiacionForm.get('calificacion')!.value > this.valorMeta && this.data.type == 1) {
       this.SnackBar.snackbarError('La calificación debe ser menor o igual al valor de la meta')
       return;
     }
     //debe seleccionar un archivo para guardar
-    if (this.selectedFileName == null && (this.califiacionForm.get('calificacion')?.value == 0  || this.califiacionForm.get('calificacion')?.value == null ) && this.califiacionForm.get('observacion')?.value == null) {
+    if (this.data.type == 1 && this.selectedFileNames == null && (this.califiacionForm.get('calificacion')?.value == 0 || this.califiacionForm.get('calificacion')?.value == null) && this.califiacionForm.get('observacion')?.value == null) {
       this.SnackBar.snackbarError('Debe dejar una observación de porque la meta esta en "0" o no calificada. ')
       return;
     }
 
     // Crear el FormData y agregar el archivo y la otra propiedad
     const formData = new FormData();
-    if (this.selectedFile) {
-      formData.append('document', this.selectedFile);
+
+    this.selectedFiles.forEach(file => {
+      formData.append('documents', file);
+    });
+
+    console.log(this.califiacionForm.value);
+
+    if (this.data.type == 1) {
+      formData.append('calificacion', this.califiacionForm.get('calificacion')!.value);
+      formData.append('Observaciones', this.califiacionForm.get('observacion')!.value);
+      formData.append('idDetalleMeta', this.goal.idAcuerdoDetalle);
+    } else {
+      formData.append('idDetalleMeta', this.data.idDetalle!.toString());
     }
 
-    formData.append('calificacion', this.califiacionForm.get('calificacion')!.value);
-    formData.append('Observaciones', this.califiacionForm.get('observacion')!.value);
-    formData.append('idDetalleMeta', this.goal.idAcuerdoDetalle);
-
+    console.log(this.goal);
+    console.log(this.data.idDetalle);
     this.postCalificacion(formData)
   }
 }

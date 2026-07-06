@@ -1,0 +1,106 @@
+.timeline{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    padding: 20px;
+}
+
+.historial-card{
+    border:1px solid #d8d8d8;
+    border-radius:10px;
+    padding:14px;
+    margin-top: 4px;
+    background:white;
+}
+
+.fecha{
+
+    font-size:13px;
+
+    color:#6f6f6f;
+
+    margin-bottom:12px;
+
+    font-weight:600;
+
+}
+
+.event-message{
+    padding: 12px 16px;
+    background: #eef5ff;
+    color: #0d47a1;
+    font-weight: 500;
+    border-radius: 6px;
+}
+
+.change-row{
+
+    padding:10px 0;
+
+    border-top:1px solid #f2f2f2;
+
+}
+
+.change-row:first-child{
+
+    border-top:none;
+
+}
+
+.campo{
+
+    font-weight:600;
+
+    color:#1b1b1b;
+
+}
+
+.values{
+
+    margin-top:4px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.old{
+
+    background:#fdecec;
+
+    color:#c62828;
+
+    padding:4px 10px;
+
+    border-radius:5px;
+
+    text-decoration:line-through;
+
+}
+
+.new{
+
+    background:#eaf8ee;
+
+    color:#2e7d32;
+
+    padding:4px 10px;
+
+    border-radius:5px;
+
+}
+
+.arrow{
+
+    color:#7d7d7d;
+
+}
+
+.historial-scroll {
+    max-height: 60vh;      /* o 500px si prefieres una altura fija */
+    overflow-y: auto;
+    padding-right: 6px;
+}

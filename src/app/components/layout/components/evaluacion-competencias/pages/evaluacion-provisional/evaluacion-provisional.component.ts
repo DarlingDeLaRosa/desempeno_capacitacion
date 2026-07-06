@@ -85,16 +85,15 @@ export class EvaluacionProvisionalComponent implements OnInit {
       this.userLogged = res.data
       
       this.getMyMinuta()
-      this.getMinuta(this.periodo.idPeriodo);
+      this.getMinutaPeriod(this.periodo.idPeriodo);
     })
   }
 
   getMyMinuta() { // necesario hacer la llamada por usuario digase por un id no por el token 
-    this.minutaService.getMinuta('', "evaluacion", true, 1, 5, true).subscribe((resp: any) => {
+    this.minutaService.getMinuta('','','', "evaluacion", true, 1, 5, true).subscribe((resp: any) => {
       this.minuta = resp.data
     })
   }
-
 
   getActiveAgreementPeriod() {
     this.periodProcessService.getPeriodProcessesActive()
@@ -171,7 +170,7 @@ export class EvaluacionProvisionalComponent implements OnInit {
     })
 
     dialog.afterClosed().subscribe(result => {
-      this.getMinuta(this.periodo.idPeriodo)
+      this.getMinutaPeriod(this.periodo.idPeriodo)
       this.getMyMinuta()
     });
   }
@@ -180,7 +179,7 @@ export class EvaluacionProvisionalComponent implements OnInit {
     const dialog = this.dialog.open(MinutaEvaluacionCompetenciaComponent, { data: { idMinuta: 0, esSupInterino: true, typeEvaluation : 2 } })
   }
 
-  getMinuta(period: number) {
+  getMinutaPeriod(period: number) {
     this.minutaService.getMinutaExistenteByPerson(this.userLogged.idPersona, period, true)
       .subscribe((res: any) => {
         this.newMinuta = res;

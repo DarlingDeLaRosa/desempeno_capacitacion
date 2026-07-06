@@ -23,9 +23,8 @@
         <div class="documento-info">
           <span class="documento-nombre">
             {{documento.nombre}}
-            <!-- <h5 style="margin: 0; font-weight: 800;">
-              {{documento.creadoEn | date}}
-            </h5> -->
+            <h5 style="margin: 0; font-weight: 800; color: #004b8d;"> {{documento.creadoEn | date}}</h5>
+            <h5 *ngIf="documento.tipoProceso != undefined" style="margin: 0; font-weight: 800;"> {{documento.tipoProceso.nombre}}</h5>
           </span>
           <!-- <span class="documento-cargo"></span> -->
         </div>
@@ -49,9 +48,8 @@
       <div *ngFor="let documento of data.documentos" class="documento">
         <div class="documento-info">
           <span class="documento-nombre">{{documento.nombre}}
-            <h5 style="margin: 0; font-weight: 800;">
-              {{documento.creadoEn | date}}
-            </h5>
+            <h5 style="margin: 0; font-weight: 800; color: #004b8d;">{{documento.creadoEn | date}}</h5>
+            <h5 *ngIf="documento.tipoProceso != undefined" style="margin: 0; font-weight: 800;"> {{documento.tipoProceso.nombre}}</h5>
           </span>
         </div>
         <div class="documento-actions">

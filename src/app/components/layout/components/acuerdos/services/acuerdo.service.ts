@@ -38,8 +38,8 @@ export class agreementService {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/get_by_idcolaborador/${idCollaborator}`, this.header));
   }
 
-  public getAgreementByRol(term: string = '', process: string = '', recinto: string = '', flujo: string = '', supervisor: boolean = false, page: number = 1, pageSize: number = 1000, probative: boolean = false) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador?flujo=${flujo}&proceso=${process}&recinto=${recinto}&probatorios=${probative}&supervisor=${supervisor}&term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
+  public getAgreementByRol( term: string = '', process: string = '', recinto: string = '', flujo: string = '', go: string | null = '', supervisor: boolean = false, page: number = 1, pageSize: number = 1000, probative: boolean = false) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/colaborador?grupoocupacional=${go}&flujo=${flujo}&proceso=${process}&recinto=${recinto}&probatorios=${probative}&supervisor=${supervisor}&term=${term}&CurrentPage=${page}&PageSize=${pageSize}`, this.header));
   }
  
   public getAgreementProbative(term: string = '', process: string = '', recinto: string = '', flujo: string = '', page: number = 1, pageSize: number = 1000, probative: boolean = false) {
@@ -58,8 +58,8 @@ export class agreementService {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Acuerdo/${idAgreement}`, this.header));
   }
 
-  public postAgreementGoalDetails(detalleMeta: any) {
-    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Acuerdo/insert_details`, detalleMeta, this.header));
+  public postAgreementGoalDetails(detalleMeta: any, wayOfSave: boolean) {
+    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Acuerdo/insert_details?changeFlow=${wayOfSave}`, detalleMeta, this.header));
   }
 
   public postGoalCalificacion(Calificacion: any) {
@@ -93,8 +93,8 @@ export class agreementService {
 
   //Flujo
 
-  public updateFlow(flow: {acuerdoId: number, flujoId: number}) {
-    return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Acuerdo/actualizar-flujo`, flow, this.header));
+  public updateFlow(flow: {acuerdoId: number, flujoId: number}, updateGoal: boolean = false) {
+    return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/Acuerdo/actualizar-flujo?aceptarModificacionesMetas=${updateGoal}`, flow, this.header));
   }
 
   // procesos

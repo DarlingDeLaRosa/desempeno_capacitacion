@@ -83,7 +83,7 @@ export class EvalucionCompetenciasComponent implements OnInit {
   }
 
   getMyMinuta() {
-    this.minutaService.getMinuta('', "evaluacion", true, 1, 5).subscribe((resp: any) => {
+    this.minutaService.getMinuta('','','', "evaluacion", true, 1, 5).subscribe((resp: any) => {
       this.minuta = resp.data
     })
   }

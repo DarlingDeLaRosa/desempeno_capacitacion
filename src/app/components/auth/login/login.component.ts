@@ -72,11 +72,11 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/layout/acuerdos']);
         } 
         
-        if(user.role == 'supervisado' && user.SupervisorInterino == 'True'){
+        if(user.role == 'supervisado' && user.SupervisorInterino == 'False'){
           this.router.navigate(['/layout/mi-evaluacion']);
         }
         
-        if(user.role == 'supervisado' && user.SupervisorInterino == 'False'){
+        if(user.role == 'supervisado' && user.SupervisorInterino == 'True'){
           this.router.navigate(['/layout/evaluacion-provisional']);
         }
         

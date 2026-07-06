@@ -1,0 +1,38 @@
+<div class="timeline">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <h2 style="margin-right: 15px">Historial de Cambios</h2>
+    <p></p>
+    <button mat-icon-button (click)="cerrar()" style="margin-top: -10px">
+      <mat-icon style="color: red">close</mat-icon>
+    </button>
+  </div>
+  <div class="historial-scroll">
+    <div *ngFor="let historial of historialUI" class="historial-card">
+      <div class="fecha">
+        {{ historial.fecha | date: "dd MMM yyyy - hh:mm a" }}
+      </div>
+
+      <ng-container *ngIf="historial.mensaje; else listaCambios">
+        <div class="event-message">
+          {{ historial.mensaje }}
+        </div>
+      </ng-container>
+
+      <ng-template #listaCambios>
+        <div *ngFor="let cambio of historial.cambios" class="change-row">
+          <div class="campo">
+            {{ cambio.campo }}
+          </div>
+
+          <div class="values">
+            <span class="old">{{ cambio.anterior || "—" }}</span>
+            <span class="arrow">→</span>
+            <span class="new">{{ cambio.nuevo || "—" }}</span>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

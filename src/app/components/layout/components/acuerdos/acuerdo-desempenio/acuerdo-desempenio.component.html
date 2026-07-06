@@ -3,46 +3,71 @@
     <h1>Acuerdo de Desempeño</h1>
   </div>
   <div>
-    <button *ngIf="userLogged.role !== 'supervisado'" type="submit" class="btnNavegar"
-      [routerLink]="[{ outlets: { 'acuerdos': ['miacuerdo']}}]" routerLinkActive="active">Mi Acuerdo de
-      Desempeño</button> &nbsp;
+    <button
+      *ngIf="userLogged.role !== 'supervisado'"
+      type="submit"
+      class="btnNavegar"
+      [routerLink]="[{ outlets: { acuerdos: ['miacuerdo'] } }]"
+      routerLinkActive="active"
+    >
+      Mi Acuerdo de Desempeño
+    </button>
+    &nbsp;
   </div>
-
 </div>
 
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <div style="display: flex; flex-direction: column; ">
+<div style="display: flex; justify-content: space-between; align-items: center">
+  <div style="display: flex; flex-direction: column">
     <h3
-      *ngIf="userLogged.role == 'Supervisor' || userLogged.role == 'supervisado' || this.userLogged.role == 'Encargado' && selectGroup; else noSup ">
-      {{usuario.Unidad | titlecase}}</h3>
+      *ngIf="
+        userLogged.role == 'Supervisor' ||
+          userLogged.role == 'supervisado' ||
+          (this.userLogged.role == 'Encargado' && selectGroup);
+        else noSup
+      "
+    >
+      {{ usuario.Unidad | titlecase }}
+    </h3>
     <ng-template #noSup>
       <h3>Acuerdos De Desempeño Trabajados.</h3>
     </ng-template>
 
     <div *ngIf="!typeAD">
-      <h5 style="color: green;" *ngIf="activeProcess != null; else noActiveProccess">
-        {{activeProcess.tipoProceso.nombre}}: {{activeProcess.fechaInicio |
-        date: 'dd/MM/yyyy'}} -
-        {{activeProcess.fechaFin | date: 'dd/MM/yyyy'}}
-
+      <h5
+        style="color: green"
+        *ngIf="activeProcess != null; else noActiveProccess"
+      >
+        {{ activeProcess.tipoProceso.nombre }}:
+        {{ activeProcess.fechaInicio | date: "dd/MM/yyyy" }} -
+        {{ activeProcess.fechaFin | date: "dd/MM/yyyy" }}
       </h5>
 
       <ng-template #noActiveProccess>
-        <h4 style="color: rgba(255, 0, 0, 0.678);">
+        <h4 style="color: rgba(255, 0, 0, 0.678)">
           El periodo de acuerdo de desempeño no esta disponible.
         </h4>
       </ng-template>
     </div>
-
   </div>
 
-  <mat-button-toggle-group name="fontStyle" aria-label="Font Style" *ngIf="this.userLogged.role == 'Encargado'"
-    [(ngModel)]="selectGroup">
-    <mat-button-toggle [disabled]="isLoading || selectGroup" [value]="true" (click)="getAcuerdoByRol()">Mis
-      Supervisados</mat-button-toggle>
-    <mat-button-toggle [disabled]="isLoading || selectGroup == false" [value]="false" (click)="getAcuerdoByRol()">Todos
-      los
-      Colaboradores</mat-button-toggle>
+  <mat-button-toggle-group
+    name="fontStyle"
+    aria-label="Font Style"
+    *ngIf="this.userLogged.role == 'Encargado'"
+    [(ngModel)]="selectGroup"
+  >
+    <mat-button-toggle
+      [disabled]="isLoading || selectGroup"
+      [value]="true"
+      (click)="getAcuerdoByRol()"
+      >Mis Supervisados</mat-button-toggle
+    >
+    <mat-button-toggle
+      [disabled]="isLoading || selectGroup == false"
+      [value]="false"
+      (click)="getAcuerdoByRol()"
+      >Todos los Colaboradores</mat-button-toggle
+    >
   </mat-button-toggle-group>
 </div>
 
@@ -135,46 +160,87 @@
   </div>
 </div> -->
 
-<div *ngIf="(userLogged.role == 'Encargado' && selectGroup) || userLogged.role == 'Supervisor'">
-
-  <div style="display: flex; justify-content: space-between; margin-top: 15px;" *ngIf="steps != undefined">
+<div
+  *ngIf="
+    (userLogged.role == 'Encargado' && selectGroup) ||
+    userLogged.role == 'Supervisor'
+  "
+>
+  <div
+    style="display: flex; justify-content: space-between; margin-top: 15px"
+    *ngIf="steps != undefined"
+  >
     <div>
-      <h4 style="margin: 0;" *ngIf="steps != undefined">Procesos de {{steps.tipoProceso.nombre}} de desempeño</h4>
+      <h4 style="margin: 0" *ngIf="steps != undefined">
+        Procesos de {{ steps.tipoProceso.nombre }} de desempeño
+      </h4>
       <!-- <h5 style="color: red; margin: 2px;" *ngIf="activeProcess.tipoProceso.id != steps.tipoProceso.id">
         Proceso no disponible en este momento.
       </h5> -->
     </div>
-    <div *ngIf="!typeAD" style="display: flex; justify-content: end; padding-right: 55px; gap: 5px;">
-      <div class="btnStage" [class.active]="selectedStage === 1" (click)="selectStage(1)">
+    <div
+      *ngIf="!typeAD"
+      style="display: flex; justify-content: end; padding-right: 55px; gap: 5px"
+    >
+      <div
+        class="btnStage"
+        [class.active]="selectedStage === 1"
+        (click)="selectStage(1)"
+      >
         Creación
       </div>
 
-      <div class="btnStage" [class.active]="selectedStage === 2" (click)="selectStage(2)">
+      <div
+        class="btnStage"
+        [class.active]="selectedStage === 2"
+        (click)="selectStage(2)"
+      >
         1 era revisión
       </div>
 
-      <div class="btnStage" [class.active]="selectedStage === 3" (click)="selectStage(3)">
+      <div
+        class="btnStage"
+        [class.active]="selectedStage === 3"
+        (click)="selectStage(3)"
+      >
         2 da revisión
       </div>
 
-      <div class="btnStage" [class.active]="selectedStage === 4" (click)="selectStage(4)">
+      <div
+        class="btnStage"
+        [class.active]="selectedStage === 4"
+        (click)="selectStage(4)"
+      >
         3 era revisión
       </div>
 
-      <div class="btnStage" [class.active]="selectedStage === 5" (click)="selectStage(5)">
+      <div
+        class="btnStage"
+        [class.active]="selectedStage === 5"
+        (click)="selectStage(5)"
+      >
         Evaluación
       </div>
     </div>
-    <div *ngIf="typeAD" style="display: flex; justify-content: end; padding-right: 55px; gap: 5px;">
-
-      <div class="btnStage" [class.active]="selectedStage === 9" (click)="selectStage(9)">
+    <div
+      *ngIf="typeAD"
+      style="display: flex; justify-content: end; padding-right: 55px; gap: 5px"
+    >
+      <div
+        class="btnStage"
+        [class.active]="selectedStage === 9"
+        (click)="selectStage(9)"
+      >
         Creación
       </div>
 
-      <div class="btnStage" [class.active]="selectedStage === 11" (click)="selectStage(11)">
+      <div
+        class="btnStage"
+        [class.active]="selectedStage === 11"
+        (click)="selectStage(11)"
+      >
         Evaluación
       </div>
-
     </div>
   </div>
 
@@ -184,26 +250,62 @@
     </button>
 
     <div class="stepper-carousel" #carousel>
-      <ng-container *ngFor="let step of steps.acuerdosStepsStatus; let i = index">
+      <ng-container
+        *ngFor="let step of steps.acuerdosStepsStatus; let i = index"
+      >
         <div class="step-container">
-          <div *ngIf="steps != undefined" class="step" [ngClass]="{
-            'in-progress': (typeAD && step.fechaCompletado == null || activeProcess != undefined && steps.tipoProceso.id == activeProcess.tipoProceso.id ) && ((i == 0 && step.fechaCompletado == null) || (i > 0 && steps.acuerdosStepsStatus[i - 1].fechaCompletado != null && step.fechaCompletado == null)),
-            'completed': step.fechaCompletado != null
-          }">
+          <div
+            *ngIf="steps != undefined"
+            class="step"
+            [ngClass]="{
+              'in-progress':
+                ((typeAD && step.fechaCompletado == null) ||
+                  (activeProcess != undefined &&
+                    steps.tipoProceso.id == activeProcess.tipoProceso.id)) &&
+                ((i == 0 && step.fechaCompletado == null) ||
+                  (i > 0 &&
+                    steps.acuerdosStepsStatus[i - 1].fechaCompletado != null &&
+                    step.fechaCompletado == null)),
+              completed: step.fechaCompletado != null,
+            }"
+          >
             <div class="circle">{{ step.procesoSecuencia.orden }}</div>
             <div class="label">{{ step.procesoSecuencia.paso.nombre }}</div>
-            <div class="labelRes" *ngIf="step.procesoSecuencia.paso.responsable != null">Responsable</div>
-            <div class="labelResPer">{{ step.procesoSecuencia.paso.responsable == 'Encargado' ? userLogged.Firstname + '
-              ' + userLogged.Lastname : step.procesoSecuencia.paso.responsable }}</div>
-            <div class="label" style="color: green;"
-              [innerHTML]="step.fechaCompletado != null ? ( '<strong>Fecha: </strong>' + (step.fechaCompletado | date: 'dd/MM/yyyy')) : ''">
+            <div
+              class="labelRes"
+              *ngIf="step.procesoSecuencia.paso.responsable != null"
+            >
+              Responsable
             </div>
+            <div class="labelResPer">
+              {{
+                step.procesoSecuencia.paso.responsable == "Encargado"
+                  ? userLogged.Firstname +
+                    "
+              " +
+                    userLogged.Lastname
+                  : step.procesoSecuencia.paso.responsable
+              }}
+            </div>
+            <div
+              class="label"
+              style="color: green"
+              [innerHTML]="
+                step.fechaCompletado != null
+                  ? '<strong>Fecha: </strong>' +
+                    (step.fechaCompletado | date: 'dd/MM/yyyy')
+                  : ''
+              "
+            ></div>
           </div>
 
-          <div *ngIf="i < steps.acuerdosStepsStatus.length - 1" class="line" [ngClass]="{
-            'completed-line': step.fechaCompletado != null
-          }">
-          </div>
+          <div
+            *ngIf="i < steps.acuerdosStepsStatus.length - 1"
+            class="line"
+            [ngClass]="{
+              'completed-line': step.fechaCompletado != null,
+            }"
+          ></div>
         </div>
       </ng-container>
     </div>
@@ -216,18 +318,48 @@
   <app-loader-stepper-box *ngIf="steps == undefined"></app-loader-stepper-box>
 </div>
 
-<div style="display: flex; justify-content: space-between; align-items: end;">
-  <div style="margin: 5px 0 0; display: flex; gap: 4px; align-items: center;"
-    *ngIf="userLogged.role != 'supervisado' && selectGroup == false || this.userLogged.role == 'Analista'; else noFilter ">
-
-    <mat-form-field appearance="fill" style="flex: 2;">
+<div style="display: flex; justify-content: space-between; align-items: end">
+  <div
+    style="margin: 5px 0 0; display: flex; gap: 4px; align-items: center"
+    *ngIf="
+      (userLogged.role != 'supervisado' && selectGroup == false) ||
+        this.userLogged.role == 'Analista';
+      else noFilter
+    "
+  >
+    <mat-form-field appearance="fill" style="flex: 2">
       <mat-label>Buscar</mat-label>
-      <input matInput [(ngModel)]="searchTerm">
+      <input matInput [(ngModel)]="searchTerm" />
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" style="flex: 1;"
-      *ngIf="userLogged.RecintoSigla == 'REC' && selectGroup == false || userLogged.RecintoSigla == 'REC' && this.userLogged.role == 'Analista'">
+    <mat-form-field appearance="fill" style="flex: 1.5">
+      <mat-label>Grupo Ocupacional</mat-label>
+      <mat-select [(ngModel)]="ocuGroup" disableRipple>
+        <ng-container>
+          <mat-option value="">Todos</mat-option>
+
+          <mat-option
+            [value]="ocupational.idGrupo"
+            *ngFor="let ocupational of ocupationalGroup"
+          >
+            {{ ocupational.nombre }}
+          </mat-option>
+        </ng-container>
+        <ng-template #noOcupationalGroup>
+          <mat-option>No hay campos disponibles</mat-option>
+        </ng-template>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="fill"
+      style="flex: 1"
+      *ngIf="
+        (userLogged.RecintoSigla == 'REC' && selectGroup == false) ||
+        (userLogged.RecintoSigla == 'REC' && this.userLogged.role == 'Analista')
+      "
+    >
       <mat-label>Recintos</mat-label>
       <mat-select [(ngModel)]="recinto">
         <mat-option value="">Todos</mat-option>
@@ -241,29 +373,51 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" style="flex: 1.5;"
-      *ngIf="selectGroup == false ||  this.userLogged.role == 'Analista'">
+    <mat-form-field
+      appearance="fill"
+      style="flex: 1.5"
+      *ngIf="selectGroup == false || this.userLogged.role == 'Analista'"
+    >
       <mat-label>Etapa</mat-label>
       <mat-select [(ngModel)]="process">
         <mat-option value="">Todos</mat-option>
         <mat-option value="Creación de acuerdo">Creación de acuerdo</mat-option>
-        <mat-option value="Primera revisión de acuerdo">Primera revisión de acuerdo</mat-option>
-        <mat-option value="Segunda revisión de acuerdo">Segunda revisión de acuerdo</mat-option>
-        <mat-option value="Tercera revisión de acuerdo">Tercera revisión de acuerdo</mat-option>
-        <mat-option value="Evaluación de acuerdo">Evaluación de acuerdo</mat-option>
-        <mat-option value="Creación de acuerdo probatorio">Creación de acuerdo probatorio</mat-option>
-        <mat-option value="Evaluación de acuerdo probatorio">Evaluación de acuerdo probatorio</mat-option>
+        <mat-option value="Primera revisión de acuerdo"
+          >Primera revisión de acuerdo</mat-option
+        >
+        <mat-option value="Segunda revisión de acuerdo"
+          >Segunda revisión de acuerdo</mat-option
+        >
+        <mat-option value="Tercera revisión de acuerdo"
+          >Tercera revisión de acuerdo</mat-option
+        >
+        <mat-option value="Evaluación de acuerdo"
+          >Evaluación de acuerdo</mat-option
+        >
+        <mat-option value="Creación de acuerdo probatorio"
+          >Creación de acuerdo probatorio</mat-option
+        >
+        <mat-option value="Evaluación de acuerdo probatorio"
+          >Evaluación de acuerdo probatorio</mat-option
+        >
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="fill" style="flex: 1.5;"
-      *ngIf=" selectGroup == false ||  this.userLogged.role == 'Analista'">
+    <mat-form-field
+      appearance="fill"
+      style="flex: 1.5"
+      *ngIf="selectGroup == false || this.userLogged.role == 'Analista'"
+    >
       <mat-label>Estado</mat-label>
       <mat-select [(ngModel)]="flujo">
         <mat-option value="">Todos</mat-option>
         <mat-option value="Creación / Gestión">Creación / Gestión</mat-option>
-        <mat-option value="Revisión de analista">Revisión de analista</mat-option>
-        <mat-option value="Revisión de analista de planificación">Revisión de analista de planificación</mat-option>
+        <mat-option value="Revisión de analista"
+          >Revisión de analista</mat-option
+        >
+        <mat-option value="Revisión de analista de planificación"
+          >Revisión de analista de planificación</mat-option
+        >
         <mat-option value="Subir documentos">Subir documentos</mat-option>
         <mat-option value="Periodo probatorio">Periodo probatorio</mat-option>
         <mat-option value="Finalizado">Finalizado</mat-option>
@@ -271,23 +425,37 @@
     </mat-form-field>
 
     <button type="button" class="btnSave" (click)="getAcuerdoByRol()">
-      <mat-icon style="margin-right: 3px;">search</mat-icon> Buscar
+      <mat-icon style="margin-right: 3px">search</mat-icon> Buscar
     </button>
-
   </div>
 
   <ng-template #noFilter><span></span></ng-template>
 
-  <div style="margin: 0 0 10px 0; display: flex; justify-content: end;"
-    *ngIf="agreementProbatorios != undefined && agreementProbatorios">
-    <mat-button-toggle-group [(ngModel)]="typeAD" name="fontStyle" aria-label="Font Style"
-      *ngIf="this.userLogged.role == 'Encargado' && selectGroup || this.userLogged.role != 'supervisado'">
-      <mat-button-toggle (click)="getAcuerdoByRol(); selectStage(1); validateCreationFT()" [value]="false"
-        [disabled]="typeAD == false || isLoading">A.D.
-        ordinario</mat-button-toggle>
-      <mat-button-toggle (click)="getAcuerdoByRol(); selectStage(9); validateCreationFT()" [value]="true"
-        [disabled]="typeAD || isLoading">A.D.
-        probatorio</mat-button-toggle>
+  <div
+    style="margin: 0 0 10px 0; display: flex; justify-content: end"
+    *ngIf="agreementProbatorios != undefined && agreementProbatorios"
+  >
+    <mat-button-toggle-group
+      [(ngModel)]="typeAD"
+      name="fontStyle"
+      aria-label="Font Style"
+      *ngIf="
+        (this.userLogged.role == 'Encargado' && selectGroup) ||
+        this.userLogged.role != 'supervisado'
+      "
+    >
+      <mat-button-toggle
+        (click)="getAcuerdoByRol(); selectStage(1); validateCreationFT()"
+        [value]="false"
+        [disabled]="typeAD == false || isLoading"
+        >A.D. ordinario</mat-button-toggle
+      >
+      <mat-button-toggle
+        (click)="getAcuerdoByRol(); selectStage(9); validateCreationFT()"
+        [value]="true"
+        [disabled]="typeAD || isLoading"
+        >A.D. probatorio</mat-button-toggle
+      >
     </mat-button-toggle-group>
   </div>
 </div>
@@ -299,93 +467,150 @@
       <th class="headerCell">Unidad organizativa</th>
       <th class="headerCell">Cargo</th>
       <th class="headerCell">
-        <div style="display: flex; justify-content: center;">
-          G.O
-        </div>
+        <div style="display: flex; justify-content: center">G.O</div>
       </th>
       <th class="headerCell">
-        <div style="display: flex; justify-content: center;">
-          Etapa
-        </div>
+        <div style="display: flex; justify-content: center">Etapa</div>
       </th>
       <th class="headerCell">
-        <div style="display: flex; justify-content: center;">
-          Estado
-        </div>
+        <div style="display: flex; justify-content: center">Estado</div>
       </th>
-      <th class="headerCell" style="width: 5%;">
-        <div *ngIf="isLoading ===  true" class="loader"></div>
+      <th class="headerCell" style="width: 5%">
+        <div *ngIf="isLoading === true" class="loader"></div>
       </th>
     </tr>
   </thead>
   <tbody *ngIf="agreement && agreement.length > 0; else noElements">
     <tr class="dataRow" *ngFor="let acuerdo of agreement">
-      <td class="dataIndiCell">{{acuerdo.colaboradorObj.nombre | titlecase }} {{acuerdo.colaboradorObj.apellidos |
-        titlecase }}</td>
       <td class="dataIndiCell">
-        <ng-container *ngIf="appHelpers.getUnitOrg(
-              acuerdo.colaboradorObj.division,
-              acuerdo.colaboradorObj.departamento,
-              acuerdo.colaboradorObj.direccion,
-              acuerdo.colaboradorObj.viceRectoria
-            ).nombre !== 'Unidad organizativa no asignada'; else noUnidad">
-          <span [matTooltip]="appHelpers.getUnitOrg(
-              acuerdo.colaboradorObj.division,
-              acuerdo.colaboradorObj.departamento,
-              acuerdo.colaboradorObj.direccion,
-              acuerdo.colaboradorObj.viceRectoria
-              ).nombre | titlecase">
-            {{
+        {{ acuerdo.colaboradorObj.nombre | titlecase }}
+        {{ acuerdo.colaboradorObj.apellidos | titlecase }}
+      </td>
+      <td class="dataIndiCell">
+        <ng-container
+          *ngIf="
             appHelpers.getUnitOrg(
-            acuerdo.colaboradorObj.division,
-            acuerdo.colaboradorObj.departamento,
-            acuerdo.colaboradorObj.direccion,
-            acuerdo.colaboradorObj.viceRectoria
-            ).nombre | titlecase
+              acuerdo.colaboradorObj.division,
+              acuerdo.colaboradorObj.departamento,
+              acuerdo.colaboradorObj.direccion,
+              acuerdo.colaboradorObj.viceRectoria
+            ).nombre !== 'Unidad organizativa no asignada';
+            else noUnidad
+          "
+        >
+          <span
+            [matTooltip]="
+              appHelpers.getUnitOrg(
+                acuerdo.colaboradorObj.division,
+                acuerdo.colaboradorObj.departamento,
+                acuerdo.colaboradorObj.direccion,
+                acuerdo.colaboradorObj.viceRectoria
+              ).nombre | titlecase
+            "
+          >
+            {{
+              appHelpers.getUnitOrg(
+                acuerdo.colaboradorObj.division,
+                acuerdo.colaboradorObj.departamento,
+                acuerdo.colaboradorObj.direccion,
+                acuerdo.colaboradorObj.viceRectoria
+              ).nombre | titlecase
             }}
           </span>
         </ng-container>
 
         <ng-template #noUnidad>
-          <span class="badge-red" matTooltip="Validar que el usuario tenga unidad organizativa asignada."> <mat-icon
-              matSuffix style="margin-right: 5px;">warning</mat-icon> Unidad organizativa no encontrada.</span>
+          <span
+            class="badge-red"
+            matTooltip="Validar que el usuario tenga unidad organizativa asignada."
+          >
+            <mat-icon matSuffix style="margin-right: 5px">warning</mat-icon>
+            Unidad organizativa no encontrada.</span
+          >
         </ng-template>
       </td>
-      <td class="dataIndiCell">{{acuerdo.colaboradorObj.cargo.nombre}}</td>
+      <td class="dataIndiCell">{{ acuerdo.colaboradorObj.cargo.nombre }}</td>
       <td class="dataIndiCell">
-        <div style="display: flex; justify-content: center;">
-          {{acuerdo.colaboradorObj.grupoObj.nombre}}
+        <div style="display: flex; justify-content: center">
+          {{ acuerdo.colaboradorObj.grupoObj.nombre }}
         </div>
       </td>
       <td class="dataIndiCell">
-        <div style="display: flex; justify-content: center;">
-          {{acuerdo.tipoProceso.nombre}}
+        <div style="display: flex; justify-content: center">
+          {{ acuerdo.tipoProceso.nombre }}
         </div>
       </td>
 
       <td class="dataIndiCell">
-        <div style="display: flex; justify-content: center; color: white;">
-          <div class="tag pendiente" [ngClass]="{
-            'aceptada': acuerdo.flujoObj.idFlujo == 6,
-          }">
-            {{acuerdo.flujoObj.nombre}}
-            {{acuerdo.flujoObj.idFlujo == 5 ? 'durante ' + acuerdo.acuerdoDuracion.duracion : ''}}
+        <div style="display: flex; justify-content: center; color: white">
+          <div
+            class="tag pendiente"
+            [ngClass]="{
+              aceptada: acuerdo.flujoObj.idFlujo == 6,
+            }"
+          >
+            {{ acuerdo.flujoObj.nombre }}
+            {{
+              acuerdo.flujoObj.idFlujo == 5
+                ? "durante " + acuerdo.acuerdoDuracion.duracion
+                : ""
+            }}
           </div>
 
           <div
-            (click)="commentsAgreement(acuerdo.idAcuerdo, acuerdo.colaboradorObj.nombre + ' ' + acuerdo.colaboradorObj.apellidos, acuerdo.colaboradorObj.estadoObj.idEstado, acuerdo.colaboradorObj.usuario)"
+            (click)="
+              commentsAgreement(
+                acuerdo.idAcuerdo,
+                acuerdo.colaboradorObj.nombre +
+                  ' ' +
+                  acuerdo.colaboradorObj.apellidos,
+                acuerdo.colaboradorObj.estadoObj.idEstado,
+                acuerdo.colaboradorObj.usuario
+              )
+            "
             class="pulse"
-            *ngIf="pendingComments(acuerdo) && this.agreement != undefined && activeProcess != undefined  && ( usuario.role == 'Analista' && usuario.Position != 'Analista de Planificación' || usuario.role == 'Supervisor' || usuario.role == 'Encargado' && selectGroup ) ">
-            <mat-icon matTooltip="Nuevo comentario" style="color: mediumorchid;">comment</mat-icon>
+            *ngIf="
+              pendingComments(acuerdo) &&
+              this.agreement != undefined &&
+              activeProcess != undefined &&
+              ((usuario.role == 'Analista' &&
+                usuario.Position != 'Analista de Planificación') ||
+                usuario.role == 'Supervisor' ||
+                (usuario.role == 'Encargado' && selectGroup))
+            "
+          >
+            <mat-icon matTooltip="Nuevo comentario" style="color: mediumorchid"
+              >comment</mat-icon
+            >
           </div>
 
-          <div *ngIf="acuerdo.estaCompletado " style="margin-top: 5px;">
-            <mat-icon matTooltip="Acuerdo de desempeño cerrado y completado" style="color: #4caf50; ">star</mat-icon>
+          <div *ngIf="acuerdo.estaCompletado" style="margin-top: 5px">
+            <mat-icon
+              matTooltip="Acuerdo de desempeño cerrado y completado"
+              style="color: #4caf50"
+              >star</mat-icon
+            >
           </div>
 
-          <div [routerLink]="[{ outlets: { 'acuerdos': ['ver-acuerdo', acuerdo.idAcuerdo]}}]" class="pulse"
-            *ngIf="this.agreement != undefined && activeProcess != undefined && usuario.role == 'Analista' && (acuerdo.flujoObj.idFlujo == 2 && usuario.Position != 'Analista de Planificación' || acuerdo.flujoObj.idFlujo == 3 && usuario.Position == 'Analista de Planificación'  ) ">
-            <mat-icon matTooltip="Evaluación pendiente" style="color: darkblue">description</mat-icon>
+          <div
+            [routerLink]="[
+              { outlets: { acuerdos: ['ver-acuerdo', acuerdo.idAcuerdo] } },
+            ]"
+            class="pulse"
+            *ngIf="
+              this.agreement != undefined &&
+              activeProcess != undefined &&
+              (usuario.role == 'Analista' ||
+                (usuario.role == 'Encargado' && selectGroup == false)) &&
+              ((acuerdo.flujoObj.idFlujo == 2 &&
+                usuario.Position != 'Analista de Planificación') ||
+                (acuerdo.flujoObj.idFlujo == 3 &&
+                  usuario.Position == 'Analista de Planificación'))
+            "
+          >
+            <mat-icon matTooltip="Evaluación pendiente" style="color: darkblue"
+              >description</mat-icon
+            >
           </div>
         </div>
         <!-- <div style="display: flex; justify-content: center; color: white;" *ngIf="typeAD">
@@ -413,14 +638,11 @@
             <mat-icon matTooltip="Pendiente de creación" class="editIcon">edit</mat-icon>
           </div> -->
 
-
-
         <!-- <div style="display: flex; justify-content: center; color: white;" *ngIf="acuerdo.tipoProceso.id != activeProcess.tipoProceso.id">
           <div class="tag pendiente">
             Proceso {{activeProcess.tipoProceso.nombre}} en curso.
           </div> 
         </div> -->
-
 
         <!-- <div style="display: flex; justify-content: center; color: white;" *ngIf="acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 ">
           <div class="tag pendiente">
@@ -429,74 +651,209 @@
        </div>  -->
       </td>
 
-      <td class="dataIndiCell" style="text-align: center;"
-        *ngIf="activeProcess != undefined && activeProcess.tipoProceso.id == selectedStage || activeProcess == undefined || usuario.role == 'Analista' || usuario.role == 'Encargado' && selectGroup == false; else noStage">
-        <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
+      <td
+        class="dataIndiCell"
+        style="text-align: center"
+        *ngIf="
+          (activeProcess != undefined &&
+            activeProcess.tipoProceso.id == selectedStage) ||
+            activeProcess == undefined ||
+            usuario.role == 'Analista' ||
+            (usuario.role == 'Encargado' && selectGroup == false);
+          else noStage
+        "
+      >
+        <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones."
+          >more_vert</mat-icon
+        >
         <mat-menu #menu="matMenu">
-
           <div
-            *ngIf="usuario.Position != 'Analista de Planificación' && (acuerdo.flujoObj.idFlujo == 4 || acuerdo.documentosObj.length > 0)"
+            *ngIf="
+              usuario.Position != 'Analista de Planificación' &&
+              (acuerdo.flujoObj.idFlujo == 4 ||
+                acuerdo.documentosObj.length > 0)
+            "
             class="ItemMiniMenu"
-            (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.documentosObj, acuerdo.flujoObj.idFlujo ,acuerdo.colaboradorObj.estadoObj.idEstado)">
-            <mat-icon style="color: maroon;">upload_file</mat-icon>
-            <h4> Documentos </h4>
+            (click)="
+              openModalListadoDocumentos(
+                acuerdo.colaboradorObj.idPersona,
+                acuerdo.colaboradorObj.nombre,
+                acuerdo.colaboradorObj.apellidos,
+                acuerdo.documentosObj,
+                acuerdo.flujoObj.idFlujo,
+                acuerdo.colaboradorObj.estadoObj.idEstado
+              )
+            "
+          >
+            <mat-icon style="color: maroon">upload_file</mat-icon>
+            <h4>Documentos</h4>
           </div>
 
-          <div class="ItemMiniMenu"
-            *ngIf=" acuerdo.flujoObj.idFlujo < 3 && acuerdo.colaboradorObj.estadoObj.idEstado == 1 && acuerdo.tipoProceso.id == 5 && acuerdo.detalles.length > 0 && userLogged.role == 'Supervisor' || acuerdo.flujoObj.idFlujo < 3 && acuerdo.colaboradorObj.estadoObj.idEstado == 1  &&  acuerdo.tipoProceso.id == 5 && userLogged.role == 'Encargado' && selectGroup && selectedStage == 5"
-            [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]"
-            routerLinkActive="active">
-            <mat-icon style="color: green;">done_outline</mat-icon>
+          <div
+            class="ItemMiniMenu"
+            *ngIf="
+              (acuerdo.flujoObj.idFlujo < 3 &&
+                acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                acuerdo.tipoProceso.id == 5 &&
+                acuerdo.detalles.length > 0 &&
+                userLogged.role == 'Supervisor') ||
+              (acuerdo.flujoObj.idFlujo < 3 &&
+                acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                acuerdo.tipoProceso.id == 5 &&
+                userLogged.role == 'Encargado' &&
+                selectGroup &&
+                selectedStage == 5)
+            "
+            [routerLink]="[
+              {
+                outlets: {
+                  acuerdos: ['evaluacion', acuerdo.colaboradorObj.idPersona],
+                },
+              },
+            ]"
+            routerLinkActive="active"
+          >
+            <mat-icon style="color: green">done_outline</mat-icon>
             <h4>Evaluar A.D.</h4>
           </div>
 
-          <div class="ItemMiniMenu" [routerLink]="[{ outlets: { 'acuerdos': ['ver-acuerdo', acuerdo.idAcuerdo]}}]"
-            *ngIf="acuerdo.detalles.length > 0">
+          <div
+            class="ItemMiniMenu"
+            [routerLink]="[
+              { outlets: { acuerdos: ['ver-acuerdo', acuerdo.idAcuerdo] } },
+            ]"
+            *ngIf="acuerdo.detalles.length > 0"
+          >
             <mat-icon style="color: darkblue">description</mat-icon>
-            <h4>{{usuario.role == 'Analista' ? 'Validar A.D.' : 'Ver A.D.'}}</h4>
+            <h4>
+              {{ usuario.role == "Analista" ? "Validar A.D." : "Ver A.D." }}
+            </h4>
           </div>
 
-          <div class="ItemMiniMenu" [routerLink]="[{ outlets: { 'acuerdos': ['comportamientos', acuerdo.idAcuerdo]}}]"
-            *ngIf="acuerdo.colaboradorObj.estadoObj.idEstado == 1 && activeProcess && acuerdo.detalles.length > 0 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 && activeProcess.tipoProceso.id == 5 && usuario.Position != 'Analista de Planificación'">
-            <mat-icon style="color: darkgoldenrod;">psychology</mat-icon>
+          <div
+            class="ItemMiniMenu"
+            [routerLink]="[
+              { outlets: { acuerdos: ['comportamientos', acuerdo.idAcuerdo] } },
+            ]"
+            *ngIf="
+              acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+              activeProcess &&
+              acuerdo.detalles.length > 0 &&
+              acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 &&
+              activeProcess.tipoProceso.id == 5 &&
+              usuario.Position != 'Analista de Planificación'
+            "
+          >
+            <mat-icon style="color: darkgoldenrod">psychology</mat-icon>
             <h4>Ver Comportamientos</h4>
           </div>
 
-          <div class="ItemMiniMenu" *ngIf="acuerdo.detalles.length > 0 && acuerdo.comentarios.length > 0"
-            (click)="commentsAgreement(acuerdo.idAcuerdo, acuerdo.colaboradorObj.nombre + ' ' + acuerdo.colaboradorObj.apellidos, acuerdo.colaboradorObj.estadoObj.idEstado, acuerdo.colaboradorObj.usuario)">
-            <mat-icon style="color: mediumorchid;">comment</mat-icon>
+          <div
+            class="ItemMiniMenu"
+            *ngIf="
+              acuerdo.detalles.length > 0 && acuerdo.comentarios.length > 0
+            "
+            (click)="
+              commentsAgreement(
+                acuerdo.idAcuerdo,
+                acuerdo.colaboradorObj.nombre +
+                  ' ' +
+                  acuerdo.colaboradorObj.apellidos,
+                acuerdo.colaboradorObj.estadoObj.idEstado,
+                acuerdo.colaboradorObj.usuario
+              )
+            "
+          >
+            <mat-icon style="color: mediumorchid">comment</mat-icon>
             <h4>Comentarios</h4>
           </div>
 
-          <div class="ItemMiniMenu"
-            *ngIf="acuerdo.tipoProceso.id != 5 && acuerdo.flujoObj.idFlujo == 1 && activeProcess && acuerdo.tipoProceso.id >= 2"
-            (click)="completeCheckOut(acuerdo.tipoProceso.nombre, acuerdo.idAcuerdo)">
-            <mat-icon style="color: chocolate;">move_up</mat-icon>
+          <div
+            class="ItemMiniMenu"
+            *ngIf="
+              acuerdo.tipoProceso.id != 5 &&
+              acuerdo.flujoObj.idFlujo == 1 &&
+              activeProcess &&
+              acuerdo.tipoProceso.id >= 2
+            "
+            (click)="
+              completeCheckOut(acuerdo.tipoProceso.nombre, acuerdo.idAcuerdo)
+            "
+          >
+            <mat-icon style="color: chocolate">move_up</mat-icon>
             <h4>Completar revisión</h4>
           </div>
 
           <!-- *ngIf="usuario.Position != 'Analista de Planificación' && (acuerdo.flujoObj.idFlujo == 4 || acuerdo.documentosObj.length > 0)" -->
-          <div *ngIf="acuerdo.estaCompletado == false && acuerdo.tipoProceso.id == 5 && acuerdo.flujoObj.idFlujo == 6"
-            class="ItemMiniMenu" (click)="completeAgreement(acuerdo.idAcuerdo)">
-            <mat-icon style="color: royalblue;">star</mat-icon>
-            <h4> Completar/Cerrar A.D.</h4>
+          <div
+            *ngIf="
+              acuerdo.estaCompletado == false &&
+              acuerdo.tipoProceso.id == 5 &&
+              acuerdo.flujoObj.idFlujo == 6
+            "
+            class="ItemMiniMenu"
+            (click)="completeAgreement(acuerdo.idAcuerdo)"
+          >
+            <mat-icon style="color: royalblue">star</mat-icon>
+            <h4>Completar/Cerrar A.D.</h4>
           </div>
 
-          <div class="ItemMiniMenu"
-            *ngIf="acuerdo.tipoProceso.id != 5 && acuerdo.colaboradorObj.estadoObj.idEstado == 1 && acuerdo.detalles.length > 0 && this.userLogged.role == 'Encargado' && selectGroup == false || acuerdo.tipoProceso.id != 5 && acuerdo.detalles.length > 0 && this.userLogged.role == 'Analista' && usuario.Position != 'Analista de Planificación'"
-            (click)="openAuthorizationAction(acuerdo.tipoAcuerdoObj.idTipoAcuerdo, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.idAcuerdo)">
-            <mat-icon style="color: darkcyan;">lock_open</mat-icon>
+          <div
+            class="ItemMiniMenu"
+            *ngIf="
+              (acuerdo.tipoProceso.id != 5 &&
+                acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                acuerdo.detalles.length > 0 &&
+                this.userLogged.role == 'Encargado' &&
+                selectGroup == false) ||
+              (acuerdo.tipoProceso.id != 5 &&
+                acuerdo.detalles.length > 0 &&
+                this.userLogged.role == 'Analista' &&
+                usuario.Position != 'Analista de Planificación')
+            "
+            (click)="
+              openAuthorizationAction(
+                acuerdo.tipoAcuerdoObj.idTipoAcuerdo,
+                acuerdo.colaboradorObj.nombre,
+                acuerdo.colaboradorObj.apellidos,
+                acuerdo.idAcuerdo
+              )
+            "
+          >
+            <mat-icon style="color: darkcyan">lock_open</mat-icon>
             <h4>Autorizar acción</h4>
           </div>
 
-          <div class="ItemMiniMenu editarHover"
+          <div
+            class="ItemMiniMenu editarHover"
             *ngIf="
-                (activeProcess && acuerdo.colaboradorObj.estadoObj.idEstado == 1 && acuerdo.flujoObj.idFlujo <= 3 && activeProcess.tipoProceso.id == acuerdo.tipoProceso.id &&
-                (activeProcess.tipoProceso.id == 1 || activeProcess.tipoProceso.id == 2  || activeProcess.tipoProceso.id == 3)
-                && (userLogged.role == 'Supervisor' || userLogged.role == 'Encargado' &&  selectGroup) ) || (  acuerdo.esInconsistenteTipoProceso && acuerdo.tipoProceso.id == 1 && acuerdo.flujoObj.idFlujo <= 2 && usuario.role != 'Analista' &&  selectGroup ) || acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 && acuerdo.tipoProceso.id == 1"
-            [routerLink]="[{ outlets: { 'acuerdos': ['editar', acuerdo.colaboradorObj.idPersona]}}]">
+              (activeProcess &&
+                acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                acuerdo.flujoObj.idFlujo <= 3 &&
+                activeProcess.tipoProceso.id == acuerdo.tipoProceso.id &&
+                (activeProcess.tipoProceso.id == 1 ||
+                  activeProcess.tipoProceso.id == 2 ||
+                  activeProcess.tipoProceso.id == 3) &&
+                (userLogged.role == 'Supervisor' ||
+                  (userLogged.role == 'Encargado' && selectGroup))) ||
+              (acuerdo.esInconsistenteTipoProceso &&
+                acuerdo.tipoProceso.id == 1 &&
+                acuerdo.flujoObj.idFlujo <= 2 &&
+                usuario.role != 'Analista' &&
+                selectGroup) ||
+              (acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 &&
+                acuerdo.tipoProceso.id == 1)
+            "
+            [routerLink]="[
+              {
+                outlets: {
+                  acuerdos: ['editar', acuerdo.colaboradorObj.idPersona],
+                },
+              },
+            ]"
+          >
             <mat-icon class="editIcon">edit</mat-icon>
-            <h4> Crear/Editar A.D. </h4>
+            <h4>Crear/Editar A.D.</h4>
           </div>
 
           <!-- <div class="ItemMiniMenu"
@@ -505,31 +862,50 @@
             <mat-icon style="color: gray;">info</mat-icon>Periodo de edición de acuerdos de desempeño no disponible.
           </div> -->
 
-          <div class="ItemMiniMenu"
-            *ngIf="acuerdo.colaboradorObj.estadoObj.idEstado == 2 && userLogged.role == 'Supervisor' || acuerdo.colaboradorObj.estadoObj.idEstado == 2 && userLogged.role == 'Encargado' && selectGroup"
-            mat-menu-item disabled>
-            <mat-icon style="color: gray;">info</mat-icon>Este usuario esta en estado de inactividad.
+          <div
+            class="ItemMiniMenu"
+            *ngIf="
+              (acuerdo.colaboradorObj.estadoObj.idEstado == 2 &&
+                userLogged.role == 'Supervisor') ||
+              (acuerdo.colaboradorObj.estadoObj.idEstado == 2 &&
+                userLogged.role == 'Encargado' &&
+                selectGroup)
+            "
+            mat-menu-item
+            disabled
+          >
+            <mat-icon style="color: gray">info</mat-icon>Este usuario esta en
+            estado de inactividad.
           </div>
 
           <ng-container
-            *ngIf="acuerdo.colaboradorObj.estadoObj.idEstado == 1 && acuerdo.detalles.length == 0 && activeProcess == undefined && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 1 && acuerdo.tipoProceso.id == 1 
-            || acuerdo.colaboradorObj.estadoObj.idEstado == 1 && acuerdo.detalles.length == 0 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 1 && acuerdo.tipoProceso.id == 1 && (usuario.role == 'Analista' || selectGroup == false)">
-
+            *ngIf="
+              (acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                acuerdo.detalles.length == 0 &&
+                activeProcess == undefined &&
+                acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 1 &&
+                acuerdo.tipoProceso.id == 1) ||
+              (acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                acuerdo.detalles.length == 0 &&
+                acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 1 &&
+                acuerdo.tipoProceso.id == 1 &&
+                (usuario.role == 'Analista' || selectGroup == false))
+            "
+          >
             <div class="ItemMiniMenuDisable" disabled>
-              <mat-icon style="color: gray; width: 60px;">info</mat-icon>
+              <mat-icon style="color: gray; width: 60px">info</mat-icon>
               No hay elementos disponibles en este momento.
             </div>
-
           </ng-container>
-
         </mat-menu>
       </td>
 
       <ng-template #noStage>
-        <td class="dataIndiCell" style="text-align: center;">
-          <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones.">more_vert</mat-icon>
+        <td class="dataIndiCell" style="text-align: center">
+          <mat-icon [matMenuTriggerFor]="menu" matTooltip="Listado de opciones."
+            >more_vert</mat-icon
+          >
           <mat-menu #menu="matMenu">
-
             <!-- <div class="ItemMiniMenu" [routerLink]="[{ outlets: { 'acuerdos': ['ver-acuerdo', acuerdo.idAcuerdo]}}]"
               *ngIf="acuerdo.detalles.length > 0">
               <mat-icon style="color: darkblue">description</mat-icon>
@@ -537,48 +913,112 @@
             </div> -->
 
             <div
-              *ngIf="usuario.Position != 'Analista de Planificación' && acuerdo.flujoObj.idFlujo == 4  && selectedStage <= acuerdo.tipoProceso.id || usuario.Position != 'Analista de Planificación' && acuerdo.documentosObj.length > 0 && selectedStage <= acuerdo.tipoProceso.id || acuerdo.estaCompletado"
+              *ngIf="
+                (usuario.Position != 'Analista de Planificación' &&
+                  acuerdo.flujoObj.idFlujo == 4 &&
+                  selectedStage <= acuerdo.tipoProceso.id) ||
+                (usuario.Position != 'Analista de Planificación' &&
+                  acuerdo.documentosObj.length > 0 &&
+                  selectedStage <= acuerdo.tipoProceso.id) ||
+                acuerdo.estaCompletado
+              "
               class="ItemMiniMenu"
-              (click)="openModalListadoDocumentos(acuerdo.colaboradorObj.idPersona, acuerdo.colaboradorObj.nombre, acuerdo.colaboradorObj.apellidos, acuerdo.documentosObj, acuerdo.flujoObj.idFlujo ,acuerdo.colaboradorObj.estadoObj.idEstado)">
-              <mat-icon style="color: maroon;">upload_file</mat-icon>
-              <h4> Documentos</h4>
+              (click)="
+                openModalListadoDocumentos(
+                  acuerdo.colaboradorObj.idPersona,
+                  acuerdo.colaboradorObj.nombre,
+                  acuerdo.colaboradorObj.apellidos,
+                  acuerdo.documentosObj,
+                  acuerdo.flujoObj.idFlujo,
+                  acuerdo.colaboradorObj.estadoObj.idEstado
+                )
+              "
+            >
+              <mat-icon style="color: maroon">upload_file</mat-icon>
+              <h4>Documentos</h4>
             </div>
 
-            <div class="ItemMiniMenu"
-              *ngIf=" acuerdo.flujoObj.idFlujo < 3 && acuerdo.colaboradorObj.estadoObj.idEstado == 1 && acuerdo.tipoProceso.id == 5 && acuerdo.detalles.length > 0 && userLogged.role == 'Supervisor' || acuerdo.flujoObj.idFlujo < 3 && acuerdo.colaboradorObj.estadoObj.idEstado == 1  &&  acuerdo.tipoProceso.id == 5 && userLogged.role == 'Encargado' && selectGroup && selectedStage == 5"
-              [routerLink]="[{ outlets: { 'acuerdos': ['evaluacion',acuerdo.colaboradorObj.idPersona]}}]"
-              routerLinkActive="active">
-              <mat-icon style="color: green;">done_outline</mat-icon>
+            <div
+              class="ItemMiniMenu"
+              *ngIf="
+                (acuerdo.flujoObj.idFlujo < 3 &&
+                  acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                  acuerdo.tipoProceso.id == 5 &&
+                  acuerdo.detalles.length > 0 &&
+                  userLogged.role == 'Supervisor') ||
+                (acuerdo.flujoObj.idFlujo < 3 &&
+                  acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                  acuerdo.tipoProceso.id == 5 &&
+                  userLogged.role == 'Encargado' &&
+                  selectGroup &&
+                  selectedStage == 5)
+              "
+              [routerLink]="[
+                {
+                  outlets: {
+                    acuerdos: ['evaluacion', acuerdo.colaboradorObj.idPersona],
+                  },
+                },
+              ]"
+              routerLinkActive="active"
+            >
+              <mat-icon style="color: green">done_outline</mat-icon>
               <h4>Evaluar A.D.</h4>
             </div>
 
-            <div class="ItemMiniMenuDisable" disabled
-              *ngIf="selectedStage > acuerdo.tipoProceso.id && selectGroup || acuerdo.tipoProceso.id != 5 && selectedStage != 5 && selectGroup && selectedStage > acuerdo.tipoProceso.id">
-              <mat-icon style="color: gray; width: 60px;">info</mat-icon>
+            <div
+              class="ItemMiniMenuDisable"
+              disabled
+              *ngIf="
+                (selectedStage > acuerdo.tipoProceso.id && selectGroup) ||
+                (acuerdo.tipoProceso.id != 5 &&
+                  selectedStage != 5 &&
+                  selectGroup &&
+                  selectedStage > acuerdo.tipoProceso.id)
+              "
+            >
+              <mat-icon style="color: gray; width: 60px">info</mat-icon>
               No hay elementos disponibles en este momento.
             </div>
-
           </mat-menu>
         </td>
       </ng-template>
-
     </tr>
-
-
   </tbody>
   <tfoot *ngIf="pagination && pagination.totalPage">
     <tr class="paginatorRow">
       <!-- <ng-container *ngFor="let td of [1, 2, 3, 4, 5]"> -->
       <td colspan="5" class="dataIndiCell"></td>
       <!-- </ng-container> -->
-      <td class="paginationCell"> <span
-          style="color: #888; display: flex; justify-content: end; margin-right: 15px;">{{pagination.totalItem}}
-          Items</span></td>
       <td class="paginationCell">
-        <span style="display: flex; align-items: center;" *ngIf="pagination.totalPage > 1">
-          <mat-icon class="rowIcon" matTooltip="Pagina anterior." (click)="previousPage()">navigate_before</mat-icon>
-          <h5 style="margin: 0;">{{page}} / {{pagination.totalPage}}</h5>
-          <mat-icon class="rowIcon" matTooltip="Pagina siguiente." (click)="nextPage()">navigate_next</mat-icon>
+        <span
+          style="
+            color: #888;
+            display: flex;
+            justify-content: end;
+            margin-right: 15px;
+          "
+          >{{ pagination.totalItem }} Items</span
+        >
+      </td>
+      <td class="paginationCell">
+        <span
+          style="display: flex; align-items: center"
+          *ngIf="pagination.totalPage > 1"
+        >
+          <mat-icon
+            class="rowIcon"
+            matTooltip="Pagina anterior."
+            (click)="previousPage()"
+            >navigate_before</mat-icon
+          >
+          <h5 style="margin: 0">{{ page }} / {{ pagination.totalPage }}</h5>
+          <mat-icon
+            class="rowIcon"
+            matTooltip="Pagina siguiente."
+            (click)="nextPage()"
+            >navigate_next</mat-icon
+          >
         </span>
       </td>
     </tr>
@@ -586,8 +1026,12 @@
   <ng-template #noElements>
     <tbody>
       <tr class="dataRow">
-        <td class="dataIndiCell" *ngIf="agreement && agreement.length == 0; else searching">No hay elementos que
-          mostrar.</td>
+        <td
+          class="dataIndiCell"
+          *ngIf="agreement && agreement.length == 0; else searching"
+        >
+          No hay elementos que mostrar.
+        </td>
         <ng-template #searching>
           <td class="dataIndiCell">Buscando elementos.</td>
         </ng-template>
@@ -599,25 +1043,56 @@
   </ng-template>
 </table>
 
-<div style="display: flex; justify-content: end; margin: 10px 0 ; gap: 5px" *ngIf="!typeAD">
-  <button *ngIf="activeStep?.procesoSecuencia?.paso?.nombre == 'Creación de minuta' "
-    [routerLink]="['/layout/evaluacion-competencias/minuta']" [queryParams]="{ typeMinuta: 1 }" class="saveButton">Crear
-    Minuta
+<div
+  style="display: flex; justify-content: end; margin: 10px 0; gap: 5px"
+  *ngIf="!typeAD"
+>
+  <button
+    *ngIf="activeStep?.procesoSecuencia?.paso?.nombre == 'Creación de minuta'"
+    [routerLink]="['/layout/evaluacion-competencias/minuta']"
+    [queryParams]="{ typeMinuta: 1 }"
+    class="saveButton"
+  >
+    Crear Minuta
   </button>
 
-  <button *ngIf="userLogged.role != 'Analista' && minuta != undefined && selectGroup" class="saveButton"
-    (click)="openModalTemplateMinuta()"> Ver Minuta
+  <button
+    *ngIf="userLogged.role != 'Analista' && minuta != undefined && selectGroup"
+    class="saveButton"
+    (click)="openModalTemplateMinuta()"
+  >
+    Ver Minuta
   </button>
 
-  <ng-container *ngIf="userLogged.role != 'Analista' && minuta != undefined && selectGroup && minuta.aprobada ">
-    <button class="saveButton"
-      (click)="openModalListadoDocumentos(0, userLogged.Firstname, userLogged.Lastname, minutaList, minuta.documentos.length == 0 ? 4 : 2 )"
+  <ng-container
+    *ngIf="
+      userLogged.role != 'Analista' &&
+      minuta != undefined &&
+      selectGroup &&
+      minuta.aprobada
+    "
+  >
+    <button
+      class="saveButton"
+      (click)="
+        openModalListadoDocumentos(
+          0,
+          userLogged.Firstname,
+          userLogged.Lastname,
+          minutaList,
+          minuta.documentos.length == 0 ? 4 : 2
+        )
+      "
       [disabled]="!minuta.aprobada"
       matTooltip="En espera de la revisión de la minuta. Debe ser aprobada antes de subir el documento."
-      [matTooltipDisabled]="minuta.aprobada">
-
+      [matTooltipDisabled]="minuta.aprobada"
+    >
       <ng-container *ngIf="minuta != undefined">
-        {{ minuta.documentos.length == 0 ? "Subir Documento de Minuta Firmada" : "Documento de Minuta" }}
+        {{
+          minuta.documentos.length == 0
+            ? "Subir Documento de Minuta Firmada"
+            : "Documento de Minuta"
+        }}
       </ng-container>
     </button>
   </ng-container>

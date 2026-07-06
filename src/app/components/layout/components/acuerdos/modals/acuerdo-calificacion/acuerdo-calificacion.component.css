@@ -59,7 +59,6 @@ button.cancel-button {
 
 .mediovefiricacion {
   margin-top: 17px;
-  width: calc(40% - 10px);
   padding: 10px;
   border-radius: 2%;
   height: 60px;
@@ -68,7 +67,6 @@ button.cancel-button {
   justify-content: center;
   border: 1px solid #ccc;
   box-sizing: border-box;
-
 }
 
 /* Opcional: Si quieres una barra de desplazamiento en la descripción si excede el alto */

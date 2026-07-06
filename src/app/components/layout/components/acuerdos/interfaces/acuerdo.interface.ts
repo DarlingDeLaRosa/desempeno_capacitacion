@@ -12,7 +12,7 @@ export interface AcuerdoI {
   idTracking: TrackingI,
   idFlujo: number,
   estaCompletado: boolean
-  esInconsistenteTipoProceso:  boolean
+  esInconsistenteTipoProceso: boolean
   estaPrimeraRevisionCompleta: boolean
   estaSegundaRevisionCompleta: boolean
   estaTerceraRevisionCompleta: boolean
@@ -42,15 +42,17 @@ export interface AcuerdoDetalle {
   idMeta: number;
   metaObj: Meta;
   calificacion: number;
-  documentosObj: Documento
+  documentosObj: Documento[]
+  historial: historicalChangesI[]
   observaciones?: string
+  fueModificado?: boolean 
 }
 
 export interface Meta {
   idMeta: number;
   idMedio: number;
   medioVerificacionObj: any;
-  descripcionMedioVerificacion:string
+  descripcionMedioVerificacion: string
   nombre: string;
   valor: number;
   isTranversal: boolean;
@@ -61,6 +63,7 @@ export interface DocumentoMinuta {
   idDocumento: number,
   nombre: string,
   enlace: string
+  tipoProceso: { id: number, nombre: string };
   creadoEn: Date
 }
 
@@ -78,6 +81,7 @@ export interface Documento {
   idAcuerdoDetalle: number;
   idMeta: number;
   idProtocolo: number;
+  tipoProceso: { id: number, nombre: string };
   idMinuta: number;
   fecha: string;
   creadoEn: Date
@@ -178,4 +182,9 @@ export interface MinutaCollaboratorTemplateI {
   motivoAusencia: string
 }
 
-
+export interface historicalChangesI {
+  accion: string,
+  valorAnteriorJson: string,
+  valorNuevoJson: string,
+  fecha: Date
+} 

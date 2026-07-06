@@ -1,15 +1,17 @@
 import { Component, Inject, OnInit, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { ClassImports } from '../../../../../../helpers/class.components';
 import { agreementService } from '../../services/acuerdo.service';
-import { AcuerdoI } from '../../interfaces/acuerdo.interface';
+import { AcuerdoI, Documento, historicalChangesI } from '../../interfaces/acuerdo.interface';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { SnackBars } from '../../../../services/snackBars.service';
 import { ActivatedRoute } from '@angular/router';
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
+import { ListadoDocumentoComponent } from '../listado-documento/listado-documento.component';
+import { HistoricoComponent } from '../historico/historico.component';
 
 
 @Component({
@@ -30,9 +32,12 @@ export class VerAcuerdoComponent implements OnInit {
   commentsForm: FormGroup
   idAgreement: number = 0
   userLogged!: loggedUserI
+  uploadFile: boolean = false
+  historicalChanges: boolean = false
 
   constructor(
     public fb: FormBuilder,
+    private dialog: MatDialog,
     public snackBar: SnackBars,
     private route: ActivatedRoute,
     public appHelper: HerlperService,
@@ -82,16 +87,19 @@ export class VerAcuerdoComponent implements OnInit {
 
     if (agreementDecision) {
       if (this.agreement.colaboradorObj.grupoObj.idGrupo == 5) {
-         flowData = decision ? { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 1 }
-          : { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo }
+        flowData =
+          decision && this.agreement.tipoProceso.id == 1 ?
+            { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 1 } :
+            decision && this.agreement.tipoProceso.id != 1 ? { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 2 }
+              : { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo }
       } else {
         decision ? flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: this.agreement.flujoObj.idFlujo + 2 }
-          : flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: 2 }
+          : flowData = { acuerdoId: this.agreement.idAcuerdo, flujoId: 1 }
       }
 
-      this.agreementservice.updateFlow(flowData).subscribe((res: any) => {
+      this.agreementservice.updateFlow(flowData, decision).subscribe((res: any) => {
         if (res.status) {
-          this.appHelper.handleResponse(res, () => { }, this.commentsForm)
+          this.appHelper.handleResponse(res, () => this.getAgreementByIdCollaborator(), this.commentsForm)
         }
       })
     }
@@ -101,6 +109,28 @@ export class VerAcuerdoComponent implements OnInit {
   calculadora() {
     this.totalCalificacion = this.agreement.detalles.reduce((acc, item) => acc + (item.calificacion || 0), 0);
     this.totalValor = this.agreement.detalles.reduce((acc, item) => acc + (item.metaObj.valor || 0), 0);
+  }
+
+  openModalListadoDocumentos(nombre: string, apellido: string, documentosList: Documento[] = []): void {
+    const nombreCompleto = nombre + ' ' + apellido;
+    const dialog = this.dialog.open(ListadoDocumentoComponent, {
+      data: {
+        idCollaborator: 0,
+        nombreCompleto,
+        documentosList
+      }
+    })
+    dialog.afterClosed().subscribe(result => {
+      if (result) {
+        this.getAgreementByIdCollaborator()
+      }
+    });
+  }
+  
+  openModalHistorico(changesList: historicalChangesI[] = [], meta: string): void {
+    const dialog = this.dialog.open(HistoricoComponent, {
+      data: { changesList, meta }
+    })
   }
 
   // closeModal(): void {

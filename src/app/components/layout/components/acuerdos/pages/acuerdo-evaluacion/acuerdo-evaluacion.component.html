@@ -39,7 +39,6 @@
   </span>
 </div>
 
-
 <app-loader-box *ngIf="!agreement"></app-loader-box>
 
 <h2 style="margin: 15px 0px 5px 0px; font-size: 20px;">Lista de Metas</h2>
@@ -49,21 +48,20 @@
     <thead class="headerTable">
       <tr class="headerRow">
         <th class="headerCell">Metas</th>
-        <th class="headerCell">Medio de verificación</th>
-        <th class="headerCell">valor</th>
-        <th class="headerCell">Calificación</th>
-        <th class="headerCell"></th>
+        <th class="headerCell" style="width: 15%; text-align: center;">Medio de verificación</th>
+        <th class="headerCell" style="width: 8%; text-align: center;">valor</th>
+        <th class="headerCell" style="width: 10%; text-align: center;" >Calificación</th>
+        <th class="headerCell" style="width: 5%;" ></th>
 
         <div *ngIf="isLoading ===  true" class="loader"></div>
-        <!-- </th> -->
       </tr>
     </thead>
     <tbody>
       <tr class="dataRow" *ngFor="let goal of goalDetails; let i = index">
         <td class="dataIndiCell">{{goal.nombre}}</td>
-        <td class="dataIndiCell">{{goal.nombreMedio}}</td>
-        <td class="dataIndiCell">{{goal.valor}}</td>
-        <td class="dataIndiCell">{{goal.calificacion}}</td>
+        <td class="dataIndiCell" style="text-align: center;">{{goal.nombreMedio}}</td>
+        <td class="dataIndiCell" style="text-align: center;">{{goal.valor}}</td>
+        <td class="dataIndiCell" style="text-align: center;">{{goal.calificacion}}</td>
         <td class="dataIndiCell">
           <mat-icon class="editIcon" (click)="openModalCalificacion(goal)">task</mat-icon>
         </td>
@@ -79,8 +77,8 @@
       <tr class="paginatorRow" *ngIf="goalDetails.length !== 0">
         <td class="dataIndiCell">Total:</td>
         <td class="dataIndiCell"></td>
-        <td class="dataIndiCell"><strong>{{totalValor}}</strong></td>
-        <td class="dataIndiCell"><strong>{{totalCalificacion}}</strong></td>
+        <td class="dataIndiCell" style="text-align: center;"><strong>{{totalValor}}</strong></td>
+        <td class="dataIndiCell" style="text-align: center;"><strong>{{totalCalificacion}}</strong></td>
 
         <td class="dataIndiCell">
           <span style="display: flex; align-items: center;">

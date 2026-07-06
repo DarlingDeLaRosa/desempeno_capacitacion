@@ -42,8 +42,8 @@ export class MinutaService {
   }
 
   //peticion para traer todos las minutas
-  public getMinuta(term: string, typeMinuta: string = 'Acuerdo', sup: boolean = true, page: number = 1, totalPage: number = 10, esSupervisorInterino: boolean = false,) {
-    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?tipo=${typeMinuta}&esSupervisorInterino=${esSupervisorInterino}&esSupervisor=${sup}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
+  public getMinuta(recinto: string = '', proceso: string = '', term: string, typeMinuta: string = 'Acuerdo', sup: boolean = true, page: number = 1, totalPage: number = 10, esSupervisorInterino: boolean = false,) {
+    return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas?proceso=${proceso}&recinto=${recinto}&tipo=${typeMinuta}&esSupervisorInterino=${esSupervisorInterino}&esSupervisor=${sup}&Term=${term}&CurrentPage=${page}&PageSize=${totalPage}`, this.header));
   }
   
   // public getMinutaProvisional(term: string, typeMinuta: string = 'Acuerdo', sup: boolean = true, page: number = 1, totalPage: number = 10) {
@@ -64,6 +64,11 @@ export class MinutaService {
 
   public getMinutaExistenteByPerson(userId: number, period: number, isEvaluation: boolean, periodProcessId: number = 0) {
     return this.appHelpers.handleRequest(() => this.http.get<ResponseI>(`${this.baseURL}/Minutas/validar-existencia?periodoId=${period}&supervisorId=${userId}&esUnaEvaluacion=${isEvaluation}&periodoAcuerdoId=${periodProcessId}`, this.header));
+  }
+
+  //peticion para validar documento de una minuta
+  public postValidateDocMinuta(Minuta: any) {
+    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Minutas/validar-documento-anexo`, Minuta, this.header));
   }
 
   //peticion para hacer el post de una minuta

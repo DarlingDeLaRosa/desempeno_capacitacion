@@ -11,44 +11,66 @@
   </div> -->
 </div>
 
-<div style="display: flex; justify-content: space-between;">
-  <div style="display: flex; gap: 5px; align-items: center;">
+<div style="display: flex; justify-content: space-between">
+  <div style="display: flex; gap: 5px; align-items: center">
     <mat-form-field
-    *ngIf="systemInformation.activeRol().nombre != 'supervisado'"
-    appearance="fill"
-    style="flex: 1"
-  >
-    <mat-label>Buscar</mat-label>
-    <input matInput [(ngModel)]="searchTerm" (input)="Buscar()" />
-    <mat-icon matSuffix>search</mat-icon>
-  </mat-form-field>
+      *ngIf="systemInformation.activeRol().nombre != 'supervisado'"
+      appearance="fill"
+      style="flex: 1"
+    >
+      <mat-label>Buscar</mat-label>
+      <input matInput [(ngModel)]="searchTerm" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" style="flex: 1">
-    <mat-label>Tipos de Minuta</mat-label>
-    <mat-select [(ngModel)]="typeMinuta" (selectionChange)="getMinutas('')">
-      <mat-option value="">Todos</mat-option>
-      <mat-option value="acuerdo">Minuta de Acuerdo de Desempeño</mat-option>
-      <mat-option value="evaluacion"
-        >Minuta de Evaluación de Competencias</mat-option
-      >
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" style="flex: 1">
+      <mat-label>Tipos de Minuta</mat-label>
+      <mat-select [(ngModel)]="typeMinuta">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="acuerdo">Minuta de Acuerdo de Desempeño</mat-option>
+        <mat-option value="evaluacion"
+          >Minuta de Evaluación de Competencias</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" style="flex: 1">
-    <mat-label>Recinto</mat-label>
-    <mat-select [(ngModel)]="typeMinuta" (selectionChange)="getMinutas('')">
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" style="flex: 1" *ngIf="this.userLogged.RecintoSigla == 'REC'">
+      <mat-label>Recintos</mat-label>
+      <mat-select [(ngModel)]="recinto">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="fem">FEM</mat-option>
+        <mat-option value="eph">EPH</mat-option>
+        <mat-option value="emh">EMH</mat-option>
+        <mat-option value="um">UM</mat-option>
+        <mat-option value="jvm">JVM</mat-option>
+        <mat-option value="lnnm">LNNM</mat-option>
+        <mat-option value="rec">REC</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" style="flex: 1">
-    <mat-label>Proceso</mat-label>
-    <mat-select [(ngModel)]="typeMinuta" (selectionChange)="getMinutas('')">
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" style="flex: 1.5">
+      <mat-label>Etapa</mat-label>
+      <mat-select [(ngModel)]="process">
+        <mat-option value="">Todos</mat-option>
+        <mat-option value="Creación de acuerdo">Creación de acuerdo</mat-option>
+        <mat-option value="Primera revisión de acuerdo"
+          >Primera revisión de acuerdo</mat-option
+        >
+        <mat-option value="Segunda revisión de acuerdo"
+          >Segunda revisión de acuerdo</mat-option
+        >
+        <mat-option value="Tercera revisión de acuerdo"
+          >Tercera revisión de acuerdo</mat-option
+        >
+        <mat-option value="Evaluación de acuerdo"
+          >Evaluación de acuerdo</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
 
-  <button type="button" class="btnSave">
-    <mat-icon style="margin-right: 3px">search</mat-icon> Buscar
-  </button>
+    <button type="button" class="btnSave" (click)="getMinutas('')">
+      <mat-icon style="margin-right: 3px">search</mat-icon> Buscar
+    </button>
   </div>
 
   <span></span>
@@ -61,7 +83,7 @@
       <th class="headerCell">Unidad organizativa</th>
       <th class="headerCell">Cargo</th>
       <th class="headerCell">Tipo de Minuta</th>
-      <!-- <th class="headerCell">Nivel</th> -->
+      <th class="headerCell" *ngIf="this.userLogged.RecintoSigla == 'REC'">Recinto Supervisor</th>
       <!-- <th class="headerCell">Proceso</th> -->
       <th class="headerCell">
         <div style="display: flex; justify-content: center">G. Ocupacional</div>
@@ -76,10 +98,12 @@
   </thead>
   <tbody *ngIf="minutaList && minutaList.length > 0; else noElements">
     <tr class="dataRow" *ngFor="let minuta of minutaList">
+
       <td class="dataIndiCell">
         {{ minuta.supervisorIntranet!.nombre | titlecase }}
         {{ minuta.supervisorIntranet!.apellidos | titlecase }}
       </td>
+
       <td class="dataIndiCell">
         <ng-container
           *ngIf="
@@ -123,12 +147,14 @@
           >
         </ng-template>
       </td>
+
       <td
         class="dataIndiCell"
         [matTooltip]="minuta.supervisorIntranet!.cargo.nombre"
       >
         {{ minuta.supervisorIntranet!.cargo.nombre }}
       </td>
+
       <td
         class="dataIndiCell"
         *ngIf="minuta.periodoAcuerdo != null; else noPeriod"
@@ -144,16 +170,26 @@
             : "A.D. -" + minuta.periodoAcuerdo.tipoProceso.nombre
         }}
       </td>
+
       <ng-template #noPeriod>
         <td class="dataIndiCell" style="color: red">
           No se encontro el tipo de minuta
         </td>
       </ng-template>
+
+           
+      <td class="dataIndiCell" *ngIf="this.userLogged.RecintoSigla == 'REC'">
+        <div style="display: flex; justify-content: center">
+          {{minuta.supervisor.recinto | uppercase}}
+        </div>
+      </td>
+
       <td class="dataIndiCell">
         <div style="display: flex; justify-content: center">
           {{ minuta.supervisorIntranet!.grupoObj.nombre }}
         </div>
       </td>
+
       <td class="dataIndiCell">
         <div style="display: flex; justify-content: center">
           <div
@@ -251,15 +287,15 @@
             <h4 style="color: orangered">Rechazar Minuta</h4>
           </div>
 
-          <!-- <button mat-menu-item (click)="postValidarMinuta(minuta.id, false)" *ngIf=" minuta.aprobada == true && minuta.documentos.length > 0 ">
+          <div class="ItemMiniMenu" *ngIf="minuta.estaFinalizado ==  false && minuta.documentos.length > 0 " (click)="validateDocMinuta(minuta.id, false, minuta.documentos[0].idDocumento)" >
             <mat-icon style="color: orangered">close</mat-icon>
-            <h4 style="color: orangered">Rechazar Documento Minuta</h4>
-          </button> -->
+            <h4 style="color: orangered">Rechazar Doc. Minuta</h4>
+          </div>
 
-          <!-- <div class="ItemMiniMenu eliminarHover" *ngIf="minuta.estaFinalizado ==  false" (click)="deleteMinuta(minuta.id)">
+          <div class="ItemMiniMenu eliminarHover" *ngIf="minuta.estaFinalizado ==  false" (click)="deleteMinuta(minuta.id)">
             <mat-icon style="color: red;">delete</mat-icon>
             <h4 style="color: red;">Eliminar Minuta</h4>
-          </div> -->
+          </div> 
         </mat-menu>
       </td>
       <!-- <td class="dataIndiCell">{{minuta.periodoAcuerdo!.tipoProceso.nombre}}</td> -->
@@ -277,6 +313,7 @@
       <ng-container *ngFor="let td of [1, 2, 3, 4, 5]">
         <td class="dataIndiCell"></td>
       </ng-container>
+      <td class="dataIndiCell" *ngIf="this.userLogged.RecintoSigla == 'REC'"></td>
       <td class="paginationCell">
         <span style="color: #888">{{ pagination.totalItem }} Items</span>
       </td>
@@ -302,6 +339,7 @@
       </td>
     </tr>
   </tfoot>
+
   <ng-template #noElements>
     <tbody>
       <tr class="dataRow">
@@ -314,6 +352,7 @@
         <ng-template #searching>
           <td class="dataIndiCell">Buscando elementos.</td>
         </ng-template>
+        <td class="dataIndiCell" *ngIf="this.userLogged.RecintoSigla == 'REC'"></td>
         <ng-container *ngFor="let td of [1, 2, 3, 4, 5, 6]">
           <td class="dataIndiCell"></td>
         </ng-container>

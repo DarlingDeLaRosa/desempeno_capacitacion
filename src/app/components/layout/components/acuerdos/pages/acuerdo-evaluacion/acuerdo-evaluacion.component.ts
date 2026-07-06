@@ -82,7 +82,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
     this.protocolService.getProtocolByTypeProtocolId(6)
       .subscribe((res: any) => {
         this.protocol = res.data;
-        this.docName = this.protocol.documentosObj[0].nombre.split('.')[0]
+        this.docName = this.protocol != null ? this.protocol.documentosObj[0].nombre.split('.')[0] : '';
       })
   }
 
@@ -176,6 +176,7 @@ export class AcuerdoEvaluacionComponent implements OnInit {
       data: {
         meta: goal,
         nombre: `${this.agreement.colaboradorObj.nombre} ${this.agreement.colaboradorObj.apellidos}`,
+        type: 1
       },
     })
 

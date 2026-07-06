@@ -199,7 +199,7 @@ export class AcuerdoEvaluacionProvisionalComponent {
   }
 
   getMyMinuta() {
-    this.minutaService.getMinuta('', "acuerdo", true, 1, 5, true).subscribe((resp: any) => {
+    this.minutaService.getMinuta('','','', "acuerdo", true, 1, 5, true).subscribe((resp: any) => {
       if (resp.data.length > 0) {
         this.totalMinutaList = resp.data
         this.getExactMinuta()

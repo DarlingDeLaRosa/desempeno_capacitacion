@@ -67,6 +67,9 @@ export class ListadoDocumentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.data.documentosList);
+    console.log(this.data.documentos);
+    
     if (this.data.type == 1) {
       this.getActiveAgreementPeriod()
 
@@ -99,7 +102,7 @@ export class ListadoDocumentoComponent implements OnInit {
   getMinutasDoc(type: string) {
     this.removeBoton = true
     
-    this.minutaservice.getMinuta('', type, true, 1, 10, this.data.esSupIn).subscribe((resp: any) => {
+    this.minutaservice.getMinuta('','','', type, true, 1, 10, this.data.esSupIn).subscribe((resp: any) => {
       
       if (type == 'evaluacion') {
         this.minuta = resp.data
@@ -211,7 +214,6 @@ export class ListadoDocumentoComponent implements OnInit {
         }
       }
     }
-
   }
 
   openDocumentInNewTab(urldocument: any): void {

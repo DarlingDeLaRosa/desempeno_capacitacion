@@ -6,16 +6,20 @@ import { EvaluationCompetencyServices } from '../../services/evaluacion-competen
 import { systemInformationService } from '../../../../services/systemInformationService.service';
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 import { LoaderComponent } from '../../../../../../helpers/components/loader/loader.component';
-import { AcuerdoI } from '../../../acuerdos/interfaces/acuerdo.interface';
+import { AcuerdoI, Documento, DocumentoMinuta } from '../../../acuerdos/interfaces/acuerdo.interface';
 import { agreementService } from '../../../acuerdos/services/acuerdo.service';
 import { HerlperService } from '../../../../services/appHelpers.service';
+import { AcuerdoCalificacionComponent } from '../../../acuerdos/modals/acuerdo-calificacion/acuerdo-calificacion.component';
+import { GoalGetI } from '../../../mantenimiento/mantenimiento-options/metas/interface/metas.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ListadoDocumentoComponent } from '../../../acuerdos/modals/listado-documento/listado-documento.component';
 
 @Component({
   selector: 'app-view-supervisado-evaluacion',
   standalone: true,
   imports: [ClassImports, MaterialComponents, LoaderComponent],
   templateUrl: './view-supervisado-evaluacion.component.html',
-  styleUrls: ['./view-supervisado-evaluacion.component.css', '../../../acuerdos/modals/ver-acuerdo/ver-acuerdo.component.css' ]
+  styleUrls: ['./view-supervisado-evaluacion.component.css', '../../../acuerdos/modals/ver-acuerdo/ver-acuerdo.component.css']
 })
 export class ViewSupervisadoEvaluacionComponent {
 
@@ -27,13 +31,15 @@ export class ViewSupervisadoEvaluacionComponent {
   totalValor: number = 0
   agreement!: AcuerdoI
   competency: number = 0
-  
+  uploadFile: boolean = false
+
   constructor(
+    private dialog: MatDialog,
     public appHelper: HerlperService,
     private agreementservice: agreementService,
     public systemInformation: systemInformationService,
     private evaluationCompetencyService: EvaluationCompetencyServices,
-  ) { 
+  ) {
     this.userLogged = systemInformation.localUser
   }
 
@@ -44,12 +50,12 @@ export class ViewSupervisadoEvaluacionComponent {
 
   getAgreementByIdCollaborator() {
     this.agreementservice.getAgreementByIdCollaborator(Number(this.userLogged.idPersona)).subscribe({
-      next: (resp: any) => { 
-        this.agreement = resp.data 
+      next: (resp: any) => {
+        this.agreement = resp.data
         this.calculadora()
       },
-      error: (error) => { 
-        setTimeout(() => { this.noDataAgreement = true}, 500); 
+      error: (error) => {
+        setTimeout(() => { this.noDataAgreement = true }, 500);
       }
     })
 
@@ -68,6 +74,37 @@ export class ViewSupervisadoEvaluacionComponent {
     })
   }
 
+  openModalListadoDocumentos(nombre: string, apellido: string, documentosList: Documento[] = [] ): void {
+    const nombreCompleto = nombre + ' ' + apellido;
+    const dialog = this.dialog.open(ListadoDocumentoComponent, {
+      data: {
+        idCollaborator: 0,
+        nombreCompleto,
+        documentosList
+      }
+    })
+    dialog.afterClosed().subscribe(result => { if (result) { 
+      this.getAgreementByIdCollaborator()
+    } });
+  }
+
+  openUploadFileDialog(goal: GoalGetI, idDetalle: number): void {
+
+    const dialog = this.dialog.open(AcuerdoCalificacionComponent, {
+      width: '700px',
+      data: {
+        meta: goal,
+        nombre: `${this.agreement.colaboradorObj.nombre} ${this.agreement.colaboradorObj.apellidos}`,
+        type: 2,
+        idDetalle
+      },
+    })
+
+    dialog.afterClosed().subscribe(result => {
+      this.getAgreementByIdCollaborator();
+    });
+  }
+
   changeCompetency(competency: number): void {
     this.competency = competency;
   }
@@ -77,5 +114,5 @@ export class ViewSupervisadoEvaluacionComponent {
     this.totalValor = this.agreement.detalles.reduce((acc, item) => acc + (item.metaObj.valor || 0), 0);
   }
 
-  
+
 }

@@ -193,7 +193,7 @@ export class AcuerdoEditarComponent implements OnInit {
   }
 
   //Metodo para preparar y guardar el detalle de las metas
-  postGoalDetails() {
+  postGoalDetails(wayOfSave: boolean = false) {
     const acuerdoParaPost = this.goalDetails.map(detalle => ({
       idAcuerdo: this.agreement.idAcuerdo,
       metaObj: {
@@ -208,7 +208,7 @@ export class AcuerdoEditarComponent implements OnInit {
     }));
 
     this.SnackBar.snackbarLouder(true)
-    this.agreementservice.postAgreementGoalDetails(acuerdoParaPost).subscribe((resp: any) => {
+    this.agreementservice.postAgreementGoalDetails(acuerdoParaPost, wayOfSave).subscribe((resp: any) => {
       this.appHelpers.handleResponse(resp, () => this.getAgreementByIdCollaborator())
       this.activateSave = false;
     })
@@ -336,11 +336,15 @@ export class AcuerdoEditarComponent implements OnInit {
   }
 
   //metodo para guardar
-  save() {
-    if (this.totalValor != this.agreement.puntos) {
+  async save() {
+
+    let keepWorking : boolean = await this.SnackBar.snackbarConfirmation('¿Como desea guardar este acuerdo de desempeño?','', 'Guardar y terminar', 'Guardar y trabajar mas tarde', '#004b8d' , '#aaa')
+
+    if (keepWorking && this.totalValor != this.agreement.puntos) {
       this.SnackBar.snackbarError('El valor total debe ser igual a ' + this.agreement.puntos)
       return
     }
-    this.postGoalDetails();
+    
+    this.postGoalDetails(keepWorking);
   }
 }

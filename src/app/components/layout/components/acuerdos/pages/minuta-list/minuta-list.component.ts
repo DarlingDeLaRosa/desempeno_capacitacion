@@ -15,6 +15,7 @@ import { FormGroup } from '@angular/forms';
 import { CommentEmailComponent } from './dialog/comment-email/comment-email.component';
 import { AutorizacionAccionComponent } from '../../modals/autorizacion-accion/autorizacion-accion.component';
 import { agreementService } from '../../services/acuerdo.service';
+import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 
 @Component({
   selector: 'app-minuta-list',
@@ -31,7 +32,10 @@ export class MinutaListComponent implements OnInit {
   typeMinuta: string = ''
   pagination!: PaginationI
   page: number = 1
+  recinto: string = ''
+  process: string = ''
   charge: boolean = false
+  userLogged!: loggedUserI
 
   constructor(
     private dialog: MatDialog,
@@ -40,12 +44,14 @@ export class MinutaListComponent implements OnInit {
     private minutaService: MinutaService,
     private agreementservice: agreementService,
     public systemInformation: systemInformationService,
-  ) { }
+  ) {
+    this.userLogged = systemInformation.localUser
+  }
 
   ngOnInit(): void {
     this.getMinutas('')
   }
-  
+
   openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
     const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo } })
     dialog.afterClosed().subscribe(() => { });
@@ -55,27 +61,27 @@ export class MinutaListComponent implements OnInit {
     this.charge = true
     this.minutaList = []
 
-    this.minutaService.getMinuta(term, this.typeMinuta, false, this.page, 10).subscribe((resp: any) => {
+    this.minutaService.getMinuta(this.recinto, this.process, this.searchTerm, this.typeMinuta, false, this.page, 10).subscribe((resp: any) => {
       this.charge = false
       this.minutaList = resp.data;
-      
+
       let { currentPage, totalItem, totalPage } = resp
       this.pagination = { currentPage, totalItem, totalPage }
     })
   }
 
   //buscar los por departamento y nombre del colaborador
-  Buscar() {
-    if (this.searchTerm.length > 2) {
-      this.getMinutas(this.searchTerm)
-    } else {
-      if (this.searchTerm.length < 1) {
-        this.getMinutas('');
-      }
-    }
-  }
+  // Buscar() {
+  //   if (this.searchTerm.length > 2) {
+  //     this.getMinutas(this.searchTerm)
+  //   } else {
+  //     if (this.searchTerm.length < 1) {
+  //       this.getMinutas('');
+  //     }
+  //   }
+  // }
 
-  openModalListadoDocumentos(nombre: string, apellido: string, idPersona: number, documentos: DocumentoMinuta[] = [], type: number, done: boolean, tipoProceso: number): void {    
+  openModalListadoDocumentos(nombre: string, apellido: string, idPersona: number, documentos: DocumentoMinuta[] = [], type: number, done: boolean, tipoProceso: number): void {
     const nombreCompleto = nombre + ' ' + apellido;
     const dialog = this.dialog.open(ListadoDocumentoComponent, {
       data: {
@@ -104,7 +110,7 @@ export class MinutaListComponent implements OnInit {
     if (state) {
       removeDecision = await this.snackBar.snackbarConfirmation('¿Está seguro de aceptar la minuta como válida?', 'Se habilitará la opción para que el usuario pueda subir el documento.')
     } else {
-      removeDecision = await this.snackBar.snackbarConfirmation()
+      removeDecision = await this.snackBar.snackbarConfirmation('¿Está seguro de rechazar la minuta ?', 'Se eliminara la minuta y el colaborador tendra la opción de hacerla nuevamente.')
     }
 
     if (removeDecision) {
@@ -129,20 +135,45 @@ export class MinutaListComponent implements OnInit {
     }
   }
 
-  completeMinuta(idMin: number){
-    this.agreementservice.completeMinuta(idMin).subscribe((res: any)=>{
+  completeMinuta(idMin: number) {
+    this.agreementservice.completeMinuta(idMin).subscribe((res: any) => {
       this.appHelper.handleResponse(res, () => this.getMinutas(''))
     })
   }
 
   async deleteMinuta(id: number) {
     let removeDecision: boolean = await this.snackBar.snackbarConfirmation()
-    
+
     if (removeDecision) {
       this.snackBar.snackbarLouder(true)
       this.minutaService.deleteMinuta(id).subscribe((res: any) => {
         this.appHelper.handleResponse(res, () => this.getMinutas(''))
       })
+    }
+  }
+
+  async validateDocMinuta(minutaId: number, state: boolean, documentoId: number) {
+
+    if (state == false) {
+      let removeDesicion = await this.snackBar.snackbarConfirmation('¿Está seguro de rechazar el documento ?', 'Se eliminara el documento y el colaborador tendra la opción de hacerlo nuevamente.')
+
+      if (removeDesicion) {
+        const dialog = this.dialog.open(CommentEmailComponent, { disableClose: true })
+
+        dialog.afterClosed().subscribe(result => {
+
+          let validateDoc = {
+            state: state,
+            minutaId: minutaId,
+            documentoId: documentoId,
+            comentario: result
+          }
+
+          this.minutaService.postValidateDocMinuta(validateDoc).subscribe((resp: any) => {
+            this.appHelper.handleResponse(resp, () => this.getMinutas(''))
+          })
+        });
+      }
     }
   }
 

@@ -1,69 +1,88 @@
 <div class="container">
-  <div class="Content">
+  <div class="Content" *ngIf="data.type == 1">
     <div>
-      <h2 style="margin-bottom: 20px;">{{nameCollaborator}}</h2>
+      <h2 style="margin-bottom: 20px">{{ nameCollaborator }}</h2>
     </div>
-</div>
+  </div>
 
-  <h3 style="margin-bottom: 10px;" >Meta</h3>
+  <h3 style="margin-bottom: 10px">Meta</h3>
   <div class="container2">
     <div class="description">
       <p>
-        {{goal.nombre}}
+        {{ goal.nombre }}
       </p>
     </div>
     <div class="punto">
-      <p>{{goal.valor}} Puntos</p>
+      <p>{{ goal.valor }} Puntos</p>
     </div>
   </div>
   <div class="mediovefiricacion">
-    <p>Medio Verifiación: {{goal.nombreMedio}}</p>
+    <p *ngIf="data.type == 1">Medio Verifiación: {{ goal.nombreMedio }}</p>
+    <p *ngIf="data.type == 2">
+      Medio Verifiación: {{ goal.descripcionMedioVerificacion }}
+    </p>
   </div>
 
-  <h3 style="margin: 20px 0 10px 0;">Calificación y documento de veficación</h3>
+  <h3 style="margin: 20px 0 10px 0">Calificación y documento de veficación</h3>
 
   <form [formGroup]="califiacionForm">
-  <div style="display: flex; gap: 5px">
-      <mat-form-field style="width: 35%;">
+    <div style="display: flex; gap: 5px">
+      <mat-form-field style="width: 35%" *ngIf="data.type == 1">
         <mat-label>Calificación</mat-label>
-        <input matInput type="number" formControlName="calificacion">
+        <input matInput type="number" formControlName="calificacion" />
       </mat-form-field>
 
-      <div class="file-upload-container" (click)="fileInput.click()" style="width: 65%;">
-        <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>
-        <span class="file-upload-name">
-          {{ selectedFileName || 'Seleccione un archivo *' }}
+      <div
+        class="file-upload-container"
+        (click)="fileInput.click()"
+        style="width: 65%"
+      >
+        <label class="file-upload-label"
+          ><mat-icon style="color: #002c52">upload_file</mat-icon></label
+        >
+        <span class="file-upload-name" >
+          {{
+            selectedFileNames != undefined && selectedFileNames.length
+              ? selectedFileNames.length + " archivo(s) seleccionado(s)"
+              : "Seleccione archivos"
+          }}
         </span>
         <input
-        type="file"
-        #fileInput
-        (change)="onFileSelected($event)"
-        hidden
+          type="file"
+          #fileInput
+          (change)="onFileSelected($event)"
+          hidden
+          multiple
         />
       </div>
 
       <ng-container *ngIf="safeUrl">
         <div>
-          <mat-icon style="margin-top: 13px;"
-           (click)=" openLinkInNewTab()"
-          class="editIcon">open_in_new</mat-icon>
+          <mat-icon
+            style="margin-top: 13px"
+            (click)="openLinkInNewTab()"
+            class="editIcon"
+            >open_in_new</mat-icon
+          >
         </div>
       </ng-container>
     </div>
-    <div>
 
-      <mat-form-field appearance="fill" style="width: 100%;">
+    <div *ngIf="data.type == 1">
+      <mat-form-field appearance="fill" style="width: 100%">
         <mat-label>Observación</mat-label>
-        <input matInput formControlName="observacion">
-        <mat-error *ngIf="califiacionForm.get('observacion')?.hasError('muyCorta')">
+        <input matInput formControlName="observacion" />
+        <mat-error
+          *ngIf="califiacionForm.get('observacion')?.hasError('muyCorta')"
+        >
           La observación debe ser mas corta.
         </mat-error>
       </mat-form-field>
     </div>
   </form>
-  <div class="modal-actions">
+
+  <div class="modal-actions" style="margin-top: 5px">
     <button class="cleanButton" (click)="cerrar()">Cancelar</button>
     <button class="saveButton" (click)="enviarDatos()">Guardar</button>
   </div>
 </div>
-

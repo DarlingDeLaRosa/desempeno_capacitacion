@@ -38,6 +38,7 @@ export class MinutaComponent implements OnInit {
   usuario!: loggedUserI
   typeMinuta: number = 0
   interino: boolean = false
+  btnDisable: boolean = false
   formMinuta!: FormGroup;
   isLoading: boolean = true;
   idPeriodsProcessActive!: periodProcessGetI
@@ -62,9 +63,9 @@ export class MinutaComponent implements OnInit {
     private evaluationCompetencyService: EvaluationCompetencyServices,
   ) {
     this.formMinuta = this.fb.group({
-      agendaReunion: new FormControl<string>('', [Validators.maxLength(3000)]),
+      agendaReunion: new FormControl<string>('', [Validators.required, Validators.maxLength(3000)]),
       desarrollo: new FormControl<string>('', [Validators.required, Validators.maxLength(5000)]),
-      conclusiones: new FormControl<string>('', [Validators.maxLength(12000)]),
+      conclusiones: new FormControl<string>('', [Validators.required, Validators.maxLength(12000)]),
       tipoProcesoId: new FormControl<number>(0),
       unidadOrg: new FormControl(''),
     })
@@ -92,7 +93,7 @@ export class MinutaComponent implements OnInit {
   getAcuerdoByRol() {
     const request = this.interino
       ? this.agreementService.getAgreementProbative('', '', '', '', 1, 100)
-      : this.agreementService.getAgreementByRol('', '', '', '', true);
+      : this.agreementService.getAgreementByRol('', '', '', '', '', true);
 
     request.subscribe((resp: any) => {
       
@@ -209,6 +210,8 @@ export class MinutaComponent implements OnInit {
 
   // metodo para armar objeto de minuta y hacer el post
   postMinuta() {
+    console.log(this.idPeriodsProcessActive);
+    
     const Minuta: MinutaI = {
       // supervisorId: Number(this.usuario.idPersona),
       periodoAcuerdoId: this.idPeriodsProcessActive.idPeriodoAcuerdo,
@@ -241,13 +244,16 @@ export class MinutaComponent implements OnInit {
 
   //Metodo para guardar minuta
   save() {
-    // if (this.formMinuta.invalid) {
-    //   this.SnackBar.snackbarError('El formulario es inválido'); return
-    // }
+    if (this.formMinuta.invalid) {
+      this.SnackBar.snackbarError('El formulario es inválido'); return
+    }
+
+    this.btnDisable = true
+    this.postMinuta()
+
     // if (this.formMinuta.get('tipoProcesoId')?.value == 0) {
     //   this.SnackBar.snackbarError('Debes seleccionar un proseso para guardar'); return
     // }
-    this.postMinuta()
   }
 }
 
