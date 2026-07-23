@@ -80,8 +80,8 @@
       <p style="padding: 10px 5px 5px 5px;"><strong>NOMBRE: </strong>{{agreement.colaboradorObj.nombre}}
         {{agreement.colaboradorObj.apellidos}}</p>
       <p style="padding: 10px 5px 5px 5px;"><strong>NOMBRE: </strong>
-        {{agreement.colaboradorObj.supervisorObj.nombre}}
-        {{agreement.colaboradorObj.supervisorObj.apellidos}}</p>
+        {{agreement.supervisorObj.nombre}}
+        {{agreement.supervisorObj.apellidos}}</p>
     </div>
 
     <div class="info-row">
@@ -89,7 +89,7 @@
         <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.cargo.nombre}}</p>
       </div>
       <div style="padding: 10px 5px 5px 5px;">
-        <p><strong>CARGO ACTUAL: </strong>{{agreement.colaboradorObj.supervisorObj.cargoObj.nombre}} </p>
+        <p><strong>CARGO ACTUAL: </strong>{{agreement.cargoSupervisor | titlecase}} </p>
       </div>
     </div>
 

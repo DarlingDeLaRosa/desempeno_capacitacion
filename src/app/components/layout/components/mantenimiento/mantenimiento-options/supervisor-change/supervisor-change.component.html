@@ -1,0 +1,185 @@
+<div style="margin: 0 0 10px 0; display: flex; justify-content: space-between">
+  <h2 class="Stitle">Cambio de supervisor</h2>
+</div>
+
+<div class="matRadioChoice">
+  <h4 style="margin-right: 20px">¿Donde se producira el cambio?</h4>
+
+  <mat-radio-group (ngModelChange)="onTypeChange()" [(ngModel)]="typeOfChange">
+    <mat-radio-button [value]="false" color="primary"
+      >Supervisados</mat-radio-button
+    >
+    <mat-radio-button [value]="true" color="primary"
+      >Supervisor</mat-radio-button
+    >
+  </mat-radio-group>
+</div>
+
+<div style="display: flex; gap: 10px">
+  <mat-form-field appearance="fill" style="width: 500px" *ngIf="typeOfChange">
+    <mat-label>Supervisor Actual</mat-label>
+    <input
+      matInput
+      [matAutocomplete]="auto"
+      appearance="fill"
+      [(ngModel)]="oldSup"
+      (input)="getSupervisorByName(oldSup)"
+    />
+
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      [displayWith]="displaySUPName"
+      (optionSelected)="selectSup($event.option.value)"
+    >
+      <ng-container
+        *ngIf="supervisors && supervisors.length > 0; else noGoalPoa"
+      >
+        <mat-option *ngFor="let supervisor of supervisors" [value]="supervisor">
+          {{ supervisor.nombre | titlecase }}
+          {{ supervisor.apellidos | titlecase }}
+        </mat-option>
+      </ng-container>
+      <ng-template #noGoalPoa>
+        <mat-option>No hay campos disponibles</mat-option>
+      </ng-template>
+    </mat-autocomplete>
+
+    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field
+    appearance="fill"
+    style="width: 500px"
+    *ngIf="typeOfChange == false"
+  >
+    <mat-label>Colaborador</mat-label>
+    <input
+      matInput
+      [matAutocomplete]="col"
+      appearance="fill"
+      [(ngModel)]="colab"
+      (input)="getCollaborators()"
+    />
+
+    <mat-autocomplete
+      #col="matAutocomplete"
+      [displayWith]="displayCOLName"
+      (optionSelected)="selectCol($event.option.value)"
+    >
+      <ng-container *ngIf="colabs && colabs.length > 0; else noGoalPoa">
+        <mat-option *ngFor="let col of colabs" [value]="col">
+          {{ col.persona.nombre | titlecase }}
+          {{ col.persona.apellidos | titlecase }}
+        </mat-option>
+      </ng-container>
+      <ng-template #noGoalPoa>
+        <mat-option>No hay campos disponibles</mat-option>
+      </ng-template>
+    </mat-autocomplete>
+
+    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" style="width: 500px">
+    <mat-label>Nuevo Supervisor </mat-label>
+    <input
+      matInput
+      [matAutocomplete]="aut"
+      appearance="fill"
+      [(ngModel)]="newSup"
+      (input)="getSupervisorByName(newSup)"
+    />
+
+    <mat-autocomplete
+      #aut="matAutocomplete"
+      [displayWith]="displaySUPName"
+      (optionSelected)="selectSecondSup($event.option.value)"
+    >
+      <ng-container
+        *ngIf="supervisors && supervisors.length > 0; else noGoalPoa"
+      >
+        <mat-option *ngFor="let supervisor of supervisors" [value]="supervisor">
+          {{ supervisor.nombre | titlecase }}
+          {{ supervisor.apellidos | titlecase }}
+        </mat-option>
+      </ng-container>
+      <ng-template #noGoalPoa>
+        <mat-option>No hay campos disponibles</mat-option>
+      </ng-template>
+    </mat-autocomplete>
+
+    <mat-icon matSuffix>keyboard_arrow_down</mat-icon>
+  </mat-form-field>
+</div>
+
+<div style="display: flex; gap: 10px">
+
+  <div *ngIf="typeOfChange" class="containerSupervised">
+    <h3>Listado de supervisados del supervisor</h3>
+    <ul *ngFor="let supervised of hijos">
+      <li style="color: rgba(255, 0, 0, 0.874)">
+        {{ supervised.nombre | titlecase}} {{ supervised.apellidos | titlecase}} →
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="typeOfChange == false" class="containerSupervised">
+    <h3>Listado de supervisados seleccionados</h3>
+    
+    <ul *ngFor="let col of colChanges; let i = index">
+      <li
+        style="
+          display: flex;
+          justify-content: space-between;
+          color: rgba(255, 0, 0, 0.874);
+        "
+      >
+        <p>{{ col.persona.nombre | titlecase }} {{ col.persona.apellidos | titlecase }} →</p>
+        <p style="cursor: pointer" matTooltip="Eliminar colaborador" (click)="removeFronColab(i)">X</p>
+      </li>
+    </ul>
+  </div>
+
+  <div class="containerSupervisedNew">
+    <h3>Listado final</h3>
+    
+    @if(newHijos.length > 0 && newHijos[0].nombre != undefined){
+      <ul *ngFor="let supervised of newHijos">
+        <li style="color: grey">
+          {{ supervised.nombre | titlecase }} {{ supervised.apellidos | titlecase }}
+        </li>
+      </ul>
+    }
+
+    @if(hijos.length > 0 && hijos[0].nombre != undefined){
+      <ul *ngFor="let supervised of hijos">
+        <li style="color: green">
+          {{ supervised.nombre | titlecase }} {{ supervised.apellidos | titlecase }} →
+        </li>
+      </ul>
+    }
+
+    <ul *ngFor="let col of colChanges">
+      <li style="color: green">
+        {{ col.persona.nombre | titlecase }} {{ col.persona.apellidos | titlecase }} →
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div style="margin-top: 10px">
+  <button type="submit" class="saveButton" (click)="saveChanges()" >Guardar cambios</button> &nbsp;
+  <button
+    type="button"
+    class="cleanButton"
+    *ngIf="
+      this.hijos.length > 0 ||
+      this.newHijos.length > 0 ||
+      this.oldSup.length > 0 ||
+      this.newSup.length > 0
+    "
+    (click)="onTypeChange()"
+  >
+    Limpiar edición
+  </button>
+</div>

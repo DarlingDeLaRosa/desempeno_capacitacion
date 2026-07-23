@@ -122,8 +122,8 @@
                         {{asignationAgreement.colaborador.apellidos | titlecase }}</td>
                     <td class="dataIndiCell">{{asignationAgreement.colaborador.cedula ?
                         asignationAgreement.colaborador.cedula : 'No Asignado'}}</td>
-                    <td class="dataIndiCell" [matTooltip]="asignationAgreement.colaborador.cargo.nombre | titlecase">
-                        {{asignationAgreement.colaborador.cargo.nombre}}</td>
+                    <td class="dataIndiCell" [matTooltip]="(asignationAgreement.cargo != null ? asignationAgreement.cargo : asignationAgreement.colaborador.cargo.nombre ) | titlecase">
+                        {{(asignationAgreement.cargo != null ? asignationAgreement.cargo : asignationAgreement.colaborador.cargo.nombre )| titlecase}}</td>
                     <td class="dataIndiCell">{{asignationAgreement.tipoAcuerdoObj.nombre}}</td>
                     <td class="dataIndiCell"  [matTooltip]="asignationAgreement.supervisor.nombres + ' ' + asignationAgreement.supervisor.apellidos | titlecase">{{asignationAgreement.supervisor.nombres | titlecase}} {{asignationAgreement.supervisor.apellidos | titlecase}}</td>
                     <td class="dataIndiCell">

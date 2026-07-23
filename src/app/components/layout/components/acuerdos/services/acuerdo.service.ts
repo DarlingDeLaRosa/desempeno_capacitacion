@@ -65,6 +65,10 @@ export class agreementService {
   public postGoalCalificacion(Calificacion: any) {
     return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Acuerdo/calificar_meta`, Calificacion, this.header));
   }
+ 
+  public postEvidence(Calificacion: any) {
+    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Acuerdo/details/${Calificacion}/add_evidence`, Calificacion, this.header));
+  }
 
   public postFileAcuerdo(formData: any) {
     return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Acuerdo/upload_file_acuerdo`, formData, this.header));

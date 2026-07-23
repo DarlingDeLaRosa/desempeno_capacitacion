@@ -5,6 +5,9 @@ import { periodProcessGetI, periodProcessI } from '../../mantenimiento/mantenimi
 
 export interface AcuerdoI {
   idAcuerdo: number,
+  borrador: boolean,
+  cargo: string,
+  cargoSupervisor: string,
   idColaborador: number,
   colaboradorObj: CollaboratorsGetI
   idTipoAcuerdo: number,
@@ -21,6 +24,7 @@ export interface AcuerdoI {
   comentarios: commentsI[]
   detalles: AcuerdoDetalle[];
   documentosObj: Documento[];
+  supervisorObj: CollaboratorsGetI
   periodo: PeriodoI
   tipoProceso: GeneralI
   acuerdoDuracion: { id: number, duracion: string, periodo: string },

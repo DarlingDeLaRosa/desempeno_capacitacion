@@ -6,13 +6,13 @@
         </button>
     </div>
 
-    <p style="margin: 20px 0 10px 0;">Autorizar a realizar acción. </p>
+    <p style="margin: 20px 0 10px 0;">Autorizar a realizar acción.</p>
 
     <form style=" margin: 15px 0 15px 0" [formGroup]="authorizeAccionForm" (ngSubmit)="postProcessChange()">
 
         <div style="display: flex;">
 
-            <mat-form-field appearance="fill" style="flex: 1">
+            <mat-form-field appearance="fill" style="flex: 1" *ngIf="data.type == 1">
                 <mat-label>Proceso</mat-label>
                 <mat-select formControlName="processId" disableRipple>
                     <ng-container *ngIf="processes && processes.length; else noPosition">
@@ -27,6 +27,25 @@
             </mat-form-field>
             
         </div>
+        
+        <div style="display: flex;" *ngIf="data.type == 2">
+
+            <mat-form-field appearance="fill" style="flex: 1">
+                <mat-label>Estado</mat-label>
+                <mat-select formControlName="processId" disableRipple>
+                    <ng-container *ngIf="flows && flows.length; else noFlows">
+                        <mat-option ngIf="flow.idFlujo != 5" [value]="flow.idFlujo" *ngFor="let flow of flows">
+                            {{flow.nombre}}
+                        </mat-option>
+                    </ng-container>
+                    <ng-template #noFlows>
+                        <mat-option>No hay campos disponibles</mat-option>
+                    </ng-template>
+                </mat-select>
+            </mat-form-field>
+            
+        </div>
+
         <div style="display: flex; justify-content: end;">
             <button type="submit" class="saveButton">Guardar cambios</button> &nbsp;
         </div>

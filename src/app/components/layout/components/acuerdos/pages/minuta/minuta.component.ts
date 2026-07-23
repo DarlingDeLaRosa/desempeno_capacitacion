@@ -210,7 +210,6 @@ export class MinutaComponent implements OnInit {
 
   // metodo para armar objeto de minuta y hacer el post
   postMinuta() {
-    console.log(this.idPeriodsProcessActive);
     
     const Minuta: MinutaI = {
       // supervisorId: Number(this.usuario.idPersona),

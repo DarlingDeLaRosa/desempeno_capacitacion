@@ -67,9 +67,6 @@ export class ListadoDocumentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.data.documentosList);
-    console.log(this.data.documentos);
-    
     if (this.data.type == 1) {
       this.getActiveAgreementPeriod()
 
@@ -101,9 +98,9 @@ export class ListadoDocumentoComponent implements OnInit {
 
   getMinutasDoc(type: string) {
     this.removeBoton = true
-    
-    this.minutaservice.getMinuta('','','', type, true, 1, 10, this.data.esSupIn).subscribe((resp: any) => {
-      
+
+    this.minutaservice.getMinuta('', '', '', type, true, 1, 10, this.data.esSupIn).subscribe((resp: any) => {
+
       if (type == 'evaluacion') {
         this.minuta = resp.data
       } else {
@@ -162,10 +159,17 @@ export class ListadoDocumentoComponent implements OnInit {
   // }
 
   async deleteDocument(id: number) {
-    
     let removeDecision: boolean = await this.SnackBar.snackbarConfirmation()
 
     if (removeDecision) {
+
+      if (this.data.type == 3) {
+        this.agreementservice.deleteDocumentAcuerdo(id)
+          .subscribe((res: any) => {
+            this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())
+            this.cerrar(true)
+          })
+      }
 
       if (this.minuta != undefined && this.idUserLogged != this.minuta[0].supervisorIntranet.idPersona) {
 
@@ -205,7 +209,7 @@ export class ListadoDocumentoComponent implements OnInit {
         }
 
         if (this.data.type == 1) {
-          
+
           this.agreementservice.deleteDocumentAcuerdo(id)
             .subscribe((res: any) => {
               this.appHelpers.handleResponse(res, () => this.getAcuerdoByIdCollaborator())

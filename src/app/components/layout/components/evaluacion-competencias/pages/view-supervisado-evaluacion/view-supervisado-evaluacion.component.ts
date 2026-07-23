@@ -78,6 +78,7 @@ export class ViewSupervisadoEvaluacionComponent {
     const nombreCompleto = nombre + ' ' + apellido;
     const dialog = this.dialog.open(ListadoDocumentoComponent, {
       data: {
+        type: 3,
         idCollaborator: 0,
         nombreCompleto,
         documentosList

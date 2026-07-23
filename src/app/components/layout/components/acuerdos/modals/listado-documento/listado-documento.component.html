@@ -33,7 +33,7 @@
             <mat-icon class="listIcon">visibility</mat-icon>
           </button>
 
-          <button *ngIf="data.flujoId == 4 || rolUserLogged == 'Analista' || rolUserLogged == 'Encargado'" mat-icon-button
+          <button *ngIf="data.flujoId == 4 || rolUserLogged == 'Analista' || rolUserLogged == 'Encargado' || data.type == 3" mat-icon-button
             (click)="deleteDocument(documento.idDocumento)">
             <mat-icon style="color: red;">delete</mat-icon>
           </button>

@@ -58,6 +58,7 @@ export class AcuerdoCalificacionComponent implements OnInit {
     this.selectedFiles = Array.from(input.files);
     this.selectedFileNames = this.selectedFiles.map(f => f.name);
   }
+
   //cargar la
   setCalificacionForm() {
     this.selectedFileNames = this.goal.nombreDoc
@@ -75,6 +76,7 @@ export class AcuerdoCalificacionComponent implements OnInit {
       this.appHelpers.handleResponse(resp, () => this.cerrar(), this.califiacionForm);
     })
   }
+
   //abre el documento en una pagina en blanco
   openLinkInNewTab(): void {
     if (this.safeUrl) {
@@ -127,8 +129,6 @@ export class AcuerdoCalificacionComponent implements OnInit {
       formData.append('documents', file);
     });
 
-    console.log(this.califiacionForm.value);
-
     if (this.data.type == 1) {
       formData.append('calificacion', this.califiacionForm.get('calificacion')!.value);
       formData.append('Observaciones', this.califiacionForm.get('observacion')!.value);
@@ -137,9 +137,7 @@ export class AcuerdoCalificacionComponent implements OnInit {
       formData.append('idDetalleMeta', this.data.idDetalle!.toString());
     }
 
-    console.log(this.goal);
-    console.log(this.data.idDetalle);
-    this.postCalificacion(formData)
+    this.postCalificacion(formData) 
   }
 }
 

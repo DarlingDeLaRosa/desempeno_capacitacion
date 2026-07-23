@@ -22,7 +22,7 @@ export class HerlperService {
             catchError((error) => {
 
                 if (error.status == 404) return throwError(error)
-                
+
                 this.snackBar.snackbarLouder(false);
                 setTimeout(() => {
                     error.error.message ? this.snackBar.snackbarError(error.error.message, 6000)
@@ -58,12 +58,18 @@ export class HerlperService {
         } else this.snackBar.snackbarError('Completa los campos requeridos para realizar la acción.')
     }
 
+    //Hacer peticion cargando
+    saveFuctionChange(saveFunction: () => void) {
+        this.snackBar.snackbarLouder(true)
+        saveFunction()
+    }
+
     //Metodo para retornar de cual unidad 
     getUnitOrg(division: DivisionI, department: DepartmentI, direction: DirectionI, vicerectorate: ViceRectorate) {
         const unidad = [division, department, direction, vicerectorate].find(
             unit => unit.nombre !== "NO ASIGNADO" && unit.nombre !== "N/A"
         );
-        return unidad ?? {nombre: 'Unidad organizativa no asignada'}
+        return unidad ?? { nombre: 'Unidad organizativa no asignada' }
     }
 
     ableToMakeMinuta(agreements: AcuerdoI[]): boolean {

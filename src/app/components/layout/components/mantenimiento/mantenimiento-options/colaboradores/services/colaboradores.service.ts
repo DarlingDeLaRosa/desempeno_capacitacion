@@ -69,8 +69,22 @@ export class CollaboratorServices {
     public getPersonFilterByName(name: string) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/filter/${name}`, this.header));
     }
+   
+    public getSupFilterByName(name: string) {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/get_supervisors_with_son?filter=${name}`, this.header));
+    }
 
     public getCollaboratorByIdSup(id: number) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/Persona/get_by_idsupervisor?idSupervidor=${id}`, this.header));
+    }
+
+    //cambios de supervisor 
+
+    public postChangeSup( supervisor: {newSupervisorId: number, currentSupervisorId: number }) {
+        return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURLHS}/Colaboradores/cambiar-supervisor`, supervisor, this.header))
+    }
+    
+    public postChangeSupervised( supervisor: {newSupervisorId: number, supervisadosId: number[] }) {
+        return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURLHS}/Colaboradores/cambiar-supervisado-supervisor`, supervisor, this.header))
     }
 }

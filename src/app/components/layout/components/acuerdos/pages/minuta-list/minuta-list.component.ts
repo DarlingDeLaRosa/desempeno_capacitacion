@@ -13,7 +13,6 @@ import { SnackBars } from '../../../../services/snackBars.service';
 import { MinutaEvaluacionCompetenciaComponent } from '../../../../templates/minuta-evaluacion-competencia/minuta-evaluacion-competencia.component';
 import { FormGroup } from '@angular/forms';
 import { CommentEmailComponent } from './dialog/comment-email/comment-email.component';
-import { AutorizacionAccionComponent } from '../../modals/autorizacion-accion/autorizacion-accion.component';
 import { agreementService } from '../../services/acuerdo.service';
 import { loggedUserI } from '../../../../../../helpers/intranet/intranet.interface';
 
@@ -50,11 +49,6 @@ export class MinutaListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getMinutas('')
-  }
-
-  openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
-    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo } })
-    dialog.afterClosed().subscribe(() => { });
   }
 
   getMinutas(term: string) {

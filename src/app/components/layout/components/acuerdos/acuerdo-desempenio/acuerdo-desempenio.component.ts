@@ -6,7 +6,7 @@ import { ListadoDocumentoComponent } from '../modals/listado-documento/listado-d
 import { systemInformationService } from '../../../services/systemInformationService.service';
 import { agreementService } from '../services/acuerdo.service';
 import { loggedUserI, OcupationalGroupI } from '../../../../../helpers/intranet/intranet.interface';
-import { AcuerdoDetalle, AcuerdoI, Documento, DocumentoMinuta, MinutaGetI } from '../interfaces/acuerdo.interface';
+import { AcuerdoI, Documento, MinutaGetI } from '../interfaces/acuerdo.interface';
 import { AutorizacionAccionComponent } from '../modals/autorizacion-accion/autorizacion-accion.component';
 import { ComentariosComponent } from '../modals/comentarios/comentarios.component';
 import { HerlperService } from '../../../services/appHelpers.service';
@@ -62,6 +62,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
   steps!: PeriodProcessStepsI
   selectedStage!: number
   ocupationalGroup!: OcupationalGroupI[]
+  allValid: boolean = true;
 
   constructor(
     private dialog: MatDialog,
@@ -95,9 +96,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
   getOcupationalGroup() {
     this.intranetService.getOcupationalGroup()
-      .subscribe((res: any) => {
-        this.ocupationalGroup = res.data;
-      })
+      .subscribe((res: any) => { this.ocupationalGroup = res.data; })
   }
 
   validateCreationFT() {
@@ -140,17 +139,15 @@ export class AcuerdoDesempenioComponent implements OnInit {
   validateAgrementCreation() {
     if (this.agreement != undefined && this.agreement.length == 0 && this.steps.acuerdosStepsStatus != undefined) return;
 
-    let allValid = true;
-
     this.agreement.forEach(ag => {
       let totalDetalles = 0;
 
       ag.detalles.forEach(det => { totalDetalles += det.metaObj?.valor ?? 0; });
-      if (totalDetalles !== ag.puntos) { allValid = false; }
+      if (totalDetalles !== ag.puntos) { this.allValid = false; }
     });
 
     if (
-      allValid &&
+      this.allValid &&
       this.steps.acuerdosStepsStatus[0].fechaCompletado == null &&
       this.agreement.filter(item => item.tipoProceso.id === this.selectedStage) && this.agreement.every(item => item.flujoObj.idFlujo >= 2) &&
       (this.steps.tipoProceso.id == 1 || this.steps.tipoProceso.id == 2 || this.steps.tipoProceso.id == 3 || this.steps.tipoProceso.id == 9 && this.typeAD)
@@ -274,9 +271,9 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
       // this.validateCreationAd()
       // this.validateOcupationalGroup()
-      if (resolve) resolve();
       // this.validateAgrementCreation()
       // this.validateDocumentationAgreement()
+      if (resolve) resolve();
     })
   }
 
@@ -331,6 +328,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
       })
     }
   }
+
   //Metodo para abrir el modal del acuerdo estructurado
   // openModalVerAcuerdo(idAgreement: number): void {
   //   const dialog = this.dialog.open(VerAcuerdoComponent, { data: { idAgreement } })
@@ -349,8 +347,6 @@ export class AcuerdoDesempenioComponent implements OnInit {
   //   }
   //   this.updateSteps()
   // }
-
-
 
   // valida si hay alguna persona que este fuera del proceso Id y fuera del flujo Id, si existe enviara como falso, sino existe entonces enviara como verdadero 
   // validateEvaluationAd(flujoId: number, typeProcessId: number,): boolean {
@@ -398,7 +394,12 @@ export class AcuerdoDesempenioComponent implements OnInit {
   }
 
   openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
-    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo } })
+    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo, type : 1 } })
+    dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(); this.searchTerm = '' });
+  }
+
+  openAuthorizationActionCycle(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
+    const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo, type : 2 } })
     dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(); this.searchTerm = '' });
   }
 

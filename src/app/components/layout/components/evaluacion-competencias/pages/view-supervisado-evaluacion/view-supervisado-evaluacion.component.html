@@ -179,8 +179,8 @@
           </p>
           <p style="padding: 10px 5px 5px 5px">
             <strong>NOMBRE: </strong>
-            {{ agreement.colaboradorObj.supervisorObj.nombre }}
-            {{ agreement.colaboradorObj.supervisorObj.apellidos }}
+            {{ agreement.supervisorObj.nombre | titlecase}}
+            {{ agreement.supervisorObj.apellidos | titlecase}}
           </p>
         </div>
 
@@ -194,7 +194,7 @@
           <div style="padding: 10px 5px 5px 5px">
             <p>
               <strong>CARGO ACTUAL: </strong
-              >{{ agreement.colaboradorObj.supervisorObj.cargoObj.nombre }}
+              >{{ agreement.cargoSupervisor | titlecase }}
             </p>
           </div>
         </div>

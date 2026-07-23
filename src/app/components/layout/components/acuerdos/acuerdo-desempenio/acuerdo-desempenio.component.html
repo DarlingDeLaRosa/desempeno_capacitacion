@@ -174,9 +174,6 @@
       <h4 style="margin: 0" *ngIf="steps != undefined">
         Procesos de {{ steps.tipoProceso.nombre }} de desempeño
       </h4>
-      <!-- <h5 style="color: red; margin: 2px;" *ngIf="activeProcess.tipoProceso.id != steps.tipoProceso.id">
-        Proceso no disponible en este momento.
-      </h5> -->
     </div>
     <div
       *ngIf="!typeAD"
@@ -317,6 +314,17 @@
 
   <app-loader-stepper-box *ngIf="steps == undefined"></app-loader-stepper-box>
 </div>
+
+<!-- <div class="alert-warning">
+  <span class="alert-icon">⚠️</span>
+  <div class="alert-content">
+    <strong>Atención</strong>
+    <p>
+      Recuerda que los documentos deben estar completos antes de enviar la
+      solicitud.
+    </p>
+  </div>
+</div> -->
 
 <div style="display: flex; justify-content: space-between; align-items: end">
   <div
@@ -529,7 +537,14 @@
           >
         </ng-template>
       </td>
-      <td class="dataIndiCell">{{ acuerdo.colaboradorObj.cargo.nombre }}</td>
+      <td class="dataIndiCell">
+        {{
+          (acuerdo.cargo != null
+            ? acuerdo.cargo
+            : acuerdo.colaboradorObj.cargo.nombre
+          ) | titlecase
+        }}
+      </td>
       <td class="dataIndiCell">
         <div style="display: flex; justify-content: center">
           {{ acuerdo.colaboradorObj.grupoObj.nombre }}
@@ -774,6 +789,7 @@
               acuerdo.tipoProceso.id != 5 &&
               acuerdo.flujoObj.idFlujo == 1 &&
               activeProcess &&
+              acuerdo.borrador == false &&
               acuerdo.tipoProceso.id >= 2
             "
             (click)="
@@ -825,6 +841,32 @@
           </div>
 
           <div
+            class="ItemMiniMenu"
+            *ngIf="
+              ((acuerdo.tipoProceso.id == 1 && acuerdo.flujoObj.idFlujo > 3) ||
+                acuerdo.tipoProceso.id > 1) &&
+              acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+              userLogged.RecintoSigla == 'REC' &&
+              ((userLogged.role == 'Encargado' && selectGroup == false) ||
+                (userLogged.role == 'Analista' &&
+                  usuario.Position != 'Analista de Planificación'))
+            "
+            (click)="
+              openAuthorizationActionCycle(
+                acuerdo.tipoAcuerdoObj.idTipoAcuerdo,
+                acuerdo.colaboradorObj.nombre,
+                acuerdo.colaboradorObj.apellidos,
+                acuerdo.idAcuerdo
+              )
+            "
+          >
+            <mat-icon style="color: rgba(62, 96, 146, 0.836)"
+              >change_circle</mat-icon
+            >
+            <h4>Cambio de flujo</h4>
+          </div>
+
+          <div
             class="ItemMiniMenu editarHover"
             *ngIf="
               (activeProcess &&
@@ -837,7 +879,6 @@
                 (userLogged.role == 'Supervisor' ||
                   (userLogged.role == 'Encargado' && selectGroup))) ||
               (acuerdo.esInconsistenteTipoProceso &&
-                acuerdo.tipoProceso.id == 1 &&
                 acuerdo.flujoObj.idFlujo <= 2 &&
                 usuario.role != 'Analista' &&
                 selectGroup) ||

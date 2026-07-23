@@ -20,7 +20,7 @@ import { systemInformationService } from '../../../../services/systemInformation
   templateUrl: './cursos-tablero.component.html',
   styleUrl: './cursos-tablero.component.css'
 })
-export default class CursosTableroComponent implements  OnInit{
+export class CursosTableroComponent implements OnInit{
 
   cursoTableroList: Array<CourseGetI> = [];
   cursos: Array<any> = [];

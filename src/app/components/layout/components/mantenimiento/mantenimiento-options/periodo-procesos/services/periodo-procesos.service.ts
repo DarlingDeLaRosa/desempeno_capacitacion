@@ -51,4 +51,8 @@ export class PeriodsProcessServices {
     public getTypeProcess(agreement: boolean| string = ''  ) {
         return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/tipos-procesos?acuerdo=${agreement}`, this.header));
     }
+    
+    public getCycles() {
+        return this.appHelpers.handleRequest(() => this.http.get(`${this.baseURL}/flujos`, this.header));
+    }
 }

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MaterialComponents } from '../../../../helpers/material.components';
 import { ClassImports } from '../../../../helpers/class.components';
+import { systemInformationService } from '../../services/systemInformationService.service';
+import { loggedUserI } from '../../../../helpers/intranet/intranet.interface';
 
 @Component({
   selector: 'app-mantenimiento',
@@ -11,4 +13,11 @@ import { ClassImports } from '../../../../helpers/class.components';
 })
 export class MantenimientoComponent {
 
+  usuario!: loggedUserI
+
+  constructor(
+    public systemInformationService: systemInformationService,
+  ) {
+    this.usuario = this.systemInformationService.localUser;
+  }
 }

@@ -9,7 +9,7 @@ import { GradosComponent } from './components/layout/components/mantenimiento/ma
 import { AsignacionCompetenciasComponent } from './components/layout/components/mantenimiento/mantenimiento-options/asignacion-competencias/asignacion-competencias.component';
 import { ColaboradoresComponent } from './components/layout/components/mantenimiento/mantenimiento-options/colaboradores/colaboradores.component';
 import { EvaluacionPersonaComponent } from './components/layout/components/evaluacion-competencias/pages/evaluacion-persona/evaluacion-persona.component';
-import { CompetenciasOuletComponent } from './components/layout/components/evaluacion-competencias/competencias-oultet.component';
+import { CompetenciasOuletComponent } from './components/layout/components/evaluacion-competencias/competencias-oulet.component';
 import { PlanMejoraOuletComponent } from './components/layout/components/plan-de-mejora/plandemejora-oulet.component';
 import { PlanMejoraListComponent } from './components/layout/components/plan-de-mejora/pages/plan-mejora-list/plan-mejora-list.component';
 import { PlanMejoraResultadoComponent } from './components/layout/components/plan-de-mejora/pages/plan-mejora-resultado/plan-mejora-resultado.component';
@@ -17,7 +17,7 @@ import { PlanMejoraFormularioComponent } from './components/layout/components/pl
 import { CursosComponent } from './components/layout/components/cursos/cursos-oulet.component';
 import { CursosMantenimientoComponent } from './components/layout/components/mantenimiento/mantenimiento-options/cursos/cursos.component';
 import { CursosListadoComponent } from './components/layout/components/cursos/pages/cursos-listado/cursos-listado.component';
-import CursosTableroComponent from './components/layout/components/cursos/pages/cursos-tablero/cursos-tablero.component';
+import { CursosTableroComponent } from './components/layout/components/cursos/pages/cursos-tablero/cursos-tablero.component';
 import { CursosMiembrosComponent } from './components/layout/components/cursos/pages/cursos-miembros/cursos-miembros.component';
 import { AcuerdosComponent } from './components/layout/components/acuerdos/acuerdos.component';
 import { AcuerdoDesempenioComponent } from './components/layout/components/acuerdos/acuerdo-desempenio/acuerdo-desempenio.component';
@@ -49,79 +49,79 @@ import { ProvisionalComponent } from './components/layout/components/evaluacion-
 export const routes: Routes = [
   {
     path: 'login/:token',
-    component: LoginComponent,
+    loadComponent: () => import('./components/auth/login/login.component').then(m => m.LoginComponent),
     // canActivate: [LayoutClassGuard]
   },
 
   {
     path: 'layout',
-    component: LayoutComponent,
+    loadComponent: () => import('./components/layout/layout.component').then(m => m.LayoutComponent),
     // canActivate: [LoginClassGuard],
     children: [
       {
         path: 'acuerdos',
-        component: AcuerdosComponent,
+        loadComponent: () => import('./components/layout/components/acuerdos/acuerdos.component').then(m => m.AcuerdosComponent),
         children: [
           {
             path: '',
-            component: AcuerdoDesempenioComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/acuerdo-desempenio/acuerdo-desempenio.component').then(m => m.AcuerdoDesempenioComponent),
             outlet: 'acuerdos'
           },
           {
             path: 'miacuerdo',
-            component: MiAcuerdoComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/mi-acuerdo/mi-acuerdo.component').then(m => m.MiAcuerdoComponent),
             outlet: 'acuerdos'
           },
           {
             path: 'minuta',
-            component: MinutaComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/minuta/minuta.component').then(m => m.MinutaComponent),
             outlet: 'acuerdos'
           },
           {
             path: 'ver-acuerdo/:id',
-            component: VerAcuerdoComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/modals/ver-acuerdo/ver-acuerdo.component').then(m => m.VerAcuerdoComponent),
             outlet: 'acuerdos'
           },
           {
             path: 'comportamientos/:id',
-            component: VerComportamientosProbatoriosComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/ver-comportamientos-probatorios/ver-comportamientos-probatorios.component').then(m => m.VerComportamientosProbatoriosComponent),
             outlet: 'acuerdos'
           },
           {
             path: 'editar/:id',
-            component: AcuerdoEditarComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/acuerdo-desempenio/acuerdo-editar/acuerdo-editar.component').then(m => m.AcuerdoEditarComponent),
             outlet: 'acuerdos'
           },
           {
             path: 'evaluacion/:id',
-            component: AcuerdoEvaluacionComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/acuerdo-evaluacion/acuerdo-evaluacion.component').then(m => m.AcuerdoEvaluacionComponent),
             outlet: 'acuerdos'
           },
         ]
       },
       {
         path: 'minutaLista',
-        component: MinutaListComponent,
+        loadComponent: () => import('./components/layout/components/acuerdos/pages/minuta-list/minuta-list.component').then(m => m.MinutaListComponent),
         // outlet: 'acuerdos'
       },
       {
         path: 'cursos',
-        component: CursosComponent,
+        loadComponent: () => import('./components/layout/components/cursos/cursos-oulet.component').then(m => m.CursosComponent),
         children: [
           {
             path: '',
-            component: CursosTableroComponent,
+            loadComponent: () => import('./components/layout/components/cursos/pages/cursos-tablero/cursos-tablero.component').then(m => m.CursosTableroComponent),
             outlet: 'cursos'
           },
           {
             path: 'listado',
-            component: CursosListadoComponent,
+            loadComponent: () => import('./components/layout/components/cursos/pages/cursos-listado/cursos-listado.component').then(m => m.CursosListadoComponent),
             canActivate: [EncargadoGuard],
             outlet: 'cursos'
           },
           {
             path: 'miembros',
-            component: CursosMiembrosComponent,
+            loadComponent: () => import('./components/layout/components/cursos/pages/cursos-miembros/cursos-miembros.component').then(m => m.CursosMiembrosComponent),
             canActivate: [SupervisorGuard],
             outlet: 'cursos'
           },
@@ -129,11 +129,11 @@ export const routes: Routes = [
       },
       {
         path: 'reportes',
-        component: ReportesOuletComponent,
+        loadComponent: () => import('./components/layout/components/reportes/reportes-oulet.component').then(m => m.ReportesOuletComponent),
         children: [
           {
             path: '',
-            component: ReportDashboardComponent,
+            loadComponent: () => import('./components/layout/components/reportes/pages/report-dashboard/report-dashboard.component').then(m => m.ReportDashboardComponent),
             outlet: 'reportes'
           },
         ]
@@ -141,149 +141,154 @@ export const routes: Routes = [
       {
 
         path: 'plan-de-mejora',
-        component: PlanMejoraOuletComponent,
+        loadComponent: () => import('./components/layout/components/plan-de-mejora/plandemejora-oulet.component').then(m => m.PlanMejoraOuletComponent),
         children: [
           {
             path: '',
-            component: PlanMejoraListComponent,
+            loadComponent: () => import('./components/layout/components/plan-de-mejora/pages/plan-mejora-list/plan-mejora-list.component').then(m => m.PlanMejoraListComponent),
             outlet: 'plan-de-mejora'
           },
           {
             path: 'resultado',
-            component: PlanMejoraResultadoComponent,
+            loadComponent: () => import('./components/layout/components/plan-de-mejora/pages/plan-mejora-resultado/plan-mejora-resultado.component').then(m => m.PlanMejoraResultadoComponent),
             outlet: 'plan-de-mejora'
           },
           {
             path: 'formulario/:id',
-            component: PlanMejoraFormularioComponent,
+            loadComponent: () => import('./components/layout/components/plan-de-mejora/pages/plan-mejora-formulario/plan-mejora-formulario.component').then(m => m.PlanMejoraFormularioComponent),
             outlet: 'plan-de-mejora'
           }
         ]
       },
       {
         path: 'evaluacion-competencias',
-        component: CompetenciasOuletComponent,
+        loadComponent: () => import('./components/layout/components/evaluacion-competencias/competencias-oulet.component').then(m => m.CompetenciasOuletComponent),
         children: [
           {
             path: '',
-            component: EvalucionCompetenciasComponent
+            loadComponent: () => import('./components/layout/components/evaluacion-competencias/pages/competencias/evalucion-competencias.component').then(m => m.EvalucionCompetenciasComponent)
           },
           {
             path: 'evaluacion-competencia-persona',
-            component: EvaluacionPersonaComponent
+            loadComponent: () => import('./components/layout/components/evaluacion-competencias/pages/evaluacion-persona/evaluacion-persona.component').then(m => m.EvaluacionPersonaComponent)
           },
           {
             path: 'minuta',
-            component: MinutaComponent,
+            loadComponent:() => import('./components/layout/components/acuerdos/pages/minuta/minuta.component').then(m => m.MinutaComponent),
           },
         ]
       },
       {
         path: 'evaluacion-provisional',
-        component: EvaluacionProvisionalComponent,
+        loadComponent: () => import('./components/layout/components/evaluacion-competencias/pages/evaluacion-provisional/evaluacion-provisional.component').then(m => m.EvaluacionProvisionalComponent),
       },
       {
         path: 'acuerdos-provisional',
-        component: ProvisionalComponent,
+        loadComponent: () => import('./components/layout/components/evaluacion-competencias/pages/provisional-oulet/provisional-oulet.component').then(m => m.ProvisionalComponent),
         children: [
           {
             path: '',
-            component: AcuerdoEvaluacionProvisionalComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/acuerdo-evaluacion-provisional/acuerdo-evaluacion-provisional.component').then(m => m.AcuerdoEvaluacionProvisionalComponent),
             outlet: 'acuerdos-provisional'
           },
           {
             path: 'miacuerdo',
-            component: MiAcuerdoComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/mi-acuerdo/mi-acuerdo.component').then(m => m.MiAcuerdoComponent),
             outlet: 'acuerdos-provisional'
           },
           {
             path: 'minuta',
-            component: MinutaComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/minuta/minuta.component').then(m => m.MinutaComponent),
             outlet: 'acuerdos-provisional'
           },
           {
             path: 'ver-acuerdo/:id',
-            component: VerAcuerdoComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/modals/ver-acuerdo/ver-acuerdo.component').then(m => m.VerAcuerdoComponent),
             outlet: 'acuerdos-provisional'
           },
           {
             path: 'comportamientos/:id',
-            component: VerComportamientosProbatoriosComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/ver-comportamientos-probatorios/ver-comportamientos-probatorios.component').then(m => m.VerComportamientosProbatoriosComponent),
             outlet: 'acuerdos-provisional'
           },
           {
             path: 'editar/:id',
-            component: AcuerdoEditarComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/acuerdo-desempenio/acuerdo-editar/acuerdo-editar.component').then(m => m.AcuerdoEditarComponent),
             outlet: 'acuerdos-provisional'
           },
           {
             path: 'evaluacion/:id',
-            component: AcuerdoEvaluacionComponent,
+            loadComponent: () => import('./components/layout/components/acuerdos/pages/acuerdo-evaluacion/acuerdo-evaluacion.component').then(m => m.AcuerdoEvaluacionComponent),
             outlet: 'acuerdos-provisional'
           },
         ]
       },
       {
         path: 'mi-evaluacion',
-        component: ViewSupervisadoEvaluacionComponent,
+        loadComponent: () => import('./components/layout/components/evaluacion-competencias/pages/view-supervisado-evaluacion/view-supervisado-evaluacion.component').then(m => m.ViewSupervisadoEvaluacionComponent),
       },
       {
         path: 'mantenimiento',
-        component: MantenimientoComponent,
+        loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento.component').then(m => m.MantenimientoComponent),
         children: [
           {
             path: 'periodos',
-            component: PeriodosComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/periodos/periodos.component').then(m => m.PeriodosComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'periodos-procesos',
-            component: PeriodoProcesosComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/periodo-procesos/periodo-procesos.component').then(m => m.PeriodoProcesosComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'cursos',
-            component: CursosMantenimientoComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/cursos/cursos.component').then(m => m.CursosMantenimientoComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'competencias',
-            component: CompetenciasComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/competencias/competencias.component').then(m => m.CompetenciasComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'grados',
-            component: GradosComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/grados/grados.component').then(m => m.GradosComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'asignacion-competencias',
-            component: AsignacionCompetenciasComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/asignacion-competencias/asignacion-competencias.component').then(m => m.AsignacionCompetenciasComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'colaboradores',
-            component: ColaboradoresComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/colaboradores/colaboradores.component').then(m => m.ColaboradoresComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'metas',
-            component: MetasComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/metas/metas.component').then(m => m.MetasComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'asignacion-metas',
-            component: AsignacionMetasComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/asignacion-metas/asignacion-metas.component').then(m => m.AsignacionMetasComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'asignacion-acuerdos',
-            component: AsignacionAcuerdoComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/asignacion-acuerdo/asignacion-acuerdo.component').then(m => m.AsignacionAcuerdoComponent),
             outlet: 'mantenimiento'
           },
           {
             path: 'protocolos',
-            component: ProtocolosComponent,
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/protocolos/protocolos.component').then(m => m.ProtocolosComponent),
+            outlet: 'mantenimiento'
+          },
+          {
+            path: 'cambio-sup',
+            loadComponent: () => import('./components/layout/components/mantenimiento/mantenimiento-options/supervisor-change/supervisor-change.component').then(m => m.SupervisorChangeComponent),
             outlet: 'mantenimiento'
           }
         ]

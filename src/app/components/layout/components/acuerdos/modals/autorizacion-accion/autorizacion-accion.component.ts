@@ -5,7 +5,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { SnackBars } from '../../../../services/snackBars.service';
 import { HerlperService } from '../../../../services/appHelpers.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { typeProcessesI } from '../../../mantenimiento/mantenimiento-options/asignacion-acuerdo/interfaces/asignacion-acuerdo.interface';
+import { flowI, typeProcessesI } from '../../../mantenimiento/mantenimiento-options/asignacion-acuerdo/interfaces/asignacion-acuerdo.interface';
 import { PeriodsProcessServices } from '../../../mantenimiento/mantenimiento-options/periodo-procesos/services/periodo-procesos.service';
 import { agreementService } from '../../services/acuerdo.service';
 
@@ -16,7 +16,7 @@ import { agreementService } from '../../services/acuerdo.service';
   templateUrl: './autorizacion-accion.component.html',
   styleUrl: './autorizacion-accion.component.css'
 })
-export class AutorizacionAccionComponent implements OnInit{
+export class AutorizacionAccionComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder,
@@ -25,7 +25,7 @@ export class AutorizacionAccionComponent implements OnInit{
     private agreementservice: agreementService,
     private periodProcessService: PeriodsProcessServices,
     private dialogRef: MatDialogRef<AutorizacionAccionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {idPersona: number,  nombre: string, apellido: string, idAcuerdo: number},
+    @Inject(MAT_DIALOG_DATA) public data: { idPersona: number, nombre: string, apellido: string, idAcuerdo: number, type: number },
   ) {
     this.authorizeAccionForm = fb.group({
       processId: 0,
@@ -34,32 +34,50 @@ export class AutorizacionAccionComponent implements OnInit{
 
   authorizeAccionForm: FormGroup
   processes!: typeProcessesI[]
+  flows!: flowI[]
 
   ngOnInit(): void {
-    this.getProcesses()
+    if (this.data.type == 1) { this.getProcesses() }
+    else { this.getCycles() }
   }
-  
+
   getProcesses() {
     this.periodProcessService.getTypeProcess(true)
       .subscribe((res: any) => { this.processes = res.data; })
   }
-  
+
+  getCycles() {
+    this.periodProcessService.getCycles()
+      .subscribe((res: any) => { this.flows = res.data; })
+  }
+
   closeModal(): void {
     this.dialogRef.close();
   }
 
   async postProcessChange() {
     let processData
-    let removeDecision: boolean = await this.snackBar.snackbarConfirmation(`¿Esta seguro de cambiar el proceso del acuerdo de desempeño ?`, 'Esto permitira a usuarios hacer cambios que el proceso permita.')
+    let removeDecision: boolean = await this.snackBar.snackbarConfirmation(`¿Esta seguro de cambiar el ${this.data.type == 1 ? 'proceso' : 'estado'} del acuerdo de desempeño ?`, `Esto permitira a usuarios hacer cambios que el ${this.data.type == 1 ? 'proceso' : 'estado'} permita.`)
 
     if (removeDecision) {
-       processData = { acuerdoId: this.data.idAcuerdo, procesoId: this.authorizeAccionForm.value.processId }
+      
+      if (this.data.type == 1) {
+        processData = { acuerdoId: this.data.idAcuerdo, procesoId: this.authorizeAccionForm.value.processId }
 
-      this.agreementservice.updateProcess(processData).subscribe((res: any) => {
-        if (res.status) {
-          this.appHelper.handleResponse(res, () => this.closeModal(), this.authorizeAccionForm)
-        }
-      })
+        this.agreementservice.updateProcess(processData).subscribe((res: any) => {
+          if (res.status) {
+            this.appHelper.handleResponse(res, () => this.closeModal(), this.authorizeAccionForm)
+          }
+        })
+      } else {
+        processData = { acuerdoId: this.data.idAcuerdo, flujoId: this.authorizeAccionForm.value.processId }
+
+        this.agreementservice.updateFlow(processData).subscribe((res: any) => {
+          if (res.status) {
+            this.appHelper.handleResponse(res, () => this.closeModal(), this.authorizeAccionForm)
+          }
+        })
+      }
     }
   }
 

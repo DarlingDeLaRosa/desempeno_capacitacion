@@ -4,6 +4,7 @@ import { PeriodI } from "../../periodos/interfaces/periodo.interface";
 
 export interface asignationAgreementGetI {
     idAsignacion: number,
+    cargo: string, 
     colaborador: CollaboratorsGetI
     periodo: PeriodI
     supervisor: UserResumeTypeTwoI
@@ -26,6 +27,11 @@ export interface durationAgreementI {
 
 export interface typeProcessesI {
     id: number
+    nombre: string
+}
+
+export interface flowI {
+    idFlujo: number
     nombre: string
 }
 
