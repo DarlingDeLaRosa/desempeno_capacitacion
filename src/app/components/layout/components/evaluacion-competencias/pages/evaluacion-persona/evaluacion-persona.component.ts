@@ -77,7 +77,7 @@ export class EvaluacionPersonaComponent implements OnInit {
   }
 
   getAsignationCompetencyByIdOcuGroup() {
-    this.asignationCompetencySevice.getAsignationCompetencyByIdOcuGroup(this.person.grupoObj.idGrupo).subscribe((res: any) => {
+    this.asignationCompetencySevice.getAsignationCompetencyByIdOcuGroup(this.person.grupoObj.idGrupo, this.person.cargo.idCargo).subscribe((res: any) => {
 
       res.data.map((asignationCompetency: AsignationGetCompetencyI) => {
         const behaviorGroup = this.fb.array(

@@ -80,8 +80,6 @@ export class CursosMantenimientoComponent implements OnInit {
     this.getSuppliersByRs()
   }
 
-
-
   //Metodo para mostrar el nombre en el input
   displayRsName(rs: SuppliersI): string {
     return rs ? rs.razonSocial : '';

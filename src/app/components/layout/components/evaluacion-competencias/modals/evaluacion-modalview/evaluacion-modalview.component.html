@@ -1,37 +1,79 @@
 <div class="modal" *ngIf="evaluationData; else cargando">
-    <div class="fuctionContent">
-        <h2>Evaluación De Competencias</h2><br>
+  <div class="fuctionContent">
+    <h2>Evaluación De Competencias</h2>
+    <br />
 
-        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" [(ngModel)]="competency">
-            <mat-button-toggle [value]="0">{{evaluationData[0].grado.competencia.nombre}}</mat-button-toggle>
-            <mat-button-toggle [value]="1">{{evaluationData[1].grado.competencia.nombre}}</mat-button-toggle>
-        </mat-button-toggle-group>
+    <!-- <mat-button-toggle-group
+      name="fontStyle"
+      aria-label="Font Style"
+      *ngFor="let evaluation of evaluationData; let i = index"
+      
+    >
+      <mat-button-toggle [value]="i">{{
+        evaluation.grado.competencia.nombre
+      }}</mat-button-toggle>
+    </mat-button-toggle-group> -->
+
+    <mat-form-field appearance="fill" style="width: 300px;">
+        <mat-label>Evaluación de competencia </mat-label>
+        <mat-select [(ngModel)]="competency" disableRipple>
+          <!--(selectionChange)="activeSup($event.value)"-->
+          <ng-container
+            *ngIf="
+              evaluationData && evaluationData.length;
+              else noOcupationalGroup
+            "
+          >
+            <mat-option
+              [value]="i"
+              *ngFor="let evaluation of evaluationData ; let i = index"
+            >
+              {{ evaluation.grado.competencia.nombre }}
+            </mat-option>
+          </ng-container>
+          <ng-template #noOcupationalGroup>
+            <mat-option>No hay campos disponibles</mat-option>
+          </ng-template>
+        </mat-select>
+      </mat-form-field>
+  </div>
+
+  <h3>
+    Competencia : {{ evaluationData[competency].grado.competencia.nombre }} ({{
+      evaluationData[competency].grado.tipoGrado.nombre
+    }})
+  </h3>
+
+  <div class="competencia">
+    <p style="line-height: 26px">
+      {{ evaluationData[competency].grado.competencia.descripcion }}
+    </p>
+  </div>
+
+  <br />
+
+  <h3>Comportamientos y calificaciones</h3>
+  <div
+    class="comportamientoCalificacion"
+    *ngFor="
+      let evaluation of this.evaluationData[competency]
+        .evaluacionCompetenciasDetalles
+    "
+  >
+    <div class="comportamiento">
+      <p style="line-height: 22px">{{ evaluation.comportamiento.nombre }}</p>
     </div>
 
-     <h3>Competencia : {{evaluationData[competency].grado.competencia.nombre}} ({{evaluationData[competency].grado.tipoGrado.nombre}})</h3>
-
-    <div class="competencia" >
-        <p style="line-height: 26px;">{{evaluationData[competency].grado.competencia.descripcion}}</p>
+    <div class="iconContainer">
+      <mat-icon>arrow_forward</mat-icon>
     </div>
 
-    <br>
+    <div class="calificacionContainer">
+      <h3>{{ evaluation.calificacionComportamiento.nombre }}</h3>
+    </div>
+  </div>
 
-    <h3>Comportamientos y calificaciones</h3>
-    <div class="comportamientoCalificacion" *ngFor="let evaluation of this.evaluationData[competency].evaluacionCompetenciasDetalles">
-        <div class="comportamiento">
-            <p style="line-height: 22px;">{{evaluation.comportamiento.nombre}}</p>
-        </div>
-
-        <div class="iconContainer">
-            <mat-icon>arrow_forward</mat-icon>
-        </div>
-
-        <div class="calificacionContainer">
-            <h3>{{evaluation.calificacionComportamiento.nombre}}</h3>
-        </div>
-    </div> 
-    
-    <!-- <div class="comportamientoCalificacion">
+  <!-- <div class="comportamientoCalificacion">
         <h3 style="padding-top: 22px; color: #004b8d;">Total</h3>
         <span></span>
         <div class="calificacionContainer">
@@ -39,15 +81,14 @@
         </div>
     </div> -->
 
-    <div style="display: flex ; justify-content: end; margin-top: 15px;">
-        <button class="btnCerrar" (click)="closeModal()">Cerrar</button>
-    </div>
+  <div style="display: flex; justify-content: end; margin-top: 15px">
+    <button class="btnCerrar" (click)="closeModal()">Cerrar</button>
+  </div>
 </div>
 
 <ng-template #cargando>
-    <div class="container-loaderMother" style="padding: 30px;">
-      <div class="loaderMother"></div>
-      <div class="loading-text">Cargando...</div>
-    </div>
+  <div class="container-loaderMother" style="padding: 30px">
+    <div class="loaderMother"></div>
+    <div class="loading-text">Cargando...</div>
+  </div>
 </ng-template>
-  

@@ -9,9 +9,10 @@ import { CompetencyServices } from '../competencias/services/competencias.servic
 import { MaterialComponents } from '../../../../../../helpers/material.components';
 import { IntranetServices } from '../../../../../../helpers/intranet/intranet.service';
 import { OcupationalGroupI } from '../../../../../../helpers/intranet/intranet.interface';
-import { AsignationGetCompetencyI } from './interfaces/asignacion-competencias.interface';
+import { AsignationGetCompetencyI, AsignationGetCompetencyPositionI } from './interfaces/asignacion-competencias.interface';
 import { AsignationCompetenciesServices } from './services/asignacion-competencias.service';
 import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
+import { PositionI } from '../colaboradores/interfaces/colaboradores.interface';
 
 @Component({
   selector: 'app-asignacion-competencias',
@@ -22,6 +23,9 @@ import { PaginationI } from '../../../../../interfaces/generalInteerfaces';
 })
 
 export class AsignacionCompetenciasComponent implements OnInit {
+
+  asignationTo: boolean = true
+  positions!: PositionI[]
 
   constructor(
     public fb: FormBuilder,
@@ -34,7 +38,8 @@ export class AsignacionCompetenciasComponent implements OnInit {
     this.asignationCompetencyForm = fb.group({
       idAsignacion: 0,
       // isSup: new FormControl(false),
-      idGrupo: new FormControl('', Validators.required),
+      idGrupo: new FormControl(''),
+      idCargo: new FormControl(''),
       idGrado: new FormControl('', Validators.required),
       idCompetencia: new FormControl('', Validators.required),
     })
@@ -47,12 +52,42 @@ export class AsignacionCompetenciasComponent implements OnInit {
   showSupGOII: boolean = false
   asignationCompetencyForm: FormGroup
   ocupationalGroup!: OcupationalGroupI[]
-  asignationCompetencies!: AsignationGetCompetencyI[]
+  asignationCompetencies!: AsignationGetCompetencyPositionI[]
 
   ngOnInit(): void {
     this.getCompetencies()
     this.getOcupationalGroup()
     this.getAsignationCompetencies()
+    this.updateAssignmentValidators()
+  }
+
+  displayName(name: any): string {
+    return name ? `${name.nombre}` : '';
+  }
+
+  updateAssignmentValidators(): void {
+    const idGrupo = this.asignationCompetencyForm.get('idGrupo');
+    const idCargo = this.asignationCompetencyForm.get('idCargo');
+
+    if (this.asignationTo) {
+      // Asignación por grupo ocupacional
+      idGrupo?.setValidators(Validators.required);
+      idCargo?.clearValidators();
+
+      // Opcional: limpiar el valor que ya no aplica
+      idCargo?.reset('');
+    } else {
+      // Asignación por cargo
+      idCargo?.setValidators(Validators.required);
+      idGrupo?.clearValidators();
+
+      // Opcional: limpiar el valor que ya no aplica
+      idGrupo?.reset('');
+    }
+
+    // IMPORTANTE: recalcular el estado de validación
+    idGrupo?.updateValueAndValidity();
+    idCargo?.updateValueAndValidity();
   }
 
   // activeSup(event: number) {
@@ -94,6 +129,17 @@ export class AsignacionCompetenciasComponent implements OnInit {
       })
   }
 
+  getCargoByName() {
+    if (this.asignationCompetencyForm.value.idCargo.length <= 3) {
+      this.positions = []
+    } else {
+      this.intranetService.getPositionsByName(this.asignationCompetencyForm.value.idCargo)
+        .subscribe((res: any) => {
+          this.positions = res.data
+        })
+    }
+  }
+
   // Metodo para crear las asignaciones de competencias
   postAsignationCompetency() {
     this.asignationCompetenciesService.postAsignationCompetency(this.asignationCompetencyForm.value)
@@ -122,13 +168,35 @@ export class AsignacionCompetenciasComponent implements OnInit {
   }
 
   // Metodo asignar valores y habilitar la edición de un registro
-  async setValueToEdit(asignationCompetency: AsignationGetCompetencyI) {
-    await this.getCompetencyById(asignationCompetency.idCompetencia)
+  async setValueToEdit(asignationCompetency: AsignationGetCompetencyPositionI) {
+ 
+    asignationCompetency.grupoOcupacionlObj == null ? this.asignationTo = false: this.asignationTo = true
+    this.updateAssignmentValidators()
+    await this.getCompetencyById(asignationCompetency.competenciaObj.id)
+
     this.asignationCompetencyForm.reset(asignationCompetency)
+    this.asignationCompetencyForm.patchValue({
+      idAsignacion: asignationCompetency.idAsignacion,
+      idGrupo: asignationCompetency.grupoOcupacionlObj != null ? asignationCompetency.grupoOcupacionlObj.idGrupo : null,
+      idCargo: asignationCompetency.cargo != null ? asignationCompetency.cargo : null,
+      idGrado: asignationCompetency.gradoObj != null ? asignationCompetency.gradoObj.idGrado : null,
+      idCompetencia: asignationCompetency.competenciaObj != null ? asignationCompetency.competenciaObj.id : null,
+    })
   }
 
   // Metodo para manejar las funciones de editar y crear en el onSubmit del formulario
   saveChanges() {
+    let form = this.asignationCompetencyForm.getRawValue()
+
+    if (this.asignationTo == false) {
+      this.asignationCompetencyForm.patchValue({
+        idCargo: form.idCargo.idCargo,
+        idGrupo: null
+      })
+    } else {
+      this.asignationCompetencyForm.patchValue({ idCargo: null })
+    }
+
     this.appHelpers.saveChanges(() => this.postAsignationCompetency(), () => this.putAsignationCompetency(), this.asignationCompetencyForm.value.idAsignacion, this.asignationCompetencyForm)
   }
 

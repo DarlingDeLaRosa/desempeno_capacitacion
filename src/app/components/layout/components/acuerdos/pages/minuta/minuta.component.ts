@@ -159,6 +159,8 @@ export class MinutaComponent implements OnInit {
         motivoAusencia: null,
       }));
 
+      this.colaboradoresMinutaToSend = this.colaboradoresMinuta
+
     })
   }
 
@@ -177,6 +179,7 @@ export class MinutaComponent implements OnInit {
     const dialog = this.dialog.open(MotivoAusenciaMinutaComponent, { width: '700px', data: colaborador,});
 
     dialog.afterClosed().subscribe((result) => {
+      
       if(result.ausente){
         this.colaboradoresMinuta = this.colaboradoresMinuta.map(colab =>
           colab.idColaborador === id
