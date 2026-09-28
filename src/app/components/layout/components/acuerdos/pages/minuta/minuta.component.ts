@@ -47,6 +47,7 @@ export class MinutaComponent implements OnInit {
   colaboradoresMinuta: MinutaAsistenciaI[] = [];
   colaboradoresMinutaToSend: MinutaAsistenciaI[] = [];
   evaluationsCompetencies: EvaluationCompetencySummaryGetI[] = []
+  fecha = new Date()
 
   constructor(
     private router: Router,
@@ -63,14 +64,13 @@ export class MinutaComponent implements OnInit {
     private evaluationCompetencyService: EvaluationCompetencyServices,
   ) {
     this.formMinuta = this.fb.group({
-      agendaReunion: new FormControl<string>('', [Validators.required, Validators.maxLength(3000)]),
+      agendaReunion: new FormControl<string>(''),
       desarrollo: new FormControl<string>('', [Validators.required, Validators.maxLength(5000)]),
-      conclusiones: new FormControl<string>('', [Validators.required, Validators.maxLength(12000)]),
+      conclusiones: new FormControl<string>(''),
       tipoProcesoId: new FormControl<number>(0),
       unidadOrg: new FormControl(''),
     })
   }
-
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -83,10 +83,15 @@ export class MinutaComponent implements OnInit {
 
     if (Number(this.typeMinuta) == 1) {
       this.getPeriodsProcessActive()
+      this.formMinuta.get('agendaReunion')?.addValidators(Validators.required);
+      this.formMinuta.get('conclusiones')?.addValidators(Validators.required);
+
+      this.formMinuta.get('agendaReunion')?.updateValueAndValidity();
+      this.formMinuta.get('conclusiones')?.updateValueAndValidity();
     } else {
       this.getSupervisorWithSubordinates()
     }
-    
+
     // this.getPeriodsProcess()
   }
 
@@ -96,17 +101,17 @@ export class MinutaComponent implements OnInit {
       : this.agreementService.getAgreementByRol('', '', '', '', '', true);
 
     request.subscribe((resp: any) => {
-      
-      this.agreement = resp.data.filter((item:AcuerdoI)=> {
+
+      this.agreement = resp.data.filter((item: AcuerdoI) => {
         const fechaIngreso = new Date(item.colaboradorObj.fechaIngreso);
         const fechaActual = new Date();
-      
+
         // Diferencia en milisegundos
         const diferenciaMs = fechaActual.getTime() - fechaIngreso.getTime();
-      
+
         // Convertir la diferencia a días
         const diferenciaDias = diferenciaMs / (1000 * 60 * 60 * 24);
-      
+
         return (
           item.tipoProceso.id === this.idPeriodsProcessActive.tipoProceso.id ||
           diferenciaDias >= 30
@@ -176,18 +181,18 @@ export class MinutaComponent implements OnInit {
 
   openModalMotivoAusencia(id: number): void {
     const colaborador = this.colaboradoresMinutaToSend.find((c) => c.idColaborador === id);
-    const dialog = this.dialog.open(MotivoAusenciaMinutaComponent, { width: '700px', data: colaborador,});
+    const dialog = this.dialog.open(MotivoAusenciaMinutaComponent, { width: '700px', data: colaborador, });
 
     dialog.afterClosed().subscribe((result) => {
-      
-      if(result.ausente){
+
+      if (result.ausente) {
         this.colaboradoresMinuta = this.colaboradoresMinuta.map(colab =>
           colab.idColaborador === id
             ? { ...colab, ausente: true }
             : colab
         );
       }
-      
+
       if (result) {
         const index = this.colaboradoresMinutaToSend.findIndex((c) => c.idColaborador === result.idColaborador);
         if (index !== -1) {
@@ -213,10 +218,10 @@ export class MinutaComponent implements OnInit {
 
   // metodo para armar objeto de minuta y hacer el post
   postMinuta() {
-    
+
     const Minuta: MinutaI = {
       // supervisorId: Number(this.usuario.idPersona),
-      periodoAcuerdoId: this.idPeriodsProcessActive.idPeriodoAcuerdo,
+      periodoAcuerdoId: Number(this.typeMinuta) == 1 ? this.idPeriodsProcessActive.idPeriodoAcuerdo : null,
       esUnaEvaluacionCompentencia: Number(this.typeMinuta) == 1 ? false : true,
       // periodoId: this.systeminformation.activePeriod().idPeriodo,
       desarrollo: this.formMinuta.get('desarrollo')?.value,

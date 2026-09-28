@@ -170,7 +170,7 @@ export interface MinutaI {
   conclusion: string;
   agendaReunion: string;
   // periodoId: number
-  periodoAcuerdoId: number;
+  periodoAcuerdoId: number | null;
   // supervisor?: CollaboratorsGetI;
   periodoAcuerdo?: periodProcessGetI;
   // supervisorId: number;

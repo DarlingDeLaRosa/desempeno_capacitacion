@@ -55,7 +55,11 @@ export class MinutaEvaluacionCompetenciaComponent implements OnInit {
     let type = this.data.typeEvaluation == 1 ? 'acuerdo' : 'evaluacion'
 
     this.minutaservice.getMinutaEvaluacion(esi, type, 1, 500).subscribe((resp: any) => {
-      [this.minuta] = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == this.data.selectedStage )
+      if (this.data.typeEvaluation == 1) { 
+        [this.minuta] = resp.data.filter((minuta: MinutaGetI) => minuta.periodoAcuerdo != null && minuta.periodoAcuerdo.tipoProceso.id == this.data.selectedStage )
+      }else{
+        [this.minuta] = resp.data
+      }
       
       this.presentes.push({
         nombre: this.minuta.supervisorIntranet.nombre,

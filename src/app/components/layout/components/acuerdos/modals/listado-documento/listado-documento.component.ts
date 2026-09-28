@@ -35,7 +35,7 @@ export class ListadoDocumentoComponent implements OnInit {
   selectedFileName: string | undefined;
   isLoading: boolean = true
   activeProcess!: periodProcessGetI
-  evaluationComptency!: { fechaFin: string, fechaInicio: string }
+  evaluationComptency!: { fechaFin: string, fechaInicio: string, fechaProroga: string }
 
   constructor(
     private http: HttpClient,
@@ -255,7 +255,7 @@ export class ListadoDocumentoComponent implements OnInit {
     this.periodProcessService.getPeriodBytypeProcess(id)
       .subscribe((res: any) => {
         if (res.data) {
-          if (res.data.tipoProceso.id == 7) this.evaluationComptency = { fechaFin: res.data.fechaFin, fechaInicio: res.data.fechaInicio }
+          if (res.data.tipoProceso.id == 7) this.evaluationComptency = { fechaFin: res.data.fechaFin, fechaInicio: res.data.fechaInicio, fechaProroga: res.data.fechaProroga }
         }
       })
   }

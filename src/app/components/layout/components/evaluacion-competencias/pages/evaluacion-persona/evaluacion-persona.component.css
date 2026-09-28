@@ -27,7 +27,7 @@ p {
 .cabeceraComportamiento,
 .evaluacionComportamiento {
     display: grid;
-    grid-template-columns: 30% 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 30% 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .cabeceraComportamiento {

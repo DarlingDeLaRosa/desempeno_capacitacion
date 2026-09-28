@@ -86,7 +86,7 @@
     *ngIf="(data.documentosList != undefined && data.documentosList.length < 10 && activeProcess != null && data.flujoId == 4 ||
     data.documentos != undefined 
      && data.documentos.length == 0 && data.idCollaborator == idUserLogged && evaluationComptency != undefined 
-     && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaFin)) || acuerdo != undefined && acuerdo.esInconsistenteTipoProceso && acuerdo.tipoProceso.id == 1 && data.documentosList.length == 0 ||  acuerdo != undefined && data.flujoId == 4 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2">
+     && appHelpers.isTodayInRange(evaluationComptency.fechaInicio, evaluationComptency.fechaProroga == null ? evaluationComptency.fechaFin : evaluationComptency.fechaProroga)) || acuerdo != undefined && acuerdo.esInconsistenteTipoProceso && acuerdo.tipoProceso.id == 1 && data.documentosList.length == 0 ||  acuerdo != undefined && data.flujoId == 4 && acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2">
 
     <div class="file-upload-container" (click)="fileInput.click()">
       <label class="file-upload-label"><mat-icon style="color: #002c52">upload_file</mat-icon></label>

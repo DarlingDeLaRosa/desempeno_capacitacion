@@ -46,7 +46,8 @@
             <div class="evaluacionComportamientoContainer">
                 <div class="cabeceraComportamiento">
                     <h4>Comportamiento</h4>
-                    <h4>Nunca/No aplica</h4>
+                    <h4>No aplica</h4>
+                    <h4>Nunca</h4>
                     <h4>Poca veces</h4>
                     <h4>Frecuentemente</h4>
                     <h4>Casi siempre</h4>
@@ -59,6 +60,8 @@
                         <div class="comportamiento">
                             <p style="line-height: 22px;">{{behavior.nombre}}</p>
                         </div>
+                        <label class="radioGroupComportamiento"><input type="radio" [value]="7"
+                                formControlName="calificacionComportamientoId" /></label>
                         <label class="radioGroupComportamiento"><input type="radio" [value]="2"
                                 formControlName="calificacionComportamientoId" /></label>
                         <label class="radioGroupComportamiento"><input type="radio" [value]="3"
