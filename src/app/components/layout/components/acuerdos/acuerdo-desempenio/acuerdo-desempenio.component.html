@@ -786,6 +786,7 @@
           <div
             class="ItemMiniMenu"
             *ngIf="
+              selectGroup &&
               acuerdo.tipoProceso.id != 5 &&
               acuerdo.flujoObj.idFlujo == 1 &&
               activeProcess &&
@@ -843,6 +844,32 @@
           <div
             class="ItemMiniMenu"
             *ngIf="
+              acuerdo.esTerceraRevisionEditable == false && acuerdo.flujoObj.idFlujo == 1 &&
+              (acuerdo.tipoProceso.id == 4 &&
+                acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
+                acuerdo.detalles.length > 0 &&
+                this.userLogged.role == 'Encargado' &&
+                selectGroup == false) ||
+              (acuerdo.tipoProceso.id == 4 &&
+                acuerdo.detalles.length > 0 &&
+                this.userLogged.role == 'Analista' &&
+                usuario.Position != 'Analista de Planificación')
+            "
+            (click)="
+              openAuthorization3ra(
+                acuerdo.colaboradorObj.nombre,
+                acuerdo.colaboradorObj.apellidos,
+                acuerdo.idAcuerdo
+              )
+            "
+          >
+            <mat-icon style="color: lightcoral">key</mat-icon>
+            <h4>Permitir cambios 3ra Rev.</h4>
+          </div>
+
+          <div
+            class="ItemMiniMenu"
+            *ngIf="
               ((acuerdo.tipoProceso.id == 1 && acuerdo.flujoObj.idFlujo > 3) ||
                 acuerdo.tipoProceso.id > 1) &&
               acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
@@ -869,7 +896,7 @@
           <div
             class="ItemMiniMenu editarHover"
             *ngIf="
-              (activeProcess &&
+              acuerdo.esTerceraRevisionEditable || (activeProcess &&
                 acuerdo.colaboradorObj.estadoObj.idEstado == 1 &&
                 acuerdo.flujoObj.idFlujo <= 3 &&
                 activeProcess.tipoProceso.id == acuerdo.tipoProceso.id &&
@@ -883,7 +910,7 @@
                 usuario.role != 'Analista' &&
                 selectGroup) ||
               (acuerdo.tipoAcuerdoObj.idTipoAcuerdo == 2 &&
-                acuerdo.tipoProceso.id == 1)
+                acuerdo.tipoProceso.id == 1) 
             "
             [routerLink]="[
               {

@@ -48,6 +48,7 @@
                 *ngIf="usuario.role == 'Encargado' || usuario.role == 'Analista'" routerLinkActive="active"> <!---->
                 <mat-icon>collections_bookmark</mat-icon>Cursos
             </a>
+            
             <a *ngIf="improvePlan && appHelpers.isTodayInRange(improvePlan.fechaInicio, improvePlan.fechaFin) && usuario.role !== 'supervisado'"
                 class="item-menu" [routerLink]="['/layout/plan-de-mejora']" routerLinkActive="active">
                 <mat-icon>star</mat-icon>Plan de mejora

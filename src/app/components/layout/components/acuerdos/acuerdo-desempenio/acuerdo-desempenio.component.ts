@@ -150,7 +150,7 @@ export class AcuerdoDesempenioComponent implements OnInit {
       this.allValid &&
       this.steps.acuerdosStepsStatus[0].fechaCompletado == null &&
       this.agreement.filter(item => item.tipoProceso.id === this.selectedStage) && this.agreement.every(item => item.flujoObj.idFlujo >= 2) &&
-      (this.steps.tipoProceso.id == 1 || this.steps.tipoProceso.id == 2 || this.steps.tipoProceso.id == 3 || this.steps.tipoProceso.id == 9 && this.typeAD)
+      (this.steps.tipoProceso.id == 1 || this.steps.tipoProceso.id == 2 || this.steps.tipoProceso.id == 3 || this.steps.tipoProceso.id == 4 || this.steps.tipoProceso.id == 9 && this.typeAD)
     ) {
       let typeProcess = this.typeAD ? 9 : this.activeProcess.tipoProceso.id
 
@@ -306,11 +306,11 @@ export class AcuerdoDesempenioComponent implements OnInit {
 
     dialog.afterClosed().subscribe(result => {
       if (result) {
-        this.validateAllDocs()
-        this.stepperPeriod()
-
         this.getAcuerdoByRol()
+        this.stepperPeriod()
         this.getMyMinuta()
+
+        this.validateAllDocs()
       }
     });
   }
@@ -396,6 +396,21 @@ export class AcuerdoDesempenioComponent implements OnInit {
   openAuthorizationAction(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {
     const dialog = this.dialog.open(AutorizacionAccionComponent, { data: { idPersona, nombre, apellido, idAcuerdo, type : 1 } })
     dialog.afterClosed().subscribe(() => { this.getAcuerdoByRol(); this.searchTerm = '' });
+  }
+  
+  async openAuthorization3ra( nombre: string, apellido: string, idAcuerdo: number){
+    let allow: boolean = await this.snackBar.snackbarConfirmation(`Está seguro que desea permitir cambios en el acuerdo de ${nombre} ${apellido} ?`)
+    
+    if (allow) {
+       this.agreementService.postAllowchange3raRevision(idAcuerdo).subscribe((res: any) => {
+        
+        if (res.status) {
+          this.appHelpers.handleResponse(res, () => {
+            this.getAcuerdoByRol()
+          },)
+        }
+      })
+    }
   }
 
   openAuthorizationActionCycle(idPersona: number, nombre: string, apellido: string, idAcuerdo: number): void {

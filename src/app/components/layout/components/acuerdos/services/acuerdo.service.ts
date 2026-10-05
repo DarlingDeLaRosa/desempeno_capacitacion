@@ -112,7 +112,7 @@ export class agreementService {
   }
  
   public completeMinuta(idMinuta: number) {
-    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Minutas/${idMinuta}/completar`, this.header));
+    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Minutas/${idMinuta}/completar`, '', this.header));
   }
 
   // Comportamientos Probatorios 
@@ -129,4 +129,9 @@ export class agreementService {
     return this.appHelpers.handleRequest(() => this.http.put(`${this.baseURL}/EvaluacionesAcuerdosProbatorios`, behaviorsTest, this.header));
   }
 
+  //Permitir cambios 3ra revision 
+
+  public postAllowchange3raRevision(acuerdoId: number) {
+    return this.appHelpers.handleRequest(() => this.http.post(`${this.baseURL}/Acuerdo/${acuerdoId}/habilitar-modificaciones-extraordinarias`, '', this.header));
+  }
 }

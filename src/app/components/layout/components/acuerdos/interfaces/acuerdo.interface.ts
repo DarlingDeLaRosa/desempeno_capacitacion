@@ -6,6 +6,7 @@ import { periodProcessGetI, periodProcessI } from '../../mantenimiento/mantenimi
 export interface AcuerdoI {
   idAcuerdo: number,
   borrador: boolean,
+  esTerceraRevisionEditable: boolean,
   cargo: string,
   cargoSupervisor: string,
   idColaborador: number,
